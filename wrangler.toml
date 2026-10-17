@@ -1,0 +1,5 @@
+# For `npx wrangler pages deploy` (Cloudflare Pages); with the Git integration the same is set in
+# the dashboard: build command "npm run build", build output directory "dist".
+name = "erebus-map-editor"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-10-01"

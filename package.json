@@ -1,0 +1,33 @@
+{
+  "name": "erebus-map-editor",
+  "version": "26.1.1",
+  "private": true,
+  "description": "Erebus Editor 2026: the RoboCupJunior Rescue Simulation (Erebus) 2026 world editor, as a static site",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs && node scripts/serve.mjs",
+    "serve": "node scripts/serve.mjs",
+    "test": "node --test \"test/*.test.js\"",
+    "sync": "node scripts/sync-from-cms.mjs"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "5.15.4",
+    "@techstark/opencv-js": "4.5.1",
+    "angular": "1.8.2",
+    "angular-animate": "1.8.2",
+    "angular-cookies": "1.8.2",
+    "angular-touch": "1.8.2",
+    "angular-translate": "2.19.1",
+    "angular-translate-handler-log": "2.19.1",
+    "angular-translate-loader-static-files": "2.19.1",
+    "angular-translate-storage-cookie": "2.19.1",
+    "angular-translate-storage-local": "2.19.1",
+    "bootstrap": "4.4.1",
+    "jquery": "3.7.1",
+    "ui-bootstrap4": "3.0.0-beta.3"
+  }
+}
