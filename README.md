@@ -1,6 +1,6 @@
 # Erebus World Editor
 
-**Erebus World Editor 2026** — the world editor for the RoboCupJunior Rescue Simulation (Erebus) 2026 rules — as a static site. It needs no server: serve `dist/` as it is (Cloudflare Pages, or any static host).
+**Erebus World Editor 2026** — the world editor for the RoboCupJunior Rescue Simulation (Erebus) 2026 rules — as a static site. It needs no server: serve `dist/` as it is (Cloudflare Workers, or any static host).
 
 It started in [rcj-rescue-cms](https://github.com/robocup-junior/rcj-rescue-cms) (taken from 26.1.1) and is now made here, on its own. The β menu links to the classic editor, which stays in the CMS at https://osaka.rcj.cloud/service/editor/simulation/2026/classic.
 
@@ -20,18 +20,17 @@ npx playwright install chromium # once, for the end-to-end tests
 npm run test:e2e                # end-to-end tests of dist/ (npm run build first)
 ```
 
-## Deploying (Cloudflare Pages)
+## Deploying (Cloudflare Workers)
 
-With the Git integration, set the project up as follows.
+The site is a Worker with static assets only (`wrangler.toml`: the files of `dist/`). With the Git integration (Workers Builds), set it up as follows.
 
 | Setting | Value |
 | --- | --- |
-| Framework preset | None |
 | Build command | `npm run build` |
-| Build output directory | `dist` |
+| Deploy command | `npx wrangler deploy` |
 | Environment variable | `NODE_VERSION` = `24` |
 
-To deploy from the command line: `npm run build && npx wrangler pages deploy` (settings in `wrangler.toml`).
+To deploy from the command line: `npm run build && npx wrangler deploy`.
 
 ### Caching
 

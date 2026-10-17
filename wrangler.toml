@@ -1,5 +1,8 @@
-# For `npx wrangler pages deploy` (Cloudflare Pages); with the Git integration the same is set in
-# the dashboard: build command "npm run build", build output directory "dist".
+# Cloudflare Workers (static assets only): built with "npm run build", deployed with
+# "npx wrangler deploy" (Workers Builds: the same as its build and deploy commands). The files of
+# dist are served as they are, with the headers in dist/_headers (from public/_headers).
 name = "erebus-world-editor"
-pages_build_output_dir = "dist"
 compatibility_date = "2026-10-01"
+
+[assets]
+directory = "./dist"
