@@ -22,13 +22,15 @@ npm run test:e2e                # end-to-end tests of dist/ (npm run build first
 
 ## Deploying (Cloudflare Workers)
 
-The site is a Worker with static assets only (`wrangler.toml`: the files of `dist/`). With the Git integration (Workers Builds), set it up as follows.
+The site is a Worker with static assets only (`wrangler.toml`: the files of `dist/`), built and deployed by Workers Builds, set up as follows.
 
 | Setting | Value |
 | --- | --- |
 | Build command | `npm run build` |
 | Deploy command | `npx wrangler deploy` |
 | Environment variable | `NODE_VERSION` = `24` |
+
+Workers Builds does not start by itself on a push here: GitHub Actions starts it (`.github/workflows/ci.yml`), for every push to `main` once the tests and the build pass, and by hand from Actions → CI → Run workflow. It posts to the Worker's deploy hook for `main` (Settings → Builds → Deploy Hooks), kept in the repository's secret `CLOUDFLARE_DEPLOY_HOOK`.
 
 To deploy from the command line: `npm run build && npx wrangler deploy`.
 

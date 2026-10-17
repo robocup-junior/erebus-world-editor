@@ -2,6 +2,9 @@ name: CI
 on:
   push:
   pull_request:
+  # a deploy by hand (Actions → CI → Run workflow), from main
+  workflow_dispatch:
+
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
@@ -9,9 +12,24 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci
       - run: npm test
-      # fails when a file the page loads is missing, or a file nothing loads is in dist/
+      # type check, then dist/
       - run: npm run build
+
+  # main, as pushed or by hand, once the tests and the build pass: Cloudflare's Workers Builds builds
+  # and deploys it, started by the Worker's deploy hook (for main) in the repository's secret
+  # CLOUDFLARE_DEPLOY_HOOK
+  deploy:
+    needs: test-and-build
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start the build on Cloudflare
+        env:
+          HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "::error::The secret CLOUDFLARE_DEPLOY_HOOK is not set"; exit 1; fi
+          curl -fsS -X POST "$HOOK"
