@@ -38,7 +38,7 @@ To deploy from the command line: `npm run build && npx wrangler pages deploy` (s
 So that no old file is used after an update, two things work together:
 
 - The scripts and styles get their content's hash in their names at build time (`assets/index-<hash>.js`): a changed file has a new URL.
-- Every file is served with `Cache-Control: no-cache` (`public/_headers`): the browser asks again each time it uses one, and an unchanged file is answered with a short 304. This also covers the page itself and what is loaded by name (OpenCV.js, the icon list and icons of the room 4 creator's shape tool, fonts).
+- Every file is served with `Cache-Control: no-cache` (`public/_headers`): the browser asks again each time it uses one, and an unchanged file is answered with a short 304. This also covers the page itself and what is loaded by name (the fonts, the images).
 
 ## Libraries
 
@@ -51,7 +51,7 @@ So that no old file is used after an update, two things work together:
 
 The page's base styles (`src/styles/base.css`) are the parts of Bootstrap 4.4.1's CSS the editor uses (its reboot, buttons, the modal); Bootstrap itself is not a dependency. TypeScript stays at 6 until vue-tsc supports TypeScript 7.
 
-OpenCV.js and Font Awesome's icon files are loaded at run time as files of their own: `scripts/vendor.mjs` (run by `dev` and `build`) copies them from `node_modules/` into `public/vendor/` (not committed).
+OpenCV.js (13 MB) and Font Awesome's icon lists are files of their own, loaded when needed: Vite takes them from `node_modules/` into the build with their content's hash in their names. The room 4 creator's shape tool draws its icons with Font Awesome's font, which the page loads anyway.
 
 ## Layout
 
@@ -67,7 +67,7 @@ src/
                     room4World2026, score - the most a map can score, by rule 5.6 -, view, tour, icons, keys)
   lang/             the texts (ja, en)
   styles/           base.css (from Bootstrap), page.css, sim_modern.css, editor.css
-public/             files served as they are (fonts, images, _headers; vendor/ made by scripts/vendor.mjs)
+public/             files served as they are (fonts, images, _headers)
 test/               unit tests (vitest) with sample maps
 e2e/                end-to-end tests (Playwright): screenshots, and the files the editor saves
 ```

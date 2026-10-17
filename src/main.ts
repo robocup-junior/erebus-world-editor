@@ -9,10 +9,8 @@ import './styles/editor.css';
 import { createApp } from 'vue';
 import { i18n } from './i18n';
 import App from './App.vue';
-
-// OpenCV.js gives a promise of itself until its WebAssembly is ready: then the global cv is OpenCV
-const w = window as unknown as { cv?: unknown };
-if (w.cv && typeof (w.cv as Promise<unknown>).then === 'function') (w.cv as Promise<unknown>).then(function (ready) { w.cv = ready; });
+// OpenCV.js starts loading now
+import './lib/opencv';
 
 // mounted on the body itself: the page's parts are its children, as the styles expect
 createApp(App).use(i18n).mount('body');

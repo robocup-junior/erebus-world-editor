@@ -16,6 +16,7 @@ import * as View from '../lib/view';
 import * as T from '../lib/tour';
 import * as Keys from '../lib/keys';
 import * as Score from '../lib/score';
+import * as OpenCV from '../lib/opencv';
 import type { MapData, Room4Token } from '../lib/types';
 import type { Problem, Region, Where, VictimInfo, Clip, Show } from '../lib/model';
 import type { TourStep, TourEnv, CreatorApi, Rect, StepState } from '../lib/tour';
@@ -626,12 +627,7 @@ export function createEditor() {
     // The world with a custom room 4: its picture is read with OpenCV, once both are loaded
     function customWorld(): Promise<string> {
         return new Promise(function (resolve, reject) {
-            let tries = 0;
-            (function waitCv() {
-                if (typeof cv !== 'undefined' && cv.Mat) return go();
-                if (++tries > 100) return reject(new Error('OpenCV did not load'));
-                setTimeout(waitCv, 100);
-            })();
+            OpenCV.ready.then(go, reject);
             function go() {
                 const img = new Image();
                 img.onload = function () {

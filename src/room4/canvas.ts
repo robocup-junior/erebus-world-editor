@@ -8,7 +8,7 @@ import * as R4 from '../lib/room4';
 import * as Icons from '../lib/icons';
 import * as World from '../lib/world2026';
 import type { CreatorScope } from './scope';
-import { FA } from './faIcons';
+import * as OpenCV from '../lib/opencv';
 import type { Room4Token } from '../lib/types';
 
 // a point of the picture (px)
@@ -143,7 +143,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         reachInfo = null;
         reachStats = null;
         let state = 'ok';
-        if (!reachBase || typeof cv === 'undefined' || !cv.Mat || !cv.distanceTransform) state = 'unavailable';
+        if (!reachBase || !OpenCV.isReady()) state = 'unavailable';
         else if (!geo!.start) state = 'noStart';
         scope.$applyAsync(function () { r4.reachState = state; if (state !== 'ok') r4.reachBlocked = 0; });
         if (state !== 'ok') return;
@@ -503,6 +503,12 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         r4.drawCount = (r4.drawCount || 0) + 1;
         analyse();
     }
+
+    // OpenCV still loading when the creator opened: where the robot gets to is worked out once it is
+    // there
+    let open = true;
+    scope.$on('$destroy', function () { open = false; });
+    if (!OpenCV.isReady()) OpenCV.ready.then(function () { if (open && pixels) { analyse(); drawOverlay(); } });
 
     function restore(data: ImageData) {
         ctx.putImageData(data, 0, 0);
@@ -1130,7 +1136,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         const solid = new Uint8Array(w * h);
         for (let i = 0; i < w * h; i++) solid[i] = d[i * 4 + 3] >= 128 ? 1 : 0;
         let keep = solid;
-        if (r4.shapeStyle === 'outline' && typeof cv !== 'undefined' && cv.distanceTransform) {
+        if (r4.shapeStyle === 'outline' && OpenCV.isReady()) {
             // keep the band within one wall thickness of the edge
             const m = new cv.Mat(h, w, cv.CV_8UC1);
             for (let i = 0; i < w * h; i++) m.data[i] = solid[i] ? 255 : 0;
@@ -1190,28 +1196,28 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     }
 
     scope.r4api.useIcon = function (icon) {
-        // Font Awesome Free ships each icon as an SVG; draw it black on transparent
+        // drawn black on transparent from Font Awesome's font (the page's icons), as its SVG is: the
+        // glyph's advance across, the font's ascent and descent (512 units) down; large, so the edges
+        // stay smooth when scaled
         const styles = (icon.styles || ['solid']).filter(function (s: string) { return s !== 'brands'; });
-        const style = styles.indexOf('solid') > -1 ? 'solid' : styles[0] || 'solid';
-        const url = FA + 'svgs/' + style + '/' + icon.name + '.svg';
-        fetch(url).then(function (res) {
-            if (!res.ok) throw new Error(String(res.status));
-            return res.text();
-        }).then(function (svg) {
-            // render large so the edges stay smooth when scaled
-            svg = svg.replace('<svg ', '<svg width="512" height="' + 512 + '" preserveAspectRatio="xMidYMid meet" ');
-            const img = new Image();
-            img.onload = function () {
-                const box = svg.match(/viewBox="([\d. ]+)"/);
-                const vb = box ? box[1].split(' ').map(Number) : [0, 0, 512, 512];
-                const ratio = vb[2] / vb[3];
-                const c = document.createElement('canvas');
-                c.width = ratio >= 1 ? 512 : Math.round(512 * ratio);
-                c.height = ratio >= 1 ? Math.round(512 / ratio) : 512;
-                c.getContext('2d')!.drawImage(img, (c.width - 512) / 2, (c.height - 512) / 2, 512, 512);
-                setSilhouette(c, false);
-            };
-            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        const font = (styles.indexOf('solid') > -1 || !styles.length ? '900' : '400') + ' 512px "Font Awesome 7 Free"';
+        const glyph = String.fromCodePoint(parseInt(icon.unicode, 16));
+        document.fonts.load(font, glyph).then(function (faces) {
+            if (!faces.length || !icon.unicode) throw new Error('no glyph');
+            const m = document.createElement('canvas').getContext('2d')!;
+            m.font = font;
+            const metrics = m.measureText(glyph);
+            const asc = metrics.fontBoundingBoxAscent, gw = metrics.width, gh = asc + metrics.fontBoundingBoxDescent;
+            const k = 512 / Math.max(gw, gh);
+            const c = document.createElement('canvas');
+            c.width = Math.round(gw * k);
+            c.height = Math.round(gh * k);
+            const g = c.getContext('2d')!;
+            g.font = font;
+            g.fillStyle = '#000';
+            g.setTransform(k, 0, 0, k, 0, 0);
+            g.fillText(glyph, 0, asc);
+            setSilhouette(c, false);
         }).catch(function () {
             scope.$applyAsync(function () { r4.message = 'iconFailed'; });
         });
