@@ -1,12 +1,12 @@
 {
     "admin": {
         "simBeta": {
-            "tryIt": "Switch to Erebus Editor 2026: draw straight on the map",
+            "tryIt": "Switch to Erebus World Editor 2026: draw straight on the map",
             "fake": "Fake victim",
-            "width": "Width (tiles)",
-            "length": "Length (tiles)",
-            "title": "Erebus Editor 2026",
-            "subtitle": "Erebus Editor 2026 (Simulation 2026 world editor)",
+            "width": "Across",
+            "length": "Down",
+            "title": "Erebus World Editor 2026",
+            "subtitle": "Erebus World Editor 2026 (Simulation 2026 world editor)",
             "new": "New map",
             "open": "Open a map (JSON)",
             "save": "Save as JSON",
@@ -19,7 +19,6 @@
             "zoomOut": "Zoom out",
             "fit": "Show the whole map",
             "room": "Room {{n}}",
-            "howTo": "Wheel: zoom   Space + drag / middle button: move   Ctrl+Z: undo",
             "discard": "Going on drops the changes to this map (the copy kept in this browser stays).",
             "exportBlocked": "The world cannot be exported yet",
             "room4": "Room 4",
@@ -49,7 +48,7 @@
                 "victim": "Click where there is a wall. Room 1: on a side (one per tile); rooms 2 and 3: on the 16 places of the 6 cm walls (a curve has two: inside and outside). Click a placed victim with its kind chosen to select it and change its turn or rings, or remove it; with another kind chosen it takes that kind.",
                 "curve": "Point at a quarter tile in room 3 to see its four curves; the nearest one (blue) goes in on a click. Click the same one again to remove it.",
                 "select": "Select walls, rooms, floors and victims together to move, copy, paste or clear them.",
-                "shape": "Change the shape and size of the map. Outline: click or drag tiles to take them out of the map (no floor) or back. Add / remove rows and columns: put new ones between the others, or take one out. The outer walls follow by themselves."
+                "shape": "Change the size and shape of the map; the outer walls follow by themselves. Outline: click or drag tiles to take them out of the map or back. Insert / remove: put a row or column in, or take one out, where you click."
             },
             "floors": {
                 "checkpoint": "Checkpoint",
@@ -61,11 +60,13 @@
             "problems": {
                 "noStart": "There is no start tile",
                 "victimNoWall": "Some victims have lost their wall ({{count}})",
-                "victimUnreachable": "Some victims are where the robot cannot get ({{count}})",
+                "victimUnreachable": "Some victims are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule 3.2.4)",
                 "wallRule": "Some walls do not follow the rules of their room ({{count}})",
                 "room4Checkpoint": "The room 4 tile right behind a passage is not a checkpoint ({{count}}, rule 3.5.3). Placing a passage sets it by itself",
                 "customRoom4NoPicture": "Room 4 has not been drawn yet",
-                "presetNotSupported": "Room 4 presets are not available in this editor (switch to custom, or use the classic editor)"
+                "presetNotSupported": "Room 4 presets are not available in this editor (switch to custom, or use the classic editor)",
+                "room4Untyped": "Some victims in room 4 have no type ({{count}}): give them one in Draw room 4",
+                "room4Unreachable": "Some victims in room 4 are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule 3.2.4)"
             },
             "hints": {
                 "newMapSize": "A new map: first set its size (in tiles) in the panel on the left",
@@ -105,8 +106,8 @@
                 "undone": "Undone (redo: Ctrl+Y)",
                 "redone": "Redone",
                 "wallsDrawn": "{{cm}} cm of wall drawn",
-                "lineDone_addRow": "Row added (undo: Ctrl+Z)",
-                "lineDone_addCol": "Column added (undo: Ctrl+Z)",
+                "lineDone_addRow": "Row inserted (undo: Ctrl+Z)",
+                "lineDone_addCol": "Column inserted (undo: Ctrl+Z)",
                 "lineDone_delRow": "Row removed (undo: Ctrl+Z)",
                 "lineDone_delCol": "Column removed (undo: Ctrl+Z)",
                 "lineDrawing": "{{cm}} cm of wall. Release to draw, Esc to cancel (going back takes a corner away)",
@@ -136,7 +137,8 @@
                 "victim_place": "Click to place \"{{name}}\"",
                 "victim_move": "Click to place \"{{name}}\" on this side (the tile's victim moves here: one per tile)",
                 "victim_replace": "Click to change it to \"{{name}}\"",
-                "victim_select": "Click to select it (turn, rings or remove in the left panel)"
+                "victim_select": "Click to select it (turn, rings or remove in the left panel)",
+                "victim_unreachable": "The robot cannot get near here, so no victim goes here (rule 3.2.4)"
             },
             "drawRoom4": "Draw room 4",
             "drawRoom4Note": "Double-clicking the room 4 area opens it too",
@@ -172,8 +174,8 @@
             "room4Drawn": "Room 4 is drawn",
             "room4PresetBeta": "This map uses a room 4 preset ({{name}}). This editor makes custom room 4 only.",
             "room4ToCustom": "Switch to a custom room 4",
-            "mapSize": "Map size (tiles)",
-            "mapSizeNote": "What still fits (walls, rooms, the shape) stays when the size changes.",
+            "mapSize": "Map size",
+            "mapSizeNote": "Click a number to type it, or use − and + (1-40). The map grows or shrinks at the right and the bottom; what still fits stays. To put a row or column in the middle, use Insert row / Insert column below.",
             "checksOpen": "Open",
             "checksFold": "Fold",
             "regionNone": "Drag over tiles to select them. Drag the selection to move it (with Alt, a copy); the arrow keys move it a tile at a time.",
@@ -188,10 +190,10 @@
             "selectDone": "Done",
             "shapeModes": {
                 "outline": "Outline (uneven)",
-                "addRow": "Add a row",
-                "addCol": "Add a column",
-                "delRow": "Remove a row",
-                "delCol": "Remove a column"
+                "addRow": "Insert row",
+                "addCol": "Insert column",
+                "delRow": "Remove row",
+                "delCol": "Remove column"
             },
             "fixAll": "Fix all that can be fixed",
             "fixShort": "Fix",
@@ -213,7 +215,7 @@
             "exportBlockedLead": "Fix these {{count}} to export. Click one to see where it is.",
             "legendPocket": "Where the robot cannot get (gaps too narrow)",
             "betaMenu": "About this editor",
-            "betaLead": "Erebus Editor 2026 (beta). It reads and writes the same JSON as the classic editor, so a saved map opens in either.",
+            "betaLead": "Erebus World Editor 2026 (beta). It reads and writes the same JSON as the classic editor, so a saved map opens in either.",
             "backToClassicNote": "Save the map you are working on (Save, JSON) first",
             "tourStart": "Guide (lesson, screen tour, making room 4)",
             "tourShort": "Guide",
@@ -272,7 +274,7 @@
                     "finish": "Finish and export"
                 },
                 "welcome": {
-                    "title": "Welcome to Erebus Editor 2026",
+                    "title": "Welcome to Erebus World Editor 2026",
                     "body": "This editor makes worlds for the RoboCupJunior Rescue Simulation (Erebus) 2026 rules. You draw the map straight on the canvas, and walls and victims snap to the places the rules of the room under the pointer allow.\nThis tour goes through each part of the screen and each tool (about 3 minutes). The part being explained is lit up.\nPress → or Enter for the next step, ← to go back, and Esc to end at any time. To learn hands on, choose Learn by making a sample map from Guide at the bottom right."
                 },
                 "file": {
@@ -301,7 +303,7 @@
                 },
                 "shape": {
                     "title": "Shape (X): the map's size and outline",
-                    "body": "A new map starts here with its size: the + and − of the tiles across and down (up to 40). What still fits stays when the size changes.\nWith Outline, click or drag over tiles to take them out of the map (no floor) or bring them back, for an L shape or any map that is not a rectangle. The outer walls follow the outline by themselves.\nAdd a row, Add a column, Remove a row and Remove a column put rows and columns into the middle of a map, or take them out."
+                    "body": "A new map starts here with its size: click the tiles across or down to type them, or use − and + (up to 40). It grows or shrinks at the right and the bottom; what still fits stays.\nWith Outline, click or drag over tiles to take them out of the map (no floor) or bring them back, for an L shape or any map that is not a rectangle. The outer walls follow the outline by themselves.\nInsert row, Insert column, Remove row and Remove column put a row or column in, or take one out, where you click on the map."
                 },
                 "room": {
                     "title": "Room (M): painting the rooms",
@@ -362,6 +364,10 @@
                 "done": {
                     "title": "That is the tour",
                     "body": "This button takes the tour again at any time.\nA good order to work in: set the size with Shape → paint the rooms → join them with passages → draw walls → put floors and victims → look at the checks and export the .wbt.\nEnjoy making your maps!"
+                },
+                "score": {
+                    "title": "Maximum score",
+                    "body": "The most this map can score: every victim and cognitive target the robot can come near identified with the right type, and every checkpoint passed, worked out by rule 5.6.\nPress it for each room's share and the score with the exit and mapping bonuses. It is worked out again with every change."
                 }
             },
             "lesson": {
@@ -377,12 +383,12 @@
                 },
                 "size": {
                     "title": "Set the map's size",
-                    "body": "A new map is 8 tiles across and 6 down (a tile is 12 cm square). Change the size with the + and − of the tiles across and down in the shape tool's panel (up to 40).\nWhat still fits (walls, rooms, the outline) stays when the size changes.",
-                    "task": "Press + of the tiles across to make it 9 (6 down stays)",
+                    "body": "A new map is 8 tiles across and 6 down (a tile is 12 cm square). Change the size in the shape tool's panel: click Across or Down to type it, or use − and + (up to 40).\nWhat still fits (walls, rooms, the outline) stays when the size changes.",
+                    "task": "Make it 9 across (type it, or press +; 6 down stays)",
                     "tasks": {
-                        "length": "It is {{l}} down. Set the tiles down back to 6",
-                        "more": "It is {{w}} across. Press − of the tiles across to make it 9",
-                        "less": "It is {{w}} across. Press + of the tiles across to make it 9"
+                        "length": "It is {{l}} down. Set Down back to 6",
+                        "more": "It is {{w}} across. Set Across to 9",
+                        "less": "It is {{w}} across. Set Across to 9"
                     }
                 },
                 "outline": {
@@ -395,10 +401,10 @@
                 },
                 "addCol": {
                     "title": "Put a column in",
-                    "body": "With Add a column, a click on a vertical line between tiles puts a new column there; everything right of it moves right. Add a row does the same with a horizontal line.\nUse it to make a map you are working on bigger.",
-                    "task": "With Add a column chosen, click the line left of the rightmost column (green frame); any line takes one",
+                    "body": "With Insert column, a click on a vertical line between tiles puts a new column there; everything right of it moves right. Insert row does the same with a horizontal line.\nUse it to make a map you are working on bigger.",
+                    "task": "With Insert column chosen, click the line left of the rightmost column (green frame); any line takes one",
                     "tasks": {
-                        "removed": "A column went instead. Undo (Ctrl+Z), check that Add a column is chosen, then click a vertical line"
+                        "removed": "A column went instead. Undo (Ctrl+Z), check that Insert column is chosen, then click a vertical line"
                     }
                 },
                 "delCol": {
@@ -611,7 +617,7 @@
                 },
                 "r4stamp": {
                     "title": "Put victims",
-                    "body": "With the victim tool, pick a kind and click near a wall: the victim goes on the nearest wall. Not on a wall's end or a thin tip.\nClick a victim to select it and change its turn or ring colours; with another kind picked, it changes kind. Right-click removes it.\nRandom (under Undecided) leaves its kind to be decided when the world is exported.",
+                    "body": "With the victim tool, pick a kind and click near a wall: the victim goes on the nearest wall. Not on a wall's end or a thin tip, nor where the robot cannot come near.\nClick a victim to select it and change its turn or ring colours; with another kind picked, it changes kind. Right-click removes it.",
                     "task": "Pick a kind and click near walls to put two victims",
                     "tasks": {
                         "left": "{{n}} more: click near a wall"
@@ -695,6 +701,10 @@
                 "done": {
                     "title": "Finished!",
                     "body": "Well done: the sample map is made.\nSave it, or export the .wbt and run it in Erebus. For a new map, start from New.\nA good order to work in: size and outline → paint the rooms → join them with passages → draw walls → floors and victims → draw room 4 → look at the checks and export."
+                },
+                "score": {
+                    "title": "Maximum score",
+                    "body": "The trophy in the top bar is the most this map can score: every victim and cognitive target identified with the right type, and every checkpoint passed, worked out by rule 5.6.\nPress it for each room's share and the score with the exit and mapping bonuses. Victims on floating tiles and in rooms with a higher multiplier are worth more."
                 }
             },
             "toolHints": {
@@ -717,6 +727,57 @@
             },
             "lessonState": {
                 "tool": "Choose the {{name}} tool (in the tool column on the left)"
+            },
+            "score": {
+                "title": "The most this map can score",
+                "button": "Maximum score (worked out by rule 5.6)",
+                "short": "Max",
+                "unit": " pts",
+                "lead": "What a robot scores when it identifies every victim and cognitive target it can get to, with the right type, and passes every checkpoint (rule 5.6).",
+                "area": "Room {{n}}",
+                "multiplier": "×{{m}}",
+                "victims": "Victims {{n}}",
+                "targets": "Targets {{n}}",
+                "checkpoints": "CP {{n}}",
+                "field": "Identification, type and checkpoints",
+                "withExit": "With the exit bonus (+10%)",
+                "withMap": "With a full mapping bonus too (×2.2)",
+                "noStart": "Place the start tile to work it out.",
+                "unreachableTokens": "{{n}} victims or targets the robot cannot come near are left out (fix them in the checks).",
+                "unreachableCheckpoints": "{{n}} checkpoints the robot cannot get to are left out.",
+                "presetNote": "A room 4 preset is not counted (this editor uses a custom room 4 only).",
+                "fakeNote": "Fake victims and fake cognitive targets (rings adding up to other than 0-3) score nothing.",
+                "untypedNote": "{{n}} room 4 victims with no type are left out."
+            },
+            "tiles": "tiles",
+            "shapeEdit": "Edit on the map",
+            "keySheet": {
+                "title": "Controls",
+                "open": "Controls",
+                "back": "Back to the guides",
+                "view": "View",
+                "edit": "Editing",
+                "select": "Select tool",
+                "guide": "Help",
+                "rows": {
+                    "zoom": "Zoom in and out",
+                    "pan": "Move the view",
+                    "hand": "Hand tool (move with a left drag)",
+                    "undo": "Undo",
+                    "redo": "Redo",
+                    "cancel": "Stop what is being drawn",
+                    "tools": "Change tool (letters on the left bar)",
+                    "copy": "Copy, cut, paste",
+                    "duplicate": "Duplicate",
+                    "clear": "Clear the selection",
+                    "nudge": "Move the selection by a tile",
+                    "sheet": "Open this list"
+                },
+                "keys": {
+                    "wheel": "Wheel",
+                    "spaceDrag": "Space + drag",
+                    "middleDrag": "Middle-button drag"
+                }
             }
         },
         "simMapEditor": {
@@ -811,7 +872,6 @@
                 "zoomOut": "Zoom out",
                 "zoomFit": "Fit",
                 "zoomHint": "Ctrl (⌘) + wheel to zoom, Space + drag to pan",
-                "randomNoteShort": "Picked from all types on export",
                 "viewReach": "Out of reach",
                 "viewGuides": "Entrances / CP",
                 "unreachableShort": "Out of reach {{count}}",
@@ -837,7 +897,7 @@
                     "current": "Chosen type",
                     "mixed": "Mixed types"
                 },
-                "randomGo": "Place",
+                "randomGo": "Place {{n}}",
                 "randomNote2": "Along walls the robot can get within half a tile of, at least half a tile apart.",
                 "templates": {
                     "maze": "Maze",
@@ -934,8 +994,7 @@
                     "victim": "Letter victims",
                     "ct": "Cognitive targets",
                     "hazmat": "Hazmat signs",
-                    "fake": "Fake victims",
-                    "random": "Undecided"
+                    "fake": "Fake victims"
                 },
                 "types": {
                     "harmed": "Harmed",
@@ -945,8 +1004,6 @@
                     "fakeStable": "Stable",
                     "fakeUnharmed": "Unharmed"
                 },
-                "random": "Random",
-                "randomNote": "The export picks one of all the types above at random",
                 "eraserSize": "Size",
                 "size": {
                     "s": "S",
@@ -980,7 +1037,8 @@
                     "randomDone": "Placed {{placed}}.",
                     "randomShort": "Placed only {{placed}} of {{asked}} (not enough walls to put them on).",
                     "templateBlocked": "Every layout tried leaves part of the room out of reach. Check the light red parts.",
-                    "wallEnd": "Not on the end of a wall. Click a wall face at least as wide as a victim (2 cm)."
+                    "wallEnd": "Not on the end of a wall. Click a wall face at least as wide as a victim (2 cm).",
+                    "unreachable": "The robot cannot get near here: no victims go where the robot cannot go (rule 3.2.4)."
                 },
                 "tokens": "Wall tokens: {{count}}",
                 "farFromWall": "{{count}} away from any wall (red dashed circle)",
@@ -988,7 +1046,9 @@
                 "download": "Save as image",
                 "hint": "Import a PNG / JPEG picture or draw here. Victim types are stored in the picture, so a saved picture brings them back.",
                 "selectedStamp": "Selected victim",
-                "selectDone": "Done"
+                "selectDone": "Done",
+                "randomCount": "Count",
+                "randomKind": "Types"
             },
             "maxScore": {
                 "tokens": "Wall tokens",

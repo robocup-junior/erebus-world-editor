@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strictNullChecks": false
+  },
+  "include": [
+    "test/**/*.ts",
+    "src/env.d.ts"
+  ]
+}

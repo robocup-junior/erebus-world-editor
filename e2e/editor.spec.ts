@@ -1,0 +1,287 @@
+// The editor as it is used: what it shows, and what it saves and exports.
+import { test, expect, type Page } from '@playwright/test';
+import path from 'node:path';
+import { FIXTURES, reseed, boot, openMap, click, drag, hover, tool, download, keep, shot, settle, at, pageErrors } from './helpers';
+
+test.afterEach(async ({ page }) => {
+    expect(pageErrors(page)).toEqual([]);
+});
+
+test('empty screen (ja)', async ({ page }) => {
+    await boot(page, { lang: 'ja' });
+    await shot(page, 'empty-ja');
+});
+
+test('empty screen (en), then the language switched', async ({ page }) => {
+    await boot(page, { lang: 'en' });
+    await shot(page, 'empty-en');
+    await page.locator('.sbx-status .sbx-lang').click();
+    await settle(page);
+    await shot(page, 'empty-en-to-ja');
+    expect(await page.evaluate(() => document.documentElement.lang)).toBe('ja');
+});
+
+test('the β menu, with the link to the classic editor', async ({ page }) => {
+    await boot(page);
+    await page.locator('.sbx-beta-btn').click();
+    await shot(page, 'beta-menu');
+    const link = page.locator('.sbx-beta-menu-item');
+    await expect(link).toHaveAttribute('href', 'https://osaka.rcj.cloud/service/editor/simulation/2026/classic');
+    await expect(link).toHaveAttribute('target', '_blank');
+    await page.locator('.sbx-beta-back').click();
+    await expect(page.locator('.sbx-beta-menu')).toHaveCount(0);
+});
+
+test('a new map, and its size', async ({ page }) => {
+    await boot(page);
+    await page.locator('.sbx-empty-actions .btn-primary').click();
+    await settle(page, 400);
+    await shot(page, 'new-map');
+    await page.locator('.sbx-size-field').nth(0).locator('button').nth(1).click();
+    await settle(page, 200);
+    await page.locator('.sbx-size-field input').nth(1).fill('5');
+    await page.locator('.sbx-size-field input').nth(1).press('Enter');
+    await settle(page, 300);
+    await shot(page, 'new-map-resized');
+});
+
+test('a map opened: every tool and its panel', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    await shot(page, 'mapA-open');
+    for (const id of ['select', 'hand', 'shape', 'room', 'passage', 'line', 'curve', 'eraser', 'floor', 'victim']) {
+        await tool(page, id);
+        await hover(page, 30, 30);
+        await shot(page, 'tool-' + id);
+    }
+});
+
+test('the tools by their keys', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    await hover(page, 30, 30);
+    for (const k of ['S', 'H', 'X', 'M', 'P', 'L', 'A', 'E', 'F', 'V']) {
+        await page.keyboard.press(k.toLowerCase());
+        await settle(page, 60);
+        await expect(page.locator('.sbx-rail .sbx-tool.active')).toHaveCount(1);
+        await expect(page.locator('.sbx-tool.active .sbx-tool-key')).toHaveText(k);
+    }
+});
+
+test('drawing walls, undo and redo, and what is saved', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    await tool(page, 'line');
+    await drag(page, [[12, 12], [48, 12], [48, 48]]);
+    await shot(page, 'line-drawn');
+    await drag(page, [[60, 24], [84, 24]], { shift: true });
+    await page.keyboard.press('Control+z');
+    await settle(page);
+    await shot(page, 'line-undone');
+    await page.keyboard.press('Control+Shift+z');
+    await settle(page);
+    await page.locator('.sbx-history button').nth(0).click();
+    await page.locator('.sbx-history button').nth(1).click();
+    await settle(page);
+    await shot(page, 'line-redone');
+    const saved = await download(page, () => page.locator('.sbx-file button').nth(2).click());
+    expect(saved.name).toMatch(/\.json$/);
+    keep('walls.json', saved.text);
+});
+
+test('rooms, passages, floors, curves and the eraser', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    await tool(page, 'room');
+    await page.locator('.sbx-choice').nth(1).click();
+    await drag(page, [[54, 6], [66, 6], [66, 18]]);
+    await page.locator('.sbx-choice').nth(2).click();
+    await drag(page, [[78, 42], [90, 54]]);
+    await shot(page, 'rooms-painted');
+    await tool(page, 'passage');
+    await hover(page, 48, 8);
+    await shot(page, 'passage-hover');
+    await click(page, 48, 8);
+    await click(page, 72, 44);
+    await shot(page, 'passages');
+    await tool(page, 'floor');
+    for (const [i, x, y] of [[3, 6, 6], [0, 18, 54], [1, 30, 54], [2, 42, 54]] as [number, number, number][]) {
+        await page.locator('.sbx-choice').nth(i).click();
+        await click(page, x, y);
+    }
+    await shot(page, 'floors');
+    // the notices of the clicks gone (they stay 4 s)
+    await settle(page, 4200);
+    await tool(page, 'curve');
+    await hover(page, 57, 9);
+    await shot(page, 'curve-hover');
+    await click(page, 57, 9);
+    await tool(page, 'eraser');
+    await click(page, 42, 54);
+    await hover(page, 12, 30);
+    await shot(page, 'eraser');
+    const saved = await download(page, () => page.locator('.sbx-file button').nth(2).click());
+    keep('rooms.json', saved.text);
+});
+
+test('victims: placed, selected, turned, changed; a cognitive target', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    await tool(page, 'victim');
+    await page.locator('.sbx-seg button').nth(0).click();
+    await settle(page);
+    await shot(page, 'victim-fixed-rot');
+    await click(page, 6, 2);
+    await click(page, 30, 2);
+    await click(page, 6, 2);
+    await shot(page, 'victim-selected');
+    await page.locator('.sbx-selected .sim-rot-presets button').nth(1).click();
+    await page.locator('.sbx-selected .sbx-choice.letter').nth(2).click();
+    await page.locator('.sbx-selected .sbx-check input').click();
+    await settle(page);
+    await shot(page, 'victim-changed');
+    await page.locator('.sbx-selected .btn-link').click();
+    await page.locator('.sim-r4-stamp').nth(4).click();
+    await click(page, 2, 30);
+    await page.locator('.sim-r4-stamp').nth(6).click();
+    await settle(page);
+    await shot(page, 'ct-picker');
+    await page.locator('.sbx-ct-swatch').nth(4).click();
+    await page.locator('.sbx-ct-swatch').nth(1).click();
+    await click(page, 42, 2);
+    await shot(page, 'ct-placed');
+    const saved = await download(page, () => page.locator('.sbx-file button').nth(2).click());
+    keep('victims.json', saved.text);
+});
+
+test('select: a region copied, pasted, moved and cleared', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapB.json');
+    await tool(page, 'select');
+    await drag(page, [[4, 4], [28, 28]]);
+    await shot(page, 'region');
+    await page.keyboard.press('Control+c');
+    await hover(page, 66, 54);
+    await page.keyboard.press('Control+v');
+    await settle(page);
+    await page.keyboard.press('ArrowRight');
+    await drag(page, [[70, 58], [94, 58]], { alt: true });
+    await shot(page, 'region-pasted');
+    await page.keyboard.press('Delete');
+    await settle(page);
+    await shot(page, 'region-cleared');
+    const saved = await download(page, () => page.locator('.sbx-file button').nth(2).click());
+    keep('region.json', saved.text);
+});
+
+test('shape: rows and columns added and taken out', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapC.json');
+    await tool(page, 'shape');
+    await page.locator('.sbx-shape-modes .sbx-choice').nth(1).click();
+    await hover(page, 30, 24);
+    await shot(page, 'shape-addrow-hover');
+    await click(page, 30, 24);
+    await page.locator('.sbx-shape-modes .sbx-choice').nth(4).click();
+    await hover(page, 30, 30);
+    await shot(page, 'shape-delcol-hover');
+    await click(page, 30, 30);
+    await page.locator('.sbx-shape-modes .sbx-choice').nth(0).click();
+    await click(page, 6, 6);
+    await shot(page, 'shape-done');
+    const saved = await download(page, () => page.locator('.sbx-file button').nth(2).click());
+    keep('shape.json', saved.text);
+});
+
+test('checks: pointed out, fixed one by one and all; linear tiles', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapB.json');
+    await shot(page, 'mapB-open');
+    const items = page.locator('.sbx-problems li');
+    if (await items.count()) {
+        await items.nth(0).hover();
+        await settle(page);
+        await shot(page, 'problem-pointed');
+        await items.nth(0).click();
+        await settle(page);
+    }
+    await page.locator('.sbx-linear button').click();
+    await settle(page);
+    await shot(page, 'linear');
+    await page.locator('.sbx-checks-head').click();
+    await settle(page);
+    await shot(page, 'checks-folded');
+    await page.locator('.sbx-checks-head').click();
+    if (await page.locator('.sbx-fix-all').count()) await page.locator('.sbx-fix-all').click();
+    await settle(page);
+    await shot(page, 'fixed-all');
+});
+
+test('export: blocked by problems, then the world file', async ({ page }) => {
+    await boot(page);
+    await page.locator('.sbx-empty-actions .btn-primary').click();
+    await settle(page, 400);
+    await page.locator('.sbx-export').click();
+    await settle(page);
+    await shot(page, 'export-blocked');
+    await page.keyboard.press('Escape');
+    await openMapAfterDiscard(page, 'mapA.json');
+    await reseed(page, 12);
+    const world = await download(page, () => page.locator('.sbx-export').click());
+    expect(world.name).toMatch(/\.wbt$/);
+    keep('mapA.wbt', world.text);
+});
+
+async function openMapAfterDiscard(page: Page, name: string): Promise<void> {
+    await page.locator('#simBetaFile').setInputFiles(path.join(FIXTURES, name));
+    await settle(page, 400);
+    if (await page.locator('.sbx-dialog').count()) {
+        await shot(page, 'discard-dialog');
+        await page.locator('.sbx-dialog-btn.danger').click();
+        await settle(page, 400);
+    }
+}
+
+test('unsaved changes: asked before a new map; the work kept is offered again', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    await tool(page, 'line');
+    await drag(page, [[12, 36], [60, 36]]);
+    await page.locator('.sbx-file button').nth(0).click();
+    await settle(page);
+    await shot(page, 'discard-new');
+    await page.locator('.sbx-dialog-btn').nth(0).click();
+    await settle(page, 1000);
+    await page.reload();
+    await settle(page, 500);
+    await shot(page, 'restore-offered');
+    await page.locator('.sbx-restore').click();
+    await settle(page, 400);
+    await shot(page, 'restored');
+});
+
+test('wheel zoom, fit, and the hand', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    const p = await at(page, 48, 36);
+    await page.mouse.move(p[0], p[1]);
+    await page.mouse.wheel(0, -300);
+    await settle(page, 300);
+    await shot(page, 'zoomed');
+    await tool(page, 'hand');
+    await drag(page, [[48, 36], [20, 20]]);
+    await shot(page, 'panned');
+    await page.locator('.sbx-view button').nth(2).click();
+    await page.locator('.sbx-view button').nth(0).click();
+    await settle(page, 300);
+    await shot(page, 'zoom-out-fit');
+});
+
+test('a smaller window', async ({ page }) => {
+    await page.setViewportSize({ width: 1024, height: 680 });
+    await boot(page);
+    await shot(page, 'small-empty');
+    await openMap(page, 'mapB.json');
+    await tool(page, 'victim');
+    await shot(page, 'small-victim');
+});
