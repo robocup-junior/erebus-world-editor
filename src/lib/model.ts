@@ -12,18 +12,18 @@ import type { RoomPassage, WorldHooks } from './world2026';
 export type Where = { kind: 'edge'; x: number; y: number; dir: string } | { kind: 'slot'; x: number; y: number; i: number };
 // What is there: type H, S, U or CT (code: its ring code), fake, turn (degrees)
 export interface VictimInfo { dir?: string; type: string; value?: any; code: string; fake: boolean; rot?: number }
-export interface VictimOpts { code?: string; rot?: number }
+interface VictimOpts { code?: string; rot?: number }
 // Tiles by their indices, both ends in
 export interface Region { x0: number; y0: number; x1: number; y1: number }
 export interface Clip { w: number; h: number; cells: Record<string, Cell>; rooms: Record<string, number> }
 // The edge between two tiles of different rooms
-export interface Border { a: Pt; b: Pt; ra: number; rb: number; pass: RoomPassage }
+interface Border { a: Pt; b: Pt; ra: number; rb: number; pass: RoomPassage }
 // What a problem is about, to point out on the map
 export interface Show { tiles?: number[][]; points?: number[][]; segs?: string[]; arcs?: L.Arc[] }
 export interface Problem { key: string; params?: any; block?: boolean; at?: number[] | null; show?: Show }
-export interface Quarter { x: number; y: number; q: number; v?: number; rule?: { ok: boolean; reason?: string } }
+interface Quarter { x: number; y: number; q: number; v?: number; rule?: { ok: boolean; reason?: string } }
 export interface Slot { x: number; y: number; i: number }
-export interface Reach {
+interface Reach {
     res: number; gw: number; gh: number; reached: Uint8Array; miss: Uint8Array; pocketCount: number;
     pocketAt: (x: number, y: number) => boolean; victims: number[][];
 }
@@ -885,10 +885,6 @@ function removeLine(map: MapData, axis: string, t: number) {
 // ---- Problems ----------------------------------------------------------------------------------
 // { key, params, block, at }: block = the world export stops for it; at = [x, y] cm to show
 
-function tileCentre(k: string) {
-    const p = String(k).split(',').map(Number);
-    return [6 * p[0], 6 * p[1]];
-}
 
 // ---- Where the robot can go ---------------------------------------------------------------------
 // As the custom room 4 creator works it out, on a 0.5 cm grid over the map: the walls are 1 cm
@@ -1376,21 +1372,14 @@ export {
     key,
     inMap,
     isOutside,
-    isInside,
-    edgeTiles,
     tileOf,
-    ensureTile,
-    ensureTiles,
     newMap,
     normalize,
     resize,
-    outerWalls,
     isOuterEdge,
     roomOf,
-    roomMap,
     roomLookup,
     setRoom,
-    passageFor,
     borderEdges,
     syncBorderWalls,
     borderAt,
@@ -1402,8 +1391,6 @@ export {
     fixProblem,
     fixAll,
     passageSide,
-    syncArea4,
-    room4Checkpoints,
     resyncBorderWalls,
     copyRegion,
     clearRegion,
@@ -1411,18 +1398,15 @@ export {
     insertLine,
     removeLine,
     clearPassage,
-    prunePassages,
     wallPlan,
     setWalls,
     segNear,
-    isOuterSeg,
     setFloor,
     hasWall,
     edgeVictim,
     victimRule,
     setVictim,
     clearVictim,
-    quarterAt,
     arcCentre,
     arcChoice,
     setCurve,
@@ -1441,4 +1425,5 @@ export {
     problems,
     saved,
     world
+
 };

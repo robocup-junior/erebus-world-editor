@@ -59,7 +59,7 @@ export interface TourEnv {
 // A step's own state while it is shown
 export type StepState = Record<string, any>;
 // What is left or wrong, shown in place of the task
-export interface TaskState { key: string; params?: Record<string, any>; nameOf?: string }
+interface TaskState { key: string; params?: Record<string, any>; nameOf?: string }
 export interface TourStep {
     id: string;
     chapter: string;
@@ -152,10 +152,6 @@ const SAMPLE: {
 };
 
 // ---- what the steps look at ----
-function allRoom(env: TourEnv, r: number[], room: number) {
-    for (let tx = r[0]; tx <= r[2]; tx++) for (let ty = r[1]; ty <= r[3]; ty++) if (env.M.roomOf(env.map, c(tx), c(ty)) !== room) return false;
-    return true;
-}
 function reached(env: TourEnv, room: number) {
     return env.W.connectionStatus(env.map).rooms.some(function (e: any) { return e.room === room && e.reached; });
 }
@@ -753,6 +749,6 @@ export {
     place,
     pad,
     victims,
-    innerSegs,
     segsAlong
+
 };

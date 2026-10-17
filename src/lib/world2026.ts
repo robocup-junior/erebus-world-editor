@@ -13,8 +13,8 @@ export interface WorldHooks {
     createArea4Victims(humanId: number, hazardId: number): [string, string, string];
     room4CorrectSize?(): boolean;
 }
-export interface Bounds { minX: number; maxX: number; minY: number; maxY: number }
-export interface Room4Region extends Bounds { w: number; h: number; isRect: boolean }
+interface Bounds { minX: number; maxX: number; minY: number; maxY: number }
+interface Room4Region extends Bounds { w: number; h: number; isRect: boolean }
 // A wall of the map in cm: a straight piece, or a quarter circle from (cx + dx r, cy) to (cx, cy + dy r)
 export type WallShape =
     | { type: 'seg'; x1: number; y1: number; x2: number; y2: number }
@@ -174,82 +174,6 @@ function checkForExternalWalls(map: MapData, pos: Pt, walls: any[][]): boolean[]
     return externalsNeeded
 }
 
-function checkForNotch(map: MapData, pos: Pt, walls: any[][]): [boolean, boolean, number] {
-    //Variables to store if each notch is needed
-    let needLeft = false;
-    let needRight = false;
-
-    //No notches needed if there is not a floor
-    if(!walls[pos[1]][pos[0]].is_reachable) return [false, false, 0];
-
-    let rotations = [3.14159, 1.57079, 0, -1.57079];
-
-    //Surrounding tiles
-    let around = [[0, -1], [1, 0], [0, 1], [-1, 0]];
-    //Tiles to check if notches are needed
-    let notchAround = [[[ 1, -1], [-1, -1]],
-                       [[ 1,  1], [ 1, -1]],
-                       [[-1,  1], [ 1,  1]],
-                       [[-1, -1], [-1,  1]]];
-
-    //Current direction
-    let d = 0;
-    //Number of surrounding tiles
-    let surround = 0;
-
-    //Direction of present tile
-    let dire = -1;
-
-    //Iterate for surrounding tiles
-    for(const a of around){
-        //If x axis is within array
-        if(pos[0] + a[0] < map.width && pos[0] + a[0] > -1){
-            //If y axis is within array
-            if(pos[1] + a[1] < map.length && pos[1] + a[1] > -1){
-                //If there is a tile there
-                if(walls[pos[1] + a[1]][pos[0] + a[0]].is_reachable){
-                    //Add to number of surrounding tiles
-                    surround = surround + 1
-                    //Store direction
-                    dire = d
-                }
-            }
-        }
-        //Increment direction
-        d = d + 1
-    }
-
-    let rotation = 0
-    //If there was only one connected tile and there is a valid stored direction
-    if(surround == 1 && dire > -1 && dire < notchAround.length){
-        //Get the left and right tile positions to check
-        let targetLeft = [pos[0] + notchAround[dire][0][0], pos[1] + notchAround[dire][0][1]];
-        let targetRight = [pos[0] + notchAround[dire][1][0], pos[1] + notchAround[dire][1][1]];
-
-        //If the left tile is a valid target position
-        if(targetLeft[0] < map.width && targetLeft[0] > -1 && targetLeft[1] < map.length && targetLeft[1] > -1){
-            //If there is no tile there
-            if(!walls[targetLeft[1]][targetLeft[0]].is_reachable){
-                //A left notch is needed
-                needLeft = true;
-            }
-        }
-
-        //If the right tile is a valid target position
-        if(targetRight[0] < map.width && targetRight[0] > -1 && targetRight[1] < map.length && targetRight[1] > -1){
-            //If there is no tile there
-            if(!walls[targetRight[1]][targetRight[0]].is_reachable){
-                //A right notch is needed
-                needRight = true;
-            }
-        }
-
-        rotation = rotations[dire];
-    }
-
-    //Return information about needed notches
-    return [needLeft, needRight, rotation]
-}
 
 function is_truthy(v: any): boolean {
     if(v) return true;
@@ -489,7 +413,7 @@ interface VictimPart { x: number; z: number; rot: number; frontRotation: number;
 function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
     // (these were the page's globals: set and read within one export)
     let tile: any, tile_string: any, r: any, arr1: any, arr2: any, room4: any, connect14: any, connect34: any, area4X: any, area4Y: any, area4Rot: any,
-        startTrans: any, area4Width: any, area4Height: any, xOffset: any, zOffset: any, area4Humans: any, vicPosTrans: any, thisHuman: any,
+        startTrans: any, xOffset: any, zOffset: any, area4Humans: any, vicPosTrans: any, thisHuman: any,
         area4Hazards: any, hazPosTrans: any, thisHazard: any;
     // one i for the whole export (it was `var i` in the 16-slot loop, hoisted): kept as one variable
     var i: any;
@@ -725,7 +649,6 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
     }
 
 
-    let arr = [];
     //General scale for tiles - adjusts position and size of pieces and obstacles
     let tileScale = [0.4, 0.4, 0.4];
     //The vertical position of the floor
@@ -938,8 +861,6 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
     ]
     //Names of types of visual human
     let humanTypesVisual = ["harmed", "unharmed", "stable"]
-    //Names of types of hazards
-    let hazardTypes = ["F", "P", "C", "O"]
 
     //Id numbers used to give a unique but interable name to tile pieces
     let tileId     = 0
@@ -1547,12 +1468,6 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
             area4Y -= startTrans[1]
             allTiles = allTiles + area4Part({ roomNum: map.area4Room.type, x: area4X, y: area4Y, rot: area4Rot, width: width, height: height, xScale: tileScale[0], yScale: tileScale[1], zScale: tileScale[2], area4Width: room4.width, area4Height: room4.height})
 
-            area4Width = room4.width
-            area4Height = room4.height
-            if (area4Rot == DIR_EAST || area4Rot == DIR_WEST) {
-                area4Width = room4.height
-                area4Height = room4.width
-            }
             xOffset = -(width  * 0.3 * tileScale[0] / 2.0) + area4X * 0.3 * tileScale[0]
             zOffset = -(height * 0.3 * tileScale[1] / 2.0) + area4Y * 0.3 * tileScale[1]
             area4Humans = room4.humans
@@ -1612,37 +1527,6 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
 }
 
 // ---- Room 4 presets: where they can go -------------------------------------------------
-// A preset (Erebus Area4_1 / Area4_2) has a fixed size in tiles. The world export anchors it on
-// the 1<->4 passage (green) and turns it so the 3<->4 passage (red) lands on the preset's own
-// entrance (room1Tile / room3Tile). The checks below use the same geometry as the export, so
-// the editor only offers a preset that the export will really place on the room 4 area.
-const PASSAGE_14 = '#08D508';
-const PASSAGE_34 = '#e71a1a';
-
-function rotateTiles(v: number[], dir: number): Pt {   // same as vectorRotate in the world export
-    switch (dir) {
-        case 0: return [v[0], v[1]];
-        case 1: return [-v[1], v[0]];
-        case 2: return [-v[0], -v[1]];
-        case 3: return [v[1], -v[0]];
-    }
-    throw new Error('direction ' + dir);
-}
-
-// Tiles covered by a preset whose tile 0 is at `origin`, turned by `dir`. Erebus places tiles and
-// the Area4 protos by tile centre and turns Area4 about the centre of its tile 0, so tile indices
-// rotate like points (as in the export).
-function presetBounds(preset: any, origin: Pt, dir: number): Bounds {
-    const corners = [[0, 0], [preset.width - 1, 0], [0, preset.height - 1], [preset.width - 1, preset.height - 1]]
-        .map(function (c) { return rotateTiles(c, dir); });
-    const xs = corners.map(function (c) { return c[0]; });
-    const ys = corners.map(function (c) { return c[1]; });
-    return {
-        minX: origin[0] + Math.min.apply(null, xs), maxX: origin[0] + Math.max.apply(null, xs),
-        minY: origin[1] + Math.min.apply(null, ys), maxY: origin[1] + Math.max.apply(null, ys)
-    };
-}
-
 function room4Region(map: MapData): Room4Region | null {
     const tiles = (map.roomTiles && map.roomTiles[2]) || [];
     if (!tiles.length) return null;
@@ -1659,57 +1543,9 @@ function room4Region(map: MapData): Room4Region | null {
     return r;
 }
 
-function passageTiles(map: MapData, color: string): Pt[] {
-    const found: Pt[] = [];
-    Object.keys(map.cells).forEach(function (key) {
-        const cell = map.cells[key];
-        if (!cell.isTile || !cell.tile || cell.tile.color !== color) return;
-        const p = key.split(',').map(Number);
-        found.push([(p[0] - 1) / 2, (p[1] - 1) / 2]);
-    });
-    return found;
-}
-
-function samePoint(a: Pt, b: Pt): boolean {
-    return a[0] === b[0] && a[1] === b[1];
-}
-
 function inMap(map: MapData, p: Pt): boolean {
     return p[0] >= 0 && p[1] >= 0 && p[0] < map.width && p[1] < map.length;
 }
-
-// Everything the page needs about one preset: can it be chosen, does it fit, where it goes
-function presetStatus(map: MapData, preset: any, region: Room4Region | null, greens: Pt[], reds: Pt[]): any {
-    const status: any = { size: preset.width + ' × ' + preset.height, sizeOk: false, ok: false, issues: [], candidates: [], placement: null };
-    if (!region) { status.issues.push('noRegion'); return status; }
-    status.region = region.w + ' × ' + region.h;
-    if (!region.isRect) { status.issues.push('notRect'); return status; }
-    status.sizeOk = (region.w === preset.width && region.h === preset.height) || (region.w === preset.height && region.h === preset.width);
-    if (!status.sizeOk) { status.issues.push('wrongSize'); return status; }
-
-    // Orientations whose footprint is exactly the room 4 area, and the passage tiles they need
-    for (let dir = 0; dir < 4; dir++) {
-        const b = presetBounds(preset, [0, 0], dir);
-        if (b.maxX - b.minX + 1 !== region.w || b.maxY - b.minY + 1 !== region.h) continue;
-        const origin: Pt = [region.minX - b.minX, region.minY - b.minY];
-        const green: Pt = [origin[0] + rotateTiles(preset.room1Tile, dir)[0], origin[1] + rotateTiles(preset.room1Tile, dir)[1]];
-        const red: Pt = [origin[0] + rotateTiles(preset.room3Tile, dir)[0], origin[1] + rotateTiles(preset.room3Tile, dir)[1]];
-        if (!inMap(map, green) || !inMap(map, red)) continue;
-        status.candidates.push({ dir: dir, origin: origin, green: green, red: red });
-    }
-    if (!status.candidates.length) { status.issues.push('noRoomForPassages'); return status; }
-
-    if (greens.length !== 1) status.issues.push(greens.length ? 'manyGreen' : 'noGreen');
-    if (reds.length !== 1) status.issues.push(reds.length ? 'manyRed' : 'noRed');
-    if (greens.length === 1 && reds.length === 1) {
-        const match = status.candidates.find(function (c: any) { return samePoint(c.green, greens[0]) && samePoint(c.red, reds[0]); });
-        if (match) status.placement = match;
-        else status.issues.push('passageMismatch');
-    }
-    status.ok = !!status.placement;
-    return status;
-}
-
 
 // ---- Passages between rooms -----------------------------------------------------------
 // Areas are joined by one-tile passages with a coloured floor (rules 3.3.2 / 3.3.4 / 3.4). Where
@@ -2002,33 +1838,6 @@ function mapGeometry(map: MapData): MapGeometry {
         wallHalfCm: WALL_HALF_CM,
         robotRadiusCm: ROBOT_RADIUS_CM
     };
-};
-
-// For the tile dialog: the room of the tile at cell (x, y, z), the other rooms the robot can
-// get to from it, and whether it opens onto its own room. A passage colour can be chosen only
-// where the check would accept it: the tile is in one of the two rooms and the robot can pass
-// from it into both (walls, half walls, curved walls and holes taken into account).
-// Null / always allowed when the check is off or off the first floor.
-function tileRoomInfo(map: MapData, x: number, y: number, z?: number): any {
-    if (map.connCheckOff || z != 0) return null;
-    const rooms = tileRooms(map);
-    const k = (x - 1) / 2 + ',' + (y - 1) / 2;
-    if (!(k in rooms)) return null;
-    const fits = robotFits(map);
-    const borders: number[] = [];
-    let ownOpen = false;
-    tileNeighbours(k, rooms).forEach(function (n) {
-        if (!edgePassable(map, k, n, fits)) return;
-        if (rooms[n] === rooms[k]) ownOpen = true;
-        else if (borders.indexOf(rooms[n]) < 0) borders.push(rooms[n]);
-    });
-    return { room: rooms[k], borders: borders.sort(), ownOpen: ownOpen };
-};
-
-function passageAllowed(info: any, pass: RoomPassage): boolean {
-    if (!info) return true;
-    if (!info.ownOpen || (info.room !== pass.from && info.room !== pass.to)) return false;
-    return info.borders.indexOf(info.room === pass.from ? pass.to : pass.from) > -1;
 };
 
 // Generates a random 5-character CT code from {K,R,Y,G,B} where:
@@ -2717,61 +2526,23 @@ function recalculate(map: MapData): void {
 
 export {
     recalculate,
-    HUMAN_PLACE_TOP,
-    HUMAN_PLACE_RIGHT,
-    HUMAN_PLACE_BOTTOM,
-    HUMAN_PLACE_LEFT,
-    HUMAN_NONE,
-    HUMAN_H,
-    HUMAN_U,
-    HUMAN_S,
-    HUMAN_F,
-    HUMAN_P,
-    HUMAN_C,
-    HUMAN_O,
-    HUMAN_CT_FAKE,
-    PASSAGE_14,
-    PASSAGE_34,
     ROOM_PASSAGES,
-    TILE_CM,
     WALL_HALF_CM,
-    ROBOT_RADIUS_CM,
     area4Presets,
     getRandomAngle,
     checkRoomNumber,
     checkRoomNumberKey,
-    checkForExternalWalls,
-    checkForNotch,
-    is_truthy,
-    getRandomArbitrary,
-    orgRound,
-    normalize_quaternion,
-    multiply_quaternions,
-    axis_angle_to_quaternion,
-    quaternion_to_axis_angle,
     calculateWallTokenRot,
-    human_str_to_type,
-    cognitive_string_to_hazmat,
     cognitiveCodeToVictimLetter,
     createWorld,
-    presetBounds,
     room4Region,
-    passageTiles,
-    samePoint,
     inMap,
-    presetStatus,
     tileRooms,
-    tileNeighbours,
     tileAt,
     wallShapes,
-    shapeDistance,
-    robotFits,
-    edgePassable,
-    passageBetween,
     connectionStatus,
     mapGeometry,
-    tileRoomInfo,
-    passageAllowed,
     randomCognitiveCode,
     noRandom
+
 };

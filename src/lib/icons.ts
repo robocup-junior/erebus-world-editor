@@ -122,7 +122,6 @@ function typeOf(code: string | null | undefined) {
 }
 
 export {
-    RING,
     RING_LIST,
     ringSum,
     TYPE,
@@ -133,4 +132,5 @@ export {
     targetLetter,
     targetBackground,
     typeOf
+
 };

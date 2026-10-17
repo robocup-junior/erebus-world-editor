@@ -57,29 +57,16 @@ for (const name of ['mapA', 'mapB', 'mapC', 'mapD']) {
     const map = load(name);
     const want = expected(name);
     assert.deepStrictEqual(plain(W.connectionStatus(map)), want.conn);
-
-    const region = W.room4Region(map);
-    const greens = W.passageTiles(map, W.PASSAGE_14);
-    const reds = W.passageTiles(map, W.PASSAGE_34);
-    const area4: Record<number, unknown> = {};
-    map.area4.forEach((room: any) => { if (room.type >= 2) area4[room.type] = W.presetStatus(map, room, region, greens, reds); });
-    assert.deepStrictEqual(plain(area4), want.area4);
-
-    const tileInfo: Record<string, unknown> = {};
-    for (let x = 0; x < map.width; x++) {
-      for (let y = 0; y < map.length; y++) tileInfo[`${x},${y}`] = W.tileRoomInfo(map, 2 * x + 1, 2 * y + 1, 0);
-    }
-    assert.deepStrictEqual(plain(tileInfo), want.tileInfo);
     assert.deepStrictEqual(plain(W.mapGeometry(map)), want.geometry);
   });
 }
 
 test('the sample maps cover what the checks look at', () => {
-  // rooms 1-4, passages, a preset placed on its passages and a custom room 4
+  // rooms 1-4, passages, room 4 presets (mapB, mapC) and a custom room 4
   assert.deepStrictEqual(expected('mapA').conn.rooms.map((r: any) => r.room), [2, 3]);
   assert.ok(expected('mapA').conn.ok);
-  assert.ok(expected('mapB').area4[2].ok);
-  assert.ok(expected('mapC').area4[3].ok);
+  assert.strictEqual(load('mapB').area4Room.type, 2);
+  assert.strictEqual(load('mapC').area4Room.type, 3);
   assert.strictEqual(load('mapD').area4Room.type, 1);
   assert.ok(expected('mapD').geometry.entrances.length > 0);
 });

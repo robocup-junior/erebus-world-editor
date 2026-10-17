@@ -33,7 +33,7 @@ export interface Cell {
     [key: string]: any;
 }
 
-export interface Point3 {
+interface Point3 {
     x: number;
     y: number;
     z: number;

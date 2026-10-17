@@ -12,9 +12,9 @@
 import type { MapData, Pt } from './types';
 
 // A unit segment's place in the cells: a half of a tile edge, or an arm of a tile's inner walls
-export type SegPlace = { kind: 'edge'; cell: string; half: 1 | 2 } | { kind: 'inner'; cell: string; arm: number };
+type SegPlace = { kind: 'edge'; cell: string; half: 1 | 2 } | { kind: 'inner'; cell: string; arm: number };
 export interface Arc { x: number; y: number; q: number; v: number }
-export type RoomOf = (x: number, y: number) => number;
+type RoomOf = (x: number, y: number) => number;
 
 function cellKey(x: number, y: number, z?: number) {
     return x + ',' + y + ',' + (z || 0);
@@ -138,15 +138,6 @@ function axisLine(a: Pt, b: Pt): { end: Pt; segs: string[] } {
     return { end: end, segs: segs };
 }
 
-// The outline of the rectangle with corners a and b
-function rectSegs(a: Pt, b: Pt) {
-    const x0 = Math.min(a[0], b[0]), x1 = Math.max(a[0], b[0]);
-    const y0 = Math.min(a[1], b[1]), y1 = Math.max(a[1], b[1]);
-    return ([] as string[]).concat(
-        axisLine([x0, y0], [x1, y0]).segs, axisLine([x0, y1], [x1, y1]).segs,
-        axisLine([x0, y0], [x0, y1]).segs, axisLine([x1, y0], [x1, y1]).segs);
-}
-
 // ---- What each room takes --------------------------------------------------------------------
 // Room 1: walls on tile edges only, whole (12 cm). Rooms 2 and 3: any unit segment (6 cm grid).
 // Room 3: also curves. Room 4 is drawn as a picture, so no grid walls inside it; walls on its
@@ -232,7 +223,6 @@ export {
     curveInside,
     curveSide,
     slotPoint,
-    cellKey,
     segKey,
     parseSeg,
     place,
@@ -242,9 +232,8 @@ export {
     hasSeg,
     snap,
     axisLine,
-    rectSegs,
-    segTiles,
     segRule,
     arcRule,
     otherHalf
+
 };

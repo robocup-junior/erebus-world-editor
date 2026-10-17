@@ -1,5 +1,4 @@
-/* The page's base, as the CMS gives it to the editor (its style.css, modern_layout.css and
-   fonts.css): 14 px text in Outfit, Japanese in the system's Japanese fonts. */
+/* The page's base: 14 px text in Outfit, Japanese in the system's Japanese fonts. */
 @font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; }
 @font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-SemiBold.ttf') format('truetype'); font-weight: 600; font-style: normal; }
 @font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; }
@@ -17,7 +16,7 @@ html {
     overflow-y: auto;
 }
 
-/* Outfit has no Japanese glyphs: with lang="ja" (translate_config.js) Japanese text falls back to
+/* Outfit has no Japanese glyphs: with lang="ja" (set with the language) Japanese text falls back to
    Japanese fonts, not Chinese or Korean ones */
 html:lang(ja) {
     font-family: 'Outfit', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Yu Gothic UI', 'Yu Gothic', Meiryo, 'Noto Sans JP', 'Noto Sans CJK JP', sans-serif;
@@ -35,7 +34,7 @@ a {
     cursor: pointer;
 }
 
-/* Bootstrap's modals as the CMS shows them (its modern_modal.css): the room 4 creator, a modal,
+/* Modals (as Bootstrap draws them, with rounded corners): the room 4 creator, a modal,
    is drawn over these (sim_modern.css, .sbx-r4-full) */
 .modal.show, .modal.in {
     display: flex !important;

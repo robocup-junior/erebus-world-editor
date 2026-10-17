@@ -47,7 +47,7 @@ function rename(e: Event) {
 }
 
 onMounted(function () {
-    E.mount({ canvas: canvasEl.value!, stage: stageEl.value!, file: fileEl.value! });
+    E.mount({ canvas: canvasEl.value!, stage: stageEl.value! });
 });
 </script>
 

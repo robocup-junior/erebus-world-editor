@@ -25,10 +25,10 @@ import { tick, digest, apply, later, cancel, applyAsync } from './runtime';
 const TILE = 12;
 
 export interface Tool { id: string; icon: string; key: string }
-export interface StampChoice { id?: string; letter?: string; fake?: boolean; kind: string; symbol: string; color: string; name: string }
-export interface ProblemItem { text: string; block: boolean; at: number[] | null; show: Show | null; raw: Problem; fix: string }
-export interface DialogAction { label: string; value: unknown; style: string; icon?: string }
-export interface Dialog {
+interface StampChoice { id?: string; letter?: string; fake?: boolean; kind: string; symbol: string; color: string; name: string }
+interface ProblemItem { text: string; block: boolean; at: number[] | null; show: Show | null; raw: Problem; fix: string }
+interface DialogAction { label: string; value: unknown; style: string; icon?: string }
+interface Dialog {
     kind: 'error' | 'warn' | 'info';
     title: string;
     message?: string;
@@ -36,8 +36,8 @@ export interface Dialog {
     actions: DialogAction[];
     done: (v: unknown) => void;
 }
-export interface Selected { where: Where; victim: VictimInfo; rot: number; letter: string }
-export interface Notice { text: string; kind: string }
+interface Selected { where: Where; victim: VictimInfo; rot: number; letter: string }
+interface Notice { text: string; kind: string }
 // The room 4 creator while it is open: what it is given, and what it leaves (its picture)
 export interface Room4Host {
     roomTiles: string[][];
@@ -50,7 +50,7 @@ export interface Room4Host {
     room4StampTypes: typeof R4W.stampTypes;
 }
 // The guide while it is shown
-export interface Tour {
+interface Tour {
     kind: string;
     steps: TourStep[];
     i: number;
@@ -224,12 +224,11 @@ export function createEditor() {
     let view: View.MapView = null as unknown as View.MapView;
 
     // ---- the page's parts, once they are there ----
-    let canvas: HTMLCanvasElement, stageEl: HTMLElement, fileInput: HTMLInputElement;
+    let canvas: HTMLCanvasElement, stageEl: HTMLElement;
 
-    function mount(parts: { canvas: HTMLCanvasElement; stage: HTMLElement; file: HTMLInputElement }) {
+    function mount(parts: { canvas: HTMLCanvasElement; stage: HTMLElement }) {
         canvas = parts.canvas;
         stageEl = parts.stage;
-        fileInput = parts.file;
         view = View.create(canvas, {
             onView: function (v) { later(function () { S.zoom = v.zoom; }); },
             // the checks card floats at the top right of the map: fit the map beside it while it is open
@@ -507,8 +506,6 @@ export function createEditor() {
             const params = Object.assign({}, p.params);
             if (params.name) params.name = t(params.name);
             text = t('admin.simMapEditor.connCheck.' + p.key.slice(5), params);
-        } else if (p.key.indexOf('area4.') === 0) {
-            text = t('admin.simMapEditor.area4Check.' + p.key.slice(6));
         } else {
             text = t('admin.simBeta.problems.' + p.key, p.params);
         }

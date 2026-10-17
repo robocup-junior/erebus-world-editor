@@ -46,7 +46,6 @@
     font-size: 0.7rem;
 }
 
-
 /* ---- top bar ---- */
 .sbx-top {
     display: flex;
@@ -250,8 +249,7 @@
 }
 
 /* tool options */
-.sbx-tool-panel,
-.sbx-side {
+.sbx-tool-panel {
     padding: 0.8rem 0.9rem;
     overflow-y: auto;
     min-height: 0;
@@ -259,11 +257,6 @@
 
 .sbx-tool-panel {
     border-right: 1px solid var(--sbx-line);
-}
-
-.sbx-side {
-    border-left: 1px solid var(--sbx-line);
-    background: #fcfdfe;
 }
 
 .sbx-tool-head {
@@ -398,17 +391,6 @@
     cursor: pointer;
 }
 
-.sbx-rot {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-top: 0.4rem;
-}
-
-.sbx-rot input[type=number] {
-    width: 5.5rem;
-}
-
 /* select tool */
 .sbx-sel-head {
     display: flex;
@@ -509,27 +491,6 @@
 }
 
 /* ---- checks and map settings ---- */
-.sbx-section + .sbx-section {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--sbx-line);
-}
-
-.sbx-section-head {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-}
-
-.sbx-section-head .fas {
-    color: var(--sbx-muted);
-}
-
-.sbx-section-head .fas.ok { color: #16a34a; }
-.sbx-section-head .fas.warn { color: #d97706; }
-.sbx-section-head .fas.bad { color: #dc2626; }
 
 .sbx-count {
     margin-left: auto;
@@ -642,14 +603,6 @@
 /* what has just happened */
 .sbx-notice.ok { color: #15803d; }
 .sbx-notice.warn { color: #b45309; }
-/* the view keys, after the message: they give way first */
-
-
-.sbx-beta-note .sim-beta-badge {
-    margin: 0 0.35rem 0 0;
-    font-size: 0.7rem;
-}
-
 /* narrower screens: the side panel goes under the map, labels give way to icons */
 @media (max-width: 1440px) {
     .sbx-btn-label { display: none; }
@@ -991,8 +944,6 @@
     box-shadow: 0 0 0 2px #fff;
     animation: sbx-tour-pulse 1.8s ease-out infinite;
 }
-/* without its pulse while it goes (ngAnimate would wait for the endless animation to end) */
-.sbx-tour-dot.ng-leave { animation: none; }
 @keyframes sbx-tour-pulse {
     0% { box-shadow: 0 0 0 2px #fff, 0 0 0 2px rgba(245, 158, 11, 0.6); }
     70% { box-shadow: 0 0 0 2px #fff, 0 0 0 9px rgba(245, 158, 11, 0); }
@@ -1231,7 +1182,6 @@
 
 /* the sample map on the lesson's first and last cards */
 .sbx-tour-plan { display: block; width: 100%; height: 170px; margin: 0.1rem 0 0.7rem; }
-
 
 /* which way through the guide */
 .sbx-pick-back {

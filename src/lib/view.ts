@@ -11,7 +11,7 @@ import * as R4W from './room4World2026';
 interface PictureToken { fx: number; fy: number; type: number; ax: number | null; ay: number | null; thick: number }
 
 // What the view asks of the editor: the tool gets the pointer in cm
-export interface ViewTool {
+interface ViewTool {
     pans?(): boolean;
     down?(p: { x: number; y: number }, e: PointerEvent): void;
     move?(p: { x: number; y: number }, dragging: boolean, e: PointerEvent): void;
@@ -19,7 +19,7 @@ export interface ViewTool {
     cancel?(): void;
     leave?(): void;
 }
-export interface ViewOptions {
+interface ViewOptions {
     onView?(v: { zoom: number }): void;
     fitInset?(): number;
     underlay?(ctx: CanvasRenderingContext2D, v: { scale: number }): void;
@@ -531,4 +531,5 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
 export {
     create,
     tileRooms
+
 };

@@ -16,9 +16,9 @@ import * as M from './model';
 import * as W from './world2026';
 import * as L from './lattice';
 
-export const MULTIPLIER: Record<number, number> = { 1: 1, 2: 1.25, 3: 1.5, 4: 2 };
-export const EXIT_BONUS = 0.1;
-export const MAP_BONUS_MAX = 1 * 1.2 + 1;
+const MULTIPLIER: Record<number, number> = { 1: 1, 2: 1.25, 3: 1.5, 4: 2 };
+const EXIT_BONUS = 0.1;
+const MAP_BONUS_MAX = 1 * 1.2 + 1;
 
 export interface AreaScore {
     room: number;

@@ -1,7 +1,7 @@
 // Key names as the computer has them: on a Mac, Ctrl+ is shown as ⌘ (the editors take either) and
 // Alt as Option; elsewhere a "Ctrl (⌘)" loses its "(⌘)". text(s) turns a text over.
 const nav: { platform?: string; userAgent?: string } = typeof navigator !== 'undefined' ? navigator : {};
-export const isMac = /Mac|iPhone|iPad|iPod/.test(nav.platform || '') || /Mac OS X/.test(nav.userAgent || '');
+const isMac = /Mac|iPhone|iPad|iPod/.test(nav.platform || '') || /Mac OS X/.test(nav.userAgent || '');
 
 export function text(s: string, mac?: boolean): string;
 export function text(s: string | null | undefined, mac?: boolean): string | null | undefined;

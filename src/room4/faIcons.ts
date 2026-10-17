@@ -11,7 +11,7 @@ const SUGGESTED = ['star', 'heart', 'circle', 'square', 'play', 'plus', 'xmark',
     'cube', 'shapes', 'shield-halved', 'anchor', 'umbrella', 'cloud', 'snowflake', 'sun', 'moon', 'mountain', 'droplet',
     'water', 'skull', 'user', 'child', 'hand', 'flag', 'bell', 'key', 'lock', 'gem', 'crown', 'chess-knight'];
 
-export function parseIcons(yml: string): Icon[] {
+function parseIcons(yml: string): Icon[] {
     const list: Icon[] = [];
     let cur: Icon | null = null, mode = '';
     yml.split('\n').forEach(function (line) {
@@ -28,7 +28,7 @@ export function parseIcons(yml: string): Icon[] {
     return list.filter(function (i) { return i.styles.some(function (st) { return st !== 'brands'; }); });
 }
 
-export function parseCategories(yml: string): Category[] {
+function parseCategories(yml: string): Category[] {
     const cats: Category[] = [];
     let cur: Category | null = null, inIcons = false;
     yml.split('\n').forEach(function (line) {

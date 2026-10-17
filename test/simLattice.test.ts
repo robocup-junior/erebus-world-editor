@@ -85,10 +85,9 @@ test('points snap to the 6 cm or 12 cm grid inside the map', () => {
   assert.deepStrictEqual(L.snap(-5, 99, 1, 2, 2), [0, 4]);
 });
 
-test('lines run across or down the map, rectangles give their outline', () => {
+test('lines run across or down the map', () => {
   assert.deepStrictEqual(L.axisLine([0, 0], [3, 1]), { end: [3, 0], segs: ['h,0,0', 'h,1,0', 'h,2,0'] });
   assert.deepStrictEqual(L.axisLine([2, 4], [3, 1]), { end: [2, 1], segs: ['v,2,1', 'v,2,2', 'v,2,3'] });
-  assert.deepStrictEqual(L.rectSegs([0, 0], [1, 1]).sort(), ['h,0,0', 'h,0,1', 'v,0,0', 'v,1,0']);
 });
 
 test('each room takes the walls its rules allow', () => {
