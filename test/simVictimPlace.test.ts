@@ -13,7 +13,7 @@ const slot = (x: number, y: number, i: number): Where => ({ kind: 'slot', x, y, 
 
 // a room 1 map (only its outer walls), start at the bottom left
 function room1(w = 5, l = 3): MapData {
-  const map = M.newMap(w, l);
+  const map = M.newMap(w, l, 2026);
   map.startTile = { x: 1, y: 2 * l - 1, z: 0 };
   return map;
 }
@@ -28,7 +28,7 @@ function leftWall(map: MapData, tx: number, ty: number) {
 }
 // a map all room 2, start at the bottom left
 function room2(w = 3, l = 3): MapData {
-  const map = M.newMap(w, l);
+  const map = M.newMap(w, l, 2026);
   let borders = M.borderEdges(map);
   for (let x = 1; x < 2 * w; x += 2) for (let y = 1; y < 2 * l; y += 2) M.setRoom(map, x, y, 2);
   borders = M.syncBorderWalls(map, borders);

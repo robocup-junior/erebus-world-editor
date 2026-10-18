@@ -169,12 +169,13 @@ function outerWalls(map: MapData) {
     syncBorderWalls(map, new Set());
 }
 
-function newMap(width: number, length: number): MapData {
+// A new map of the rules of `year` (the latest year when not given)
+function newMap(width: number, length: number, year?: number): MapData {
     const map: MapData = {
         name: 'New world', length: length, height: 1, width: width, finished: true,
         startTile: { x: 0, y: 0, z: 0 }, cells: {}, roomTiles: [[], [], []], time: 480,
         area4Room: W.area4Presets()[0], room4CanvasSave: null, room4VicTypes: [], connCheckOff: false,
-        rules: LATEST_YEAR
+        rules: year || LATEST_YEAR
     };
     ensureTiles(map);
     outerWalls(map);

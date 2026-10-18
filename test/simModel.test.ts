@@ -22,7 +22,7 @@ function paint(map: MapData, room: number, tiles: number[][], borders: Set<strin
 }
 
 test('a new map has its tiles and outer walls, and no start yet', () => {
-  const map = M.newMap(3, 2);
+  const map = M.newMap(3, 2, 2026);
   assert.ok(wall(map, 1, 0) && wall(map, 5, 4) && wall(map, 0, 3) && wall(map, 6, 1));
   assert.ok(!wall(map, 2, 1));
   assert.ok(map.cells['5,3,0'].tile);
@@ -30,7 +30,7 @@ test('a new map has its tiles and outer walls, and no start yet', () => {
 });
 
 test('resizing keeps what fits and moves the outer walls', () => {
-  const map = M.newMap(3, 3);
+  const map = M.newMap(3, 3, 2026);
   M.setFloor(map, 5, 5, 'start');
   M.setWalls(map, ['v,2,1', 'v,2,0'], true);
   M.resize(map, 2, 3);
@@ -44,7 +44,7 @@ test('resizing keeps what fits and moves the outer walls', () => {
 });
 
 test('rooms get walls on their borders, and lose them when the border goes', () => {
-  const map = M.newMap(4, 2);
+  const map = M.newMap(4, 2, 2026);
   let borders = new Set<string>();
   borders = paint(map, 2, [[2, 0], [3, 0], [2, 1], [3, 1]], borders);
   assert.ok(wall(map, 4, 1) && wall(map, 4, 3), 'room 1 | room 2 border walled');
@@ -55,7 +55,7 @@ test('rooms get walls on their borders, and lose them when the border goes', () 
 });
 
 test('a passage opens the border wall and the rooms connect', () => {
-  const map = M.newMap(4, 2);
+  const map = M.newMap(4, 2, 2026);
   M.setFloor(map, 1, 1, 'start');
   let borders = paint(map, 2, [[2, 0], [3, 0], [2, 1], [3, 1]], new Set());
   assert.ok(M.problems(map).some((p) => p.key === 'conn.notConnected'));
@@ -72,7 +72,7 @@ test('a passage opens the border wall and the rooms connect', () => {
 });
 
 test('room 1 takes whole tile edges, rooms 2 and 3 the 6 cm grid, room 4 nothing inside', () => {
-  const map = M.newMap(4, 1);
+  const map = M.newMap(4, 1, 2026);
   paint(map, 2, [[1, 0]], new Set());
   paint(map, 4, [[2, 0], [3, 0]], new Set());
   // room 1 tile 0: an inner segment is refused; its edge to room 2 goes in whole
@@ -83,7 +83,7 @@ test('room 1 takes whole tile edges, rooms 2 and 3 the 6 cm grid, room 4 nothing
 });
 
 test('walls go in and out, but the outer walls stay', () => {
-  const map = M.newMap(2, 2);
+  const map = M.newMap(2, 2, 2026);
   assert.strictEqual(M.setWalls(map, ['v,2,0', 'v,2,1'], true), 2);
   assert.ok(wall(map, 2, 1));
   assert.strictEqual(M.segNear(map, 12.5, 4, 1.5), 'v,2,0');
@@ -94,7 +94,7 @@ test('walls go in and out, but the outer walls stay', () => {
 });
 
 test('a tile leaving rooms 2 / 3 loses inner walls, half walls and curves', () => {
-  const map = M.newMap(2, 1);
+  const map = M.newMap(2, 1, 2026);
   paint(map, 3, [[0, 0], [1, 0]], new Set());
   M.setWalls(map, ['h,1,1', 'v,2,1'], true);
   L.setArc(map, 1, 1, 0, 1);
@@ -106,7 +106,7 @@ test('a tile leaving rooms 2 / 3 loses inner walls, half walls and curves', () =
 });
 
 test('floors and the start tile', () => {
-  const map = M.newMap(2, 1);
+  const map = M.newMap(2, 1, 2026);
   M.setFloor(map, 1, 1, 'swamp');
   M.setFloor(map, 1, 1, 'black');
   assert.deepStrictEqual([map.cells['1,1,0'].tile.swamp, map.cells['1,1,0'].tile.black], [false, true]);
@@ -117,7 +117,7 @@ test('floors and the start tile', () => {
 });
 
 test('victims go on walls, one per tile; a victim whose wall goes is reported', () => {
-  const map = M.newMap(2, 2);
+  const map = M.newMap(2, 2, 2026);
   M.setFloor(map, 1, 1, 'start');
   assert.deepStrictEqual(M.victimRule(map, 1, 1, 'right'), { ok: false, reason: 'noWall' });
   assert.ok(M.setVictim(map, 1, 1, 'top', 'H', false));
@@ -133,7 +133,7 @@ test('victims go on walls, one per tile; a victim whose wall goes is reported', 
 });
 
 test('a room 4 preset (from a classic map) borders get no walls, and the new editor asks to switch it', () => {
-  const map = M.newMap(9, 7);
+  const map = M.newMap(9, 7, 2026);
   M.setFloor(map, 1, 13, 'start');
   map.area4Room = W.area4Presets()[2];
   const tiles = [];
@@ -144,7 +144,7 @@ test('a room 4 preset (from a classic map) borders get no walls, and the new edi
 });
 
 test('room 4 is custom as soon as it has tiles, and none without', () => {
-  const map = M.newMap(3, 1);
+  const map = M.newMap(3, 1, 2026);
   let borders = paint(map, 4, [[1, 0]], new Set());
   assert.strictEqual(map.area4Room.type, 1);
   assert.ok(M.problems(map).some((p) => p.key === 'customRoom4NoPicture'));
@@ -154,7 +154,7 @@ test('room 4 is custom as soon as it has tiles, and none without', () => {
 });
 
 test('the saved map and the world export work as in the classic editor', () => {
-  const map = M.newMap(3, 2);
+  const map = M.newMap(3, 2, 2026);
   M.setFloor(map, 1, 1, 'start');
   M.setWalls(map, ['v,2,0', 'v,2,1'], true);
   M.setVictim(map, 1, 1, 'right', 'H', false);
@@ -170,7 +170,7 @@ test('the saved map and the world export work as in the classic editor', () => {
 });
 
 test('curves go into room 3 quarters only, nearest to the pointer, and the eraser finds them', () => {
-  const map = M.newMap(2, 1);
+  const map = M.newMap(2, 1, 2026);
   paint(map, 3, [[0, 0]], new Set());
   paint(map, 2, [[1, 0]], new Set());
   // a point near the NE-bulging arc of the NW quarter of tile 0 (centre at its SW corner (0, 6))
@@ -186,7 +186,7 @@ test('curves go into room 3 quarters only, nearest to the pointer, and the erase
 });
 
 test('rooms 2 and 3 take victims on their 6 cm walls (16 places per tile)', () => {
-  const map = M.newMap(2, 1);
+  const map = M.newMap(2, 1, 2026);
   M.setFloor(map, 1, 1, 'start');
   paint(map, 2, [[1, 0]], new Set());
   // tile (3, 1): its NE quarter's top is on the outer wall, its NW quarter's right side on nothing yet
@@ -212,7 +212,7 @@ test('rooms 2 and 3 take victims on their 6 cm walls (16 places per tile)', () =
 });
 
 test('a custom room 4 needs its picture, and a checkpoint behind each passage', () => {
-  const map = M.newMap(4, 3);
+  const map = M.newMap(4, 3, 2026);
   M.setFloor(map, 1, 5, 'start');
   let borders = paint(map, 4, [[2, 0], [3, 0], [2, 1], [3, 1]], new Set());
   map.area4Room = W.area4Presets()[1];
@@ -271,7 +271,7 @@ for (const name of ['mapA', 'mapB', 'mapC']) {
 }
 
 test('cognitive targets keep their ring code (and the letter of a valid one), with their turn', () => {
-  const map = M.newMap(2, 1);
+  const map = M.newMap(2, 1, 2026);
   M.setFloor(map, 1, 1, 'start');
   assert.ok(M.setVictim(map, 1, 1, 'top', 'CT', false, { code: 'GYYKG', rot: 90 }));   // 1 + 0 + 0 - 2 + 1 = 0: F
   const t = map.cells['1,1,0'].tile;
@@ -289,7 +289,7 @@ test('cognitive targets keep their ring code (and the letter of a valid one), wi
 });
 
 test('a placed victim can be looked at, changed and removed', () => {
-  const map = M.newMap(2, 1);
+  const map = M.newMap(2, 1, 2026);
   M.setVictim(map, 1, 1, 'top', 'H', false, { rot: 45 });
   const where: M.Where = { kind: 'edge', x: 1, y: 1, dir: 'top' };
   assert.deepStrictEqual(M.victimAt(map, where), { dir: 'top', type: 'H', code: '', fake: false, rot: 45 });
@@ -306,7 +306,7 @@ test('a placed victim can be looked at, changed and removed', () => {
 });
 
 test('tiles outside the map shape get outer walls round them and take nothing', () => {
-  const map = M.newMap(3, 2);
+  const map = M.newMap(3, 2, 2026);
   let borders = M.borderEdges(map);
   borders = paint(map, 0, [[2, 0]], borders);                 // top right corner out
   assert.ok(M.isOutside(map, 5, 1));
@@ -331,7 +331,7 @@ test('tiles outside the map shape get outer walls round them and take nothing', 
 });
 
 test('a passage goes on the side asked for, moves, closes, and goes by itself when it no longer fits', () => {
-  const map = M.newMap(3, 1);
+  const map = M.newMap(3, 1, 2026);
   let borders = paint(map, 2, [[1, 0], [2, 0]], new Set());
   assert.strictEqual(M.togglePassage(map, 2, 1, [3, 1]), 'open');      // on the room 2 side
   borders = M.syncBorderWalls(map, borders);
@@ -354,7 +354,7 @@ test('a passage goes on the side asked for, moves, closes, and goes by itself wh
 });
 
 test('a passage into room 4 (preset or picture) stays on the other side', () => {
-  const map = M.newMap(3, 1);
+  const map = M.newMap(3, 1, 2026);
   map.area4Room = W.area4Presets()[2];
   paint(map, 4, [[1, 0], [2, 0]], new Set());
   M.togglePassage(map, 2, 1, [3, 1]);
@@ -367,7 +367,7 @@ test('a passage into room 4 (preset or picture) stays on the other side', () => 
 });
 
 test('a region is copied with its tiles, rooms, victims and walls, and pasted elsewhere', () => {
-  const map = M.newMap(5, 3);
+  const map = M.newMap(5, 3, 2026);
   let borders = M.borderEdges(map);
   borders = paint(map, 2, [[0, 0], [1, 0]], borders);
   M.setWalls(map, ['h,1,1'], true);                               // inner wall in tile (1, 1)
@@ -391,7 +391,7 @@ test('a region is copied with its tiles, rooms, victims and walls, and pasted el
 });
 
 test('rows and columns go in and out between the others, with everything after them moving along', () => {
-  const map = M.newMap(3, 2);
+  const map = M.newMap(3, 2, 2026);
   let borders = M.borderEdges(map);
   borders = paint(map, 2, [[1, 0], [2, 0]], borders);
   M.setFloor(map, 5, 3, 'start');
@@ -423,7 +423,7 @@ test('rows and columns go in and out between the others, with everything after t
 });
 
 test('each problem says everything it is about, to point out on the map', () => {
-  const map = M.newMap(4, 2);
+  const map = M.newMap(4, 2, 2026);
   M.setFloor(map, 1, 3, 'start');
   paint(map, 2, [[2, 0], [3, 0]], new Set());                  // room 2, not reached
   M.setWalls(map, ['v,2,2', 'v,2,3'], true);
@@ -436,7 +436,7 @@ test('each problem says everything it is about, to point out on the map', () => 
 });
 
 test('the problems that can be fixed are fixed: start, passages, gaps, victims, walls, room 4 checkpoints', () => {
-  const map = M.newMap(6, 3);
+  const map = M.newMap(6, 3, 2026);
   let borders = M.borderEdges(map);
   borders = paint(map, 2, [[2, 0], [3, 0], [2, 1], [3, 1]], borders);        // room 2, closed off
   borders = paint(map, 3, [[4, 0], [5, 0], [4, 1], [5, 1]], borders);        // room 3, behind room 2
@@ -454,7 +454,7 @@ test('the problems that can be fixed are fixed: start, passages, gaps, victims, 
 });
 
 test('a gap between rooms gets its border wall back, and a custom room 4 picture cannot be made', () => {
-  const map = M.newMap(4, 1);
+  const map = M.newMap(4, 1, 2026);
   M.setFloor(map, 1, 1, 'start');
   let borders = paint(map, 2, [[2, 0], [3, 0]], new Set());
   M.togglePassage(map, 4, 1);
@@ -473,7 +473,7 @@ test('a gap between rooms gets its border wall back, and a custom room 4 picture
 });
 
 test('no victims in a passage between areas (rule 3.7.2): refused there, pointed out when a passage comes', () => {
-  const map = M.newMap(4, 2);
+  const map = M.newMap(4, 2, 2026);
   M.setFloor(map, 1, 1, 'start');
   let borders = paint(map, 2, [[2, 0], [3, 0], [2, 1], [3, 1]], new Set());
   assert.ok(M.setVictim(map, 3, 1, 'top', 'H', false), 'not a passage yet');
@@ -489,7 +489,7 @@ test('no victims in a passage between areas (rule 3.7.2): refused there, pointed
 });
 
 test('a world with a value that is not a number is not given out (Webots would open it empty)', () => {
-  const map = M.newMap(2, 1);
+  const map = M.newMap(2, 1, 2026);
   map.startTile = { x: 1, y: 1, z: 0 };
   assert.ok(M.setVictim(map, 3, 1, 'top', 'H', false));
   (map.cells['3,1,0'].tile as any).single_victim_rotation = 'x';    // a turn that is not a number

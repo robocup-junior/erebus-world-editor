@@ -3,6 +3,7 @@
 // from, with nothing left to look at.
 import { test } from 'vitest';
 import assert from 'node:assert';
+import { LESSON_YEAR } from '../src/rules/registry';
 import * as M from '../src/lib/model';
 import * as L from '../src/lib/lattice';
 import * as W from '../src/lib/field';
@@ -20,7 +21,7 @@ function makeEnv() {
   };
   env.sync = () => { borders = M.resyncBorderWalls(env.map, borders); };
   env.act = {
-    newMap() { env.map = M.normalize(M.newMap(8, 6)); borders = M.borderEdges(env.map); },
+    newMap() { env.map = M.normalize(M.newMap(8, 6, LESSON_YEAR)); borders = M.borderEdges(env.map); },
     resize(w, l) { M.resize(env.map, w, l); borders = M.syncBorderWalls(env.map, borders); },
     openRoom4() {
       if (env.map.area4Room.type !== 1) { env.map.area4Room = W.area4Presets()[1]; env.sync(); }

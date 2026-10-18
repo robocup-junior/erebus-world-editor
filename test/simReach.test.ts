@@ -7,7 +7,7 @@ import * as L from '../src/lib/lattice';
 
 // a 3 x 3 map, all room 2, start at the bottom left tile
 function room2() {
-  const map = M.newMap(3, 3);
+  const map = M.newMap(3, 3, 2026);
   for (let x = 1; x <= 5; x += 2) for (let y = 1; y <= 5; y += 2) M.setRoom(map, x, y, 2);
   map.startTile = { x: 1, y: 5, z: 0 };
   return map;
@@ -19,7 +19,7 @@ function channel(map: MapData, a: number, b: number) {
 }
 
 test('without a start tile nothing is worked out', () => {
-  const map = M.newMap(2, 2);
+  const map = M.newMap(2, 2, 2026);
   assert.strictEqual(M.robotReach(map), null);
 });
 
@@ -62,7 +62,7 @@ test('a room not got into at all (no passage yet) is left out', () => {
 });
 
 test('the corner a curve closes off is under 5 cm2: left out as a speck, as in the room 4 creator', () => {
-  const one = M.newMap(2, 2);
+  const one = M.newMap(2, 2, 2026);
   for (let x = 1; x <= 3; x += 2) for (let y = 1; y <= 3; y += 2) M.setRoom(one, x, y, 3);
   one.startTile = { x: 1, y: 3, z: 0 };
   L.setArc(one, 3, 1, 1, 1);   // NE quarter of the top right tile, bulging into the map's NE corner
@@ -70,7 +70,7 @@ test('the corner a curve closes off is under 5 cm2: left out as a speck, as in t
 });
 
 test('a free-standing curve leaves no specks behind it', () => {
-  const one = M.newMap(3, 3);
+  const one = M.newMap(3, 3, 2026);
   for (let x = 1; x <= 5; x += 2) for (let y = 1; y <= 5; y += 2) M.setRoom(one, x, y, 3);
   one.startTile = { x: 1, y: 5, z: 0 };
   L.setArc(one, 3, 3, 0, 4);
@@ -97,7 +97,7 @@ test('gotTo: whether a victim would be got to there, before it is put (the victi
 });
 
 test('a hole is no floor - the whole tile, as in Erebus: the robot\'s centre keeps off it, and the victims behind it are out of reach', () => {
-  const map = M.newMap(3, 1);
+  const map = M.newMap(3, 1, 2026);
   map.startTile = { x: 1, y: 1, z: 0 };
   assert.ok(M.setVictim(map, 5, 1, 'right', 'H', false));
   assert.deepStrictEqual(M.robotReach(map)!.victims, []);

@@ -30,7 +30,7 @@ test('nothing to work out without a start tile', () => {
 // A 3 x 1 map: the start in room 1, a passage tile, room 4 on the right (one tile, its picture
 // 120 px = 12 cm across)
 function room4Map() {
-  const map = M.newMap(3, 1);
+  const map = M.newMap(3, 1, 2026);
   let borders = M.borderEdges(map);
   M.setRoom(map, 5, 1, 4);
   borders = M.syncBorderWalls(map, borders);
