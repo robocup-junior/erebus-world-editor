@@ -3,6 +3,7 @@
 // SimRoom4World2026.create(map) gives { createArea4Solid, createArea4Victims, room4CorrectSize } for a
 // map as the editor holds it, with room4Img (an Image of room4CanvasSave, loaded) and canvasWidth /
 // canvasHeight; they go to SimWorld2026.createWorld as its hooks.
+import earcut from 'earcut';
 import * as W from './world2026';
 import * as R4 from './room4';
 import type { MapData, Room4Token } from './types';
@@ -10,6 +11,60 @@ import type { MapData, Room4Token } from './types';
 const calculateWallTokenRot = W.calculateWallTokenRot;
 const getRandomAngle = W.getRandomAngle;
 const randomCognitiveCode = W.randomCognitiveCode;
+
+// A wall of the room 4 picture as an IndexedFaceSet: a face up each edge of its outline and of each
+// hole in it (outline points [x, z] metres, each loop as OpenCV traces it, the wall always on the same
+// side), and the top - the outline less its holes - in triangles. point: bottom and top of each
+// point in turn (x 0 z, x height z); coordIndex: the faces, each ended by -1.
+function wallMesh(outer: number[][], holes: number[][][], height: number): { point: string; coordIndex: string } {
+    const loops = [outer].concat(holes.filter(function (h) { return h.length >= 3; }));
+    const points: string[] = [], faces: number[][] = [], flat: number[] = [], holeStarts: number[] = [];
+    let base = 0;
+    loops.forEach(function (loop, k) {
+        if (k) holeStarts.push(base);
+        loop.forEach(function (p, j) {
+            const x = p[0].toFixed(5), z = p[1].toFixed(5);
+            points.push(x + ' 0 ' + z, x + ' ' + height + ' ' + z);
+            flat.push(p[0], p[1]);
+            const a = base + j, b = base + (j + 1) % loop.length;
+            faces.push([2 * a, 2 * b, 2 * b + 1, 2 * a + 1]);
+        });
+        base += loop.length;
+    });
+    // the top, turned as the outline runs (as it was when it was one face)
+    const area = function (p: number[][]) {
+        let s = 0;
+        for (let j = 0; j < p.length; j++) { const q = p[(j + 1) % p.length]; s += p[j][0] * q[1] - q[0] * p[j][1]; }
+        return s;
+    };
+    const turn = Math.sign(area(outer));
+    const tris = outer.length >= 3 ? earcut(flat, holeStarts) : [];
+    for (let t = 0; t < tris.length; t += 3) {
+        const tri = [tris[t], tris[t + 1], tris[t + 2]];
+        if (Math.sign(area(tri.map(function (v) { return [flat[2 * v], flat[2 * v + 1]]; }))) !== turn) tri.reverse();
+        faces.push(tri.map(function (v) { return 2 * v + 1; }));
+    }
+    // earcut finds no triangles in a sliver: the outline as one face, as before
+    if (!tris.length && outer.length >= 3) faces.push(outer.map(function (p, j) { return 2 * j + 1; }));
+    return {
+        point: points.join(',') + ',',
+        coordIndex: faces.map(function (f) { return f.join(',') + ',-1'; }).join(',') + ','
+    };
+}
+
+// The turn (about y) of a room 4 victim on its wall, from the outline points either side of where it
+// is (prev, next) - or, with no way along the wall there (a speck of wall, an outline walked all
+// round: prev and next the same point), facing from the wall (wall) to the stamp's centre (centre):
+// turn 0 faces -z, as on a bottom wall. Without the second, the turn was 0 / 0, NaN, and Webots read
+// none of the world. Points are [row, col] picture pixels.
+function tokenTurn(prev: number[], next: number[], centre: number[], wall: number[]): number {
+    if (prev[0] === next[0] && prev[1] === next[1])
+        return Math.atan2(-(centre[1] - wall[1]), -(centre[0] - wall[0]));
+    let angle = Math.atan(-1 * (prev[0] - next[0]) / (prev[1] - next[1])); // times -1 because axis different
+    if (prev[1] - next[1] < 0)
+        angle = 3.14 + angle;
+    return angle;
+}
 
 function create(map: MapData) {
     function wallShapes() {
@@ -112,13 +167,15 @@ function createArea4Solid() {
     let blackHigh = new cv.Mat(src.rows, src.cols, src.type(), [50, 50, 50, 255]);
     cv.inRange(src, blackLow, blackHigh, im);
 
+    // each wall's outline and the outlines of the holes in it (a shape drawn round floor that stays
+    // floor: an outline circle, a frame)
     let contours = new cv.MatVector();
     let hierarchy = new cv.Mat();
     cv.findContours(
         im,
         contours,
         hierarchy,
-        cv.RETR_EXTERNAL,
+        cv.RETR_CCOMP,
         cv.CHAIN_APPROX_SIMPLE
     );
 
@@ -148,52 +205,38 @@ function createArea4Solid() {
                 children [\n
             `;
 
+    // every outline in metres (x, z), without points closer than 2 mm; fullContPoints keeps the
+    // same points as [row, col] pixels, for the victims to find their wall
     fullContPoints = [];
+    const loops: number[][][] = [];
     for (let i = 0; i < contours.size(); i++) {
-        outputStr +=
-            "Solid {\n children [\n DEF CURVED" + String(i) + " Shape { \nappearance Appearance { \nmaterial Material { \ndiffuseColor 0.2 0.47 0.52 \n} \n}\ngeometry IndexedFaceSet { \ncoord Coordinate { \npoint [\n";
-
-        let contour = contours.get(i);
-        let points = contour.data32S;
-        let contPoints = [];
+        let points = contours.get(i).data32S;
+        let contPoints: number[][] = [];
         fullContPoints.push([]);
-
         for (let j = 0; j < points.length; j += 2) {
             let row = points[j + 1];
             let col = points[j];
-            let x = ((col / imgWidth) * room4Width).toFixed(roundDigits);
-            let y = ((row / imgHeight) * room4Height).toFixed(roundDigits);
-
+            let x = Number(((col / imgWidth) * room4Width).toFixed(roundDigits));
+            let y = Number(((row / imgHeight) * room4Height).toFixed(roundDigits));
             if (!has(contPoints, x, y)) {
-                outputStr += x.toString() + " " + "0" + " " + y.toString() + ",";
-                outputStr +=
-                    x.toString() + " " + wallHeight + " " + y.toString() + ",";
                 contPoints.push([x, y]);
                 fullContPoints[i].push([row, col]);
             }
         }
-
-        outputStr += "\n]\n}\ncoordIndex [\n";
-        for (let j = 0; j < contPoints.length - 1; j++) {
-            outputStr +=
-            (j * 2).toString() + "," +
-            ((j + 1) * 2).toString() + "," +
-            ((j + 1) * 2 + 1).toString() + "," +
-            (j * 2 + 1).toString() + "," +
-            "-1,";
-        }
-        let tmp = contPoints.length - 1;
+        loops.push(contPoints);
+    }
+    // a wall for each outer outline (hierarchy: next, previous, first child, parent), with its holes
+    const tree = hierarchy.data32S;
+    for (let i = 0; i < contours.size(); i++) {
+        if (tree[4 * i + 3] >= 0) continue;
+        const holes: number[][][] = [];
+        for (let c = tree[4 * i + 2]; c >= 0; c = tree[4 * c]) holes.push(loops[c]);
+        const mesh = wallMesh(loops[i], holes, wallHeight);
         outputStr +=
-            (tmp * 2).toString() + "," +
-            "0" + "," +
-            "1" + "," +
-            (tmp * 2 + 1).toString() + "," +
-            "-1,";
-        for (let j = 0; j < contPoints.length; j++)
-            outputStr += (j * 2 + 1).toString() + ",";
-        outputStr += "-1,\n]\n}\n}\n]\n" +
-                        "boundingObject USE CURVED" + String(i) + 
-                        "\nname \"curved" + String(i) + "\"\n}";
+            "Solid {\n children [\n DEF CURVED" + String(i) + " Shape { \nappearance Appearance { \nmaterial Material { \ndiffuseColor 0.2 0.47 0.52 \n} \n}\ngeometry IndexedFaceSet { \ncoord Coordinate { \npoint [\n" +
+            mesh.point + "\n]\n}\ncoordIndex [\n" + mesh.coordIndex + "\n]\n}\n}\n]\n" +
+            "boundingObject USE CURVED" + String(i) +
+            "\nname \"curved" + String(i) + "\"\n}";
     }
     outputStr += '\n]\n}\n';
 
@@ -358,18 +401,11 @@ function createArea4Victims(startHumanId: number, startHazardId: number): [strin
         let midPoint = [(fullContPoints[ppInd[0]][ppInd[1]][0] + fullContPoints[npInd[0]][npInd[1]][0]) / 2,
                         (fullContPoints[ppInd[0]][ppInd[1]][1] + fullContPoints[npInd[0]][npInd[1]][1]) / 2]
         if (dist(midPoint, point) > dist(closePoint, point)) { // convex wall
-            if (closeIndex[1] == 0) {
-                nextPoint = fullContPoints[closeIndex[0]][closeIndex[1]+1];
-                prevPoint = fullContPoints[closeIndex[0]][fullContPoints[closeIndex[0]].length-1];
-            }
-            else if (closeIndex[1] == fullContPoints[closeIndex[0]].length-1) {
-                nextPoint = fullContPoints[closeIndex[0]][0];
-                prevPoint = fullContPoints[closeIndex[0]][closeIndex[1]-1];
-            }
-            else {
-                nextPoint = fullContPoints[closeIndex[0]][closeIndex[1]+1];
-                prevPoint = fullContPoints[closeIndex[0]][closeIndex[1]-1];
-            }
+            // the points either side of the nearest one, round the outline (one of a point or two
+            // gives the same point both ways: see below)
+            const loop = fullContPoints[closeIndex[0]], n = loop.length;
+            nextPoint = loop[(closeIndex[1] + 1) % n];
+            prevPoint = loop[(closeIndex[1] - 1 + n) % n];
         }
         else { // concave wall
             nextPoint = fullContPoints[npInd[0]][npInd[1]] // (y, x), i.e. (row, col)
@@ -377,9 +413,7 @@ function createArea4Victims(startHumanId: number, startHazardId: number): [strin
             closePoint = midPoint;
         }
 
-        angle = Math.atan(-1*(prevPoint[0] - nextPoint[0]) / (prevPoint[1] - nextPoint[1])); // times -1 because axis different
-        if (prevPoint[1] - nextPoint[1] < 0)
-            angle = 3.14 + angle
+        angle = tokenTurn(prevPoint, nextPoint, point, closePoint);
 
         finalAngles = calculateWallTokenRot(angle, frontAngle);
 
@@ -483,5 +517,7 @@ const stampTypes = [
 
 export {
     create,
+    wallMesh,
+    tokenTurn,
     stampTypes
 };

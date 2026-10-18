@@ -627,15 +627,20 @@ export function createEditor() {
             });
             return;
         }
-        if (map.area4Room && map.area4Room.type === 1) {
-            customWorld().then(function (text) { download(text, 'text/plain', (map.name || 'world') + '.wbt'); }, function (err) {
-                applyAsync(function () {
-                    openDialog({ kind: 'error', title: t('admin.simBeta.exportFailed'), message: String(err && err.message || err) });
-                });
+        const failed = function (err: any) {
+            applyAsync(function () {
+                // a value that is not a number: what it is on, and that the file was not made
+                const message = err instanceof M.BrokenWorld ? t('admin.simBeta.exportBroken', { line: err.line }) : String(err && err.message || err);
+                openDialog({ kind: 'error', title: t('admin.simBeta.exportFailed'), message: message });
             });
+        };
+        if (map.area4Room && map.area4Room.type === 1) {
+            customWorld().then(function (text) { download(text, 'text/plain', (map.name || 'world') + '.wbt'); }, failed);
             return;
         }
-        download(M.world(map), 'text/plain', (map.name || 'world') + '.wbt');
+        let text;
+        try { text = M.world(map); } catch (e) { failed(e); return; }
+        download(text, 'text/plain', (map.name || 'world') + '.wbt');
     }
 
     // The world with a custom room 4: its picture is read with OpenCV, once both are loaded

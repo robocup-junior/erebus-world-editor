@@ -485,3 +485,18 @@ test('no victims in a passage between areas (rule 3.7.2): refused there, pointed
   assert.ok(!M.edgeVictim(map, 3, 1), 'taken out by the fix');
   assert.ok(!M.setVictim(map, 3, 1, 'top', 'H', false));
 });
+
+test('a world with a value that is not a number is not given out (Webots would open it empty)', () => {
+  const map = M.newMap(2, 1);
+  map.startTile = { x: 1, y: 1, z: 0 };
+  assert.ok(M.setVictim(map, 3, 1, 'top', 'H', false));
+  (map.cells['3,1,0'].tile as any).single_victim_rotation = 'x';    // a turn that is not a number
+  (globalThis as any).DISABLE_RANDOMNESS = true;
+  const log = console.log;
+  console.log = () => {};
+  try {
+    assert.throws(() => M.world(map), (e: any) => e instanceof M.BrokenWorld && /NaN/.test(e.line));
+    (map.cells['3,1,0'].tile as any).single_victim_rotation = 90;
+    assert.ok(!/NaN|undefined|Infinity/.test(M.world(map)));
+  } finally { console.log = log; delete (globalThis as any).DISABLE_RANDOMNESS; }
+});

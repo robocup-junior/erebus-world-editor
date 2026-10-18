@@ -147,6 +147,7 @@
             "drawRoom4": "Draw room 4",
             "drawRoom4Note": "Double-clicking the room 4 area opens it too",
             "exportFailed": "The world export failed",
+            "exportBroken": "The world would have a value that is not a number, so no file was made (Webots would open it as an empty world). Please report this: {{line}}",
             "showWhere": "Click to see where",
             "restore": "Open the last work",
             "ctRings": "Cognitive target",

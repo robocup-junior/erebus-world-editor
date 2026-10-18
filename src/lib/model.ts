@@ -1617,14 +1617,28 @@ function saved(map: MapData) {
 
 // The world (.wbt) of the map; worked out on a copy, so the map is left as it is. A custom room 4
 // needs room4(copy) = the hooks that read its picture (SimRoom4World2026, browser only).
+// A value that is not a number in it (NaN, undefined) would make Webots read nothing at all and open
+// an empty world: it is not given out, but thrown as a BrokenWorld with the line it is on.
 function world(map: MapData, room4?: (copy: MapData) => WorldHooks): string {
     const m = JSON.parse(JSON.stringify(saved(map)));
     m.area4 = W.area4Presets();
     W.recalculate(m);
-    return W.createWorld(m, room4 ? room4(m) : {});
+    const text = W.createWorld(m, room4 ? room4(m) : {});
+    const bad = text.match(/^.*\b(NaN|undefined|Infinity)\b.*$/m);
+    if (bad) throw new BrokenWorld(bad[0].trim());
+    return text;
+}
+
+class BrokenWorld extends Error {
+    line: string;
+    constructor(line: string) {
+        super('The world has a value that is not a number: ' + line);
+        this.line = line;
+    }
 }
 
 export {
+    BrokenWorld,
     SIDES,
     key,
     inMap,

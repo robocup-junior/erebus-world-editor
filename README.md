@@ -49,6 +49,7 @@ So that no old file is used after an update, two things work together:
 | vue-i18n | 11 | the texts, one file per language (`src/lang/`; written with `{{name}}` parameters, compiled by `src/i18n.ts`) |
 | Font Awesome Free | 7 | icons; the room 4 creator's shape tool draws its icons (SVGs) as walls |
 | OpenCV.js (`@techstark/opencv-js`) | 5.0 | the room 4 picture read for the world export, and where the robot can get to |
+| earcut | 3.2 | the tops of room 4's walls in the world file, in triangles round the floor a shape encloses |
 
 The page's base styles (`src/styles/base.css`) are the parts of Bootstrap 4.4.1's CSS the editor uses (its reboot, buttons, the modal); Bootstrap itself is not a dependency. TypeScript stays at 6 until vue-tsc supports TypeScript 7.
 
