@@ -2063,14 +2063,23 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         if (spec.type === 'curve') { s.pts = spec.pts.map(atF); s.smooth = spec.smooth !== false; s.closed = !!spec.closed; }
         drawShape(s);
     };
-    // an icon (Font Awesome, by name) put into the box a-b, once it has loaded
+    // an icon (Font Awesome, by name) put into the box a-b, once it has loaded: as large as fits the
+    // box with its own proportions, in the middle of it (a drag sizes it by its larger side)
     scope.r4api.drawIcon = function (name, a, b) {
         scope.pickIcon({ name: name, styles: ['solid'] });
         const want = silhouetteId;
         let tries = 0;
         (function wait() {
-            if (silhouette && silhouetteId !== want) { drawShape({ type: 'icon', a: atF(a), b: atF(b) }); return; }
-            if (++tries < 40) setTimeout(wait, 100);
+            if (silhouette && silhouetteId !== want) {
+                const p = atF(a), q = atF(b);
+                const bw = Math.abs(q.x - p.x), bh = Math.abs(q.y - p.y);
+                const k = Math.min(bw / silhouette.width, bh / silhouette.height);
+                const w = silhouette.width * k, h = silhouette.height * k;
+                const x = Math.min(p.x, q.x) + (bw - w) / 2, y = Math.min(p.y, q.y) + (bh - h) / 2;
+                drawShape({ type: 'icon', a: { x: x, y: y }, b: { x: x + w, y: y + h }, free: true });
+                return;
+            }
+            if (++tries < 100) setTimeout(wait, 100);
         })();
     };
     // the select tool's box, from a to b

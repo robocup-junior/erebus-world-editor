@@ -72,6 +72,8 @@ test('the lesson: steps done for you', async ({ page }) => {
 // the lesson is of the year of the rules chosen: in 2027's, the floors step puts a contact tile too,
 // and the victims are smiley faces
 test('the lesson in the 2027 rules: its floors and victims', async ({ page }) => {
+    // many steps: longer than a test's usual time when the tests run side by side
+    test.setTimeout(90000);
     await boot(page);
     await page.locator('.sbx-empty-rules-choices button', { hasText: '2027' }).click();
     await page.locator('.sbx-empty-tour').click();
@@ -91,6 +93,31 @@ test('the lesson in the 2027 rules: its floors and victims', async ({ page }) =>
     }
     expect(shots).toEqual(['lesson2027-floors', 'lesson2027-floors-done', 'lesson2027-victim', 'lesson2027-victim-done']);
     await expect(page.locator('.sbx-rules-btn')).toContainText('2027');
+});
+
+// the room 4 part of the lesson: the shape step's "do it for me" draws a star (an icon picked by
+// its name, its code point looked up first), inside the box the step shows
+test('the room 4 lesson: the shape step done for you', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapD.json');
+    await page.locator('.sbx-tour-btn').click();
+    await page.locator('.sbx-pick-option').nth(2).click();
+    await settle(page, 1200);
+    const card = page.locator('.sbx-tour-card');
+    // each step before it done for you (a step goes on once it is done)
+    for (let i = 0; i < 20 && !/図形（I）/.test(await card.innerText()); i++) {
+        const doIt = page.locator('.sbx-tour-nav.auto');
+        if (await doIt.count()) { await doIt.click(); await settle(page, 600); }
+        await page.locator('.sbx-tour-nav.primary').click();
+        await settle(page, 450);
+    }
+    await expect(card).toContainText('図形（I）');
+    await expect(card).not.toHaveClass(/done/);
+    await page.locator('.sbx-tour-nav.auto').click();
+    await expect(card).toHaveClass(/done/, { timeout: 10000 });
+    await page.locator('.sbx-tour-fold').click();
+    await settle(page, 300);
+    await shot(page, 'room4-lesson-shape-done');
 });
 
 test('the room 4 guide opens the creator', async ({ page }) => {

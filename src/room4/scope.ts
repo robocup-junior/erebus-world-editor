@@ -8,7 +8,7 @@ import type { Room4Host } from '../editor/editor';
 import type { StampType as RuleStamp } from '../rules/types';
 
 export type StampType = RuleStamp;
-export interface ShapeIcon { name: string; label?: string; terms?: string[]; styles: string[] }
+export interface ShapeIcon { name: string; label?: string; terms?: string[]; styles: string[]; unicode?: string }
 
 // The creator's state, shown by its panels and changed by the picture
 export interface R4State {

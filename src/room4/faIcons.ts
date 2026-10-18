@@ -45,9 +45,11 @@ function parseCategories(yml: string): Category[] {
     return cats;
 }
 
-// Both lists, the categories keeping only icons in the list
+// Both lists, the categories keeping only icons in the list (fetched once)
+let loading: Promise<{ all: Icon[]; byName: Record<string, Icon>; categories: Category[] }> | null = null;
 export function loadIcons(): Promise<{ all: Icon[]; byName: Record<string, Icon>; categories: Category[] }> {
-    return Promise.all([fetch(iconsUrl).then(function (r) { return r.text(); }),
+    if (loading) return loading;
+    loading = Promise.all([fetch(iconsUrl).then(function (r) { return r.text(); }),
                         fetch(categoriesUrl).then(function (r) { return r.text(); })]).then(function (res) {
         const all = parseIcons(res[0]);
         const byName: Record<string, Icon> = {};
@@ -57,7 +59,8 @@ export function loadIcons(): Promise<{ all: Icon[]; byName: Record<string, Icon>
             return c;
         }).filter(function (c) { return c.icons.length; });
         return { all: all, byName: byName, categories: categories };
-    });
+    }).catch(function (e) { loading = null; throw e; });
+    return loading;
 }
 
 // Icons to show for the search word / category (at most 60)

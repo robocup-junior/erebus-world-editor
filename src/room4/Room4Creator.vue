@@ -156,7 +156,14 @@ function loadIcons() {
 }
 const iconResults = computed(function () { return FaIcons.iconResults(icons, r4.iconQuery, r4.iconCategory); });
 
+// an icon by its name only (the guide's "do it for me"): its code point from the list first, as the
+// shape is drawn with the font
 function pickIcon(i: ShapeIcon) {
+    if (!i.unicode) {
+        FaIcons.loadIcons().then(function (res) { if (res.byName[i.name]) pickIcon(res.byName[i.name]); })
+            .catch(function () { r4.message = 'iconFailed'; });
+        return;
+    }
     r4.shapeName = i.name;
     r4.shapeReady = false;
     r4api.useIcon(i);
