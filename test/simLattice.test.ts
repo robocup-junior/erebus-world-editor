@@ -6,6 +6,10 @@ import type { MapData } from '../src/lib/types';
 import fs from 'node:fs';
 import path from 'node:path';
 import * as L from '../src/lib/lattice';
+import { rulesFor } from '../src/rules/registry';
+
+// the rooms of 2026
+const rooms = rulesFor(2026)!.rooms;
 
 const DIR = path.join(__dirname, 'fixtures', 'sim2026');
 const load = (name: string): MapData => JSON.parse(fs.readFileSync(path.join(DIR, `${name}.json`), 'utf8'));
@@ -93,14 +97,14 @@ test('lines run across or down the map', () => {
 test('each room takes the walls its rules allow', () => {
   // tiles at x 1 (room 1), 3 (room 2), 5 (room 3), 7 (room 4); one row
   const roomOf = (x: number, y: number) => (y === 1 && x >= 1 && x <= 7 ? (x + 1) / 2 : 0);
-  assert.deepStrictEqual(L.segRule('v,1,0', roomOf), { ok: false, whole: false, reason: 'room1Inner' });
-  assert.deepStrictEqual(L.segRule('v,2,0', roomOf), { ok: true, whole: true });     // room 1 | room 2 edge
-  assert.deepStrictEqual(L.segRule('v,3,0', roomOf), { ok: true, whole: false });    // inside room 2
-  assert.deepStrictEqual(L.segRule('v,6,0', roomOf), { ok: true, whole: false });    // room 3 | room 4 edge
-  assert.deepStrictEqual(L.segRule('v,7,0', roomOf), { ok: false, whole: false, reason: 'room4' });
-  assert.deepStrictEqual(L.segRule('v,9,0', roomOf), { ok: false, whole: false, reason: 'outside' });
-  assert.deepStrictEqual(L.arcRule(3), { ok: true });
-  assert.deepStrictEqual(L.arcRule(2), { ok: false, reason: 'curveRoom3' });
+  assert.deepStrictEqual(L.segRule('v,1,0', roomOf, rooms), { ok: false, whole: false, reason: 'room1Inner' });
+  assert.deepStrictEqual(L.segRule('v,2,0', roomOf, rooms), { ok: true, whole: true });     // room 1 | room 2 edge
+  assert.deepStrictEqual(L.segRule('v,3,0', roomOf, rooms), { ok: true, whole: false });    // inside room 2
+  assert.deepStrictEqual(L.segRule('v,6,0', roomOf, rooms), { ok: true, whole: false });    // room 3 | room 4 edge
+  assert.deepStrictEqual(L.segRule('v,7,0', roomOf, rooms), { ok: false, whole: false, reason: 'room4' });
+  assert.deepStrictEqual(L.segRule('v,9,0', roomOf, rooms), { ok: false, whole: false, reason: 'outside' });
+  assert.deepStrictEqual(L.arcRule(3, rooms), { ok: true });
+  assert.deepStrictEqual(L.arcRule(2, rooms), { ok: false, reason: 'curveRoom3' });
   assert.strictEqual(L.otherHalf('v,2,1'), 'v,2,0');
   assert.strictEqual(L.otherHalf('v,1,1'), null);
 });

@@ -12,6 +12,7 @@
             "noMap": "No map open",
             "dropHere": "You can also drop a JSON file here",
             "badFile": "This could not be read as a Simulation 2026 editor map (JSON)",
+            "unknownRules": "This map is for the {{year}} rules; this editor takes the rules of {{years}} (open it in a newer editor)",
             "zoomIn": "Zoom in",
             "zoomOut": "Zoom out",
             "fit": "Show the whole map",
@@ -57,14 +58,14 @@
             "problems": {
                 "noStart": "There is no start tile",
                 "victimNoWall": "Some victims have lost their wall ({{count}})",
-                "victimInPassage": "Some victims are in a passage between areas ({{count}}): there are none in the passages (rule 3.7.2)",
-                "victimUnreachable": "Some victims are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule 3.2.4)",
+                "victimInPassage": "Some victims are in a passage between areas ({{count}}): there are none in the passages (rule {{rule_passageTokens}})",
+                "victimUnreachable": "Some victims are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule {{rule_reach}})",
                 "wallRule": "Some walls do not follow the rules of their room ({{count}})",
-                "room4Checkpoint": "The room 4 tile right behind a passage is not a checkpoint ({{count}}, rule 3.5.3). Placing a passage sets it by itself",
+                "room4Checkpoint": "The room 4 tile right behind a passage is not a checkpoint ({{count}}, rule {{rule_room4Checkpoint}}). Placing a passage sets it by itself",
                 "customRoom4NoPicture": "Room 4 has not been drawn yet",
                 "presetNotSupported": "Room 4 presets are not available in this editor (switch to custom, or use the classic editor)",
                 "room4Untyped": "Some victims in room 4 have no type ({{count}}): give them one in Draw room 4",
-                "room4Unreachable": "Some victims in room 4 are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule 3.2.4)",
+                "room4Unreachable": "Some victims in room 4 are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule {{rule_reach}})",
                 "victimMisplaced": "Victims moved along their wall overlap the end of a wall or another victim ({{count}})"
             },
             "hints": {
@@ -74,7 +75,7 @@
                 "noBorder": "This is not a room border",
                 "passageHere": "Click a room border (dotted)",
                 "victim_noWall": "There is no wall on this side",
-                "victim_passage": "No victims go in a passage between areas (rule 3.7.2)",
+                "victim_passage": "No victims go in a passage between areas (rule {{rule_passageTokens}})",
                 "victim_quarterTile": "Victims in rooms 2 and 3 come next",
                 "victim_room4": "Room 4 victims are placed in the room 4 creator",
                 "victim_outside": "Outside the map",
@@ -90,7 +91,7 @@
                 "passageRemove": "Click to remove this passage",
                 "shapeOut": "Click or drag to take tiles out of the map",
                 "shapeIn": "Click or drag to put tiles back into the map",
-                "passageRoom4": "A passage into room 4 goes on the tile outside room 4 (as the room 4 creator and the checkpoint rule 3.5.3 expect)",
+                "passageRoom4": "A passage into room 4 goes on the tile outside room 4 (as the room 4 creator and the checkpoint rule {{rule_room4Checkpoint}} expect)",
                 "regionPick": "Drag to select",
                 "regionDrag": "Drag to move, Alt+drag to copy. Arrow keys move by a tile; Ctrl+C / X / V and Delete work too",
                 "regionCopied": "Copied. Ctrl+V pastes at the tile under the pointer",
@@ -137,7 +138,7 @@
                 "victim_place": "Click to place \"{{name}}\"",
                 "victim_move": "Click to place \"{{name}}\" here (the tile's victim moves here: one per tile)",
                 "victim_replace": "Click to change it to \"{{name}}\"",
-                "victim_unreachable": "The robot cannot get near here, so no victim goes here (rule 3.2.4)",
+                "victim_unreachable": "The robot cannot get near here, so no victim goes here (rule {{rule_reach}})",
                 "victim_selectDrag": "Click to select it, drag to move it along its wall",
                 "victim_moveSlot": "Click to place \"{{name}}\" here (the victim on this face moves here)",
                 "victim_moving": "{{cm}} cm along its wall (it stops short of the wall's end and other victims)",
@@ -379,7 +380,7 @@
                 },
                 "score": {
                     "title": "Maximum score",
-                    "body": "The most this map can score: every victim and cognitive target the robot can come near identified with the right type, and every checkpoint passed, worked out by rule 5.6.\nPress it for each room's share and the score with the exit and mapping bonuses. It is worked out again with every change."
+                    "body": "The most this map can score: every victim and cognitive target the robot can come near identified with the right type, and every checkpoint passed, worked out by rule {{rule_scoring}}.\nPress it for each room's share and the score with the exit and mapping bonuses. It is worked out again with every change."
                 }
             },
             "lesson": {
@@ -716,7 +717,7 @@
                 },
                 "score": {
                     "title": "Maximum score",
-                    "body": "The trophy in the top bar is the most this map can score: every victim and cognitive target identified with the right type, and every checkpoint passed, worked out by rule 5.6.\nPress it for each room's share and the score with the exit and mapping bonuses. Victims on floating tiles and in rooms with a higher multiplier are worth more."
+                    "body": "The trophy in the top bar is the most this map can score: every victim and cognitive target identified with the right type, and every checkpoint passed, worked out by rule {{rule_scoring}}.\nPress it for each room's share and the score with the exit and mapping bonuses. Victims on floating tiles and in rooms with a higher multiplier are worth more."
                 }
             },
             "toolHints": {
@@ -742,10 +743,10 @@
             },
             "score": {
                 "title": "The most this map can score",
-                "button": "Maximum score (worked out by rule 5.6)",
+                "button": "Maximum score (worked out by rule {{rule_scoring}})",
                 "short": "Max",
                 "unit": " pts",
-                "lead": "What a robot scores when it identifies every victim and cognitive target it can get to, with the right type, and passes every checkpoint (rule 5.6).",
+                "lead": "What a robot scores when it identifies every victim and cognitive target it can get to, with the right type, and passes every checkpoint (rule {{rule_scoring}}).",
                 "area": "Room {{n}}",
                 "multiplier": "×{{m}}",
                 "victims": "Victims {{n}}",
@@ -856,7 +857,7 @@
                 "templateClear": "Clear the walls and victims first",
                 "templateApply": "Place",
                 "showGuides": "Show entrances and checkpoints",
-                "missingCheckpoints": "{{count}} tile(s) just inside a passage are not checkpoints (rule 3.5.3). Set them in the main editor (dashed \"CP?\").",
+                "missingCheckpoints": "{{count}} tile(s) just inside a passage are not checkpoints (rule {{rule_room4Checkpoint}}). Set them in the main editor (dashed \"CP?\").",
                 "noEntrance": "Room 4 has no entrance. Open a wall towards a passage outside in the main editor.",
                 "rows": {
                     "real": "Real",
@@ -969,7 +970,7 @@
                     "randomShort": "Placed only {{placed}} of {{asked}} (not enough walls to put them on).",
                     "templateBlocked": "Every layout tried leaves part of the room out of reach. Check the light red parts.",
                     "wallEnd": "Not on the end of a wall. Click a wall face at least as wide as a victim (2 cm).",
-                    "unreachable": "The robot cannot get near here: no victims go where the robot cannot go (rule 3.2.4)."
+                    "unreachable": "The robot cannot get near here: no victims go where the robot cannot go (rule {{rule_reach}})."
                 },
                 "tokens": "Wall tokens: {{count}}",
                 "farFromWall": "{{count}} away from any wall (red dashed circle)",

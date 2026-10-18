@@ -65,14 +65,34 @@ src/
   editor/           what the page does (editor.ts), redrawing after changes (runtime.ts), formats
   room4/            the custom room 4 creator (Room4Creator.vue; its picture: canvas.ts)
   components/       rotation dial, cognitive target rings, modal, language button, build info
-  lib/              the map, its rules and the world export, framework-free (model, lattice, world2026,
-                    room4World2026, score - the most a map can score, by rule 5.6 -, view, tour, icons, keys)
+  rules/            the rules of each year (see "Rules by year"): registry, a manifest per year, parts
+  lib/              the map and its editing, framework-free (model, lattice, view, tour, icons, keys), and
+                    the Erebus 26 world export the 2026 rules use (world2026, room4World2026)
   lang/             the texts, one file per language (ja, en)
   styles/           base.css (from Bootstrap), page.css, sim_modern.css, editor.css
 public/             files served as they are (fonts, images, _headers)
 test/               unit tests (vitest) with sample maps
 e2e/                end-to-end tests (Playwright): screenshots, and the files the editor saves
 ```
+
+### Rules by year
+
+One editor, one build, every year's rules in it: a map file keeps its year (`"rules": 2026`; a file without one is of 2026), a new map is of the latest year, and the editor does what that year's rules say. The year's rules are a manifest (`src/rules/y2026.ts`) that picks a version of each part:
+
+| Part | What it holds |
+| --- | --- |
+| `geometry` | tile, wall thickness, the robot's size, how near it comes to identify a token |
+| `rooms` | for each room, the kinds of wall it takes (whole or half tile edges, walls inside a tile, curves, a picture) and where its victims go |
+| `tokens` | the kinds of victim (each: family - a letter or a ring target -, symbol, width, whether it can be fake, its codes in the map file), the room between them, whether they may go in passages, the ring target types, the room 4 stamps |
+| `scoring` | the most a map can score |
+| `export` | the world file, for the Erebus version the year is played on |
+| `refs` | the rule numbers the texts cite (`{{rule_reach}}` in a text is the year's `refs.reach`) |
+
+The rest of the editor asks `rulesOf(map)` (`src/rules/registry.ts`) and never names or compares a year; `test/simRules.test.ts` fails if it does, checks each year is complete, and makes a world and a score with each.
+
+- **A new year**: copy the latest manifest to `src/rules/yYYYY.ts` and add it to `YEARS` in the registry. For each part the year changes, copy the part's latest version to the next one (`parts/tokens/v2.ts`) and change the copy; the parts it does not change stay shared. A text the year words otherwise goes under `"years": { "YYYY": { ... } }` in each language file, at the key's path. Give the year sample maps and expected world files in its tests.
+- **A change to a year's rules** (a correction to its rule book): change that year's part version, or give the year a new version if other years share it.
+- **Dropping a year**: take it out of `YEARS` and delete its manifest; then delete the parts and `"years"` texts nothing uses any more.
 
 ### Adding a language
 

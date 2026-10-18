@@ -11,34 +11,14 @@
 // rooms joined by their passages, and tokens the robot can come near (lib/model's robotReach, with
 // the walls of a custom room 4 picture). A token the robot cannot get to, or a room 4 stamp with no
 // type, is a problem of the map (lib/model's problems); it is left out here.
-import type { MapData } from './types';
-import * as M from './model';
-import * as W from './world2026';
+import type { MapData } from '../../../lib/types';
+import * as M from '../../../lib/model';
+import * as W from '../../../lib/world2026';
+import type { AreaScore, MaxScore } from '../../types';
 
 const MULTIPLIER: Record<number, number> = { 1: 1, 2: 1.25, 3: 1.5, 4: 2 };
 const EXIT_BONUS = 0.1;
 const MAP_BONUS_MAX = 1 * 1.2 + 1;
-
-export interface AreaScore {
-    room: number;
-    multiplier: number;
-    victims: number;        // letter victims that score
-    targets: number;        // cognitive targets that score
-    checkpoints: number;
-    points: number;         // TI + TT + CN, times the multiplier
-}
-
-export interface MaxScore {
-    areas: AreaScore[];
-    field: number;          // all areas
-    withExit: number;       // and the exit bonus
-    withMap: number;        // and the most the mapping bonus gives
-    // left out: tokens that score but cannot be got to, and checkpoints that cannot
-    unreachableTokens: number;
-    unreachableCheckpoints: number;
-    untypedTokens: number;  // room 4 stamps with no type (left out)
-    room4Preset: boolean;   // a room 4 preset (not counted: this editor makes room 4 as a picture)
-}
 
 // the points of a token: [TI, TT]
 function letterPoints(linear: boolean, halfWall: boolean): [number, number] {
@@ -49,11 +29,22 @@ function targetPoints(linear: boolean): [number, number] {
     return [linear ? 10 : 30, 20];
 }
 
-// room 4 picture stamps by the export's scoring types: 0-2 letter victims, 3-6 targets (P O F C),
-// 7 a fake target, 8-10 fake victims
-function stampPoints(type: number): { kind: 'victim' | 'target' | 'none'; points: [number, number] } {
-    if (type >= 0 && type <= 2) return { kind: 'victim', points: [15, 10] };
-    if (type >= 3 && type <= 6) return { kind: 'target', points: [30, 20] };
+// what a token on a wall scores as: a letter victim, a cognitive target (one whose rings give a
+// type), or nothing (a fake)
+function scoresAs(map: MapData, v: M.VictimInfo): 'victim' | 'target' | null {
+    const rules = M.rulesOf(map), kind = M.tokenKind(map, v.type);
+    if (!kind) return null;
+    if (kind.family === 'target') return rules.tokens.target.typeOf(v.code) ? 'target' : null;
+    return v.fake ? null : 'victim';
+}
+
+// a room 4 picture stamp, by its kind: a letter victim, a target, or nothing (a fake); undefined for
+// a stamp of no type
+function stampPoints(map: MapData, type: number): { kind: 'victim' | 'target' | 'none'; points: [number, number] } | undefined {
+    const stamp = M.rulesOf(map).tokens.stamps.find(function (s) { return s.idx === type; });
+    if (!stamp) return undefined;
+    if (stamp.kind === 'victim') return { kind: 'victim', points: [15, 10] };
+    if (stamp.kind === 'ct') return { kind: 'target', points: [30, 20] };
     return { kind: 'none', points: [0, 0] };
 }
 
@@ -98,7 +89,7 @@ export function maxScore(map: MapData, picture: M.Room4Picture | null): MaxScore
             // a token on a side of the tile
             const v = M.edgeVictim(map, x, y);
             if (v && M.hasWall(map, x, y, v.dir)) {
-                const kind = v.type === 'CT' ? (W.cognitiveCodeToVictimLetter(v.code) ? 'target' : null) : (v.fake ? null : 'victim');
+                const kind = scoresAs(map, v);
                 if (kind) {
                     const at = M.victimPlace(map, { kind: 'edge', x: x, y: y, dir: v.dir }).at;
                     if (reached && !lost.has(at[0] + ',' + at[1])) add(room, kind, kind === 'target' ? targetPoints(linear) : letterPoints(linear, false));
@@ -109,7 +100,7 @@ export function maxScore(map: MapData, picture: M.Room4Picture | null): MaxScore
             for (let i = 0; i < 16; i++) {
                 const s = M.slotVictim(map, x, y, i);
                 if (!s || !M.slotHasWall(map, x, y, i)) continue;
-                const kind = s.type === 'CT' ? (W.cognitiveCodeToVictimLetter(s.code) ? 'target' : null) : (s.fake ? null : 'victim');
+                const kind = scoresAs(map, s);
                 if (!kind) continue;
                 const at = M.victimPlace(map, { kind: 'slot', x: x, y: y, i: i }).at;
                 if (reached && !lost.has(at[0] + ',' + at[1])) add(room, kind, kind === 'target' ? targetPoints(linear) : letterPoints(linear, true));
@@ -123,8 +114,8 @@ export function maxScore(map: MapData, picture: M.Room4Picture | null): MaxScore
     if (!room4Preset && picture && map.room4CanvasSave) {
         const lost = new Set((reach ? M.room4Unreached(map, picture, reach) : []).map(function (u) { return u.index; }));
         picture.tokens.forEach(function (t, index) {
-            if (!(t.type >= 0 && t.type <= 10)) { untypedTokens++; return; }
-            const p = stampPoints(t.type);
+            const p = stampPoints(map, t.type);
+            if (!p) { untypedTokens++; return; }
             if (p.kind === 'none') return;
             if (reachedRooms[4] && !lost.has(index)) add(4, p.kind, p.points);
             else unreachableTokens++;

@@ -5,9 +5,9 @@
 import { watch } from 'vue';
 import { apply, applyAsync } from '../editor/runtime';
 import type { Room4Host } from '../editor/editor';
-import type { stampTypes } from '../lib/room4World2026';
+import type { StampType as RuleStamp } from '../rules/types';
 
-export type StampType = (typeof stampTypes)[number];
+export type StampType = RuleStamp;
 export interface ShapeIcon { name: string; label?: string; terms?: string[]; styles: string[] }
 
 // The creator's state, shown by its panels and changed by the picture

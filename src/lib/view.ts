@@ -4,7 +4,7 @@ import type { MapData } from './types';
 import * as L from './lattice';
 import * as Icons from './icons';
 import * as R4 from './room4';
-import * as R4W from './room4World2026';
+import { rulesOf } from '../rules/registry';
 
 // A stamp of the room 4 picture as the map shows it: where it is and the face of the wall it is
 // against (fractions of the picture), its type index (-1 random)
@@ -332,7 +332,7 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
         const box = room4Box(rooms);
         if (!box || !map || !map.area4Room || !picture) return;
         const x = 6 * box.x0, y = 6 * box.y0, w = 6 * (box.x1 - box.x0), h = 6 * (box.y1 - box.y0);
-        const types = R4W.stampTypes;
+        const types = rulesOf(map).tokens.stamps;
         tokens.forEach(function (t) {
             const type = types.find(function (s) { return s.idx === t.type; });
             const c = { cx: x + t.fx * w, cy: y + t.fy * h };

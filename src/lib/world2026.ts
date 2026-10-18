@@ -1815,8 +1815,10 @@ function connectionStatus(map: MapData): any {
 
 
 // For the custom room 4 creator: the map's walls (cm, as for the connection check), its holes
-// and the start, to draw the walls around room 4 and work out where the robot can get to
-function mapGeometry(map: MapData): MapGeometry {
+// and the start, to draw the walls around room 4 and work out where the robot can get to; the
+// sizes are the map's year's (rules: geometry)
+function mapGeometry(map: MapData, sizes?: { tileCm: number; wallHalfCm: number; robotRadiusCm: number }): MapGeometry {
+    const g = sizes || { tileCm: TILE_CM, wallHalfCm: WALL_HALF_CM, robotRadiusCm: ROBOT_RADIUS_CM };
     const holes: Pt[] = [];
     Object.keys(map.cells).forEach(function (key) {
         const p = key.split(',').map(Number);
@@ -1861,9 +1863,9 @@ function mapGeometry(map: MapData): MapGeometry {
         width: map.width,
         length: map.length,
         start: hasStart ? { x: 6 * st.x, y: 6 * st.y } : null,
-        tileCm: TILE_CM,
-        wallHalfCm: WALL_HALF_CM,
-        robotRadiusCm: ROBOT_RADIUS_CM
+        tileCm: g.tileCm,
+        wallHalfCm: g.wallHalfCm,
+        robotRadiusCm: g.robotRadiusCm
     };
 };
 

@@ -1,10 +1,10 @@
-// The most a map can score (src/lib/score.ts), by rule 5.6 of the 2026 rules
+// The most a map can score (src/rules/parts/scoring/v1.ts), by rule 5.6 of the 2026 rules
 import { test } from 'vitest';
 import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
 import * as M from '../src/lib/model';
-import * as Score from '../src/lib/score';
+import * as Score from '../src/rules/parts/scoring/v1';
 import type { MapData } from '../src/lib/types';
 
 const load = (name: string): MapData => JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'sim2026', `${name}.json`), 'utf8'));

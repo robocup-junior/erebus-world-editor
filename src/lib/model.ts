@@ -7,6 +7,12 @@ import * as L from './lattice';
 import * as W from './world2026';
 import * as R4 from './room4';
 import type { RoomPassage, WorldHooks } from './world2026';
+import { rulesOf, FIRST_YEAR, LATEST_YEAR } from '../rules/registry';
+import type { TokenKind } from '../rules/types';
+
+// What a map's year takes (rules/registry): the walls of each room, the victims, the sizes, the
+// world file. Everything below asks it of the map, and never asks for a year.
+export { rulesOf };
 
 // A placed victim: on a side of a tile (rooms 1 and 4), or in slot i of a room 2 / 3 tile
 export type Where = { kind: 'edge'; x: number; y: number; dir: string } | { kind: 'slot'; x: number; y: number; i: number };
@@ -64,7 +70,8 @@ function room4Place(map: MapData) {
 function room4Unreached(map: MapData, picture: Room4Picture, reach: Reach): { index: number; at: number[] }[] {
     const place = room4Place(map);
     if (!place) return [];
-    const res = reach.res, need = ROBOT_R / res, R = Math.ceil(need + 0.5);
+    const g = rulesOf(map).geometry;
+    const res = reach.res, need = g.robotRadiusCm / res, R = Math.ceil(need + 0.5);
     const out: { index: number; at: number[] }[] = [];
     picture.tokens.forEach(function (t, index) {
         const cx = place.x0 + t.fx * place.w, cy = place.y0 + t.fy * place.h;
@@ -76,7 +83,7 @@ function room4Unreached(map: MapData, picture: Room4Picture, reach: Reach): { in
                 d = Math.min(d, Math.hypot(i - gx, j - gy));
             }
         }
-        if (d * res > 6 || d > need + 0.5) out.push({ index: index, at: [cx, cy] });
+        if (d * res > g.identifyCm || d > need + 0.5) out.push({ index: index, at: [cx, cy] });
     });
     return out;
 }
@@ -155,7 +162,8 @@ function newMap(width: number, length: number): MapData {
     const map: MapData = {
         name: 'New world', length: length, height: 1, width: width, finished: true,
         startTile: { x: 0, y: 0, z: 0 }, cells: {}, roomTiles: [[], [], []], time: 480,
-        area4Room: W.area4Presets()[0], room4CanvasSave: null, room4VicTypes: [], connCheckOff: false
+        area4Room: W.area4Presets()[0], room4CanvasSave: null, room4VicTypes: [], connCheckOff: false,
+        rules: LATEST_YEAR
     };
     ensureTiles(map);
     outerWalls(map);
@@ -169,6 +177,8 @@ function normalize(map: MapData) {
     if (!map.startTile) map.startTile = { x: 0, y: 0, z: 0 };
     if (!map.area4Room || typeof map.area4Room !== 'object') map.area4Room = W.area4Presets()[0];
     if (!map.height) map.height = 1;
+    // a map file from before maps kept their year
+    if (!map.rules) map.rules = FIRST_YEAR;
     ensureTiles(map);
     return map;
 }
@@ -225,10 +235,9 @@ function roomLookup(map: MapData) {
     return function (x: number, y: number) { return rooms[x + ',' + y] || 0; };
 }
 
-// Puts the tile at (x, y) into a room (1 = no room list), or outside the map (0). A tile leaving
-// rooms 2 / 3 loses what only those rooms take: inner walls and half walls on its edges (rooms
-// 1 and 4), curves (every room but 3). An outside tile loses everything on it. Returns whether
-// anything changed.
+// Puts the tile at (x, y) into a room (1 = no room list), or outside the map (0). A tile leaves
+// behind the walls its new room does not take (rules: rooms): inner walls and half walls on its
+// edges, curves. An outside tile loses everything on it. Returns whether anything changed.
 function setRoom(map: MapData, x: number, y: number, room: number) {
     if (!inMap(map, x, y) || roomOf(map, x, y) === room) return false;
     const k = key(x, y);
@@ -247,9 +256,11 @@ function setRoom(map: MapData, x: number, y: number, room: number) {
     } else {
         delete t.outside;
     }
-    t.halfTile = room === 2 || room === 3 ? 1 : 0;
-    if (room !== 3) t.curve = [0, 0, 0, 0];
-    if (room <= 1 || room === 4) {
+    // the room it goes into (an outside tile takes nothing)
+    const takes = rulesOf(map).rooms[room] || { edges: 'whole', inner: false, curves: false, picture: false, tokens: 'edge' };
+    t.halfTile = takes.inner ? 1 : 0;
+    if (!takes.curves) t.curve = [0, 0, 0, 0];
+    if (!takes.inner) {
         t.halfWallIn = [0, 0, 0, 0];
         t.halfWallVic = [];
         t.halfWallVicFakes = [];
@@ -295,7 +306,8 @@ function borderEdges(map: MapData) {
     return edges;
 }
 
-// Whether tile (x, y) is a passage between rooms (in a passage colour): no victims there (rule 3.7.2)
+// Whether tile (x, y) is a passage between rooms (in a passage colour): the rules may keep victims
+// out of it (rules: tokens.inPassages)
 function isPassage(map: MapData, x: number, y: number) {
     const t = tileOf(map, x, y);
     return !!(t && t.color && W.ROOM_PASSAGES.some(function (p: RoomPassage) { return p.color === t.color; }));
@@ -440,7 +452,7 @@ function wallPlan(map: MapData, segs: string[]) {
     const room = roomLookup(map);
     const ok = new Set<string>(), bad = new Set<string>();
     segs.forEach(function (s) {
-        const rule = L.segRule(s, room);
+        const rule = L.segRule(s, room, rulesOf(map).rooms);
         if (!rule.ok) { bad.add(s); return; }
         ok.add(s);
         if (rule.whole) ok.add(L.otherHalf(s)!);
@@ -519,46 +531,74 @@ function hasWall(map: MapData, x: number, y: number, dir: string) {
     return !!(e && e.isWall);
 }
 
+// The kind of victim `id` names, among the map's year's (rules: tokens.kinds)
+function tokenKind(map: MapData, id: string): TokenKind | null {
+    return rulesOf(map).tokens.kinds.find(function (k) { return k.id === id; }) || null;
+}
+// The ring target kind of the map's year (in the map file, a token with a ring code is one)
+function targetKind(map: MapData): TokenKind | null {
+    return rulesOf(map).tokens.kinds.find(function (k) { return k.family === 'target'; }) || null;
+}
+function isTarget(map: MapData, id: string) {
+    const k = tokenKind(map, id);
+    return !!k && k.family === 'target';
+}
+// The kind a letter on a tile side, or a value of a 6 cm face, stands for in the map file
+function kindByEdge(map: MapData, letter: string) {
+    const k = rulesOf(map).tokens.kinds.find(function (k) { return k.edge === letter; });
+    return k ? k.id : letter;
+}
+function kindBySlot(map: MapData, value: string) {
+    const k = rulesOf(map).tokens.kinds.find(function (k) { return k.slot === value; });
+    return k ? k.id : '';
+}
+
 function edgeVictim(map: MapData, x: number, y: number): (VictimInfo & { dir: string }) | null {
     const t = tileOf(map, x, y);
     if (!t) return null;
     for (const d of Object.keys(SIDES)) {
         const v = t.victims && t.victims[d];
         const code = t.cognitives && t.cognitives[d + '_code'];
-        if (v || code) return { dir: d, type: code ? 'CT' : v || '', code: code || '', fake: !!t.victim_is_fake };
+        if (v || code) {
+            const target = code ? targetKind(map) : null;
+            return { dir: d, type: target ? target.id : v ? kindByEdge(map, v) : '', code: code || '', fake: !!t.victim_is_fake };
+        }
     }
     return null;
 }
 
-// A letter victim (H, S, U) on the wall at side `dir` of the tile; a tile holds one (as in the
-// classic editor). Rooms 2 and 3 place victims on their 6 cm walls instead (next stage).
+// A victim on the wall at side `dir` of the tile, in a room whose victims go on tile sides (rules:
+// rooms); a tile holds one (as in the classic editor). Victims of rooms whose victims go on the
+// 6 cm faces are in slots (setSlotVictim), those of a picture in the picture.
 function victimRule(map: MapData, x: number, y: number, dir: string): { ok: boolean; reason?: string } {
     if (!isInside(map, x, y)) return { ok: false, reason: 'outside' };
-    const room = roomOf(map, x, y);
-    if (room === 4) return { ok: false, reason: 'room4' };
-    if (isPassage(map, x, y)) return { ok: false, reason: 'passage' };
-    if (room === 2 || room === 3) return { ok: false, reason: 'quarterTile' };
+    const rules = rulesOf(map), takes = rules.rooms[roomOf(map, x, y)];
+    if (takes.tokens === 'picture') return { ok: false, reason: 'room4' };
+    if (isPassage(map, x, y) && !rules.tokens.inPassages) return { ok: false, reason: 'passage' };
+    if (takes.tokens === 'slot') return { ok: false, reason: 'quarterTile' };
     if (!hasWall(map, x, y, dir)) return { ok: false, reason: 'noWall' };
     return { ok: true };
 }
 
-// type H, S, U (letters) or CT (a cognitive target: opts.code = its ring code, K R Y G B from the
-// outside in, as Erebus draws it); opts.rot = the turn of the token in degrees
+// type: a kind of the map's year (rules: tokens.kinds; 2026: H, S, U letters, CT a cognitive target:
+// opts.code = its ring code, K R Y G B from the outside in, as Erebus draws it); opts.rot = the turn
+// of the token in degrees
 function setVictim(map: MapData, x: number, y: number, dir: string, type: string, fake?: boolean, opts?: VictimOpts) {
     opts = opts || {};
-    if (!victimRule(map, x, y, dir).ok) return false;
+    const kind = tokenKind(map, type);
+    if (!kind || !victimRule(map, x, y, dir).ok) return false;
     const t = ensureTile(map, x, y);
     t.victims = {};
     t.cognitives = {};
-    if (type === 'CT') {
+    if (kind.family === 'target') {
         // the classic editor keeps the letter of a valid code beside it (scores read it)
-        const letter = W.cognitiveCodeToVictimLetter(opts.code);
+        const letter = rulesOf(map).tokens.target.typeOf(opts.code);
         t.cognitives![dir + '_code'] = opts.code;
         if (letter) t.victims![dir] = letter;
         t.victim_is_fake = false;
     } else {
-        t.victims![dir] = type;
-        t.victim_is_fake = !!fake;
+        t.victims![dir] = kind.edge || kind.id;
+        t.victim_is_fake = !!fake && kind.fakeable;
     }
     t.single_victim_rotation = opts.rot || 0;
     if (opts.offset !== undefined) setOffsetValue(t, null, opts.offset);
@@ -604,13 +644,13 @@ function arcChoice(map: MapData, px: number, py: number): Required<Quarter> | nu
     let best = 1;
     for (let v = 2; v <= 4; v++) if (arcDistance(at.x, at.y, at.q, v, px, py) < arcDistance(at.x, at.y, at.q, best, px, py)) best = v;
     at.v = best;
-    at.rule = L.arcRule(roomOf(map, at.x, at.y));
+    at.rule = L.arcRule(roomOf(map, at.x, at.y), rulesOf(map).rooms);
     return at as Required<Quarter>;
 }
 
 // Sets curve v in a quarter (0 takes it out); only room 3 takes curves
 function setCurve(map: MapData, x: number, y: number, q: number, v: number) {
-    if (v && !L.arcRule(roomOf(map, x, y)).ok) return false;
+    if (v && !L.arcRule(roomOf(map, x, y), rulesOf(map).rooms).ok) return false;
     const t = ensureTile(map, x, y);
     if (Number(t.curve[q]) === v) return false;
     L.setArc(map, x, y, q, v);
@@ -643,8 +683,6 @@ function arcNear(map: MapData, px: number, py: number, reach: number): L.Arc | n
 // Slot i = quarter (NW, NE, SW, SE) * 4 + side (top, right, bottom, left), as halfWallVic. A slot
 // is on a wall when the tile edge (whole, or the half wall over that half) is there, or the inner
 // half wall, or - in a quarter with a curve - that curve. Same as the classic tile dialog.
-const SLOT_VALUE: Record<string, string> = { H: '1', U: '2', S: '3' };
-const SLOT_TYPE: Record<string, string> = { 1: 'H', 2: 'U', 3: 'S' };
 
 function slotHasWall(map: MapData, x: number, y: number, i: number) {
     const q = Math.floor(i / 4), side = i % 4, qx = q % 2, qy = Math.floor(q / 2);
@@ -699,33 +737,33 @@ function slotVictim(map: MapData, x: number, y: number, i: number): VictimInfo |
     const v = t.halfWallVic && t.halfWallVic[i];
     const code = t.halfWallCognitives && t.halfWallCognitives[i];
     if ((!v || v == 0) && !code) return null;
-    return { type: code ? 'CT' : SLOT_TYPE[v as string] || '', value: v, code: code || '', fake: !!(t.halfWallVicFakes && t.halfWallVicFakes[i]) };
+    const target = code ? targetKind(map) : null;
+    return { type: target ? target.id : kindBySlot(map, String(v)), value: v, code: code || '', fake: !!(t.halfWallVicFakes && t.halfWallVicFakes[i]) };
 }
 
 function slotRule(map: MapData, x: number, y: number, i: number): { ok: boolean; reason?: string } {
-    const room = roomOf(map, x, y);
-    if (room !== 2 && room !== 3) return { ok: false, reason: 'notQuarterTile' };
-    if (isPassage(map, x, y)) return { ok: false, reason: 'passage' };
+    const rules = rulesOf(map), takes = rules.rooms[roomOf(map, x, y)];
+    if (!takes || takes.tokens !== 'slot') return { ok: false, reason: 'notQuarterTile' };
+    if (isPassage(map, x, y) && !rules.tokens.inPassages) return { ok: false, reason: 'passage' };
     if (!slotHasWall(map, x, y, i)) return { ok: false, reason: 'noWall' };
     return { ok: true };
 }
 
-const CT_VALUE: Record<string, number> = { F: 5, P: 6, C: 7, O: 8 };
-
-// As setVictim, for slot i of a room 2 / 3 tile
+// As setVictim, for slot i of a tile whose victims go on the 6 cm faces
 function setSlotVictim(map: MapData, x: number, y: number, i: number, type: string, fake?: boolean, opts?: VictimOpts) {
     opts = opts || {};
-    if (!slotRule(map, x, y, i).ok) return false;
+    const kind = tokenKind(map, type);
+    if (!kind || !slotRule(map, x, y, i).ok) return false;
     const t = ensureTile(map, x, y);
-    if (type === 'CT') {
-        const letter = W.cognitiveCodeToVictimLetter(opts.code);
+    if (kind.family === 'target') {
+        const target = rulesOf(map).tokens.target, letter = target.typeOf(opts.code);
         t.halfWallCognitives[i] = opts.code as string;
-        t.halfWallVic[i] = letter ? CT_VALUE[letter] : (null as any);
+        t.halfWallVic[i] = letter ? target.slot[letter] : (null as any);
         t.halfWallVicFakes[i] = false;
     } else {
-        t.halfWallVic[i] = SLOT_VALUE[type];
+        t.halfWallVic[i] = kind.slot as string;
         t.halfWallCognitives[i] = '';
-        t.halfWallVicFakes[i] = !!fake;
+        t.halfWallVicFakes[i] = !!fake && kind.fakeable;
     }
     t.halfWallVicRots[i] = opts.rot || 0;
     if (opts.offset !== undefined) setOffsetValue(t, i, opts.offset);
@@ -753,11 +791,12 @@ function victimAt(map: MapData, where: Where): VictimInfo | null {
     return v;
 }
 
-// Changes what is given of type (H, S, U), fake and rot; a cognitive target keeps its code
+// Changes what is given of type (a letter kind for a letter victim), fake and rot; a target keeps
+// its kind and changes only its code
 function changeVictim(map: MapData, where: Where, change: { type?: string; fake?: boolean; rot?: number; code?: string }) {
     const v = victimAt(map, where);
     if (!v) return false;
-    const type = change.type && v.type !== 'CT' ? change.type : v.type;
+    const type = change.type && !isTarget(map, v.type) ? change.type : v.type;
     const fake = change.fake === undefined ? v.fake : change.fake;
     const rot = change.rot === undefined ? v.rot : ((Number(change.rot) % 360) + 360) % 360;
     const opts = { code: change.code || v.code, rot: rot };
@@ -776,9 +815,7 @@ function removeVictim(map: MapData, where: Where) {
 // ends and of the other victims. Kept in the tile (victim_offset, halfWallVicOffsets[i]); the classic
 // editor leaves it alone and shows the victim in the middle. On a curve (room 3) it goes round the
 // arc of its quarter: its offset is the length of arc from the middle, + clockwise as drawn.
-const TOKEN_HALF = 1;       // a letter victim is 2 cm across (rule 3.7.2)
-const TARGET_HALF = 2.5;    // a cognitive target 5 cm (rule 3.7.7)
-const TOKEN_GAP = 0.5;      // and at least this far from another one
+// (how wide each kind is, and how far apart they keep: rules: tokens)
 const OFFSET_STEP = 0.1;
 
 export interface VictimPlace {
@@ -895,26 +932,30 @@ function tokenHalf(map: MapData, where: Where, type?: string) {
         const v = victimAt(map, where);
         type = v ? v.type : '';
     }
-    return type === 'CT' ? TARGET_HALF : TOKEN_HALF;
+    const kind = tokenKind(map, type) || rulesOf(map).tokens.kinds[0];
+    return kind.widthCm / 2;
 }
 
 // The victim on the face of its wall: from end to end (on a curve, the chord of its arc)
-function tokenSpan(p: VictimPlace, half: number): { a: number[]; b: number[]; r: number } {
+function tokenSpan(p: VictimPlace, half: number, wallHalf: number): { a: number[]; b: number[]; r: number } {
     const ends = [-half, half].map(function (k) {
         const f = faceAt(p, k);
-        return [f.w[0] + f.n[0] * WALL_HALF, f.w[1] + f.n[1] * WALL_HALF];
+        return [f.w[0] + f.n[0] * wallHalf, f.w[1] + f.n[1] * wallHalf];
     });
     return { a: ends[0], b: ends[1], r: 0 };
 }
 
-interface FitWorld { half: number; pieces: number[][][]; others: { a: number[]; b: number[]; r: number }[] }
+interface FitWorld { half: number; wallHalf: number; gap: number; pieces: number[][][]; others: { a: number[]; b: number[]; r: number }[] }
 
 // What the victim at `where` (or one of `type` there) has to fit among
 function fitWorld(map: MapData, where: Where, type?: string): FitWorld {
+    const rules = rulesOf(map), wallHalf = rules.geometry.wallHalfCm;
     return {
         half: tokenHalf(map, where, type),
+        wallHalf: wallHalf,
+        gap: rules.tokens.gapCm,
         pieces: wallPieces(map),
-        others: allVictims(map).filter(function (w) { return !sameWhere(w, where); }).map(function (w) { return tokenSpan(victimPlace(map, w), tokenHalf(map, w)); })
+        others: allVictims(map).filter(function (w) { return !sameWhere(w, where); }).map(function (w) { return tokenSpan(victimPlace(map, w), tokenHalf(map, w), wallHalf); })
     };
 }
 
@@ -933,11 +974,11 @@ function victimFits(map: MapData, where: Where, offset: number, world?: FitWorld
         const { w, n } = faceAt(p, k);
         if (!near.some(function (s) { return pointSegDist(w, s[0], s[1]) <= 0.01; })) return false;
         // nothing else comes up to its face
-        const f = [w[0] + n[0] * (WALL_HALF + 0.05), w[1] + n[1] * (WALL_HALF + 0.05)];
-        if (near.some(function (s) { return pointSegDist(f, s[0], s[1]) < WALL_HALF - 1e-9; })) return false;
+        const f = [w[0] + n[0] * (world.wallHalf + 0.05), w[1] + n[1] * (world.wallHalf + 0.05)];
+        if (near.some(function (s) { return pointSegDist(f, s[0], s[1]) < world!.wallHalf - 1e-9; })) return false;
     }
-    const me = tokenSpan(p, half);
-    return world.others.every(function (o) { return segSegDist(me.a, me.b, o.a, o.b) - o.r - me.r >= TOKEN_GAP - 1e-9; });
+    const me = tokenSpan(p, half, world.wallHalf);
+    return world.others.every(function (o) { return segSegDist(me.a, me.b, o.a, o.b) - o.r - me.r >= world!.gap - 1e-9; });
 }
 
 // How far the victim at `where` can go along its wall, from where it is (start: from that offset
@@ -1178,7 +1219,8 @@ function removeLine(map: MapData, axis: string, t: number) {
 // Out: { res, gw, gh, reached (Uint8Array, 1 = a centre gets there), miss (Uint8Array, 1 = out of
 // reach), pocketCount, pocketAt(x, y) cm, victims: [[x, y]] cm of the victims it cannot get to },
 // or null without a start tile.
-const REACH_RES = 0.5, ROBOT_R = 3.7, WALL_HALF = 0.5, VICTIM_NEAR = 6, SPECK_CM2 = 5;
+// (the robot's size, the walls' thickness and how near it comes to identify a token: rules: geometry)
+const REACH_RES = 0.5, SPECK_CM2 = 5;
 
 // Distance (in cells) from every cell to the nearest cell with src set, two passes over a 5 x 5
 // chamfer mask (close to the straight-line distance)
@@ -1210,12 +1252,13 @@ function distanceTo(src: ArrayLike<number>, gw: number, gh: number) {
 function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
     const st = map.startTile;
     if (!st || !(st.x > 0 && st.y > 0)) return null;
+    const geometry = rulesOf(map).geometry;
     const res = REACH_RES, gw = Math.round(12 * map.width / res), gh = Math.round(12 * map.length / res);
     const at = function (x: number, y: number) { return Math.floor(y / res) * gw + Math.floor(x / res); };
     // walls (and the floor that is not there: outside tiles) on the grid
     const wall = new Uint8Array(gw * gh);
     const markSeg = function (a: number[], b: number[]) {
-        const r = WALL_HALF;
+        const r = geometry.wallHalfCm;
         const i0 = Math.max(0, Math.floor((Math.min(a[0], b[0]) - r) / res)), i1 = Math.min(gw - 1, Math.ceil((Math.max(a[0], b[0]) + r) / res));
         const j0 = Math.max(0, Math.floor((Math.min(a[1], b[1]) - r) / res)), j1 = Math.min(gh - 1, Math.ceil((Math.max(a[1], b[1]) + r) / res));
         const dx = b[0] - a[0], dy = b[1] - a[1], l2 = dx * dx + dy * dy || 1;
@@ -1270,7 +1313,7 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
         return distanceTo(src, gw, gh);
     })();
     const edgeDist = function (i: number, j: number) { return Math.min(i + 0.5, j + 0.5, gw - i - 0.5, gh - j - 0.5); };
-    const need = ROBOT_R / res;
+    const need = geometry.robotRadiusCm / res;
     const free = new Uint8Array(gw * gh);
     for (let j = 0; j < gh; j++)
         for (let i = 0; i < gw; i++) free[j * gw + i] = dWall[j * gw + i] >= need && edgeDist(i, j) >= need && !hole[j * gw + i] ? 1 : 0;
@@ -1349,7 +1392,7 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
     };
     const near = function (pt: number[], wallPt: number[]) {
         if (pocketAt(pt[0], pt[1])) return false;
-        const n = [pt[0] - wallPt[0], pt[1] - wallPt[1]], r = VICTIM_NEAR;
+        const n = [pt[0] - wallPt[0], pt[1] - wallPt[1]], r = geometry.identifyCm;
         for (let j = Math.max(0, Math.floor((wallPt[1] - r) / res)); j <= Math.min(gh - 1, Math.ceil((wallPt[1] + r) / res)); j++) {
             for (let i = Math.max(0, Math.floor((wallPt[0] - r) / res)); i <= Math.min(gw - 1, Math.ceil((wallPt[0] + r) / res)); i++) {
                 if (!reached[j * gw + i]) continue;
@@ -1471,10 +1514,10 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
     const badSegs: string[] = [], badArcs: L.Arc[] = [];
     walls.segs.forEach(function (s) {
         if (isOuterSeg(map, s)) return;
-        const rule = L.segRule(s, room);
+        const rule = L.segRule(s, room, rulesOf(map).rooms);
         if (!rule.ok || (rule.whole && !L.hasSeg(map, L.otherHalf(s)!))) badSegs.push(s);
     });
-    walls.arcs.forEach(function (a) { if (!L.arcRule(room(a.x, a.y)).ok) badArcs.push(a); });
+    walls.arcs.forEach(function (a) { if (!L.arcRule(room(a.x, a.y), rulesOf(map).rooms).ok) badArcs.push(a); });
     if (badSegs.length || badArcs.length) {
         let at: number[];
         if (badSegs.length) { const g = L.parseSeg(badSegs[0]); at = [6 * g.i + (g.dir === 'h' ? 3 : 0), 6 * g.j + (g.dir === 'v' ? 3 : 0)]; }
@@ -1599,7 +1642,7 @@ function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string>
     if (key === 'wallRule') {
         const room = roomLookup(map);
         (p.show && p.show.segs || []).forEach(function (s) {
-            const rule = L.segRule(s, room);
+            const rule = L.segRule(s, room, rulesOf(map).rooms);
             if (!rule.ok) L.setSeg(map, s, false);
             else if (rule.whole) L.setSeg(map, L.otherHalf(s)!, true);   // beside room 1: the whole tile edge
         });
@@ -1628,7 +1671,8 @@ function saved(map: MapData) {
         name: map.name, length: map.length, height: map.height, width: map.width, finished: map.finished,
         startTile: map.startTile, cells: map.cells, roomTiles: map.roomTiles, time: map.time,
         area4Room: map.area4Room, room4CanvasSave: map.room4CanvasSave || null,
-        room4VicTypes: map.room4VicTypes || [], room4Tokens: map.room4Tokens || [], connCheckOff: !!map.connCheckOff
+        room4VicTypes: map.room4VicTypes || [], room4Tokens: map.room4Tokens || [], connCheckOff: !!map.connCheckOff,
+        rules: map.rules || FIRST_YEAR
     };
 }
 
@@ -1636,11 +1680,11 @@ function saved(map: MapData) {
 // needs room4(copy) = the hooks that read its picture (SimRoom4World2026, browser only).
 // A value that is not a number in it (NaN, undefined) would make Webots read nothing at all and open
 // an empty world: it is not given out, but thrown as a BrokenWorld with the line it is on.
-function world(map: MapData, room4?: (copy: MapData) => WorldHooks): string {
+function world(map: MapData, room4?: (copy: MapData) => Partial<WorldHooks>): string {
     const m = JSON.parse(JSON.stringify(saved(map)));
     m.area4 = W.area4Presets();
     W.recalculate(m);
-    const text = W.createWorld(m, room4 ? room4(m) : {});
+    const text = rulesOf(map).export.createWorld(m, room4 ? room4(m) : {});
     const bad = text.match(/^.*\b(NaN|undefined|Infinity)\b.*$/m);
     if (bad) throw new BrokenWorld(bad[0].trim());
     return text;
@@ -1655,6 +1699,8 @@ class BrokenWorld extends Error {
 }
 
 export {
+    tokenKind,
+    isTarget,
     setFloorKind,
     floorKind,
     BrokenWorld,

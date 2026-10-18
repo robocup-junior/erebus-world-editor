@@ -619,14 +619,14 @@ const LESSON: TourStep[] = ([
     {
         id: 'victim', chapter: 'victims', target: PANEL, tool: 'victim', victim: 'H',
         region: function () { return [[1, 1, 1, 1]]; },
-        goal: function (env) { return victims(env).some(function (v) { return v.type !== 'CT' && !v.fake; }); },
+        goal: function (env) { return victims(env).some(function (v) { return !env.M.isTarget(env.map, v.type) && !v.fake; }); },
         auto: function (env) { env.M.setVictim(env.map, 3, 3, 'bottom', 'H', false, { rot: 0 }); },
         state: function (env) { return victims(env).length ? { key: 'notReal' } : null; }
     },
     {
         id: 'fake', chapter: 'victims', target: PANEL, tool: 'victim',
         region: function () { return [[4, 0, 4, 0]]; },
-        goal: function (env) { return victims(env).some(function (v) { return v.type !== 'CT' && v.fake; }); },
+        goal: function (env) { return victims(env).some(function (v) { return !env.M.isTarget(env.map, v.type) && v.fake; }); },
         auto: function (env) { env.M.setSlotVictim(env.map, 9, 1, 0, 'S', true, { rot: 90 }); },
         enter: function (env, st) { st.n0 = victims(env).length; },
         state: function (env, st) { return victims(env).length > st.n0 ? { key: 'notFake' } : null; }
@@ -634,7 +634,7 @@ const LESSON: TourStep[] = ([
     {
         id: 'ct', chapter: 'victims', target: PANEL, tool: 'victim', victim: 'CT',
         region: function () { return [[3, 5, 3, 5]]; },
-        goal: function (env) { return victims(env).some(function (v) { return v.type === 'CT'; }); },
+        goal: function (env) { return victims(env).some(function (v) { return env.M.isTarget(env.map, v.type); }); },
         auto: function (env) { env.M.setSlotVictim(env.map, 7, 11, 10, 'CT', false, { code: 'GYYKG' }); }
     },
     {

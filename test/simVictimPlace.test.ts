@@ -5,7 +5,7 @@ import assert from 'node:assert';
 import type { MapData } from '../src/lib/types';
 import * as M from '../src/lib/model';
 import * as L from '../src/lib/lattice';
-import * as Score from '../src/lib/score';
+import * as Score from '../src/rules/parts/scoring/v1';
 
 type Where = M.Where;
 const edge = (x: number, y: number, dir: string): Where => ({ kind: 'edge', x, y, dir });

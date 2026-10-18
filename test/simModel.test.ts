@@ -160,7 +160,9 @@ test('the saved map and the world export work as in the classic editor', () => {
   M.setVictim(map, 1, 1, 'right', 'H', false);
   M.setFloor(map, 5, 3, 'checkpoint');
   const saved = M.saved(map);
-  assert.deepStrictEqual(Object.keys(saved), ['name', 'length', 'height', 'width', 'finished', 'startTile', 'cells', 'roomTiles', 'time', 'area4Room', 'room4CanvasSave', 'room4VicTypes', 'room4Tokens', 'connCheckOff']);
+  assert.deepStrictEqual(Object.keys(saved), ['name', 'length', 'height', 'width', 'finished', 'startTile', 'cells', 'roomTiles', 'time', 'area4Room', 'room4CanvasSave', 'room4VicTypes', 'room4Tokens', 'connCheckOff', 'rules']);
+  // the year of its rules (the classic editor leaves a field it does not know alone)
+  assert.strictEqual(saved.rules, 2026);
   const world = quietly(() => M.world(map));
   assert.ok(world.startsWith('#VRML_SIM'));
   assert.ok(/Victim|victim/.test(world));

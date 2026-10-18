@@ -11,17 +11,17 @@ import * as M from '../lib/model';
 import * as L from '../lib/lattice';
 import * as W from '../lib/world2026';
 import * as Icons from '../lib/icons';
-import * as R4W from '../lib/room4World2026';
 import * as View from '../lib/view';
 import * as T from '../lib/tour';
 import * as Keys from '../lib/keys';
 import { fixed } from './format';
-import * as Score from '../lib/score';
+import { rulesOf, rulesFor, years, LATEST_YEAR } from '../rules/registry';
+import type { Ruleset, MaxScore, StampType } from '../rules/types';
 import * as OpenCV from '../lib/opencv';
 import type { MapData, Room4Token } from '../lib/types';
 import type { Problem, Region, Where, VictimInfo, Clip, Show } from '../lib/model';
 import type { TourStep, TourEnv, CreatorApi, Rect, StepState } from '../lib/tour';
-import { i18n, t, lang, setLang, type Lang } from '../i18n';
+import { i18n, t, lang, setLang, setRuleTexts, type Lang } from '../i18n';
 import { tick, digest, apply, later, cancel, applyAsync } from './runtime';
 
 const TILE = 12;
@@ -49,7 +49,7 @@ export interface Room4Host {
     room4Img: HTMLImageElement;
     room4CanvasSave: string | null;
     room4Tokens: Room4Token[];
-    room4StampTypes: typeof R4W.stampTypes;
+    room4StampTypes: StampType[];
     // the floor of each room 4 tile ('black', 'swamp', 'checkpoint'; none left out), by its cell key
     // "x,y": set in the creator, put on the map when it closes
     room4Floors: Record<string, string>;
@@ -95,10 +95,35 @@ export function createEditor() {
     ];
     // the rail shows them in groups: look / rooms / walls / floors and victims
     const byId = function (id: string) { return tools.find(function (x) { return x.id === id; })!; };
-    // Victim choices as the stamps of the room 4 creator: letter victims (real / fake rows) and
-    // cognitive targets by type (a type gives random rings of it, then the rings can be changed)
-    const STAMPS = R4W.stampTypes;
-    const LETTER: Record<string, string> = { 'Φ': 'H', 'Ψ': 'S', 'Ω': 'U' };
+    // Victim choices, by the rules of the map's year (rules: tokens), as the stamps of the room 4
+    // creator: its letter victims (real / fake rows) and its ring targets by type (a type gives random
+    // rings of it, then the rings can be changed). Made again when a map of another year opens.
+    function victimPanel(rules: Ruleset) {
+        const kinds = rules.tokens.kinds, stamps = rules.tokens.stamps;
+        const target = kinds.find(function (k) { return k.family === 'target'; });
+        const idOf = function (symbol: string) {
+            const k = kinds.find(function (k) { return k.family === 'letter' && k.symbol === symbol; });
+            return k ? k.id : symbol;
+        };
+        return {
+            victimRows: [
+                { label: 'real', types: stamps.filter(function (x) { return x.kind === 'victim'; }) },
+                { label: 'fake', types: stamps.filter(function (x) { return x.kind === 'fake'; }) }
+            ].map(function (row) {
+                return {
+                    label: row.label,
+                    types: row.types.map(function (x): StampChoice { return { id: idOf(x.symbol), fake: x.kind === 'fake', kind: x.kind, symbol: x.symbol, color: x.color, name: x.name }; })
+                };
+            }),
+            ctStamps: stamps.filter(function (x) { return x.kind === 'ct' || x.kind === 'fakect'; })
+                .map(function (x): StampChoice { return { letter: x.kind === 'fakect' ? 'X' : x.symbol, kind: x.kind, symbol: x.symbol, color: x.color, name: x.name }; }),
+            victimChoices: kinds.map(function (k) { return { id: k.id, symbol: k.symbol }; }),
+            // the kind that is a ring target ('' when the year has none)
+            targetId: target ? target.id : ''
+        };
+    }
+    const firstPanel = victimPanel(rulesFor(LATEST_YEAR)!);
+    let panelYear = LATEST_YEAR;
 
     const S = reactive({
         tools: tools,
@@ -113,18 +138,10 @@ export function createEditor() {
             { id: 'checkpoint', icon: 'fa-flag-checkered' }, { id: 'black', icon: 'fa-square' },
             { id: 'swamp', icon: 'fa-water' }, { id: 'start', icon: 'fa-play' }, { id: 'clear', icon: 'fa-times' }
         ],
-        victimRows: [
-            { label: 'real', types: STAMPS.filter(function (x) { return x.kind === 'victim'; }) },
-            { label: 'fake', types: STAMPS.filter(function (x) { return x.kind === 'fake'; }) }
-        ].map(function (row) {
-            return {
-                label: row.label,
-                types: row.types.map(function (x): StampChoice { return { id: LETTER[x.symbol], fake: x.kind === 'fake', kind: x.kind, symbol: x.symbol, color: x.color, name: x.name }; })
-            };
-        }),
-        ctStamps: STAMPS.filter(function (x) { return x.kind === 'ct' || x.kind === 'fakect'; })
-            .map(function (x): StampChoice { return { letter: x.kind === 'fakect' ? 'X' : x.symbol, kind: x.kind, symbol: x.symbol, color: x.color, name: x.name }; }),
-        victimChoices: [{ id: 'H', symbol: 'Φ' }, { id: 'S', symbol: 'Ψ' }, { id: 'U', symbol: 'Ω' }, { id: 'CT', symbol: 'CT' }],
+        victimRows: firstPanel.victimRows,
+        ctStamps: firstPanel.ctStamps,
+        victimChoices: firstPanel.victimChoices,
+        targetId: firstPanel.targetId,
         // Cognitive target: five rings, K R Y G B from the outside in (Erebus order); the sum of their
         // values gives the type (0 F, 1 P, 2 C, 3 O, anything else fake)
         ringColors: [
@@ -142,8 +159,8 @@ export function createEditor() {
         fileName: '',
         problems: [] as ProblemItem[],
         blocking: false,
-        // the most the map can score (lib/score), worked out after each change; null without a start
-        score: null as Score.MaxScore | null,
+        // the most the map can score (rules: scoring), worked out after each change; null without a start
+        score: null as MaxScore | null,
         hint: '',
         notice: null as Notice | null,
         canUndo: false,
@@ -151,6 +168,7 @@ export function createEditor() {
         zoom: 0,
         lang: lang() as Lang,
         error: '',
+        errorParams: {} as Record<string, unknown>,
         dialog: null as Dialog | null,
         kept: null as { time: number; name: string; map: MapData } | null,
         region: null as Region | null,
@@ -164,9 +182,23 @@ export function createEditor() {
     });
     const ui = S.ui;
 
+    // the rules of the map open (of the latest year before one is)
+    function rules(): Ruleset {
+        return map ? rulesOf(map) : rulesFor(LATEST_YEAR)!;
+    }
+    // whether a kind of victim is the ring target kind
+    function isTarget(id: string) {
+        return !!id && id === S.targetId;
+    }
+    // what the editor shows for a kind of victim
+    function symbolOf(id: string) {
+        const k = rules().tokens.kinds.find(function (k) { return k.id === id; });
+        return k ? k.symbol : '';
+    }
+
     function pickVictim(v: StampChoice) { ui.victim = v.id!; ui.fake = !!v.fake; }
     function pickCt(letter: string) {
-        ui.victim = 'CT';
+        ui.victim = S.targetId;
         if (ctLetter() !== letter) randomCode(letter);
     }
     function targetStyle(code: string) {
@@ -174,13 +206,13 @@ export function createEditor() {
     }
 
     function ctLetter() {
-        return W.cognitiveCodeToVictimLetter(pickerRings().join('')) || 'X';
+        return rules().tokens.target.typeOf(pickerRings().join('')) || 'X';
     }
     function setRing(i: number, c: string) { ui.rings[i] = c; }
     // the ring picked on the target takes the colour, and the next ring is picked
     function pickColor(c: string) {
         const sel = S.selected;
-        if (sel && sel.victim.type === 'CT') {
+        if (sel && isTarget(sel.victim.type)) {
             const rings = sel.victim.code.split('');
             rings[ui.ring] = c;
             ui.ring = (ui.ring + 1) % 5;
@@ -193,7 +225,7 @@ export function createEditor() {
     // the rings the picker shows: those of the selected cognitive target, or of the next one
     function pickerRings(): string[] {
         const sel = S.selected;
-        return sel && sel.victim.type === 'CT' ? sel.victim.code.split('') : ui.rings;
+        return sel && isTarget(sel.victim.type) ? sel.victim.code.split('') : ui.rings;
     }
     function ringColor(i: number) {
         const rings = pickerRings();
@@ -208,10 +240,10 @@ export function createEditor() {
     }
     // the symbol shown on the rotation dial for the victim being placed
     function victimSymbol() {
-        if (ui.victim === 'CT') { const l = ctLetter(); return l === 'X' ? '×' : l; }
-        return ({ H: 'Φ', S: 'Ψ', U: 'Ω' } as Record<string, string>)[ui.victim];
+        if (isTarget(ui.victim)) { const l = ctLetter(); return l === 'X' ? '×' : l; }
+        return symbolOf(ui.victim);
     }
-    function randomCode(type: string) { ui.rings = W.randomCognitiveCode(type).split(''); }
+    function randomCode(type: string) { ui.rings = rules().tokens.target.randomCode(type).split(''); }
 
     // the victim being placed: type, fake, ring code and turn (random each time when asked)
     function victimOpts() {
@@ -221,7 +253,7 @@ export function createEditor() {
 
     function sameVictim(cur: VictimInfo | null) {
         if (!cur || cur.type !== ui.victim) return false;
-        return ui.victim === 'CT' ? cur.code === ui.rings.join('') : cur.fake === !!ui.fake;
+        return isTarget(ui.victim) ? cur.code === ui.rings.join('') : cur.fake === !!ui.fake;
     }
 
     let map: MapData = null as unknown as MapData, borders = new Set<string>(), past: string[] = [], future: string[] = [], before: string | null = null, dirty = false;
@@ -468,6 +500,7 @@ export function createEditor() {
 
     // opened: a map just opened, whose checks card starts closed when there is nothing to show
     function changed(opened?: boolean) {
+        followRules();
         computeLinear();
         computePockets();
         // the problems are worked out again: one pointed out may be gone (its item with it)
@@ -485,13 +518,26 @@ export function createEditor() {
         });
         S.blocking = S.problems.some(function (p) { return p.block; });
         // the most the map can score
-        S.score = map ? Score.maxScore(map, picture) : null;
+        S.score = map ? rulesOf(map).scoring.maxScore(map, picture) : null;
         // the checks card folds by itself when the last problem goes, and opens again when one comes
         if (opened) ui.checksFolded = !S.problems.length;
         else if (had && !S.problems.length) ui.checksFolded = true;
         else if (!had && S.problems.length) ui.checksFolded = false;
         if (view) view.redraw();
     }
+
+    // The map's year: its victims in the panel, its rule numbers and texts (i18n) - again only when a
+    // map of another year is open
+    function followRules() {
+        const r = rules();
+        setRuleTexts(r.year, r.refs);
+        if (r.year === panelYear) return;
+        panelYear = r.year;
+        Object.assign(S, victimPanel(r));
+        if (!r.tokens.kinds.some(function (k) { return k.id === ui.victim; })) { ui.victim = r.tokens.kinds[0].id; ui.fake = false; }
+    }
+    // before a map is open: the latest year's
+    setRuleTexts(LATEST_YEAR, rulesFor(LATEST_YEAR)!.refs);
 
     // A custom room 4 picture read for the checks and the score (its walls and its stamps): read once
     // per picture; it loads first, and the map is looked at again then
@@ -587,7 +633,14 @@ export function createEditor() {
             S.error = 'admin.simBeta.badFile';
             return;
         }
+        // a map of a year this editor does not take (made by a newer one)
+        if (data.rules && !rulesFor(Number(data.rules))) {
+            S.error = 'admin.simBeta.unknownRules';
+            S.errorParams = { year: data.rules, years: years().join(', ') };
+            return;
+        }
         S.error = '';
+        S.errorParams = {};
         load(data, fileName);
     }
 
@@ -659,7 +712,7 @@ export function createEditor() {
                             const size = room4CanvasSize();
                             m.canvasWidth = size.w;
                             m.canvasHeight = size.h;
-                            return R4W.create(m);
+                            return rulesOf(map).export.room4(m);
                         }));
                     } catch (e) { reject(e); }
                 };
@@ -701,11 +754,11 @@ export function createEditor() {
             roomTiles: map.roomTiles,
             canvasWidth: size.w,
             canvasHeight: size.h,
-            room4MapGeometry: function () { return W.mapGeometry(map); },
+            room4MapGeometry: function () { return W.mapGeometry(map, rulesOf(map).geometry); },
             room4Img: new Image(),
             room4CanvasSave: map.room4CanvasSave || null,
             room4Tokens: JSON.parse(JSON.stringify(map.room4Tokens || [])),
-            room4StampTypes: R4W.stampTypes,
+            room4StampTypes: rulesOf(map).tokens.stamps,
             room4Floors: floors
         };
         room4Done = function () {
@@ -918,7 +971,7 @@ export function createEditor() {
     // The name of the victim the victim tool places (as in its panel)
     function victimName() {
         let x: StampChoice | null = null;
-        if (ui.victim === 'CT') {
+        if (isTarget(ui.victim)) {
             const l = ctLetter();
             x = S.ctStamps.find(function (c) { return c.letter === l; }) || null;
         } else {
@@ -1222,7 +1275,7 @@ export function createEditor() {
         if (a) { M.setCurve(map, a.x, a.y, a.q, 0); return; }
         const s = M.segNear(map, p.x, p.y, reach());
         if (!s) return;
-        const rule = L.segRule(s, M.roomLookup(map));
+        const rule = L.segRule(s, M.roomLookup(map), rulesOf(map).rooms);
         M.setWalls(map, rule.whole ? [s, L.otherHalf(s)!] : [s], false);
     }
 
@@ -1335,7 +1388,7 @@ export function createEditor() {
 
     function selectWhere(where: Where | null) {
         const v = where && M.victimAt(map, where);
-        S.selected = v ? { where: where!, victim: v, rot: v.rot!, letter: v.type === 'CT' ? (W.cognitiveCodeToVictimLetter(v.code) || 'X') : '', offset: M.victimOffset(map, where!) } : null;
+        S.selected = v ? { where: where!, victim: v, rot: v.rot!, letter: isTarget(v.type) ? (rules().tokens.target.typeOf(v.code) || 'X') : '', offset: M.victimOffset(map, where!) } : null;
     }
 
     function selectNone() { S.selected = null; view.redraw(); }
@@ -1600,7 +1653,7 @@ export function createEditor() {
                 if (f) say(f.kind === 'start' ? 'erase_start' : 'erase_floor');
                 return f ? { kind: 'tile', tile: f.tile, color: '#dc2626' } : null;
             }
-            const rule = L.segRule(s, M.roomLookup(map));
+            const rule = L.segRule(s, M.roomLookup(map), rulesOf(map).rooms);
             say(rule.whole ? 'erase_wallWhole' : 'erase_wall');
             return { kind: 'segs', segs: rule.whole ? [s, L.otherHalf(s)] : [s], color: '#dc2626' };
         }
@@ -2398,7 +2451,7 @@ export function createEditor() {
         canvasDblClick: canvasDblClick,
         room4Gone: room4Gone,
         // read while drawing the page
-        ctLetter: ctLetter, pickerRings: pickerRings, ringColor: ringColor, ctSum: ctSum, victimSymbol: victimSymbol,
+        ctLetter: ctLetter, isTarget: isTarget, symbolOf: symbolOf, pickerRings: pickerRings, ringColor: ringColor, ctSum: ctSum, victimSymbol: victimSymbol,
         targetStyle: targetStyle, toolKey: function (id: string) { return (byId(id) || {} as Tool).key; },
         linearNoStart: linearNoStart, linearUnreached: linearUnreached, room4State: room4State, canFixAll: canFixAll,
         regionSize: regionSize, toolHint: toolHint, room4Ready: room4Ready, tourLook: tourLook, tourStep: tourStep,

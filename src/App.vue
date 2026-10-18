@@ -7,7 +7,7 @@ import { tick } from './editor/runtime';
 import { fixed, monthDayTime } from './editor/format';
 import { t } from './i18n';
 import * as Keys from './lib/keys';
-import type { AreaScore } from './lib/score';
+import type { AreaScore } from './rules/types';
 import RotationDial from './components/RotationDial.vue';
 import CtRings from './components/CtRings.vue';
 import Modal from './components/Modal.vue';
@@ -27,7 +27,6 @@ const KEY_SHEET = [
 ];
 // a key as shown: '@name' is a mouse action in words
 function keyName(k: string) { return k.charAt(0) === '@' ? t('admin.simBeta.keySheet.keys.' + k.slice(1)) : keys(k); }
-const LETTER: Record<string, string> = { H: 'Φ', S: 'Ψ', U: 'Ω' };
 
 const fileEl = ref<HTMLInputElement | null>(null);
 const canvasEl = ref<HTMLCanvasElement | null>(null);
@@ -251,20 +250,20 @@ onMounted(function () {
                 <button class="btn btn-sm btn-link p-0" type="button" @click="E.selectNone()">{{ t('admin.simBeta.selectDone') }}</button>
               </div>
               <div class="sbx-sel-head">
-                <span class="sbx-sel-symbol target" v-if="S.selected.victim.type === 'CT'" :style="E.targetStyle(S.selected.victim.code)"></span>
-                <span class="sbx-sel-symbol" v-if="S.selected.victim.type !== 'CT'" :class="{ fake: S.selected.victim.fake }">{{ LETTER[S.selected.victim.type] }}</span>
-                <span v-if="S.selected.victim.type === 'CT'">{{ t(S.selected.letter === 'X' ? 'admin.simMapEditor.ctFake' : 'admin.simMapEditor.ct' + S.selected.letter) }}</span>
-                <span v-if="S.selected.victim.type !== 'CT' && S.selected.victim.fake">{{ t('admin.simBeta.fake') }}</span>
+                <span class="sbx-sel-symbol target" v-if="E.isTarget(S.selected.victim.type)" :style="E.targetStyle(S.selected.victim.code)"></span>
+                <span class="sbx-sel-symbol" v-if="!E.isTarget(S.selected.victim.type)" :class="{ fake: S.selected.victim.fake }">{{ E.symbolOf(S.selected.victim.type) }}</span>
+                <span v-if="E.isTarget(S.selected.victim.type)">{{ t(S.selected.letter === 'X' ? 'admin.simMapEditor.ctFake' : 'admin.simMapEditor.ct' + S.selected.letter) }}</span>
+                <span v-if="!E.isTarget(S.selected.victim.type) && S.selected.victim.fake">{{ t('admin.simBeta.fake') }}</span>
               </div>
-              <div class="sbx-label" v-if="S.selected.victim.type !== 'CT'">{{ t('admin.simBeta.kind') }}</div>
-              <div class="sbx-choices" v-if="S.selected.victim.type !== 'CT'">
+              <div class="sbx-label" v-if="!E.isTarget(S.selected.victim.type)">{{ t('admin.simBeta.kind') }}</div>
+              <div class="sbx-choices" v-if="!E.isTarget(S.selected.victim.type)">
                 <button class="sbx-choice letter" type="button" v-for="v in S.victimChoices.slice(0, 3)" :key="v.id" :class="{ active: S.selected.victim.type === v.id }" @click="E.changeSelected({ type: v.id })">{{ v.symbol }}</button>
               </div>
-              <label class="sbx-check" v-if="S.selected.victim.type !== 'CT'">
+              <label class="sbx-check" v-if="!E.isTarget(S.selected.victim.type)">
                 <input type="checkbox" :checked="S.selected.victim.fake" @click="E.changeSelected({ fake: !S.selected.victim.fake })">{{ t('admin.simBeta.fake') }}</label>
-              <div v-if="S.selected.victim.type !== 'CT'">
+              <div v-if="!E.isTarget(S.selected.victim.type)">
                 <div class="sbx-label">{{ t('admin.simBeta.rot') }}</div>
-                <RotationDial class="sbx-dial" :model-value="S.selected.rot" @update:model-value="(v: number) => S.selected!.rot = v" @change="E.changeSelected({ rot: S.selected!.rot })" :symbol="LETTER[S.selected.victim.type]"></RotationDial>
+                <RotationDial class="sbx-dial" :model-value="S.selected.rot" @update:model-value="(v: number) => S.selected!.rot = v" @change="E.changeSelected({ rot: S.selected!.rot })" :symbol="E.symbolOf(S.selected.victim.type)"></RotationDial>
               </div>
               <!-- where along its wall: dragged on the map, or here -->
               <div class="sbx-along" v-for="r in [E.selectedRange()]" :key="'along'">
@@ -299,15 +298,15 @@ onMounted(function () {
                 <div class="sim-r4-stamp-group">
                   <span class="sim-r4-stamp-group-label">{{ t('admin.simMapEditor.room4Creator.groups.ct') }}</span>
                   <div class="sim-r4-stamp-row cols-2">
-                    <button class="sim-r4-stamp" type="button" v-for="c in S.ctStamps" :key="c.name" :class="['kind-' + c.kind, { active: S.ui.victim === 'CT' && E.ctLetter() === c.letter }]" @click="E.pickCt(c.letter!)" :style="{ '--stamp-color': c.color }" :title="t(c.name)">
+                    <button class="sim-r4-stamp" type="button" v-for="c in S.ctStamps" :key="c.name" :class="['kind-' + c.kind, { active: E.isTarget(S.ui.victim) && E.ctLetter() === c.letter }]" @click="E.pickCt(c.letter!)" :style="{ '--stamp-color': c.color }" :title="t(c.name)">
                       <span class="sim-r4-stamp-badge">{{ c.symbol }}</span><span class="sim-r4-stamp-name">{{ t(c.name) }}</span>
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-            <CtRings v-if="S.selected ? S.selected.victim.type === 'CT' : S.ui.victim === 'CT'" :rings="E.pickerRings()" :ring="S.ui.ring" :colors="S.ringColors" :letter="E.ctLetter()" :sum="E.ctSum()" @pick-ring="(i: number) => S.ui.ring = i" @pick-color="E.pickColor"></CtRings>
-            <div v-if="!S.selected && S.ui.victim !== 'CT'">
+            <CtRings v-if="S.selected ? E.isTarget(S.selected.victim.type) : E.isTarget(S.ui.victim)" :rings="E.pickerRings()" :ring="S.ui.ring" :colors="S.ringColors" :letter="E.ctLetter()" :sum="E.ctSum()" @pick-ring="(i: number) => S.ui.ring = i" @pick-color="E.pickColor"></CtRings>
+            <div v-if="!S.selected && !E.isTarget(S.ui.victim)">
               <div class="sbx-label">{{ t('admin.simBeta.rot') }}</div>
               <div class="sbx-seg">
                 <button type="button" :class="{ active: !S.ui.randomRot }" @click="S.ui.randomRot = false">
@@ -368,7 +367,7 @@ onMounted(function () {
                 <span><strong>{{ t('admin.simBeta.tourEmpty') }}</strong><small>{{ t('admin.simBeta.tourEmptyNote') }}</small></span>
                 <i class="fas fa-chevron-right"></i>
               </button>
-              <div class="sbx-error" v-if="S.error">{{ t(S.error) }}</div>
+              <div class="sbx-error" v-if="S.error">{{ t(S.error, S.errorParams) }}</div>
             </div>
           </div>
         </main>

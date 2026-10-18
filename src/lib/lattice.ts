@@ -10,6 +10,7 @@
 // tile it is one of the tile's inner half walls. Curves stay per quarter tile, as in the cells.
 //
 import type { MapData, Pt } from './types';
+import type { RoomRules } from '../rules/types';
 
 // A unit segment's place in the cells: a half of a tile edge, or an arm of a tile's inner walls
 type SegPlace = { kind: 'edge'; cell: string; half: 1 | 2 } | { kind: 'inner'; cell: string; arm: number };
@@ -139,9 +140,9 @@ function axisLine(a: Pt, b: Pt): { end: Pt; segs: string[] } {
 }
 
 // ---- What each room takes --------------------------------------------------------------------
-// Room 1: walls on tile edges only, whole (12 cm). Rooms 2 and 3: any unit segment (6 cm grid).
-// Room 3: also curves. Room 4 is drawn as a picture, so no grid walls inside it; walls on its
-// border with another room are tile edges like any other.
+// By the rooms of the map's year (rules: rooms; 2026: room 1 whole tile edges (12 cm), rooms 2 and
+// 3 any unit segment (6 cm grid), room 3 also curves, room 4 a picture - no grid walls inside it,
+// walls on its border with another room are tile edges like any other).
 
 // The tiles beside a unit segment (one or two, as tile cell coordinates [x, y])
 function segTiles(seg: string): Pt[] {
@@ -155,19 +156,23 @@ function segTiles(seg: string): Pt[] {
 }
 
 // Whether a unit segment can be drawn, given roomOf(x, y) = the room (1-4) of the tile at cell
-// (x, y), or 0 outside the map. { ok, whole, reason }: whole = it can only go in as part of a
-// whole tile edge (beside room 1); reason when it cannot go in at all.
-function segRule(seg: string, roomOf: RoomOf): { ok: boolean; whole: boolean; reason?: string } {
+// (x, y), or 0 outside the map, and what each room takes. { ok, whole, reason }: whole = it can only
+// go in as part of a whole tile edge (beside a room of whole edges); reason when it cannot go in at
+// all ('room4': in a picture room, 'room1Inner': inside a tile of a room without inner walls).
+function segRule(seg: string, roomOf: RoomOf, takes: Record<number, RoomRules>): { ok: boolean; whole: boolean; reason?: string } {
     const rooms = segTiles(seg).map(function (t) { return roomOf(t[0], t[1]); }).filter(function (r) { return r > 0; });
     if (!rooms.length) return { ok: false, whole: false, reason: 'outside' };
     const inner = segTiles(seg).length === 1;
-    if (rooms.every(function (r) { return r === 4; })) return { ok: false, whole: false, reason: 'room4' };
-    if (inner && rooms[0] === 1) return { ok: false, whole: false, reason: 'room1Inner' };
-    return { ok: true, whole: rooms.indexOf(1) > -1 };
+    if (rooms.every(function (r) { return takes[r].picture; })) return { ok: false, whole: false, reason: 'room4' };
+    if (inner && !takes[rooms[0]].inner) return { ok: false, whole: false, reason: 'room1Inner' };
+    return { ok: true, whole: rooms.some(function (r) { return takes[r].edges === 'whole'; }) };
 }
 
-function arcRule(room: number): { ok: boolean; reason?: string } {
-    return room === 3 ? { ok: true } : { ok: false, reason: room === 4 ? 'room4' : 'curveRoom3' };
+// Whether a curve can go in a tile of `room` ('room4': a picture room, 'curveRoom3': a room without
+// curves)
+function arcRule(room: number, takes: Record<number, RoomRules>): { ok: boolean; reason?: string } {
+    const t = takes[room];
+    return t && t.curves ? { ok: true } : { ok: false, reason: t && t.picture ? 'room4' : 'curveRoom3' };
 }
 
 // The other half of the tile edge a unit segment is on (null inside a tile)
