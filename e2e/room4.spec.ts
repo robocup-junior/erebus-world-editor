@@ -19,7 +19,7 @@ async function openCreator(page: Page): Promise<void> {
 test('the creator: every tool and its panel', async ({ page }) => {
     await openCreator(page);
     await shot(page, 'r4-open');
-    for (const id of ['select', 'pen', 'line', 'curve', 'arc', 'rect', 'circle', 'ellipse', 'polygon', 'stamp', 'erase', 'template']) {
+    for (const id of ['select', 'pen', 'line', 'curve', 'arc', 'rect', 'circle', 'ellipse', 'polygon', 'stamp', 'floor', 'erase', 'template']) {
         await r4tool(page, id);
         await shot(page, 'r4-tool-' + id);
     }
@@ -83,6 +83,38 @@ test('the creator: walls and stamps drawn, back on the map, saved and exported',
     await reseed(page, 12);
     const world = await download(page, () => page.locator('.sbx-export').click());
     keep('room4.wbt', world.text);
+});
+
+// mapD's room 4: 4 x 3 tiles, cells x 5-11, y 3-7; the centre of its tile (c, r) in the picture
+const tileAt = (c: number, r: number): [number, number] => [(c + 0.5) / 4, (r + 0.5) / 3];
+
+test('the creator: holes, swamps and checkpoints on room 4\'s tiles, undone, and on the map', async ({ page }) => {
+    await openCreator(page);
+    await r4tool(page, 'floor');
+    const choice = (i: number) => page.locator('.sim-r4-panel .sbx-choice').nth(i).click();
+    await choice(1);                                    // hole
+    await r4click(page, ...tileAt(1, 1));
+    await choice(2);                                    // swamp, dragged along the bottom row
+    await r4drag(page, [tileAt(0, 2), tileAt(1, 2), tileAt(2, 2)]);
+    await choice(0);                                    // checkpoint
+    await r4click(page, ...tileAt(3, 0));
+    await r4click(page, ...tileAt(3, 1));
+    await r4click(page, ...tileAt(3, 1));               // clicked again: taken off
+    await shot(page, 'r4-floors');
+    // undo / redo take the floors back and forth too: three steps back, the checkpoint at the top
+    // right is gone
+    for (let i = 0; i < 3; i++) { await page.keyboard.press('Control+z'); await settle(page, 300); }
+    await shot(page, 'r4-floors-undone');
+    for (let i = 0; i < 3; i++) { await page.keyboard.press('Control+Shift+z'); await settle(page, 300); }
+    await page.locator('.sim-r4-head-ok').click();
+    await settle(page, 800);
+    await shot(page, 'r4-floors-on-map');
+    const saved = JSON.parse((await download(page, () => page.locator('.sbx-file button').nth(2).click())).text);
+    const floor = (k: string) => { const t = (saved.cells[k] || {}).tile || {}; return ['black', 'swamp', 'checkpoint'].filter((f) => t[f]); };
+    expect(floor('7,5,0')).toEqual(['black']);
+    expect([floor('5,7,0'), floor('7,7,0'), floor('9,7,0')]).toEqual([['swamp'], ['swamp'], ['swamp']]);
+    expect(floor('11,3,0')).toEqual(['checkpoint']);
+    expect(floor('11,5,0')).toEqual([]);
 });
 
 test('the creator: a template, selection turned, zoom', async ({ page }) => {

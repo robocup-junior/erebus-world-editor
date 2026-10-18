@@ -108,14 +108,32 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         x.lineWidth = geo.wallHalfCm * 2;
         x.lineCap = 'square';
         geo.shapes.forEach(function (sh) { mapShapePath(x, sh); x.stroke(); });
-        const holes = new Uint8Array(gw * gh);
-        geo.holes.forEach(function (h) {
-            const x0 = Math.floor(h[0] * geo.tileCm / REACH_RES), y0 = Math.floor(h[1] * geo.tileCm / REACH_RES);
-            const n = Math.round(geo.tileCm / REACH_RES);
-            for (let yy = y0; yy < Math.min(gh, y0 + n); yy++) for (let xx = x0; xx < Math.min(gw, x0 + n); xx++) holes[yy * gw + xx] = 1;
-        });
-        return { canvas: c, gw: gw, gh: gh, holes: holes };
+        return { canvas: c, gw: gw, gh: gh, holes: new Uint8Array(gw * gh) };
     })();
+
+    // ---- the floors of room 4's tiles: holes, swamps, checkpoints (the floor tool) ---------------
+    // In editor.room4Floors by cell key "x,y" (the map's own coordinates); the tile (tx, ty) of the
+    // picture is the cell (2 (box x + tx) + 1, 2 (box y + ty) + 1)
+    const floors: Record<string, string> = editor.room4Floors || (editor.room4Floors = {});
+    const box = { x: (minX - 1) / 2, y: (minY - 1) / 2 };
+    function floorKey(tx: number, ty: number) { return (2 * (box.x + tx) + 1) + ',' + (2 * (box.y + ty) + 1); }
+    function floorAt(tx: number, ty: number) { return floors[floorKey(tx, ty)] || ''; }
+    // the holes on the reach grid: the map's, outside room 4, and room 4's as they are here
+    function markHoles() {
+        if (!reachBase || !geo) return;
+        const holes = reachBase.holes, gw = reachBase.gw, gh = reachBase.gh, n = Math.round(geo.tileCm / REACH_RES);
+        holes.fill(0);
+        const mark = function (tx: number, ty: number) {
+            const x0 = Math.floor(tx * geo.tileCm / REACH_RES), y0 = Math.floor(ty * geo.tileCm / REACH_RES);
+            for (let yy = y0; yy < Math.min(gh, y0 + n); yy++) for (let xx = x0; xx < Math.min(gw, x0 + n); xx++) holes[yy * gw + xx] = 1;
+        };
+        geo.holes.forEach(function (h) { if (!inRoom[(h[0] - box.x) + ',' + (h[1] - box.y)]) mark(h[0], h[1]); });
+        Object.keys(inRoom).forEach(function (k) {
+            const t = k.split(',').map(Number);
+            if (floorAt(t[0], t[1]) === 'black') mark(box.x + t[0], box.y + t[1]);
+        });
+    }
+    markHoles();
 
     // The map's walls in picture pixels: stamps attach to them as to the walls drawn here
     const mapWallMask = (function () {
@@ -236,6 +254,8 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
                 const gx = gx0 + bx, gy = gy0 + by;
                 if (gx < 0 || gy < 0 || gx >= gw || gy >= gh) continue;
                 const i = gy * gw + gx;
+                // a hole is no floor to cover
+                if (reachBase!.holes[i]) continue;
                 if (src.data[i] !== 0) roomCells++;
                 if (src.data[i] !== 0 && rdist.data32F[i] > need + 0.5) miss[by * bw + bx] = 1;
             }
@@ -323,15 +343,20 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     // ---- picture state, history and saving ------------------------------------------
     let pixels: Uint8ClampedArray = null as unknown as Uint8ClampedArray;
     let tokens: Token[] = [];
-    const undo: ImageData[] = [];
-    let redo: ImageData[] = [];
+    // a step of the history: the picture and the floors
+    type Step = { img: ImageData; floors: string };
+    const undo: Step[] = [];
+    let redo: Step[] = [];
 
     function snapshot() {
         return ctx.getImageData(0, 0, W, H);
     }
+    function step(): Step {
+        return { img: snapshot(), floors: JSON.stringify(floors) };
+    }
 
     function checkpoint() {
-        undo.push(snapshot());
+        undo.push(step());
         if (undo.length > 40) undo.shift();
         redo = [];
     }
@@ -510,9 +535,13 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     scope.$on('$destroy', function () { open = false; });
     if (!OpenCV.isReady()) OpenCV.ready.then(function () { if (open && pixels) { analyse(); drawOverlay(); } });
 
-    function restore(data: ImageData) {
-        ctx.putImageData(data, 0, 0);
+    function restore(s: Step) {
+        ctx.putImageData(s.img, 0, 0);
         save();
+        Object.keys(floors).forEach(function (key) { delete floors[key]; });
+        Object.assign(floors, JSON.parse(s.floors));
+        markHoles();
+        checkGuide();
         analyse();
     }
 
@@ -690,46 +719,79 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     }
 
     // ---- entrances and checkpoints (from the map) -------------------------------------------
-    const boxTile = { x: (minX - 1) / 2, y: (minY - 1) / 2 };
-    const guide = (function () {
-        if (!geo || !geo.entrances) return { entrances: [], checkpoints: {}, missing: [] };
-        const cps: Record<string, boolean> = {};
-        (geo.checkpoints || []).forEach(function (t: number[]) { cps[(t[0] - boxTile.x) + ',' + (t[1] - boxTile.y)] = true; });
-        const entrances = geo.entrances.map(function (e: any) {
+    const boxTile = box;
+    const guide = {
+        entrances: (geo && geo.entrances ? geo.entrances : []).map(function (e: any) {
             return { tx: e.tile[0] - boxTile.x, ty: e.tile[1] - boxTile.y, dir: e.dir, color: e.color,
                 passage: e.passage === undefined ? !!e.color : e.passage, half: e.half } as { tx: number; ty: number; dir: number[]; color: string; passage: boolean; half: boolean };
-        });
-        // the room 4 tile behind each passage should be a checkpoint (rule 3.5.3)
-        const missing: string[] = [];
-        entrances.forEach(function (e: any) {
+        }),
+        missing: [] as string[]
+    };
+    // the room 4 tile behind each passage should be a checkpoint (rule 3.5.3): worked out again as
+    // the floor tool changes the floors
+    function checkGuide() {
+        guide.missing = [];
+        guide.entrances.forEach(function (e: any) {
             const key = e.tx + ',' + e.ty;
-            if (e.passage && !cps[key] && missing.indexOf(key) < 0) missing.push(key);
+            if (e.passage && floorAt(e.tx, e.ty) !== 'checkpoint' && guide.missing.indexOf(key) < 0) guide.missing.push(key);
         });
-        return { entrances: entrances, checkpoints: cps, missing: missing };
-    })();
-    scope.$applyAsync(function () {
-        r4.entranceCount = guide.entrances.length;
-        r4.passageCount = guide.entrances.filter(function (e: any) { return e.passage; }).length;
-        r4.missingCheckpoints = guide.missing.length;
-    });
+        scope.$applyAsync(function () {
+            r4.entranceCount = guide.entrances.length;
+            r4.passageCount = guide.entrances.filter(function (e: any) { return e.passage; }).length;
+            r4.missingCheckpoints = guide.missing.length;
+        });
+    }
+    checkGuide();
+
+    // The floors as the map editor shows them (a hole the whole tile, as Erebus has it), under the
+    // picture's walls, see-through so the walls drawn over them still show
+    function drawFloors() {
+        octx.save();
+        Object.keys(inRoom).forEach(function (key) {
+            const t = key.split(',').map(Number), kind = floorAt(t[0], t[1]);
+            if (!kind) return;
+            const x = t[0] * block, y = t[1] * block;
+            if (kind === 'black') {
+                octx.fillStyle = 'rgba(17, 17, 17, 0.6)';
+                octx.fillRect(x, y, block, block);
+            } else if (kind === 'swamp') {
+                octx.fillStyle = 'rgba(205, 133, 63, 0.45)';
+                octx.fillRect(x, y, block, block);
+            } else if (kind === 'checkpoint') {
+                const g = octx.createLinearGradient(x, y, x + block, y + block);
+                g.addColorStop(0, 'rgba(148, 163, 184, 0.35)');
+                g.addColorStop(0.5, 'rgba(226, 232, 240, 0.35)');
+                g.addColorStop(1, 'rgba(148, 163, 184, 0.35)');
+                octx.fillStyle = g;
+                octx.fillRect(x, y, block, block);
+                octx.fillStyle = '#64748b';
+                octx.font = '700 ' + (11 * k) + 'px system-ui, sans-serif';
+                octx.textBaseline = 'top';
+                octx.fillText('CP', x + 5 * k, y + 5 * k);
+            }
+        });
+        octx.restore();
+    }
+
+    // The floor tool on the tile at p: `to` the floor it gets ('' none); whether it changed
+    function floorTile(p: P) {
+        const tx = Math.floor(p.x / block), ty = Math.floor(p.y / block);
+        return inRoom[tx + ',' + ty] ? { tx: tx, ty: ty } : null;
+    }
+    function setFloor(tx: number, ty: number, to: string) {
+        const key = floorKey(tx, ty);
+        if ((floors[key] || '') === to) return false;
+        if (to) floors[key] = to; else delete floors[key];
+        return true;
+    }
+    function floorsChanged() {
+        markHoles();
+        checkGuide();
+        analyse();
+    }
 
     function drawGuides() {
         octx.save();
-        // checkpoint tiles: silver
-        Object.keys(guide.checkpoints).forEach(function (key) {
-            const t = key.split(',').map(Number);
-            const x = t[0] * block, y = t[1] * block;
-            const g = octx.createLinearGradient(x, y, x + block, y + block);
-            g.addColorStop(0, 'rgba(148, 163, 184, 0.35)');
-            g.addColorStop(0.5, 'rgba(226, 232, 240, 0.35)');
-            g.addColorStop(1, 'rgba(148, 163, 184, 0.35)');
-            octx.fillStyle = g;
-            octx.fillRect(x, y, block, block);
-            octx.fillStyle = '#64748b';
-            octx.font = '700 ' + (11 * k) + 'px system-ui, sans-serif';
-            octx.textBaseline = 'top';
-            octx.fillText('CP', x + 5 * k, y + 5 * k);
-        });
         // tiles behind a passage that are not a checkpoint yet
         guide.missing.forEach(function (key) {
             const t = key.split(',').map(Number);
@@ -781,6 +843,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
 
     function drawOverlayParts() {
         octx.clearRect(0, 0, W, H);
+        drawFloors();
         if (tokenCover) octx.drawImage(tokenCover, 0, 0);
         // grid: tiles, and quarter tiles while snapping
         octx.save();
@@ -930,6 +993,22 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
                         octx.moveTo(hover.x + d, hover.y - d); octx.lineTo(hover.x - d, hover.y + d);
                         octx.stroke();
                     }
+                }
+            } else if (r4.tool === 'floor') {
+                // the tile it would change, or a cross off room 4
+                const ft = floorTile(hover);
+                if (ft) {
+                    octx.strokeStyle = '#2563eb';
+                    octx.lineWidth = 2.5 * k;
+                    octx.strokeRect(ft.tx * block + 1.5 * k, ft.ty * block + 1.5 * k, block - 3 * k, block - 3 * k);
+                } else {
+                    octx.strokeStyle = '#94a3b8';
+                    octx.lineWidth = 2 * k;
+                    const d = 5 * k;
+                    octx.beginPath();
+                    octx.moveTo(hover.x - d, hover.y - d); octx.lineTo(hover.x + d, hover.y + d);
+                    octx.moveTo(hover.x + d, hover.y - d); octx.lineTo(hover.x - d, hover.y + d);
+                    octx.stroke();
                 }
             } else if (r4.snap && r4.tool !== 'pen') {
                 dot(snap(hover), '#2563eb');
@@ -1756,6 +1835,17 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         }
         if (tool === 'stamp') { placeStamp(p); return; }
         if (tool === 'template') return;
+        if (tool === 'floor') {
+            // the tile clicked gets the floor chosen, or loses it when it has it already (or with
+            // none chosen); dragging gives the tiles passed the same
+            const ft = floorTile(p);
+            if (!ft) return;
+            const to = r4.floor === 'clear' || floorAt(ft.tx, ft.ty) === r4.floor ? '' : r4.floor;
+            checkpoint();
+            drag = { floor: to, changed: setFloor(ft.tx, ft.ty, to) };
+            drawOverlay();
+            return;
+        }
         if (tool === 'curve') {
             const q = snap(p);
             if (!pending) pending = { type: 'curve', pts: [q] };
@@ -1815,6 +1905,9 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
             sel!.fy = Math.round(drag.fy + dy);
         } else if (drag && drag.selecting) {
             drag.rect = selectRect(drag.start, p);
+        } else if (drag && drag.floor !== undefined) {
+            const ft = floorTile(p);
+            if (ft && setFloor(ft.tx, ft.ty, drag.floor)) drag.changed = true;
         } else if (drag && drag.tokensOnly) {
             eraseTokensAt(p);
         } else if (drag && drag.arc) {
@@ -1845,6 +1938,12 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         const d = drag;
         drag = null;
         if (d.move) { drawOverlay(); return; }
+        if (d.floor !== undefined) {
+            // nothing changed: no step to undo
+            if (!d.changed) { undo.pop(); drawOverlay(); return; }
+            floorsChanged();
+            return;
+        }
         if (d.selecting) {
             const r = selectRect(d.start, pos(e));
             sel = r.w >= 4 && r.h >= 4 ? { x: r.x, y: r.y, w: r.w, h: r.h, float: null } : null;
@@ -1982,12 +2081,12 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     scope.r4api.undo = function () {
         if (sel) { sel = null; syncSel(); }
         if (!undo.length) return;
-        redo.push(snapshot());
+        redo.push(step());
         restore(undo.pop()!);
     };
     scope.r4api.redo = function () {
         if (!redo.length) return;
-        undo.push(snapshot());
+        undo.push(step());
         restore(redo.pop()!);
     };
     scope.r4api.clear = function () {
@@ -2028,7 +2127,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     };
 
     // redraw the overlay when options change
-    scope.$watchGroup(['r4.snap', 'r4.tool', 'r4.stamp', 'r4.eraser', 'r4.eraseTarget', 'r4.showReach', 'r4.showGuides',
+    scope.$watchGroup(['r4.snap', 'r4.tool', 'r4.floor', 'r4.stamp', 'r4.eraser', 'r4.eraseTarget', 'r4.showReach', 'r4.showGuides',
         'r4.mirror', 'r4.shapeStyle', 'r4.shapeRot', 'r4.smooth'], function () { artCache.key = ''; drawOverlay(); });
 
     // ---- zoom and pan ----------------------------------------------------------------------

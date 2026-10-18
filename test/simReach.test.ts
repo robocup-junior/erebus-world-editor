@@ -96,7 +96,7 @@ test('gotTo: whether a victim would be got to there, before it is put (the victi
   assert.ok(!at(3, 3, 0 * 4 + 3), 'inside the channel');
 });
 
-test('a hole is no floor: the robot keeps clear of it (rule 3.6.4), and the victims behind it are out of reach', () => {
+test('a hole is no floor - the whole tile, as in Erebus: the robot\'s centre keeps off it, and the victims behind it are out of reach', () => {
   const map = M.newMap(3, 1);
   map.startTile = { x: 1, y: 1, z: 0 };
   assert.ok(M.setVictim(map, 5, 1, 'right', 'H', false));

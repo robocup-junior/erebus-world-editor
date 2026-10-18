@@ -13,6 +13,7 @@ export interface ShapeIcon { name: string; label?: string; terms?: string[]; sty
 // The creator's state, shown by its panels and changed by the picture
 export interface R4State {
     tool: string;
+    floor: string;          // the floor tool's floor: 'checkpoint', 'black', 'swamp' or 'clear'
     stamp: number;
     snap: boolean;
     eraser: string;

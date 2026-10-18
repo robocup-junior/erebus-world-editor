@@ -496,6 +496,24 @@ function setFloor(map: MapData, x: number, y: number, kind: string) {
     return true;
 }
 
+// The floor of tile (x, y) as `kind` ('black', 'swamp', 'checkpoint', or '' for none): set, not
+// switched as setFloor does (the room 4 creator gives the floors it ends with). Whether it changed.
+function setFloorKind(map: MapData, x: number, y: number, kind: string) {
+    if (!isInside(map, x, y)) return false;
+    const now = tileOf(map, x, y);
+    if (FLOORS.every(function (f) { return !!(now && now[f]) === (f === kind); })) return false;
+    const t = ensureTile(map, x, y);
+    FLOORS.forEach(function (f) { t[f] = f === kind; });
+    delete t.cpAuto;
+    return true;
+}
+
+// The floor kind of tile (x, y): 'black', 'swamp', 'checkpoint' or ''
+function floorKind(map: MapData, x: number, y: number) {
+    const t = tileOf(map, x, y);
+    return (t && FLOORS.find(function (f) { return !!t[f]; })) || '';
+}
+
 function hasWall(map: MapData, x: number, y: number, dir: string) {
     const e = map.cells[key(x + SIDES[dir][0], y + SIDES[dir][1])];
     return !!(e && e.isWall);
@@ -1160,7 +1178,7 @@ function removeLine(map: MapData, axis: string, t: number) {
 // Out: { res, gw, gh, reached (Uint8Array, 1 = a centre gets there), miss (Uint8Array, 1 = out of
 // reach), pocketCount, pocketAt(x, y) cm, victims: [[x, y]] cm of the victims it cannot get to },
 // or null without a start tile.
-const REACH_RES = 0.5, ROBOT_R = 3.7, WALL_HALF = 0.5, VICTIM_NEAR = 6, SPECK_CM2 = 5, HOLE_INSET = 1.5;
+const REACH_RES = 0.5, ROBOT_R = 3.7, WALL_HALF = 0.5, VICTIM_NEAR = 6, SPECK_CM2 = 5;
 
 // Distance (in cells) from every cell to the nearest cell with src set, two passes over a 5 x 5
 // chamfer mask (close to the straight-line distance)
@@ -1209,18 +1227,17 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
             }
         }
     };
-    const outside = new Uint8Array(gw * gh);
+    // no floor: an outside tile (a wall to the robot), or a hole - the whole tile, as Erebus has no
+    // floor there and counts the robot fallen in once its centre is over it: its centre keeps off it
+    const outside = new Uint8Array(gw * gh), hole = new Uint8Array(gw * gh);
     for (let x = 1; x < 2 * map.width; x += 2) {
         for (let y = 1; y < 2 * map.length; y += 2) {
-            // no floor: an outside tile, or a hole (rule 3.6.4: 1.5 cm in from the tile's edges; the
-            // robot keeps clear of it as of a wall). A hole tile's rim is no floor to get to either.
-            const t = tileOf(map, x, y), inset = isOutside(map, x, y) ? 0 : t && t.black ? HOLE_INSET : -1;
-            if (inset < 0) continue;
+            const t = tileOf(map, x, y), off = isOutside(map, x, y);
+            if (!off && !(t && t.black)) continue;
             for (let j = 6 * (y - 1) / res; j < 6 * (y + 1) / res; j++) {
                 for (let i = 6 * (x - 1) / res; i < 6 * (x + 1) / res; i++) {
                     outside[j * gw + i] = 1;
-                    if (j * res >= 6 * (y - 1) + inset && (j + 1) * res <= 6 * (y + 1) - inset
-                        && i * res >= 6 * (x - 1) + inset && (i + 1) * res <= 6 * (x + 1) - inset) wall[j * gw + i] = 1;
+                    if (off) wall[j * gw + i] = 1; else hole[j * gw + i] = 1;
                 }
             }
         }
@@ -1256,7 +1273,7 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
     const need = ROBOT_R / res;
     const free = new Uint8Array(gw * gh);
     for (let j = 0; j < gh; j++)
-        for (let i = 0; i < gw; i++) free[j * gw + i] = dWall[j * gw + i] >= need && edgeDist(i, j) >= need ? 1 : 0;
+        for (let i = 0; i < gw; i++) free[j * gw + i] = dWall[j * gw + i] >= need && edgeDist(i, j) >= need && !hole[j * gw + i] ? 1 : 0;
     // from the start: its nearest free cell, then everything joined to it (8 ways)
     const reached = new Uint8Array(gw * gh);
     let seed = -1;
@@ -1638,6 +1655,8 @@ class BrokenWorld extends Error {
 }
 
 export {
+    setFloorKind,
+    floorKind,
     BrokenWorld,
     SIDES,
     key,

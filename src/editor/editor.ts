@@ -50,6 +50,9 @@ export interface Room4Host {
     room4CanvasSave: string | null;
     room4Tokens: Room4Token[];
     room4StampTypes: typeof R4W.stampTypes;
+    // the floor of each room 4 tile ('black', 'swamp', 'checkpoint'; none left out), by its cell key
+    // "x,y": set in the creator, put on the map when it closes
+    room4Floors: Record<string, string>;
 }
 // The guide while it is shown
 interface Tour {
@@ -688,7 +691,12 @@ export function createEditor() {
             commit();
         }
         const size = room4CanvasSize();
-        // the creator leaves its picture in its host
+        const floors: Record<string, string> = {};
+        map.roomTiles[2].forEach(function (k) {
+            const p = k.split(',').map(Number), kind = M.floorKind(map, p[0], p[1]);
+            if (kind) floors[p[0] + ',' + p[1]] = kind;
+        });
+        // the creator leaves its picture and the floors in its host
         const host: Room4Host = {
             roomTiles: map.roomTiles,
             canvasWidth: size.w,
@@ -697,15 +705,24 @@ export function createEditor() {
             room4Img: new Image(),
             room4CanvasSave: map.room4CanvasSave || null,
             room4Tokens: JSON.parse(JSON.stringify(map.room4Tokens || [])),
-            room4StampTypes: R4W.stampTypes
+            room4StampTypes: R4W.stampTypes,
+            room4Floors: floors
         };
         room4Done = function () {
             const picture = (host.room4CanvasSave || null) !== (map.room4CanvasSave || null);
             const kept = JSON.stringify(host.room4Tokens || []) !== JSON.stringify(map.room4Tokens || []);
-            if (picture || kept) {
+            const floored = map.roomTiles[2].some(function (k) {
+                const p = k.split(',').map(Number);
+                return M.floorKind(map, p[0], p[1]) !== (host.room4Floors[p[0] + ',' + p[1]] || '');
+            });
+            if (picture || kept || floored) {
                 begin();
                 map.room4CanvasSave = host.room4CanvasSave;
                 map.room4Tokens = host.room4Tokens || [];
+                map.roomTiles[2].forEach(function (k) {
+                    const p = k.split(',').map(Number);
+                    M.setFloorKind(map, p[0], p[1], host.room4Floors[p[0] + ',' + p[1]] || '');
+                });
                 commit();
                 view.setMap(map, true);
             }

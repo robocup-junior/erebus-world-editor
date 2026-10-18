@@ -22,6 +22,7 @@ const host = E.S.room4!.host;
 
 const r4 = reactive<R4State>({
     tool: 'pen',
+    floor: 'checkpoint',
     stamp: -1,
     snap: true,
     eraser: 'm',
@@ -102,20 +103,21 @@ const tools = [
     { id: 'polygon', icon: 'fas fa-draw-polygon', key: 'G' },
     { id: 'shape', icon: 'fas fa-icons', key: 'I' },
     { id: 'stamp', icon: 'fas fa-user-injured', key: 'V' },
+    { id: 'floor', icon: 'fas fa-fill-drip', key: 'F' },
     { id: 'erase', icon: 'fas fa-eraser', key: 'E' },
     { id: 'template', icon: 'fas fa-th-large', key: 'T' }
 ];
-// The rail groups the tools: select, lines, shapes, victims, eraser, templates
+// The rail groups the tools: select, lines, shapes, victims and floors, eraser, templates
 const byId: Record<string, (typeof tools)[number]> = {};
 tools.forEach(function (x) { byId[x.id] = x; });
-const toolGroups = [['select'], ['pen', 'line', 'curve', 'arc'], ['rect', 'circle', 'ellipse', 'polygon', 'shape'], ['stamp'], ['erase'], ['template']]
+const toolGroups = [['select'], ['pen', 'line', 'curve', 'arc'], ['rect', 'circle', 'ellipse', 'polygon', 'shape'], ['stamp', 'floor'], ['erase'], ['template']]
     .map(function (g) { return g.map(function (id) { return byId[id]; }); });
 function toolKey(id: string) {
     return byId[id] ? byId[id].key : '';
 }
 // Tools that draw walls (mirror drawing applies to them)
 function drawsWalls() {
-    return ['stamp', 'select', 'template'].indexOf(r4.tool) < 0;
+    return ['stamp', 'floor', 'select', 'template'].indexOf(r4.tool) < 0;
 }
 const templates = [
     { id: 'maze', icon: 'fas fa-border-all' },
@@ -124,6 +126,12 @@ const templates = [
     { id: 'zigzag', icon: 'fas fa-wave-square' },
     { id: 'rings', icon: 'far fa-dot-circle' },
     { id: 'obstacles', icon: 'fas fa-shapes' }
+];
+// The floor tool's floors, as the map editor's floor tool has them (a whole tile each, as Erebus
+// has them in room 4 too); no start tile, which is not in room 4
+const floorChoices = [
+    { id: 'checkpoint', icon: 'fa-flag-checkered' }, { id: 'black', icon: 'fa-square' },
+    { id: 'swamp', icon: 'fa-water' }, { id: 'clear', icon: 'fa-times' }
 ];
 function stepCount(d: number) {
     r4.randomCount = Math.max(1, Math.min(30, (r4.randomCount || 1) + d));
@@ -480,6 +488,13 @@ onBeforeUnmount(function () {
                 </button>
               </div>
             </div>
+          </div>
+
+          <!-- Floors of room 4's tiles -->
+          <div class="sbx-choices column" v-if="r4.tool === 'floor'">
+            <button class="sbx-choice" type="button" v-for="f in floorChoices" :key="f.id" :class="{ active: r4.floor === f.id }" @click="r4.floor = f.id">
+              <i class="fas fa-fw" :class="f.icon"></i>{{ t('admin.simBeta.floors.' + f.id) }}
+            </button>
           </div>
 
           <div class="sim-r4-hint">
