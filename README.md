@@ -46,7 +46,7 @@ So that no old file is used after an update, two things work together:
 | Library | Version | Used for |
 | --- | --- | --- |
 | Vue | 3.5 | the page |
-| vue-i18n | 11 | Japanese and English (`src/lang/`; texts written with `{{name}}` parameters, compiled by `src/i18n.ts`) |
+| vue-i18n | 11 | the texts, one file per language (`src/lang/`; written with `{{name}}` parameters, compiled by `src/i18n.ts`) |
 | Font Awesome Free | 7 | icons; the room 4 creator's shape tool draws its icons (SVGs) as walls |
 | OpenCV.js (`@techstark/opencv-js`) | 5.0 | the room 4 picture read for the world export, and where the robot can get to |
 
@@ -63,15 +63,23 @@ src/
   App.vue           the editor's page: top bar, tool rail and panel, map, checks, dialogs, guide
   editor/           what the page does (editor.ts), redrawing after changes (runtime.ts), formats
   room4/            the custom room 4 creator (Room4Creator.vue; its picture: canvas.ts)
-  components/       rotation dial, cognitive target rings, modal
+  components/       rotation dial, cognitive target rings, modal, language button, build info
   lib/              the map, its rules and the world export, framework-free (model, lattice, world2026,
                     room4World2026, score - the most a map can score, by rule 5.6 -, view, tour, icons, keys)
-  lang/             the texts (ja, en)
+  lang/             the texts, one file per language (ja, en)
   styles/           base.css (from Bootstrap), page.css, sim_modern.css, editor.css
 public/             files served as they are (fonts, images, _headers)
 test/               unit tests (vitest) with sample maps
 e2e/                end-to-end tests (Playwright): screenshots, and the files the editor saves
 ```
+
+### Adding a language
+
+1. Copy `src/lang/en.json` to `src/lang/<code>.json` (`<code>`: its BCP 47 code, such as `fr` or `pt-BR`) and translate the texts. Keep each `{{name}}` parameter as it is; it may move within the sentence. `listSep` is what joins the items of a list (`, ` in English, `・` in Japanese).
+2. Add it to `LANGUAGES` in `src/i18n.ts`: its code, its name in its own language, and its texts (imported like the others).
+3. `npm test`: `test/simLang.test.ts` checks that every language has each key English has, with the same parameters, and that each file is in `LANGUAGES`.
+
+A text not translated yet is shown in English. The language button (`src/components/LangMenu.vue`) shows the language in use and lists every language in `LANGUAGES` by its own name, so a new one appears there by itself. The page's `lang` attribute follows the language chosen, so the browser picks the right fonts for its script.
 
 ### The end-to-end tests
 

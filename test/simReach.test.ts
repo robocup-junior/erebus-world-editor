@@ -87,3 +87,23 @@ test('a victim inside a narrow channel near its mouth is pointed out, one outsid
   assert.ok(M.setSlotVictim(inside, 3, 3, 0 * 4 + 3, 'H', false));
   assert.strictEqual(M.robotReach(inside).victims.length, 1);
 });
+
+test('gotTo: whether a victim would be got to there, before it is put (the victim tool\'s red cursor)', () => {
+  const map = channel(room2(), 12, 18);
+  const r = M.robotReach(map)!;
+  const at = (x: number, y: number, i: number) => { const p = M.victimPlace(map, { kind: 'slot', x, y, i }); return r.gotTo(x, y, p.at, p.wall); };
+  assert.ok(at(1, 1, 1 * 4 + 1), 'the outer face of the channel wall');
+  assert.ok(!at(3, 3, 0 * 4 + 3), 'inside the channel');
+});
+
+test('a hole is no floor: the robot keeps clear of it (rule 3.6.4), and the victims behind it are out of reach', () => {
+  const map = M.newMap(3, 1);
+  map.startTile = { x: 1, y: 1, z: 0 };
+  assert.ok(M.setVictim(map, 5, 1, 'right', 'H', false));
+  assert.deepStrictEqual(M.robotReach(map)!.victims, []);
+  M.setFloor(map, 3, 1, 'black');
+  const r = M.robotReach(map)!;
+  assert.strictEqual(r.victims.length, 1, 'the corridor is cut by the hole');
+  // the hole itself is not pointed out as floor out of reach
+  assert.ok(!r.pocketAt(18, 6));
+});

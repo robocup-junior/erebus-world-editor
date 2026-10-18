@@ -15,6 +15,7 @@ import * as R4W from '../lib/room4World2026';
 import * as View from '../lib/view';
 import * as T from '../lib/tour';
 import * as Keys from '../lib/keys';
+import { fixed } from './format';
 import * as Score from '../lib/score';
 import * as OpenCV from '../lib/opencv';
 import type { MapData, Room4Token } from '../lib/types';
@@ -37,7 +38,7 @@ interface Dialog {
     actions: DialogAction[];
     done: (v: unknown) => void;
 }
-interface Selected { where: Where; victim: VictimInfo; rot: number; letter: string }
+interface Selected { where: Where; victim: VictimInfo; rot: number; letter: string; offset: number }
 interface Notice { text: string; kind: string }
 // The room 4 creator while it is open: what it is given, and what it leaves (its picture)
 export interface Room4Host {
@@ -259,8 +260,9 @@ export function createEditor() {
     // floats over it; the next fit - the fit button, a new size of the window - keeps clear of it)
     watch(function () { return ui.checksFolded; }, function (now, was) { if (now !== was && now) later(function () { view.fitIfAuto(); }); });
 
-    function switchLang() {
-        S.lang = S.lang === 'ja' ? 'en' : 'ja';
+    // to the language picked in the language button
+    function switchLang(code: Lang) {
+        S.lang = code;
         setLang(S.lang);
     }
     watch(function () { return i18n.global.locale.value; }, function () { S.lang = lang(); changed(); digest(); });
@@ -308,6 +310,7 @@ export function createEditor() {
     }
 
     function undo() {
+        slideDone();
         if (!past.length) return;
         future.push(JSON.stringify(map));
         restore(past.pop()!);
@@ -315,6 +318,7 @@ export function createEditor() {
     }
 
     function redo() {
+        slideDone();
         if (!future.length) return;
         past.push(JSON.stringify(map));
         restore(future.pop()!);
@@ -360,8 +364,10 @@ export function createEditor() {
 
     // where the robot cannot get to (M.robotReach): its mask as a picture, shown hatched light red
     let pocketMask: { canvas: HTMLCanvasElement; w: number; h: number; hatched: HTMLCanvasElement | null } | null = null, lostVictims: number[][] = [];
+    // where the robot gets to, as worked out after the last change (for the victim tool's preview)
+    let robot: ReturnType<typeof M.robotReach> = null;
     function computePockets() {
-        const r = map ? M.robotReach(map, room4Picture()) : null;
+        const r = robot = map ? M.robotReach(map, room4Picture()) : null;
         lostVictims = r ? r.victims : [];
         pocketMask = null;
         if (!r || !r.pocketCount) return;
@@ -400,14 +406,17 @@ export function createEditor() {
         ctx.drawImage(hc, 0, 0, pocketMask.w, pocketMask.h);
     }
 
-    // victims the robot cannot get to: a red dashed ring round each
-    function drawLostVictims(ctx: CanvasRenderingContext2D, px: number) {
-        if (!lostVictims.length) return;
+    // victims where they may not be (the checks' victim problems: no wall, in a passage, overlapping,
+    // out of the robot's reach): a red dashed ring round each
+    const VICTIM_PROBLEMS = ['victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable'];
+    let badVictims: number[][] = [];
+    function drawBadVictims(ctx: CanvasRenderingContext2D, px: number) {
+        if (!badVictims.length) return;
         ctx.save();
         ctx.strokeStyle = '#dc2626';
         ctx.lineWidth = 2 * px;
         ctx.setLineDash([4 * px, 3 * px]);
-        lostVictims.forEach(function (p) {
+        badVictims.forEach(function (p) {
             ctx.beginPath();
             ctx.arc(p[0], p[1], 2.4, 0, 2 * Math.PI);
             ctx.stroke();
@@ -465,7 +474,12 @@ export function createEditor() {
         S.canRedo = future.length > 0;
         const had = S.problems.length;
         const picture = room4Picture();
-        S.problems = map ? M.problems(map, picture).map(problemText) : [];
+        const problems = map ? M.problems(map, picture) : [];
+        S.problems = problems.map(problemText);
+        badVictims = [];
+        problems.forEach(function (p) {
+            if (VICTIM_PROBLEMS.indexOf(p.key) > -1 && p.show && p.show.points) badVictims = badVictims.concat(p.show.points);
+        });
         S.blocking = S.problems.some(function (p) { return p.block; });
         // the most the map can score
         S.score = map ? Score.maxScore(map, picture) : null;
@@ -909,6 +923,7 @@ export function createEditor() {
 
     function toolDown(p: P, e: PointerEvent) {
         const tool = ui.tool;
+        slideDone();
         begin();
         if (tool === 'select') { regionDown(p, e); view.redraw(); return; }
         if (tool === 'line') {
@@ -928,6 +943,10 @@ export function createEditor() {
             // a drag keeps to what it started on: walls and victims, or the floors of tiles
             stroke = { floors: !thingNear(p) };
             erase(p, stroke.floors, true);
+        } else if (tool === 'victim') {
+            // on a placed one: dragged, it goes along its wall
+            const hit = victimUnder(p);
+            stroke = hit ? { grab: hit, down: p } : {};
         } else {
             stroke = {};
         }
@@ -944,6 +963,7 @@ export function createEditor() {
             else if (tool === 'select') regionMove(p);
             else if (tool === 'shape' && ui.shapeMode === 'outline') paintShape(p);
             else if (tool === 'eraser') erase(p, stroke.floors, false);
+            else if (tool === 'victim') dragVictim(p);
         }
         hover = hoverAt(p);
         view.redraw();
@@ -973,6 +993,8 @@ export function createEditor() {
         } else if (tool === 'floor') {
             const tl = tileAt(p);
             if (tl) M.setFloor(map, tl.x, tl.y, ui.floor);
+        } else if (tool === 'victim' && stroke.victim) {
+            dropVictim();
         } else if (tool === 'victim') {
             placeVictim(p);
         } else if (tool === 'select') {
@@ -1137,26 +1159,19 @@ export function createEditor() {
         borders = M.syncBorderWalls(map, borders);
     }
 
-    function victimNear(p: P) {
-        const tl = tileAt(p);
-        if (!tl) return null;
-        const v = M.edgeVictim(map, tl.x, tl.y);
-        if (!v) return null;
-        const d = M.SIDES[v.dir];
-        const vx = 6 * tl.x + 4 * d[0], vy = 6 * tl.y + 4 * d[1];
-        return Math.hypot(p.x - vx, p.y - vy) < 2.5 ? { tile: tl, victim: v } : null;
-    }
-
-    function slotNear(p: P) {
-        const sl = M.slotAt(map, p.x, p.y);
-        if (!sl || !M.slotVictim(map, sl.x, sl.y, sl.i)) return null;
-        const pos = M.slotPos(sl.x, sl.y, sl.i, map);
-        return Math.hypot(p.x - pos[0], p.y - pos[1]) < 1.8 ? sl : null;
+    // The placed victim whose badge is under p (the nearest), wherever along its wall it is
+    function victimUnder(p: P): Where | null {
+        let best: Where | null = null, bestD = Infinity;
+        M.allVictims(map).forEach(function (w) {
+            const at = M.victimPlace(map, w).at, d = Math.hypot(p.x - at[0], p.y - at[1]);
+            if (d < (w.kind === 'edge' ? 2.5 : 1.8) && d < bestD) { best = w; bestD = d; }
+        });
+        return best;
     }
 
     // A victim, curve or wall the eraser would take at p
     function thingNear(p: P) {
-        return !!(victimNear(p) || slotNear(p) || M.arcNear(map, p.x, p.y, reach()) || M.segNear(map, p.x, p.y, reach()));
+        return !!(victimUnder(p) || M.arcNear(map, p.x, p.y, reach()) || M.segNear(map, p.x, p.y, reach()));
     }
 
     // The floor of the tile under p the eraser takes off: a hole, swamp or checkpoint, or the start
@@ -1179,10 +1194,8 @@ export function createEditor() {
             else M.setFloor(map, f.tile.x, f.tile.y, 'clear');
             return;
         }
-        const v = victimNear(p);
-        if (v) { M.clearVictim(map, v.tile.x, v.tile.y); return; }
-        const sl = slotNear(p);
-        if (sl) { M.clearSlotVictim(map, sl.x, sl.y, sl.i); return; }
+        const w = victimUnder(p);
+        if (w) { M.removeVictim(map, w); return; }
         const a = M.arcNear(map, p.x, p.y, reach());
         if (a) { M.setCurve(map, a.x, a.y, a.q, 0); return; }
         const s = M.segNear(map, p.x, p.y, reach());
@@ -1300,7 +1313,7 @@ export function createEditor() {
 
     function selectWhere(where: Where | null) {
         const v = where && M.victimAt(map, where);
-        S.selected = v ? { where: where!, victim: v, rot: v.rot!, letter: v.type === 'CT' ? (W.cognitiveCodeToVictimLetter(v.code) || 'X') : '' } : null;
+        S.selected = v ? { where: where!, victim: v, rot: v.rot!, letter: v.type === 'CT' ? (W.cognitiveCodeToVictimLetter(v.code) || 'X') : '', offset: M.victimOffset(map, where!) } : null;
     }
 
     function selectNone() { S.selected = null; view.redraw(); }
@@ -1314,6 +1327,40 @@ export function createEditor() {
         selectWhere(sel.where);
     }
 
+    // The selected victim moved along its wall from the panel: to `offset`, as far as it fits. The
+    // slider moves it as it goes (slideSelected) and is one change when let go (slideDone); the
+    // middle button is one change at once.
+    let sliding: { from: number } | null = null;
+    function slideSelected(offset: number) {
+        const sel = S.selected;
+        if (!sel) return;
+        if (!sliding) { begin(); sliding = { from: M.victimOffset(map, sel.where) }; }
+        M.moveVictim(map, sel.where, Number(offset) || 0);
+        selectWhere(sel.where);
+        view.redraw();
+    }
+    function slideDone() {
+        const sel = S.selected;
+        if (!sliding || !sel) { sliding = null; return; }
+        if (M.victimOffset(map, sel.where) !== sliding.from && newlyLost()) {
+            M.moveVictim(map, sel.where, sliding.from);
+            notify('victim_unreachable', null, 'warn');
+        }
+        sliding = null;
+        commit();
+        selectWhere(sel.where);
+    }
+    function moveSelected(offset: number) {
+        slideSelected(offset);
+        slideDone();
+    }
+    // how far it goes, for the panel's slider
+    function selectedRange() {
+        const sel = S.selected;
+        if (!sel) return null;
+        return M.victimRange(map, sel.where);
+    }
+
     function removeSelected() {
         const sel = S.selected;
         if (!sel) return;
@@ -1325,16 +1372,39 @@ export function createEditor() {
 
     function selectedPos() {
         const w = S.selected && S.selected.where;
-        if (!w) return null;
-        if (w.kind === 'slot') return M.slotPos(w.x, w.y, w.i, map);
-        const d = M.SIDES[w.dir];
-        return [6 * w.x + 4 * d[0], 6 * w.y + 4 * d[1]];
+        return w ? M.victimPlace(map, w).at : null;
     }
 
     function quarterTile(p: P) {
         const tl = tileAt(p);
         const room = tl ? M.roomOf(map, tl.x, tl.y) : 0;
         return room === 2 || room === 3;
+    }
+
+    // A placed victim dragged: along its wall, as far as it fits (it starts once the pointer has gone
+    // half a cm, so a click stays a click)
+    function dragVictim(p: P) {
+        if (!stroke.victim) {
+            if (!stroke.grab || Math.hypot(p.x - stroke.down.x, p.y - stroke.down.y) < 0.5) return;
+            stroke.victim = stroke.grab;
+            stroke.from = M.victimOffset(map, stroke.grab);
+            selectWhere(stroke.grab);
+        }
+        if (M.moveVictim(map, stroke.victim, M.offsetToward(map, stroke.victim, p.x, p.y))) selectWhere(stroke.victim);
+    }
+    // an offset as the page shows it: +2.5, −1.0, 0.0 (cm)
+    function offsetText(o: number) {
+        return (o > 0 ? '+' : o < 0 ? '−' : '') + fixed(Math.abs(o), 1);
+    }
+    function dropVictim() {
+        const w = stroke.victim;
+        if (M.victimOffset(map, w) === stroke.from) return;
+        // where the robot cannot get to: back where it was, with why
+        if (newlyLost()) {
+            M.moveVictim(map, w, stroke.from);
+            notify('victim_unreachable', null, 'warn');
+        } else notify('victim_moved', { cm: offsetText(M.victimOffset(map, w)) }, 'ok');
+        selectWhere(w);
     }
 
     // A placed victim of the chosen kind is selected (its turn / rings in the panel, as the room 4
@@ -1357,35 +1427,75 @@ export function createEditor() {
         return !!r && r.victims.some(function (q) { return !was.has(q[0] + ',' + q[1]); });
     }
     function put(p: P) {
-        if (quarterTile(p)) {
-            const sl = M.slotAt(map, p.x, p.y)!;
-            const where: Where = { kind: 'slot', x: sl.x, y: sl.y, i: sl.i };
-            const cur = M.slotVictim(map, sl.x, sl.y, sl.i);
-            if (sameVictim(cur)) { selectWhere(where); return; }
-            const rule = M.slotRule(map, sl.x, sl.y, sl.i);
-            if (!rule.ok) { notify('victim_' + rule.reason, null, 'warn'); return; }
-            M.setSlotVictim(map, sl.x, sl.y, sl.i, ui.victim, ui.fake, victimOpts());
+        // a placed one clicked on: selected, or given the chosen kind (it stays where it is)
+        const hit = victimUnder(p);
+        if (hit) {
+            if (sameVictim(M.victimAt(map, hit))) { selectWhere(hit); return; }
+            replaceKind(hit);
             selectWhere(null);
             return;
         }
-        const s = sideAt(p);
-        if (!s) return;
-        const where: Where = { kind: 'edge', x: s.tile.x, y: s.tile.y, dir: s.dir };
-        const v = M.edgeVictim(map, s.tile.x, s.tile.y);
-        if (v && v.dir === s.dir && sameVictim(v)) { selectWhere(where); return; }
-        const rule = M.victimRule(map, s.tile.x, s.tile.y, s.dir);
+        const where = placementAt(p);
+        if (!where) return;
+        const rule = where.kind === 'slot' ? M.slotRule(map, where.x, where.y, where.i) : M.victimRule(map, where.x, where.y, where.dir);
         if (!rule.ok) { notify('victim_' + rule.reason, null, 'warn'); return; }
-        M.setVictim(map, s.tile.x, s.tile.y, s.dir, ui.victim, ui.fake, victimOpts());
+        // a new one goes where the click is along the wall, as far as it fits
+        const opts = Object.assign(victimOpts(), { offset: 0 });
+        if (where.kind === 'slot') M.setSlotVictim(map, where.x, where.y, where.i, ui.victim, ui.fake, opts);
+        else M.setVictim(map, where.x, where.y, where.dir, ui.victim, ui.fake, opts);
+        M.moveVictim(map, where, M.offsetToward(map, where, p.x, p.y));
+        if (!M.victimFits(map, where, M.victimOffset(map, where))) {
+            M.removeVictim(map, where);
+            notify('victim_noRoom', null, 'warn');
+            return;
+        }
         selectWhere(null);
     }
+    // a placed victim given the chosen kind (with the turn and rings chosen), where it is - or, a
+    // cognitive target being wider, the nearest place it fits; none: left as it was
+    function replaceKind(w: Where) {
+        const keep = JSON.stringify(map.cells);
+        const o = M.victimOffset(map, w), opts = Object.assign(victimOpts(), { offset: o });
+        if (w.kind === 'slot') M.setSlotVictim(map, w.x, w.y, w.i, ui.victim, ui.fake, opts);
+        else M.setVictim(map, w.x, w.y, w.dir, ui.victim, ui.fake, opts);
+        if (M.victimFits(map, w, o)) return;
+        M.moveVictim(map, w, o);
+        if (M.victimFits(map, w, M.victimOffset(map, w))) return;
+        map.cells = JSON.parse(keep);
+        notify('victim_noRoom', null, 'warn');
+    }
+    // The spot of a new victim at p: the face of the wall nearest to it, of its quarter (rooms 2, 3)
+    // or its tile - one with a wall, when one is within half the face; else the side p is on
+    function placementAt(p: P): Where | null {
+        if (quarterTile(p)) {
+            const sl = M.slotAt(map, p.x, p.y)!;
+            const t = M.tileOf(map, sl.x, sl.y), q = Math.floor(sl.i / 4);
+            if (t && t.curve && Number(t.curve[q])) return { kind: 'slot', x: sl.x, y: sl.y, i: sl.i };
+            return nearestFace([0, 1, 2, 3].map(function (side): Where { return { kind: 'slot', x: sl.x, y: sl.y, i: q * 4 + side }; }), p, 3)
+                || { kind: 'slot', x: sl.x, y: sl.y, i: sl.i };
+        }
+        const s = sideAt(p);
+        if (!s) return null;
+        return nearestFace(Object.keys(M.SIDES).map(function (d): Where { return { kind: 'edge', x: s.tile.x, y: s.tile.y, dir: d }; }), p, 6)
+            || { kind: 'edge', x: s.tile.x, y: s.tile.y, dir: s.dir };
+    }
+    function nearestFace(faces: Where[], p: P, reach: number): Where | null {
+        let best: Where | null = null, bestD = reach;
+        faces.forEach(function (w) {
+            const ok = w.kind === 'slot' ? M.slotHasWall(map, w.x, w.y, w.i) : M.hasWall(map, w.x, w.y, w.dir);
+            if (!ok) return;
+            const wall = M.victimPlace(map, w, 0).wall, along = M.victimPlace(map, w, 0).along;
+            // across its wall's line
+            const d = Math.abs((p.x - wall[0]) * along[1] - (p.y - wall[1]) * along[0]);
+            if (d < bestD) { best = w; bestD = d; }
+        });
+        return best;
+    }
 
-    // What a click of the victim tool does on a spot holding cur (moved: the tile's victim, on another
-    // side, goes to this one - a tile of room 1 has one victim)
-    function victimSay(cur: VictimInfo | null, moved?: boolean) {
-        const name = victimName();
-        if (cur && sameVictim(cur)) say('victim_select');
-        else if (cur) say('victim_replace', { name: name });
-        else say(moved ? 'victim_move' : 'victim_place', { name: name });
+    // What a click of the victim tool does on the placed victim cur
+    function victimSay(cur: VictimInfo | null) {
+        if (cur && sameVictim(cur)) say('victim_selectDrag');
+        else say('victim_replace', { name: victimName() });
     }
 
     // What the tool would do at p, for the preview
@@ -1457,10 +1567,8 @@ export function createEditor() {
             return { kind: 'curve', choice: c };
         }
         if (tool === 'eraser') {
-            const v = victimNear(p);
-            if (v) { say('erase_victim'); return { kind: 'victim', tile: v.tile, dir: v.victim.dir }; }
-            const sl = slotNear(p);
-            if (sl) { say('erase_victim'); return { kind: 'spot', at: M.slotPos(sl.x, sl.y, sl.i, map), color: '#dc2626' }; }
+            const w = victimUnder(p);
+            if (w) { say('erase_victim'); return { kind: 'spot', at: M.victimPlace(map, w).at, color: '#dc2626', small: w.kind === 'slot' }; }
             const a = M.arcNear(map, p.x, p.y, reach());
             if (a) { say('erase_curve'); return { kind: 'arc', arc: a, color: '#dc2626' }; }
             const s = M.segNear(map, p.x, p.y, reach());
@@ -1490,23 +1598,32 @@ export function createEditor() {
             say(isPass ? 'passageRemove' : 'passageHere');
             return isPass ? { kind: 'tile', tile: s.tile, color: '#dc2626' } : null;
         }
-        if (tool === 'victim' && quarterTile(p)) {
-            const sl = M.slotAt(map, p.x, p.y)!;
-            const rule = M.slotRule(map, sl.x, sl.y, sl.i);
-            if (!rule.ok) say('victim_' + rule.reason);
-            else victimSay(M.slotVictim(map, sl.x, sl.y, sl.i));
-            return { kind: 'spot', at: M.slotPos(sl.x, sl.y, sl.i, map), color: rule.ok ? '#16a34a' : '#dc2626', small: true };
-        }
         if (tool === 'victim') {
-            const s = sideAt(p);
-            if (!s) return null;
-            const rule = M.victimRule(map, s.tile.x, s.tile.y, s.dir);
-            if (!rule.ok) say('victim_' + rule.reason);
-            else {
-                const v = M.edgeVictim(map, s.tile.x, s.tile.y);
-                victimSay(v && v.dir === s.dir ? v : null, !!(v && v.dir !== s.dir));
+            // moving one along its wall
+            if (stroke && stroke.victim) {
+                say('victim_moving', { cm: offsetText(M.victimOffset(map, stroke.victim)) });
+                return null;
             }
-            return { kind: 'victimSpot', side: s, ok: rule.ok };
+            // on a placed one: select it (and drag it along its wall), or give it the chosen kind
+            const hit = victimUnder(p);
+            if (hit) {
+                victimSay(M.victimAt(map, hit));
+                return { kind: 'spot', at: M.victimPlace(map, hit).at, color: '#16a34a', small: hit.kind === 'slot' };
+            }
+            const where = placementAt(p);
+            if (!where) return null;
+            const rule = where.kind === 'slot' ? M.slotRule(map, where.x, where.y, where.i) : M.victimRule(map, where.x, where.y, where.dir);
+            if (!rule.ok) say('victim_' + rule.reason);
+            else if (where.kind === 'edge') {
+                const v = M.edgeVictim(map, where.x, where.y);
+                say(v ? 'victim_move' : 'victim_place', { name: victimName() });
+            } else say(M.slotVictim(map, where.x, where.y, where.i) ? 'victim_moveSlot' : 'victim_place', { name: victimName() });
+            // where it would go: the click's place along the wall, as far as it fits - red where the
+            // robot would not get to it (rule 3.2.4: it is not put there)
+            const place = M.victimPlace(map, where, rule.ok ? M.offsetToward(map, where, p.x, p.y, 0, ui.victim) : 0);
+            const lost = rule.ok && !!robot && !robot.gotTo(where.x, where.y, place.at, place.wall);
+            if (lost) say('victim_unreachable');
+            return { kind: 'spot', at: place.at, color: rule.ok && !lost ? '#16a34a' : '#dc2626', small: where.kind === 'slot' };
         }
         return null;
     }
@@ -1534,7 +1651,7 @@ export function createEditor() {
         if (!map) return;
         const px = 1 / v.scale;
         drawFloatingWalls(ctx);
-        drawLostVictims(ctx, px);
+        drawBadVictims(ctx, px);
         const tool = ui.tool;
         // the borders where a passage can go, while the passage tool is out
         if (tool === 'passage') {
@@ -1627,9 +1744,6 @@ export function createEditor() {
             ctx.strokeRect(6 * (hover.tile.x - 1) + px, 6 * (hover.tile.y - 1) + px, TILE - 2 * px, TILE - 2 * px);
         } else if (hover.kind === 'segs') {
             drawSegs(ctx, hover.segs, hover.color, 1.4);
-        } else if (hover.kind === 'victim') {
-            const d = M.SIDES[hover.dir];
-            ring(ctx, 6 * hover.tile.x + 4 * d[0], 6 * hover.tile.y + 4 * d[1], 2.3, '#dc2626', px);
         } else if (hover.kind === 'border') {
             const s = hover.side;
             ctx.fillStyle = hover.border.pass.color;
@@ -1642,9 +1756,6 @@ export function createEditor() {
             const ex = 6 * s.ex, ey = 6 * s.ey;
             if (s.ex % 2 === 0) { ctx.moveTo(ex, ey - 6); ctx.lineTo(ex, ey + 6); } else { ctx.moveTo(ex - 6, ey); ctx.lineTo(ex + 6, ey); }
             ctx.stroke();
-        } else if (hover.kind === 'victimSpot') {
-            const s = hover.side, d = M.SIDES[s.dir];
-            ring(ctx, 6 * s.tile.x + 4 * d[0], 6 * s.tile.y + 4 * d[1], 2.3, hover.ok ? '#16a34a' : '#dc2626', px);
         }
     }
 
@@ -1957,7 +2068,7 @@ export function createEditor() {
         const params: Record<string, any> = Object.assign({}, state.params);
         if (state.nameOf && params.name) params.name = t(state.nameOf + params.name);
         if (params.list) {
-            params.list = params.list.map(function (id: string) { return t(params.listOf + id); }).join(S.lang === 'ja' ? '・' : ', ');
+            params.list = params.list.map(function (id: string) { return t(params.listOf + id); }).join(t('admin.simBeta.listSep'));
         }
         // the step's own text, else the one the steps share (lessonState)
         let k = 'admin.simBeta.lesson.' + s.id + '.tasks.' + state.key, v = t(k, params);
@@ -2221,7 +2332,9 @@ export function createEditor() {
                 }
                 return;
             }
-            if (/INPUT|TEXTAREA|SELECT/.test((e.target as HTMLElement).tagName)) return;
+            // typing in a field keeps its keys (a slider or a check box does not: Ctrl+Z still undoes)
+            const el = e.target as HTMLElement;
+            if (/TEXTAREA|SELECT/.test(el.tagName) || (el.tagName === 'INPUT' && !/^(range|checkbox|radio|button)$/.test((el as HTMLInputElement).type))) return;
             if (!map) {
                 if (e.key === '?' && !S.tour) { e.preventDefault(); apply(function () { openGuidePick('keys'); }); }
                 return;
@@ -2277,7 +2390,7 @@ export function createEditor() {
         pointProblem: act(pointProblem), restoreKept: act(restoreKept), resize: act(resize), setSize: act(setSize), toCustomRoom4: act(toCustomRoom4),
         renamed: act(renamed), zoomIn: act(zoomIn), zoomOut: act(zoomOut), fit: act(fit), setTool: act(setTool),
         copyRegion: act(copyRegion), cutRegion: act(cutRegion), clearRegion: act(clearRegion), pasteRegion: act(pasteRegion),
-        duplicateRegion: act(duplicateRegion), selectNone: act(selectNone), changeSelected: act(changeSelected),
+        duplicateRegion: act(duplicateRegion), selectNone: act(selectNone), changeSelected: act(changeSelected), moveSelected: act(moveSelected), slideSelected: act(slideSelected), slideDone: act(slideDone), selectedRange: selectedRange, offsetText: offsetText,
         removeSelected: act(removeSelected), switchLang: act(switchLang), openGuidePick: act(openGuidePick),
         closeGuidePick: act(closeGuidePick), pickGuide: act(pickGuide), startTour: act(startTour), startRoom4Tour: act(startRoom4Tour),
         tourRoom4Inside: act(tourRoom4Inside), tourFold: act(tourFold), tourCloseCreator: act(tourCloseCreator),

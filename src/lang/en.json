@@ -42,7 +42,7 @@
                 "line": "Drag to draw walls. The line turns with the pointer, so one drag can draw a zigzag (go back the way you came to undo a turn). Start with Shift held for one straight line. Room 1 snaps to 12 cm (tile edges), rooms 2 and 3 to 6 cm. Not inside room 4.",
                 "eraser": "Click or drag over walls, curves and victims to remove them. Away from walls it takes a tile's floor off (hole, swamp, checkpoint); a click takes the start off. The outer walls stay.",
                 "floor": "Click a tile to set its floor.",
-                "victim": "Click where there is a wall. Room 1: on a side (one per tile); rooms 2 and 3: on the 16 places of the 6 cm walls (a curve has two: inside and outside). Click a placed victim with its kind chosen to select it and change its turn or rings, or remove it; with another kind chosen it takes that kind.",
+                "victim": "Click near a wall: the victim goes on the wall where you click. Room 1: on a tile side (one per tile); rooms 2 and 3: on a face of the 6 cm walls (4 quarters × 4 faces); a curve has two places (inside and outside). Drag a placed victim to move it along its wall (it stops short of the wall's end and other victims). Click it with its kind chosen to select it and change its turn, rings or place, or remove it; with another kind chosen it takes that kind.",
                 "curve": "Point at a quarter tile in room 3 to see its four curves; the nearest one (blue) goes in on a click. Click the same one again to remove it.",
                 "select": "Select walls, rooms, floors and victims together to move, copy, paste or clear them.",
                 "shape": "Change the size and shape of the map; the outer walls follow by themselves. Outline: click or drag tiles to take them out of the map or back. Insert / remove: put a row or column in, or take one out, where you click."
@@ -57,13 +57,15 @@
             "problems": {
                 "noStart": "There is no start tile",
                 "victimNoWall": "Some victims have lost their wall ({{count}})",
+                "victimInPassage": "Some victims are in a passage between areas ({{count}}): there are none in the passages (rule 3.7.2)",
                 "victimUnreachable": "Some victims are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule 3.2.4)",
                 "wallRule": "Some walls do not follow the rules of their room ({{count}})",
                 "room4Checkpoint": "The room 4 tile right behind a passage is not a checkpoint ({{count}}, rule 3.5.3). Placing a passage sets it by itself",
                 "customRoom4NoPicture": "Room 4 has not been drawn yet",
                 "presetNotSupported": "Room 4 presets are not available in this editor (switch to custom, or use the classic editor)",
                 "room4Untyped": "Some victims in room 4 have no type ({{count}}): give them one in Draw room 4",
-                "room4Unreachable": "Some victims in room 4 are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule 3.2.4)"
+                "room4Unreachable": "Some victims in room 4 are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule 3.2.4)",
+                "victimMisplaced": "Victims moved along their wall overlap the end of a wall or another victim ({{count}})"
             },
             "hints": {
                 "newMapSize": "A new map: first set its size (in tiles) in the panel on the left",
@@ -72,6 +74,7 @@
                 "noBorder": "This is not a room border",
                 "passageHere": "Click a room border (dotted)",
                 "victim_noWall": "There is no wall on this side",
+                "victim_passage": "No victims go in a passage between areas (rule 3.7.2)",
                 "victim_quarterTile": "Victims in rooms 2 and 3 come next",
                 "victim_room4": "Room 4 victims are placed in the room 4 creator",
                 "victim_outside": "Outside the map",
@@ -132,10 +135,14 @@
                 "erase_floor": "Click to take this tile's floor off",
                 "erase_start": "Click to take the start tile off",
                 "victim_place": "Click to place \"{{name}}\"",
-                "victim_move": "Click to place \"{{name}}\" on this side (the tile's victim moves here: one per tile)",
+                "victim_move": "Click to place \"{{name}}\" here (the tile's victim moves here: one per tile)",
                 "victim_replace": "Click to change it to \"{{name}}\"",
-                "victim_select": "Click to select it (turn, rings or remove in the left panel)",
-                "victim_unreachable": "The robot cannot get near here, so no victim goes here (rule 3.2.4)"
+                "victim_unreachable": "The robot cannot get near here, so no victim goes here (rule 3.2.4)",
+                "victim_selectDrag": "Click to select it, drag to move it along its wall",
+                "victim_moveSlot": "Click to place \"{{name}}\" here (the victim on this face moves here)",
+                "victim_moving": "{{cm}} cm along its wall (it stops short of the wall's end and other victims)",
+                "victim_moved": "Moved to {{cm}} cm along its wall (undo: Ctrl+Z)",
+                "victim_noRoom": "No room for a victim here (too near the end of the wall or another victim)"
             },
             "drawRoom4": "Draw room 4",
             "drawRoom4Note": "Double-clicking the room 4 area opens it too",
@@ -212,6 +219,17 @@
             "backToClassicNote": "Save the map you are working on (Save, JSON) first",
             "tourStart": "Guide (lesson, screen tour, making room 4)",
             "tourShort": "Guide",
+            "listSep": ", ",
+            "build": {
+                "title": "About this build",
+                "commit": "Commit",
+                "dirty": "(with changes not committed)",
+                "branch": "Branch",
+                "commitDate": "Committed",
+                "builtAt": "Built",
+                "copy": "Copy",
+                "copied": "Copied"
+            },
             "tourEmpty": "New here? See how it works",
             "tourEmptyNote": "Choose to learn by making a map, or to take the tour of the screen",
             "tourEnd": "End",
@@ -324,7 +342,7 @@
                 },
                 "victim": {
                     "title": "Victim (V): victims and cognitive targets",
-                    "body": "Pick a kind in the panel (letter victims Φ, Ψ, Ω and fake ones, cognitive targets F, P, C, O and a fake one) and click where there is a wall.\nThey go on tile edges in room 1 (one per tile side), on 16 places along the 6 cm walls in rooms 2 and 3, and on two places on a curve (inside and outside). Where one cannot go, the status line says why.\nTurn the dial (Set the turn) for its rotation, or choose Random for a new one each time. For a cognitive target, click a ring of the target and then a colour below; the sum of the rings gives its type.\nClick a victim with the same kind to select it, then change its turn or rings or remove it. Clicking it with another kind changes its kind."
+                    "body": "Pick a kind in the panel (letter victims Φ, Ψ, Ω and fake ones, cognitive targets F, P, C, O and a fake one) and click near a wall: it goes on the wall where you click.\nThey go on tile sides in room 1 (one per tile), on the faces of the 6 cm walls in rooms 2 and 3, and on two places on a curve (inside and outside). Drag a placed one to move it along its wall. Where one cannot go, the status line says why.\nTurn the dial (Set the turn) for its rotation, or choose Random for a new one each time. For a cognitive target, click a ring of the target and then a colour below; the sum of the rings gives its type.\nClick a victim with the same kind to select it, then change its turn, rings or place along its wall, or remove it. Clicking it with another kind changes its kind."
                 },
                 "room4": {
                     "title": "Drawing room 4",
@@ -352,7 +370,7 @@
                 },
                 "more": {
                     "title": "Guide and language",
-                    "body": "Guide at the bottom right has the lesson that builds a sample map, this tour, and how to make room 4, at any time.\nEnglish / 日本語 switches the language."
+                    "body": "Guide at the bottom right has the lesson that builds a sample map, this tour, and how to make room 4, at any time.\nThe globe button (it shows the language in use) picks the language."
                 },
                 "done": {
                     "title": "That is the tour",
@@ -500,7 +518,7 @@
                 },
                 "victim": {
                     "title": "Put a victim",
-                    "body": "With the victim tool, pick a kind and click where there is a wall. Victims go on tile edges in room 1 (one per tile), on 16 places along the 6 cm walls in rooms 2 and 3, and on two places on a curve (inside and outside). Where one cannot go, the status line says why.\nSet its turn with the dial (Set the turn), or choose Random for a new one each time.",
+                    "body": "With the victim tool, pick a kind and click near a wall: it goes on the wall where you click, and you can drag it along its wall afterwards. Victims go on tile sides in room 1 (one per tile), on the faces of the 6 cm walls in rooms 2 and 3, and on two places on a curve (inside and outside). Where one cannot go, the status line says why.\nSet its turn with the dial (Set the turn), or choose Random for a new one each time.",
                     "task": "Pick Harmed (Φ) and click the top side of the room 1 wall you drew (the bottom edge of the tile in the green frame)",
                     "tasks": {
                         "notReal": "That is a fake victim or a cognitive target. Pick Harmed (Φ) in the Real row and put it on the room 1 wall"
@@ -689,7 +707,7 @@
                 },
                 "more": {
                     "title": "Guide and language",
-                    "body": "Guide at the bottom right has this lesson, the tour of the screen and how to make room 4, at any time. The room 4 creator's Guide button shows the room 4 part on its own.\nEnglish / 日本語 switches the language."
+                    "body": "Guide at the bottom right has this lesson, the tour of the screen and how to make room 4, at any time. The room 4 creator's Guide button shows the room 4 part on its own.\nThe globe button (it shows the language in use) picks the language."
                 },
                 "done": {
                     "title": "Finished!",
@@ -715,8 +733,8 @@
                 "curve": "Point at a quarter tile in room 3 and click the blue curve",
                 "eraser": "Point at a wall, curve, victim or floor and click (drag to go on)",
                 "floor": "Click a tile to make it a {{floor}} (again to take it off)",
-                "victim": "Click a side with a wall to place \"{{name}}\". Pick the kind in the left panel",
-                "victim_selected": "The selected victim: change its turn or rings, or remove it, in the left panel"
+                "victim": "Click near a wall to place \"{{name}}\" where you click (drag it along its wall afterwards). Pick the kind in the left panel",
+                "victim_selected": "Drag the selected victim to move it along its wall. Change its turn, rings or place, or remove it, in the left panel"
             },
             "lessonState": {
                 "tool": "Choose the {{name}} tool (in the tool column on the left)"
@@ -771,7 +789,10 @@
                     "spaceDrag": "Space + drag",
                     "middleDrag": "Middle-button drag"
                 }
-            }
+            },
+            "along": "Place along its wall",
+            "alongNote": "You can also drag it on the map (0.1 cm steps)",
+            "alongMiddle": "To the middle"
         },
         "simMapEditor": {
             "name": "Name of design: ",
@@ -963,10 +984,10 @@
             "passagePurple": "Purple",
             "passageOrange": "Orange",
             "passageRed": "Red",
-            "ctF": "F: Flammable Gas",
-            "ctP": "P: Poison",
-            "ctC": "C: Corrosive",
-            "ctO": "O: Organic Peroxide",
+            "ctF": "Flammable Gas",
+            "ctP": "Poison",
+            "ctC": "Corrosive",
+            "ctO": "Organic Peroxide",
             "ctFake": "Fake target",
             "exportW": "Export this map as a world file for Erebus"
         }

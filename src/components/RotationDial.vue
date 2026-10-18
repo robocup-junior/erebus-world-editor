@@ -4,8 +4,10 @@
 // steps, the presets, a typed value, or a random turn. `change` comes when the user changes it.
 import { ref, watch } from 'vue';
 import { t } from '../i18n';
+import * as Icons from '../lib/icons';
 
-const props = defineProps<{ modelValue: number | null | undefined; symbol?: string | null; image?: string | null; disabled?: boolean }>();
+// mark: a cognitive target's type colour (its mark is shown instead of a symbol)
+const props = defineProps<{ modelValue: number | null | undefined; symbol?: string | null; image?: string | null; mark?: string | null; disabled?: boolean }>();
 const emit = defineEmits<{ (e: 'update:modelValue', v: number): void; (e: 'change', v: number): void }>();
 
 function normalize(value: unknown) {
@@ -98,7 +100,8 @@ function keyDown(event: KeyboardEvent) {
         <div class="sim-rot-arm" :style="{ transform: 'rotate(' + angle + 'deg)' }"><span class="sim-rot-knob"></span></div>
         <div class="sim-rot-card" :class="{ 'has-image': image }" :style="{ transform: 'translate(-50%, -50%) rotate(' + angle + 'deg)' }">
           <img class="sim-rot-image" v-if="image" :src="image" :alt="symbol || ''">
-          <span class="sim-rot-symbol" v-if="!image" :class="{ placeholder: !symbol }">{{ symbol || 'Φ' }}</span>
+          <span class="sim-rot-mark" v-if="!image && mark" :style="{ background: Icons.markBackground(mark) }"></span>
+          <span class="sim-rot-symbol" v-if="!image && !mark" :class="{ placeholder: !symbol }">{{ symbol || 'Φ' }}</span>
         </div>
       </div>
       <div class="sim-rot-controls">

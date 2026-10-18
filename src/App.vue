@@ -11,6 +11,8 @@ import type { AreaScore } from './lib/score';
 import RotationDial from './components/RotationDial.vue';
 import CtRings from './components/CtRings.vue';
 import Modal from './components/Modal.vue';
+import BuildInfo from './components/BuildInfo.vue';
+import LangMenu from './components/LangMenu.vue';
 import Room4Creator from './room4/Room4Creator.vue';
 
 const E = createEditor();
@@ -251,7 +253,7 @@ onMounted(function () {
               <div class="sbx-sel-head">
                 <span class="sbx-sel-symbol target" v-if="S.selected.victim.type === 'CT'" :style="E.targetStyle(S.selected.victim.code)"></span>
                 <span class="sbx-sel-symbol" v-if="S.selected.victim.type !== 'CT'" :class="{ fake: S.selected.victim.fake }">{{ LETTER[S.selected.victim.type] }}</span>
-                <span v-if="S.selected.victim.type === 'CT'">CT {{ S.selected.victim.code }}</span>
+                <span v-if="S.selected.victim.type === 'CT'">{{ t(S.selected.letter === 'X' ? 'admin.simMapEditor.ctFake' : 'admin.simMapEditor.ct' + S.selected.letter) }}</span>
                 <span v-if="S.selected.victim.type !== 'CT' && S.selected.victim.fake">{{ t('admin.simBeta.fake') }}</span>
               </div>
               <div class="sbx-label" v-if="S.selected.victim.type !== 'CT'">{{ t('admin.simBeta.kind') }}</div>
@@ -263,6 +265,21 @@ onMounted(function () {
               <div v-if="S.selected.victim.type !== 'CT'">
                 <div class="sbx-label">{{ t('admin.simBeta.rot') }}</div>
                 <RotationDial class="sbx-dial" :model-value="S.selected.rot" @update:model-value="(v: number) => S.selected!.rot = v" @change="E.changeSelected({ rot: S.selected!.rot })" :symbol="LETTER[S.selected.victim.type]"></RotationDial>
+              </div>
+              <!-- where along its wall: dragged on the map, or here -->
+              <div class="sbx-along" v-for="r in [E.selectedRange()]" :key="'along'">
+                <template v-if="r">
+                  <div class="sbx-label">{{ t('admin.simBeta.along') }}</div>
+                  <div class="sbx-along-row">
+                    <input type="range" class="sbx-along-range" :min="r.min" :max="r.max" step="0.1" :value="S.selected.offset" :disabled="r.min === r.max"
+                      :aria-label="t('admin.simBeta.along')" @input="E.slideSelected(Number(($event.target as HTMLInputElement).value))" @change="E.slideDone()" @pointerup="E.slideDone()" @blur="E.slideDone()">
+                    <span class="sbx-along-value">{{ E.offsetText(S.selected.offset) }} cm</span>
+                  </div>
+                  <div class="sbx-along-foot">
+                    <span>{{ t('admin.simBeta.alongNote') }}</span>
+                    <button class="btn btn-sm btn-link p-0" type="button" :disabled="!S.selected.offset" @click="E.moveSelected(0)">{{ t('admin.simBeta.alongMiddle') }}</button>
+                  </div>
+                </template>
               </div>
               <button class="btn btn-sm btn-outline-danger btn-block mt-3" type="button" @click="E.removeSelected()">
                 <i class="fas fa-trash-alt mr-1"></i>{{ t('admin.simBeta.remove') }}
@@ -381,21 +398,19 @@ onMounted(function () {
         </div>
       </div>
       <footer class="sbx-status">
-        <span class="sbx-hint sbx-notice" v-if="S.notice" :class="S.notice.kind"><i class="fas" :class="({ ok: 'fa-check-circle', warn: 'fa-exclamation-triangle', info: 'fa-info-circle' } as Record<string, string>)[S.notice.kind]"></i>{{ S.notice.text }}</span>
-        <span class="sbx-hint" v-if="!S.notice && S.hint"><i class="fas fa-mouse-pointer"></i>{{ S.hint }}</span>
-        <span class="sbx-tool-hint" v-if="!S.notice && !S.hint && !S.ui.showLinear && E.toolHint()"><i class="fas fa-lightbulb"></i>{{ E.toolHint() }}</span>
+        <span class="sbx-hint sbx-notice" v-if="S.notice" :class="S.notice.kind"><i class="fas" :class="({ ok: 'fa-check-circle', warn: 'fa-exclamation-triangle', info: 'fa-info-circle' } as Record<string, string>)[S.notice.kind]"></i><span class="sbx-hint-text" :title="S.notice.text">{{ S.notice.text }}</span></span>
+        <span class="sbx-hint" v-if="!S.notice && S.hint"><i class="fas fa-mouse-pointer"></i><span class="sbx-hint-text" :title="S.hint">{{ S.hint }}</span></span>
+        <span class="sbx-tool-hint" v-if="!S.notice && !S.hint && !S.ui.showLinear && E.toolHint()"><i class="fas fa-lightbulb"></i><span class="sbx-hint-text" :title="E.toolHint()">{{ E.toolHint() }}</span></span>
         <span class="sbx-legend" v-if="!S.notice && !S.hint && S.ui.showLinear && !E.linearNoStart()">
           <span><i class="sbx-key linear"></i>{{ t('admin.simBeta.legendLinear') }}</span>
           <span><i class="sbx-key floating"></i>{{ t('admin.simBeta.legendFloating') }}</span>
           <span><i class="sbx-key floating-wall"></i>{{ t('admin.simBeta.legendFloatingWall') }}</span>
           <span v-if="E.linearUnreached()"><i class="sbx-key unreached"></i>{{ t('admin.simBeta.legendUnreached') }}</span>
         </span>
-        <span class="sbx-hint" v-if="!S.notice && !S.hint && S.ui.showLinear && E.linearNoStart()"><i class="fas fa-info-circle"></i>{{ t('admin.simBeta.linearNoStart') }}</span>
-        <span class="sbx-copyright">©︎ 2021-2026 Erebus Development Team</span>
+        <span class="sbx-hint" v-if="!S.notice && !S.hint && S.ui.showLinear && E.linearNoStart()"><i class="fas fa-info-circle"></i><span class="sbx-hint-text">{{ t('admin.simBeta.linearNoStart') }}</span></span>
+        <BuildInfo></BuildInfo>
         <span class="sbx-status-tools">
-          <button class="sbx-status-btn sbx-lang" type="button" @click="E.switchLang()" title="Language">
-            <i class="fas fa-globe-asia"></i><span>{{ S.lang === 'ja' ? 'English' : '日本語' }}</span>
-          </button>
+          <LangMenu :lang="S.lang" @pick="E.switchLang"></LangMenu>
           <button class="sbx-status-btn sbx-tour-btn" type="button" @click="E.openGuidePick()" :title="t('admin.simBeta.tourStart')" aria-haspopup="dialog">
             <i class="far fa-question-circle"></i><span>{{ t('admin.simBeta.tourShort') }}</span><span class="sbx-tour-dot" v-if="!S.tourSeen"></span>
           </button>

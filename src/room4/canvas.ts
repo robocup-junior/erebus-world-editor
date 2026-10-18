@@ -539,7 +539,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         // (lib/icons): letter victims as discs, cognitive targets as on its map - a disc in the
         // type colour with the type letter (× a fake one)
         const at = R4.badgeOnWall(t, t.anchor, r);
-        if (type && (type.kind === 'ct' || type.kind === 'fakect')) Icons.targetLetter(octx, at.x, at.y, r, null, type.color, 2 * k, type.symbol);
+        if (type && (type.kind === 'ct' || type.kind === 'fakect')) Icons.targetMark(octx, at.x, at.y, r, null, type.color, 2 * k);
         else Icons.victim(octx, at.x, at.y, r, type ? type.symbol : '?', type ? type.color : '#94a3b8', 2 * k);
         if (!t.nearWall || t.unreachable) {
             octx.save();

@@ -1,12 +1,33 @@
-// The texts in Japanese and English (src/lang). Their parameters are written {{name}}; a key with no
-// text gives the key back, which the editor uses to tell a missing text. The language chosen is kept
-// in this browser (under the key the earlier version of the page used, so the choice carries over).
+// The page's texts, one file per language (src/lang). Their parameters are written {{name}}. A text
+// not in a language yet is shown in English; a key with no text at all gives the key back, which the
+// editor uses to tell a missing text. The language chosen is kept in this browser (under the key the
+// earlier version of the page used, so the choice carries over).
+//
+// To add a language: its file in src/lang (a copy of en.json, translated; test/simLang.test.ts checks
+// it has every key with the same parameters), and a line in LANGUAGES.
 import { createI18n, type MessageCompiler, type MessageContext } from 'vue-i18n';
 import en from './lang/en.json';
 import ja from './lang/ja.json';
 
-export type Lang = 'en' | 'ja';
+// The languages, in the order the language menu lists them: code (BCP 47, also the page's lang
+// attribute), name (in that language), texts
+export const LANGUAGES = [
+    { code: 'ja', name: '日本語', messages: ja },
+    { code: 'en', name: 'English', messages: en }
+] as const;
+export type Lang = typeof LANGUAGES[number]['code'];
+// for a text not in the chosen language yet
+const FALLBACK: Lang = 'en';
 const LANG_KEY = 'NG_TRANSLATE_LANG_KEY';
+
+function known(code: string | null | undefined): Lang | null {
+    if (!code) return null;
+    const c = code.toLowerCase();
+    // the exact code (pt-br), else its language (pt)
+    const hit = LANGUAGES.find(function (l) { return l.code.toLowerCase() === c; })
+        || LANGUAGES.find(function (l) { return l.code.toLowerCase() === c.split('-')[0]; });
+    return hit ? hit.code : null;
+}
 
 const compile: MessageCompiler = function (message) {
     const text = typeof message === 'string' ? message : '';
@@ -18,25 +39,29 @@ const compile: MessageCompiler = function (message) {
     };
 };
 
-// The language kept, else the browser's (Japanese for ja-*, else English)
+// The language kept, else the first of the browser's that the page has, else English
 function preferred(): Lang {
-    let lang: string | null = null;
-    try { lang = window.localStorage.getItem(LANG_KEY); } catch (e) { /* storage off */ }
-    if (lang === 'en' || lang === 'ja') return lang;
+    let kept: string | null = null;
+    try { kept = window.localStorage.getItem(LANG_KEY); } catch (e) { /* storage off */ }
+    if (known(kept)) return known(kept)!;
     const nav: any = navigator;
-    const browser = (nav.languages && nav.languages[0]) || nav.language || nav.browserLanguage || nav.systemLanguage || nav.userLanguage || '';
-    return /^ja\b/i.test(browser) ? 'ja' : 'en';
+    const browser: string[] = (nav.languages && nav.languages.length ? nav.languages : [nav.language || nav.browserLanguage || nav.systemLanguage || nav.userLanguage || '']);
+    for (let i = 0; i < browser.length; i++) if (known(browser[i])) return known(browser[i])!;
+    return FALLBACK;
 }
 
 const start = preferred();
 // told to the browser at once, so kanji are drawn with Japanese glyph shapes
 document.documentElement.lang = start;
 
+const messages: Record<string, any> = {};
+LANGUAGES.forEach(function (l) { messages[l.code] = l.messages; });
+
 export const i18n = createI18n({
     legacy: false,
     locale: start,
-    fallbackLocale: false,
-    messages: { en: en, ja: ja },
+    fallbackLocale: FALLBACK,
+    messages: messages,
     messageCompiler: compile,
     missingWarn: false,
     fallbackWarn: false,

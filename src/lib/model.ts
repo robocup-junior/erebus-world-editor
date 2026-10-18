@@ -12,7 +12,8 @@ import type { RoomPassage, WorldHooks } from './world2026';
 export type Where = { kind: 'edge'; x: number; y: number; dir: string } | { kind: 'slot'; x: number; y: number; i: number };
 // What is there: type H, S, U or CT (code: its ring code), fake, turn (degrees)
 export interface VictimInfo { dir?: string; type: string; value?: any; code: string; fake: boolean; rot?: number }
-interface VictimOpts { code?: string; rot?: number }
+// offset: where along its wall (cm from the middle of its face; left as it is when not given)
+interface VictimOpts { code?: string; rot?: number; offset?: number }
 // Tiles by their indices, both ends in
 export interface Region { x0: number; y0: number; x1: number; y1: number }
 export interface Clip { w: number; h: number; cells: Record<string, Cell>; rooms: Record<string, number> }
@@ -26,6 +27,9 @@ export interface Slot { x: number; y: number; i: number }
 interface Reach {
     res: number; gw: number; gh: number; reached: Uint8Array; miss: Uint8Array; pocketCount: number;
     pocketAt: (x: number, y: number) => boolean; victims: number[][];
+    // whether the robot would get to a victim of tile (x, y) at `at` on the wall at `wall` (one in a
+    // room left out is not looked at: got to)
+    gotTo: (x: number, y: number, at: Pt, wall: Pt) => boolean;
 }
 // A custom room 4 picture as the checks read it: its size, its wall pixels (summed: wallSum[(y) * (w
 // + 1) + x] counts the walls above and left of (x, y), so a box of them is counted at once) and its
@@ -291,6 +295,12 @@ function borderEdges(map: MapData) {
     return edges;
 }
 
+// Whether tile (x, y) is a passage between rooms (in a passage colour): no victims there (rule 3.7.2)
+function isPassage(map: MapData, x: number, y: number) {
+    const t = tileOf(map, x, y);
+    return !!(t && t.color && W.ROOM_PASSAGES.some(function (p: RoomPassage) { return p.color === t.color; }));
+}
+
 // A passage tile that no longer lies between its two rooms loses its colour: it has to be in one
 // of them and touch the other
 function prunePassages(map: MapData) {
@@ -508,6 +518,7 @@ function victimRule(map: MapData, x: number, y: number, dir: string): { ok: bool
     if (!isInside(map, x, y)) return { ok: false, reason: 'outside' };
     const room = roomOf(map, x, y);
     if (room === 4) return { ok: false, reason: 'room4' };
+    if (isPassage(map, x, y)) return { ok: false, reason: 'passage' };
     if (room === 2 || room === 3) return { ok: false, reason: 'quarterTile' };
     if (!hasWall(map, x, y, dir)) return { ok: false, reason: 'noWall' };
     return { ok: true };
@@ -532,6 +543,7 @@ function setVictim(map: MapData, x: number, y: number, dir: string, type: string
         t.victim_is_fake = !!fake;
     }
     t.single_victim_rotation = opts.rot || 0;
+    if (opts.offset !== undefined) setOffsetValue(t, null, opts.offset);
     return true;
 }
 
@@ -541,6 +553,7 @@ function clearVictim(map: MapData, x: number, y: number) {
     t.victims = {};
     t.cognitives = {};
     t.victim_is_fake = false;
+    delete t.victim_offset;
     return true;
 }
 
@@ -674,6 +687,7 @@ function slotVictim(map: MapData, x: number, y: number, i: number): VictimInfo |
 function slotRule(map: MapData, x: number, y: number, i: number): { ok: boolean; reason?: string } {
     const room = roomOf(map, x, y);
     if (room !== 2 && room !== 3) return { ok: false, reason: 'notQuarterTile' };
+    if (isPassage(map, x, y)) return { ok: false, reason: 'passage' };
     if (!slotHasWall(map, x, y, i)) return { ok: false, reason: 'noWall' };
     return { ok: true };
 }
@@ -696,6 +710,7 @@ function setSlotVictim(map: MapData, x: number, y: number, i: number, type: stri
         t.halfWallVicFakes[i] = !!fake;
     }
     t.halfWallVicRots[i] = opts.rot || 0;
+    if (opts.offset !== undefined) setOffsetValue(t, i, opts.offset);
     return true;
 }
 
@@ -705,6 +720,7 @@ function clearSlotVictim(map: MapData, x: number, y: number, i: number) {
     t.halfWallVic![i] = '';
     if (t.halfWallCognitives) t.halfWallCognitives[i] = '';
     if (t.halfWallVicFakes) t.halfWallVicFakes[i] = false;
+    setOffsetValue(t, i, 0);
     return true;
 }
 
@@ -733,6 +749,253 @@ function changeVictim(map: MapData, where: Where, change: { type?: string; fake?
 
 function removeVictim(map: MapData, where: Where) {
     return where.kind === 'edge' ? clearVictim(map, where.x, where.y) : clearSlotVictim(map, where.x, where.y, where.i);
+}
+
+// ---- Where a victim is along its wall -----------------------------------------------------------
+// A victim of rooms 1-3 sits on the face of its wall, anywhere along it: its offset (cm) from the
+// middle of the face, + to the right on a top or bottom face, + down on a left or right one. It
+// stays on its face (the tile's side, or the 6 cm wall of its quarter), clear of the walls at the
+// ends and of the other victims. Kept in the tile (victim_offset, halfWallVicOffsets[i]); the classic
+// editor leaves it alone and shows the victim in the middle. On a curve (room 3) it goes round the
+// arc of its quarter: its offset is the length of arc from the middle, + clockwise as drawn.
+const TOKEN_HALF = 1;       // a letter victim is 2 cm across (rule 3.7.2)
+const TARGET_HALF = 2.5;    // a cognitive target 5 cm (rule 3.7.7)
+const TOKEN_GAP = 0.5;      // and at least this far from another one
+const OFFSET_STEP = 0.1;
+
+export interface VictimPlace {
+    at: Pt;                 // where it is drawn (2 cm off the wall)
+    wall: Pt;               // the point of the wall it is on (the wall's middle line)
+    along: Pt;              // the way its face runs there
+    offset: number;
+    half: number;           // half its face (6 cm for a tile side, 3 cm on a 6 cm wall, 3π/2 cm on a curve)
+    centre?: Pt;            // on a curve: the centre of its arc (radius 6)
+}
+
+function setOffsetValue(t: Tile, i: number | null, offset: number) {
+    const o = Math.round((Number(offset) || 0) / OFFSET_STEP) * OFFSET_STEP;
+    const v = Math.abs(o) < 1e-9 ? 0 : Number(o.toFixed(1));
+    if (i === null) {
+        if (v) t.victim_offset = v; else delete t.victim_offset;
+        return;
+    }
+    if (!v && !t.halfWallVicOffsets) return;
+    if (!t.halfWallVicOffsets) t.halfWallVicOffsets = [];
+    t.halfWallVicOffsets[i] = v || null;
+    if (!t.halfWallVicOffsets.some(function (x: number | null) { return x; })) delete t.halfWallVicOffsets;
+}
+
+function victimOffset(map: MapData, where: Where): number {
+    const t = tileOf(map, where.x, where.y);
+    if (!t) return 0;
+    const o = where.kind === 'edge' ? t.victim_offset : t.halfWallVicOffsets && t.halfWallVicOffsets[where.i];
+    return Number(o) || 0;
+}
+
+// Where the victim at `where` is, with its offset (or the one given)
+function victimPlace(map: MapData, where: Where, offset?: number): VictimPlace {
+    const o = offset === undefined ? victimOffset(map, where) : offset;
+    if (where.kind === 'slot') {
+        const t = tileOf(map, where.x, where.y);
+        const sp = L.slotPoint(where.x, where.y, where.i, t && t.curve, o);
+        return { at: sp.at, wall: sp.wall, along: sp.along, offset: o, half: sp.curved ? 1.5 * Math.PI : 3, centre: sp.centre };
+    }
+    const d = SIDES[where.dir], along: Pt = d[0] ? [0, 1] : [1, 0];
+    return {
+        at: [6 * where.x + 4 * d[0] + along[0] * o, 6 * where.y + 4 * d[1] + along[1] * o],
+        wall: [6 * where.x + 6 * d[0] + along[0] * o, 6 * where.y + 6 * d[1] + along[1] * o],
+        along: along, offset: o, half: 6
+    };
+}
+
+// The point of the wall k cm along the face from the victim's middle (round the arc on a curve), and
+// the way off the wall to its face there
+function faceAt(p: VictimPlace, k: number): { w: Pt; n: Pt } {
+    const n0 = [p.at[0] - p.wall[0], p.at[1] - p.wall[1]], l = Math.hypot(n0[0], n0[1]) || 1;
+    if (!p.centre) return { w: [p.wall[0] + p.along[0] * k, p.wall[1] + p.along[1] * k], n: [n0[0] / l, n0[1] / l] };
+    const c = p.centre, a = Math.atan2(p.wall[1] - c[1], p.wall[0] - c[0]) + k / 6;
+    const u = [Math.cos(a), Math.sin(a)], out = Math.hypot(p.at[0] - c[0], p.at[1] - c[1]) > 6 ? 1 : -1;
+    return { w: [c[0] + 6 * u[0], c[1] + 6 * u[1]], n: [out * u[0], out * u[1]] };
+}
+
+// Every victim of rooms 1-3 on the map
+function allVictims(map: MapData): Where[] {
+    const out: Where[] = [];
+    for (let x = 1; x < 2 * map.width; x += 2) {
+        for (let y = 1; y < 2 * map.length; y += 2) {
+            const v = edgeVictim(map, x, y);
+            if (v) out.push({ kind: 'edge', x: x, y: y, dir: v.dir });
+            for (let i = 0; i < 16; i++) if (slotVictim(map, x, y, i)) out.push({ kind: 'slot', x: x, y: y, i: i });
+        }
+    }
+    return out;
+}
+
+function sameWhere(a: Where, b: Where) {
+    return a.kind === b.kind && a.x === b.x && a.y === b.y && (a.kind === 'edge' ? a.dir === (b as any).dir : a.i === (b as any).i);
+}
+
+// Every wall as short straight pieces (a curve in pieces), cm
+function wallPieces(map: MapData): number[][][] {
+    const walls = L.fromCells(map);
+    const pieces: number[][][] = [];
+    walls.segs.forEach(function (k) {
+        const g = L.parseSeg(k);
+        const a = [6 * g.i, 6 * g.j], b = g.dir === 'h' ? [6 * g.i + 6, 6 * g.j] : [6 * g.i, 6 * g.j + 6];
+        pieces.push([a, b]);
+    });
+    // a curve: the quarter of the circle (radius 6) about its centre inside its quarter
+    walls.arcs.forEach(function (a) {
+        const c = L.curveCentre(a.x, a.y, a.q, a.v);
+        const ox = 6 * (a.x - 1) + (a.q % 2) * 6, oy = 6 * (a.y - 1) + Math.floor(a.q / 2) * 6;
+        const pts: number[][] = [];
+        for (let k = 0; k <= 96; k++) {
+            const t = 2 * Math.PI * k / 96, p = [c[0] + 6 * Math.cos(t), c[1] + 6 * Math.sin(t)];
+            if (p[0] >= ox - 0.01 && p[0] <= ox + 6.01 && p[1] >= oy - 0.01 && p[1] <= oy + 6.01) pts.push(p);
+        }
+        for (let k = 1; k < pts.length; k++) {
+            if (Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]) >= 1) continue;
+            pieces.push([pts[k - 1], pts[k]]);
+        }
+    });
+    return pieces;
+}
+
+function pointSegDist(p: number[], a: number[], b: number[]) {
+    const dx = b[0] - a[0], dy = b[1] - a[1], l2 = dx * dx + dy * dy;
+    const t = l2 ? Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / l2)) : 0;
+    return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy);
+}
+
+function segSegDist(a: number[], b: number[], c: number[], d: number[]) {
+    return Math.min(pointSegDist(a, c, d), pointSegDist(b, c, d), pointSegDist(c, a, b), pointSegDist(d, a, b));
+}
+
+// Half the width of the victim at `where` along its wall (type: of the one to go there instead)
+function tokenHalf(map: MapData, where: Where, type?: string) {
+    if (!type) {
+        const v = victimAt(map, where);
+        type = v ? v.type : '';
+    }
+    return type === 'CT' ? TARGET_HALF : TOKEN_HALF;
+}
+
+// The victim on the face of its wall: from end to end (on a curve, the chord of its arc)
+function tokenSpan(p: VictimPlace, half: number): { a: number[]; b: number[]; r: number } {
+    const ends = [-half, half].map(function (k) {
+        const f = faceAt(p, k);
+        return [f.w[0] + f.n[0] * WALL_HALF, f.w[1] + f.n[1] * WALL_HALF];
+    });
+    return { a: ends[0], b: ends[1], r: 0 };
+}
+
+interface FitWorld { half: number; pieces: number[][][]; others: { a: number[]; b: number[]; r: number }[] }
+
+// What the victim at `where` (or one of `type` there) has to fit among
+function fitWorld(map: MapData, where: Where, type?: string): FitWorld {
+    return {
+        half: tokenHalf(map, where, type),
+        pieces: wallPieces(map),
+        others: allVictims(map).filter(function (w) { return !sameWhere(w, where); }).map(function (w) { return tokenSpan(victimPlace(map, w), tokenHalf(map, w)); })
+    };
+}
+
+// Whether the victim at `where` fits at `offset`: on its face, its wall under it all the way, clear
+// of every other wall (the ones at the ends of its face) and of the other victims
+function victimFits(map: MapData, where: Where, offset: number, world?: FitWorld): boolean {
+    world = world || fitWorld(map, where);
+    const p = victimPlace(map, where, offset), half = world.half;
+    if (Math.abs(offset) > p.half - half + 1e-9) return false;
+    const near = world.pieces.filter(function (s) { return pointSegDist(p.wall, s[0], s[1]) < half + 3; });
+    // every half cm across it (a wall coming up to its face in the middle stops it too)
+    const steps = Math.ceil(2 * half / 0.5);
+    for (let j = 0; j <= steps; j++) {
+        const k = -half + 2 * half * j / steps;
+        // its wall is under it
+        const { w, n } = faceAt(p, k);
+        if (!near.some(function (s) { return pointSegDist(w, s[0], s[1]) <= 0.01; })) return false;
+        // nothing else comes up to its face
+        const f = [w[0] + n[0] * (WALL_HALF + 0.05), w[1] + n[1] * (WALL_HALF + 0.05)];
+        if (near.some(function (s) { return pointSegDist(f, s[0], s[1]) < WALL_HALF - 1e-9; })) return false;
+    }
+    const me = tokenSpan(p, half);
+    return world.others.every(function (o) { return segSegDist(me.a, me.b, o.a, o.b) - o.r - me.r >= TOKEN_GAP - 1e-9; });
+}
+
+// How far the victim at `where` can go along its wall, from where it is (start: from that offset
+// instead), or from the nearest place it fits when it does not fit there: { min, max } offsets, cm.
+// type: for one of that type to go there (its width), instead of the one there
+function victimRange(map: MapData, where: Where, start?: number, type?: string): { min: number; max: number } {
+    const p = victimPlace(map, where, start);
+    const world = fitWorld(map, where, type);
+    const steps = Math.round(2 * p.half / OFFSET_STEP);
+    let from = p.offset;
+    // not fitting where it is: from the nearest place where it does
+    for (let k = 0; k <= steps && !victimFits(map, where, from, world); k++) {
+        const lo = Number((p.offset - k * OFFSET_STEP).toFixed(1)), hi = Number((p.offset + k * OFFSET_STEP).toFixed(1));
+        if (victimFits(map, where, lo, world)) from = lo;
+        else if (victimFits(map, where, hi, world)) from = hi;
+    }
+    if (!victimFits(map, where, from, world)) return { min: p.offset, max: p.offset };
+    let min = from, max = from;
+    for (let k = 1; k <= steps; k++) {
+        const o = Number((from - k * OFFSET_STEP).toFixed(1));
+        if (!victimFits(map, where, o, world)) break;
+        min = o;
+    }
+    for (let k = 1; k <= steps; k++) {
+        const o = Number((from + k * OFFSET_STEP).toFixed(1));
+        if (!victimFits(map, where, o, world)) break;
+        max = o;
+    }
+    return { min: min, max: max };
+}
+
+// The offset of the point (px, py) on the face of the victim at `where`, kept where it fits
+// (from: the offset to look from; where it is when not given. type: as for victimRange)
+function offsetToward(map: MapData, where: Where, px: number, py: number, from?: number, type?: string): number {
+    const base = victimPlace(map, where, 0);
+    let want = (px - base.wall[0]) * base.along[0] + (py - base.wall[1]) * base.along[1];
+    // on a curve: the length of arc round to the point's angle
+    if (base.centre) {
+        const c = base.centre, a = Math.atan2(py - c[1], px - c[0]) - Math.atan2(base.wall[1] - c[1], base.wall[0] - c[0]);
+        want = 6 * Math.atan2(Math.sin(a), Math.cos(a));
+    }
+    const r = victimRange(map, where, from, type);
+    return Number(Math.max(r.min, Math.min(r.max, Math.round(want / OFFSET_STEP) * OFFSET_STEP)).toFixed(1));
+}
+
+// Moves the victim at `where` along its wall (as far as it fits toward the offset asked for)
+function moveVictim(map: MapData, where: Where, offset: number) {
+    const t = tileOf(map, where.x, where.y);
+    if (!t || !victimAt(map, where)) return false;
+    const r = victimRange(map, where);
+    const o = Number(Math.max(r.min, Math.min(r.max, Math.round(offset / OFFSET_STEP) * OFFSET_STEP)).toFixed(1));
+    if (o === victimOffset(map, where)) return false;
+    setOffsetValue(t, where.kind === 'edge' ? null : where.i, o);
+    return true;
+}
+
+// The victims that do not fit where they are moved to (a wall or another victim came there since)
+function misplacedVictims(map: MapData): Where[] {
+    return allVictims(map).filter(function (w) {
+        const o = victimOffset(map, w);
+        return o !== 0 && !victimFits(map, w, o);
+    });
+}
+
+// Puts a victim that does not fit back: the nearest offset toward the middle where it does
+function settleVictim(map: MapData, where: Where) {
+    const t = tileOf(map, where.x, where.y);
+    if (!t) return false;
+    const o = victimOffset(map, where), world = fitWorld(map, where);
+    const steps = Math.round(Math.abs(o) / OFFSET_STEP);
+    for (let k = 1; k <= steps; k++) {
+        const c = Number((o - Math.sign(o) * k * OFFSET_STEP).toFixed(1));
+        if (victimFits(map, where, c, world)) { setOffsetValue(t, where.kind === 'edge' ? null : where.i, c); return true; }
+    }
+    setOffsetValue(t, where.kind === 'edge' ? null : where.i, 0);
+    return true;
 }
 
 // ---- Regions of tiles: copy, clear, paste (the select tool) ------------------------------------
@@ -897,7 +1160,7 @@ function removeLine(map: MapData, axis: string, t: number) {
 // Out: { res, gw, gh, reached (Uint8Array, 1 = a centre gets there), miss (Uint8Array, 1 = out of
 // reach), pocketCount, pocketAt(x, y) cm, victims: [[x, y]] cm of the victims it cannot get to },
 // or null without a start tile.
-const REACH_RES = 0.5, ROBOT_R = 3.7, WALL_HALF = 0.5, VICTIM_NEAR = 6, SPECK_CM2 = 5;
+const REACH_RES = 0.5, ROBOT_R = 3.7, WALL_HALF = 0.5, VICTIM_NEAR = 6, SPECK_CM2 = 5, HOLE_INSET = 1.5;
 
 // Distance (in cells) from every cell to the nearest cell with src set, two passes over a 5 x 5
 // chamfer mask (close to the straight-line distance)
@@ -949,9 +1212,17 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
     const outside = new Uint8Array(gw * gh);
     for (let x = 1; x < 2 * map.width; x += 2) {
         for (let y = 1; y < 2 * map.length; y += 2) {
-            if (!isOutside(map, x, y)) continue;
-            for (let j = 6 * (y - 1) / res; j < 6 * (y + 1) / res; j++)
-                for (let i = 6 * (x - 1) / res; i < 6 * (x + 1) / res; i++) { wall[j * gw + i] = 1; outside[j * gw + i] = 1; }
+            // no floor: an outside tile, or a hole (rule 3.6.4: 1.5 cm in from the tile's edges; the
+            // robot keeps clear of it as of a wall). A hole tile's rim is no floor to get to either.
+            const t = tileOf(map, x, y), inset = isOutside(map, x, y) ? 0 : t && t.black ? HOLE_INSET : -1;
+            if (inset < 0) continue;
+            for (let j = 6 * (y - 1) / res; j < 6 * (y + 1) / res; j++) {
+                for (let i = 6 * (x - 1) / res; i < 6 * (x + 1) / res; i++) {
+                    outside[j * gw + i] = 1;
+                    if (j * res >= 6 * (y - 1) + inset && (j + 1) * res <= 6 * (y + 1) - inset
+                        && i * res >= 6 * (x - 1) + inset && (i + 1) * res <= 6 * (x + 1) - inset) wall[j * gw + i] = 1;
+                }
+            }
         }
     }
     // the walls of a custom room 4 picture, on room 4's tiles: a cell is a wall where they cover a
@@ -972,29 +1243,9 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
             }
         }
     }
-    const walls = L.fromCells(map);
-    const pieces: number[][][] = [];      // every wall as short straight pieces (curves too), for line of sight
-    walls.segs.forEach(function (k) {
-        const g = L.parseSeg(k);
-        const a = [6 * g.i, 6 * g.j], b = g.dir === 'h' ? [6 * g.i + 6, 6 * g.j] : [6 * g.i, 6 * g.j + 6];
-        markSeg(a, b);
-        pieces.push([a, b]);
-    });
-    // a curve: the quarter of the circle (radius 6) about its centre inside its quarter, in short pieces
-    walls.arcs.forEach(function (a) {
-        const c = L.curveCentre(a.x, a.y, a.q, a.v);
-        const ox = 6 * (a.x - 1) + (a.q % 2) * 6, oy = 6 * (a.y - 1) + Math.floor(a.q / 2) * 6;
-        const pts: number[][] = [];
-        for (let k = 0; k <= 96; k++) {
-            const t = 2 * Math.PI * k / 96, p = [c[0] + 6 * Math.cos(t), c[1] + 6 * Math.sin(t)];
-            if (p[0] >= ox - 0.01 && p[0] <= ox + 6.01 && p[1] >= oy - 0.01 && p[1] <= oy + 6.01) pts.push(p);
-        }
-        for (let k = 1; k < pts.length; k++) {
-            if (Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]) >= 1) continue;
-            markSeg(pts[k - 1], pts[k]);
-            pieces.push([pts[k - 1], pts[k]]);
-        }
-    });
+    // every wall as short straight pieces (curves too), for line of sight
+    const pieces = wallPieces(map);
+    pieces.forEach(function (s) { markSeg(s[0], s[1]); });
     // the map's edge is a wall too
     const dWall = (function () {
         const src = new Uint8Array(gw * gh);
@@ -1098,18 +1349,18 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
             if (skip(x, y)) continue;
             const v = edgeVictim(map, x, y);
             if (v && hasWall(map, x, y, v.dir)) {
-                const d = SIDES[v.dir], pt = [6 * x + 4 * d[0], 6 * y + 4 * d[1]];
-                if (!near(pt, [6 * x + 6 * d[0], 6 * y + 6 * d[1]])) victims.push(pt);
+                const p = victimPlace(map, { kind: 'edge', x: x, y: y, dir: v.dir });
+                if (!near(p.at, p.wall)) victims.push(p.at);
             }
-            const t = tileOf(map, x, y);
             for (let i = 0; i < 16; i++) {
                 if (!slotVictim(map, x, y, i) || !slotHasWall(map, x, y, i)) continue;
-                const sp = L.slotPoint(x, y, i, t && t.curve);
-                if (!near(sp.at, sp.wall)) victims.push(sp.at);
+                const p = victimPlace(map, { kind: 'slot', x: x, y: y, i: i });
+                if (!near(p.at, p.wall)) victims.push(p.at);
             }
         }
     }
-    return { res: res, gw: gw, gh: gh, reached: reached, miss: miss, pocketCount: pocketCount, pocketAt: pocketAt, victims: victims };
+    const gotTo = function (x: number, y: number, at: Pt, wallPt: Pt) { return skip(x, y) || near(at, wallPt); };
+    return { res: res, gw: gw, gh: gh, reached: reached, miss: miss, pocketCount: pocketCount, pocketAt: pocketAt, victims: victims, gotTo: gotTo };
 }
 
 // { key, params, block, at, show }: block = the world export stops for it; at = [x, y] cm to go to;
@@ -1169,13 +1420,21 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
     for (let x = 1; x < 2 * map.width; x += 2) {
         for (let y = 1; y < 2 * map.length; y += 2) {
             const v = edgeVictim(map, x, y);
-            if (v && !hasWall(map, x, y, v.dir)) floating.push([6 * x + 4 * SIDES[v.dir][0], 6 * y + 4 * SIDES[v.dir][1]]);
+            if (v && !hasWall(map, x, y, v.dir)) floating.push(victimPlace(map, { kind: 'edge', x: x, y: y, dir: v.dir }).at);
             for (let i = 0; i < 16; i++) {
-                if (slotVictim(map, x, y, i) && !slotHasWall(map, x, y, i)) floating.push(slotPos(x, y, i, map));
+                if (slotVictim(map, x, y, i) && !slotHasWall(map, x, y, i)) floating.push(victimPlace(map, { kind: 'slot', x: x, y: y, i: i }).at);
             }
         }
     }
     if (floating.length) out.push({ key: 'victimNoWall', params: { count: floating.length }, at: floating[0], show: { points: floating } });
+    // victims in a passage between rooms (a passage put where they were): there are none (rule 3.7.2)
+    const inPassage = allVictims(map).filter(function (w) { return isPassage(map, w.x, w.y); }).map(function (w) { return victimPlace(map, w).at; });
+    if (inPassage.length) out.push({ key: 'victimInPassage', params: { count: inPassage.length }, block: true, at: inPassage[0], show: { points: inPassage } });
+    // victims moved along their wall where they no longer fit (a wall or another victim came there)
+    const misplaced = misplacedVictims(map).filter(function (w) {
+        return w.kind === 'edge' ? hasWall(map, w.x, w.y, w.dir) : slotHasWall(map, w.x, w.y, w.i);
+    }).map(function (w) { return victimPlace(map, w).at; });
+    if (misplaced.length) out.push({ key: 'victimMisplaced', params: { count: misplaced.length }, block: true, at: misplaced[0], show: { points: misplaced } });
     // victims the robot cannot get to (walls too close round them): there are none there (rule 3.2.4)
     const reach = robotReach(map, picture);
     if (reach && reach.victims.length) {
@@ -1214,7 +1473,7 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
 // has to be drawn). FIXABLE: the problems it handles.
 
 const FIXABLE = ['noStart', 'presetNotSupported', 'room4Checkpoint', 'conn.notConnected', 'conn.passageNoRoom',
-    'conn.passageMisplaced', 'conn.unmarkedGap', 'victimNoWall', 'victimUnreachable', 'wallRule'];
+    'conn.passageMisplaced', 'conn.unmarkedGap', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable', 'wallRule'];
 // fixed by drawing in the room 4 creator
 const DRAW_FIX = ['customRoom4NoPicture', 'room4Untyped', 'room4Unreachable'];
 
@@ -1305,21 +1564,19 @@ function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string>
         }
         return borders;
     }
+    if (key === 'victimInPassage') {
+        allVictims(map).filter(function (w) { return isPassage(map, w.x, w.y); }).forEach(function (w) { removeVictim(map, w); });
+        return borders;
+    }
     if (key === 'victimUnreachable') {
         // the victims at the places the problem points out
         const at = new Set((p.show && p.show.points || []).map(function (q) { return q[0] + ',' + q[1]; }));
-        for (let x = 1; x < 2 * map.width; x += 2) {
-            for (let y = 1; y < 2 * map.length; y += 2) {
-                const v = edgeVictim(map, x, y);
-                if (v && at.has((6 * x + 4 * SIDES[v.dir][0]) + ',' + (6 * y + 4 * SIDES[v.dir][1]))) clearVictim(map, x, y);
-                const t = tileOf(map, x, y);
-                for (let i = 0; i < 16; i++) {
-                    if (!slotVictim(map, x, y, i)) continue;
-                    const q = L.slotPoint(x, y, i, t && t.curve).at;
-                    if (at.has(q[0] + ',' + q[1])) clearSlotVictim(map, x, y, i);
-                }
-            }
-        }
+        allVictims(map).filter(function (w) { const q = victimPlace(map, w).at; return at.has(q[0] + ',' + q[1]); })
+            .forEach(function (w) { removeVictim(map, w); });
+        return borders;
+    }
+    if (key === 'victimMisplaced') {
+        misplacedVictims(map).forEach(function (w) { settleVictim(map, w); });
         return borders;
     }
     if (key === 'wallRule') {
@@ -1338,7 +1595,7 @@ function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string>
 // Every problem that can be fixed, in an order where one fix does not undo another
 function fixAll(map: MapData, borders: Set<string>, picture?: Room4Picture | null): Set<string> {
     const order = ['presetNotSupported', 'conn.passageNoRoom', 'conn.passageMisplaced', 'conn.unmarkedGap', 'wallRule',
-        'conn.notConnected', 'room4Checkpoint', 'victimNoWall', 'victimUnreachable', 'noStart'];
+        'conn.notConnected', 'room4Checkpoint', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable', 'noStart'];
     order.forEach(function (key) {
         problems(map, picture).filter(function (p) { return p.key === key; }).forEach(function (p) {
             const after = fixProblem(map, p, borders);
@@ -1413,6 +1670,14 @@ export {
     arcNear,
     slotHasWall,
     slotPos,
+    victimPlace,
+    victimOffset,
+    victimFits,
+    victimRange,
+    offsetToward,
+    moveVictim,
+    misplacedVictims,
+    allVictims,
     slotAt,
     slotVictim,
     slotRule,

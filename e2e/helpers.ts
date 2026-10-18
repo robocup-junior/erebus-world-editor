@@ -28,7 +28,7 @@ export function pageErrors(page: Page): string[] {
 
 // The page with the same random numbers and time each run, the language given, and the guide's first
 // question already answered (unless fresh)
-export async function boot(page: Page, opts: { lang?: 'ja' | 'en'; fresh?: boolean } = {}): Promise<void> {
+export async function boot(page: Page, opts: { lang?: string; fresh?: boolean } = {}): Promise<void> {
     watchErrors(page);
     await page.addInitScript(function (o) {
         let s = 20261017;

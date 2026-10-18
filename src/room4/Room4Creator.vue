@@ -10,6 +10,7 @@ import { t } from '../i18n';
 import { tick } from '../editor/runtime';
 import type { Editor } from '../editor/editor';
 import CtRings from '../components/CtRings.vue';
+import LangMenu from '../components/LangMenu.vue';
 import RotationDial from '../components/RotationDial.vue';
 import { mountCanvas } from './canvas';
 import { scopeTools, type CreatorScope, type R4State, type StampType, type ShapeIcon } from './scope';
@@ -320,7 +321,7 @@ onBeforeUnmount(function () {
                   <button type="button" :class="{ active: r4.randomRot }" @click="r4.randomRot = true"><i class="fas fa-dice mr-1"></i>{{ t('admin.simBeta.rotRandom') }}</button>
                 </div>
                 <p class="sbx-rot-note" v-if="r4.randomRot">{{ t('admin.simBeta.rotRandomNote') }}</p>
-                <RotationDial class="sbx-dial" v-if="!r4.randomRot" v-model="r4.rot" :symbol="stampType(r4.stamp)?.symbol"></RotationDial>
+                <RotationDial class="sbx-dial" v-if="!r4.randomRot" v-model="r4.rot" :symbol="stampType(r4.stamp)?.symbol" :mark="ctLetterOf(r4.stamp) ? stampType(r4.stamp)?.color : null"></RotationDial>
               </div>
             </div>
 
@@ -345,7 +346,7 @@ onBeforeUnmount(function () {
                   <button type="button" :class="{ active: r4.sel.rot === null }" @click="setSelRandomRot(true)"><i class="fas fa-dice mr-1"></i>{{ t('admin.simBeta.rotRandom') }}</button>
                 </div>
                 <p class="sbx-rot-note" v-if="r4.sel.rot === null">{{ t('admin.simBeta.rotRandomNote') }}</p>
-                <RotationDial class="sbx-dial" v-if="r4.sel.rot !== null" :model-value="r4.sel.rot" @update:model-value="(v: number) => r4.sel!.rot = v" @change="setSelRot(r4.sel!.rot!)" :symbol="stampType(r4.sel.idx)?.symbol"></RotationDial>
+                <RotationDial class="sbx-dial" v-if="r4.sel.rot !== null" :model-value="r4.sel.rot" @update:model-value="(v: number) => r4.sel!.rot = v" @change="setSelRot(r4.sel!.rot!)" :symbol="stampType(r4.sel.idx)?.symbol" :mark="ctLetterOf(r4.sel.idx) ? stampType(r4.sel.idx)?.color : null"></RotationDial>
               </div>
               <button type="button" class="btn btn-sm btn-outline-danger btn-block mt-3" @click="removeSel()"><i class="fas fa-trash-alt mr-1"></i>{{ t('admin.simBeta.remove') }}</button>
             </div>
@@ -543,7 +544,7 @@ onBeforeUnmount(function () {
             <span class="sim-r4-status-note" v-if="r4.showReach && (r4.reachState === 'noStart' || r4.reachState === 'noSeed' || r4.reachState === 'unavailable')" :title="t('admin.simMapEditor.room4Creator.reach.' + r4.reachState)"><i class="fas fa-info-circle"></i>{{ t('admin.simMapEditor.room4Creator.reachOff') }}</span>
             <!-- the guide and the language, at the right end as in the editor -->
             <span class="sim-r4-status-tools">
-              <button type="button" class="sbx-status-btn sbx-lang" @click="E.switchLang()" title="Language"><i class="fas fa-globe-asia"></i><span>{{ E.S.lang === 'ja' ? 'English' : '日本語' }}</span></button>
+              <LangMenu :lang="E.S.lang" @pick="E.switchLang"></LangMenu>
               <button type="button" class="sbx-status-btn sbx-tour-btn sim-r4-help" @click="E.startRoom4Tour()" :title="t('admin.simBeta.guideRoom4')"><i class="far fa-question-circle"></i><span>{{ t('admin.simBeta.tourShort') }}</span></button>
             </span>
             <span class="sim-r4-status-legend">

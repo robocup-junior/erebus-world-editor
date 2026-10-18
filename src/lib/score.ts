@@ -14,7 +14,6 @@
 import type { MapData } from './types';
 import * as M from './model';
 import * as W from './world2026';
-import * as L from './lattice';
 
 const MULTIPLIER: Record<number, number> = { 1: 1, 2: 1.25, 3: 1.5, 4: 2 };
 const EXIT_BONUS = 0.1;
@@ -101,8 +100,8 @@ export function maxScore(map: MapData, picture: M.Room4Picture | null): MaxScore
             if (v && M.hasWall(map, x, y, v.dir)) {
                 const kind = v.type === 'CT' ? (W.cognitiveCodeToVictimLetter(v.code) ? 'target' : null) : (v.fake ? null : 'victim');
                 if (kind) {
-                    const d = M.SIDES[v.dir];
-                    if (reached && !lost.has((6 * x + 4 * d[0]) + ',' + (6 * y + 4 * d[1]))) add(room, kind, kind === 'target' ? targetPoints(linear) : letterPoints(linear, false));
+                    const at = M.victimPlace(map, { kind: 'edge', x: x, y: y, dir: v.dir }).at;
+                    if (reached && !lost.has(at[0] + ',' + at[1])) add(room, kind, kind === 'target' ? targetPoints(linear) : letterPoints(linear, false));
                     else unreachableTokens++;
                 }
             }
@@ -112,7 +111,7 @@ export function maxScore(map: MapData, picture: M.Room4Picture | null): MaxScore
                 if (!s || !M.slotHasWall(map, x, y, i)) continue;
                 const kind = s.type === 'CT' ? (W.cognitiveCodeToVictimLetter(s.code) ? 'target' : null) : (s.fake ? null : 'victim');
                 if (!kind) continue;
-                const at = L.slotPoint(x, y, i, tile && tile.curve).at;
+                const at = M.victimPlace(map, { kind: 'slot', x: x, y: y, i: i }).at;
                 if (reached && !lost.has(at[0] + ',' + at[1])) add(room, kind, kind === 'target' ? targetPoints(linear) : letterPoints(linear, true));
                 else unreachableTokens++;
             }

@@ -201,21 +201,25 @@ function curveSide(v: number, inside: boolean) {
     return inside ? (d + 2) % 4 : d;
 }
 
-// Where slot i of tile (x, y) is drawn, cm, and the point of the wall it is on.
-// curve: the tile's curve array (or nothing)
-function slotPoint(x: number, y: number, i: number, curve?: (number | string)[] | null): { at: Pt; wall: Pt; curved: boolean; inside?: boolean } {
-    const q = Math.floor(i / 4), side = i % 4;
+// Where slot i of tile (x, y) is drawn, cm, the point of the wall it is on and the way its face runs
+// there. curve: the tile's curve array (or nothing). offset: cm along the face from its middle (+ to
+// the right on a top or bottom face, + down on a left or right one; on a curve, the length of arc,
+// + clockwise as drawn)
+function slotPoint(x: number, y: number, i: number, curve?: (number | string)[] | null, offset?: number): { at: Pt; wall: Pt; along: Pt; curved: boolean; inside?: boolean; centre?: Pt } {
+    const q = Math.floor(i / 4), side = i % 4, o = Number(offset) || 0;
     const qx = 6 * x - 3 + (q % 2) * 6, qy = 6 * y - 3 + Math.floor(q / 2) * 6;
     const v = curve ? Number(curve[q]) || 0 : 0;
     if (!v) {
         const off = [[0, -1], [1, 0], [0, 1], [-1, 0]][side];
-        return { at: [qx + 2 * off[0], qy + 2 * off[1]], wall: [qx + 3 * off[0], qy + 3 * off[1]], curved: false };
+        const along: Pt = side % 2 ? [0, 1] : [1, 0];
+        return { at: [qx + 2 * off[0] + along[0] * o, qy + 2 * off[1] + along[1] * o], wall: [qx + 3 * off[0] + along[0] * o, qy + 3 * off[1] + along[1] * o], along: along, curved: false };
     }
     const c = curveCentre(x, y, q, v);
-    const len = Math.hypot(qx - c[0], qy - c[1]);
-    const u = [(qx - c[0]) / len, (qy - c[1]) / len];
-    const r = 6 + (curveInside(v, side) ? -2.4 : 2.4);
-    return { at: [c[0] + u[0] * r, c[1] + u[1] * r], wall: [c[0] + u[0] * 6, c[1] + u[1] * 6], curved: true, inside: curveInside(v, side) };
+    const a = Math.atan2(qy - c[1], qx - c[0]) + o / 6;
+    const u = [Math.cos(a), Math.sin(a)];
+    const inside = curveInside(v, side);
+    const r = 6 + (inside ? -2.4 : 2.4);
+    return { at: [c[0] + u[0] * r, c[1] + u[1] * r], wall: [c[0] + u[0] * 6, c[1] + u[1] * 6], along: [-u[1], u[0]], curved: true, inside: inside, centre: c };
 }
 
 export {

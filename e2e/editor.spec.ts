@@ -16,6 +16,8 @@ test('empty screen (en), then the language switched', async ({ page }) => {
     await boot(page, { lang: 'en' });
     await shot(page, 'empty-en');
     await page.locator('.sbx-status .sbx-lang').click();
+    await shot(page, 'lang-menu');
+    await page.locator('.sbx-lang-item', { hasText: '日本語' }).click();
     await settle(page);
     await shot(page, 'empty-en-to-ja');
     expect(await page.evaluate(() => document.documentElement.lang)).toBe('ja');
@@ -104,6 +106,8 @@ test('rooms, passages, floors, curves and the eraser', async ({ page }) => {
     await click(page, 48, 8);
     await click(page, 72, 44);
     await shot(page, 'passages');
+    // the passage clicks' notices gone (they stay 4 s), so the floors' shot is the same at any pace
+    await settle(page, 4200);
     await tool(page, 'floor');
     for (const [i, x, y] of [[3, 6, 6], [0, 18, 54], [1, 30, 54], [2, 42, 54]] as [number, number, number][]) {
         await page.locator('.sbx-choice').nth(i).click();
@@ -140,7 +144,7 @@ test('victims: placed, selected, turned, changed; a cognitive target', async ({ 
     await page.locator('.sbx-selected .sbx-check input').click();
     await settle(page);
     await shot(page, 'victim-changed');
-    await page.locator('.sbx-selected .btn-link').click();
+    await page.locator('.sbx-selected-head .btn-link').click();
     await page.locator('.sim-r4-stamp').nth(4).click();
     await click(page, 2, 30);
     await page.locator('.sim-r4-stamp').nth(6).click();
@@ -152,6 +156,49 @@ test('victims: placed, selected, turned, changed; a cognitive target', async ({ 
     await shot(page, 'ct-placed');
     const saved = await download(page, () => page.locator('.sbx-file button').nth(2).click());
     keep('victims.json', saved.text);
+});
+
+test('victims: put where clicked along the wall, dragged along it, moved in the panel', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    await tool(page, 'victim');
+    await page.locator('.sbx-seg button').nth(0).click();
+    // the top wall of tile (5, 1) (room 1, 24-36 cm): a click 3 cm right of its middle
+    await hover(page, 33, 2);
+    await shot(page, 'victim-along-hover');
+    await click(page, 33, 2);
+    await click(page, 33, 4);
+    await expect(page.locator('.sbx-along-value')).toHaveText('+3.0 cm');
+    // dragged to the left: it stops short of the wall at the tile's left end (24 cm) - none there,
+    // so at the tile's corner less its half width
+    await drag(page, [[33, 4], [20, 4]]);
+    await expect(page.locator('.sbx-along-value')).toHaveText('−5.0 cm');
+    await shot(page, 'victim-dragged');
+    // back to the middle, then 2 cm with the slider; undo goes back one step at a time
+    await page.locator('.sbx-along-foot .btn-link').click();
+    await expect(page.locator('.sbx-along-value')).toHaveText('0.0 cm');
+    await page.locator('.sbx-along-range').fill('2');
+    await expect(page.locator('.sbx-along-value')).toHaveText('+2.0 cm');
+    await settle(page);
+    await shot(page, 'victim-slid');
+    await page.keyboard.press('Control+z');
+    await settle(page);
+    await click(page, 30, 4);
+    await expect(page.locator('.sbx-along-value')).toHaveText('0.0 cm');
+    await page.keyboard.press('Control+Shift+z');
+    await settle(page);
+    await click(page, 32, 4);
+    await expect(page.locator('.sbx-along-value')).toHaveText('+2.0 cm');
+    // a click on the face away from it moves the tile's victim there
+    await click(page, 26, 2);
+    await click(page, 26, 4);
+    await expect(page.locator('.sbx-along-value')).toHaveText('−4.0 cm');
+    const saved = await download(page, () => page.locator('.sbx-file button').nth(2).click());
+    keep('victims-along.json', saved.text);
+    expect(JSON.parse(saved.text).cells['5,1,0'].tile.victim_offset).toBe(-4);
+    await reseed(page, 5);
+    const world = await download(page, () => page.locator('.sbx-export').click());
+    keep('victims-along.wbt', world.text);
 });
 
 test('select: a region copied, pasted, moved and cleared', async ({ page }) => {

@@ -2,6 +2,7 @@
 // The rings of a cognitive target (K R Y G B from the outside in): the target to pick a ring on,
 // its type and the sum of the ring values, and the colours to give the picked ring
 import { t } from '../i18n';
+import * as Icons from '../lib/icons';
 
 const props = defineProps<{
     rings: string[];
@@ -12,6 +13,13 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{ (e: 'pick-ring', i: number): void; (e: 'pick-color', id: string): void }>();
 
+// the type's mark and name (no letter: F P C O mean nothing at a glance)
+function typeName() {
+    return t(props.letter === 'X' ? 'admin.simMapEditor.ctFake' : 'admin.simMapEditor.ct' + props.letter);
+}
+function typeMark() {
+    return { background: Icons.markBackground(Icons.TYPE[props.letter] || Icons.TYPE.X) };
+}
 function ringColor(i: number) {
     const c = props.colors.find(function (r) { return r.id === props.rings[i]; });
     return c ? c.color : '#fff';
@@ -26,7 +34,7 @@ function ringColor(i: number) {
         <circle class="sbx-ct-sel" cx="50" cy="50" :r="43.5 - 9 * ring" fill="none"></circle>
       </svg>
       <div class="sbx-ct-info">
-        <span class="sbx-ct-type" :class="'t-' + letter">{{ letter === 'X' ? t('admin.simBeta.ctFake') : letter }}</span>
+        <span class="sbx-ct-type"><span class="sbx-ct-mark" :style="typeMark()"></span>{{ typeName() }}</span>
         <div class="sbx-ct-sum">{{ t('admin.simBeta.ctSum') }} {{ sum > 0 ? '+' : '' }}{{ sum }}</div>
         <div class="sbx-ct-code">
           <span v-for="(c, i) in rings" :key="i" :class="{ sel: ring === i }" @click="emit('pick-ring', i)">{{ c }}</span>

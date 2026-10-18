@@ -341,7 +341,7 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
             const edge = room4EdgeNear(c.cx, c.cy, 3);
             if (edge && (!a || Math.hypot(edge.x - c.cx, edge.y - c.cy) < Math.hypot(a.x - c.cx, a.y - c.cy))) a = { x: edge.x, y: edge.y, thick: 1 };
             const at = R4.badgeOnWall(c, a, 1.6);
-            if (type && (type.kind === 'ct' || type.kind === 'fakect')) ctBadge(at.x, at.y, null, type.color, type.symbol);
+            if (type && (type.kind === 'ct' || type.kind === 'fakect')) ctBadge(at.x, at.y, null, type.color);
             else badge(at.x, at.y, type ? type.symbol : '?', false, type ? type.color : Icons.FAKE);
         });
     }
@@ -376,9 +376,9 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
         Icons.victim(ctx, x, y, 1.6, text, color || (fake ? Icons.FAKE : Icons.VICTIM), 0.25);
     }
 
-    // on the map a cognitive target shows its type letter: its rings would be too small to see
-    function ctBadge(x: number, y: number, code: string | null, color?: string, letter?: string) {
-        Icons.targetLetter(ctx, x, y, 1.6, code, color as string, 0.25, letter);
+    // on the map a cognitive target shows its type's mark: its own rings would be too small to see
+    function ctBadge(x: number, y: number, code: string | null, color?: string) {
+        Icons.targetMark(ctx, x, y, 1.6, code, color as string, 0.25);
     }
 
     function drawVictims() {
@@ -393,15 +393,19 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
                 const code = t.cognitives && t.cognitives[d + '_code'];
                 const v = t.victims && t.victims[d];
                 if (!v && !code) return;
-                if (code) { ctBadge(cx + side[d][0], cy + side[d][1], code); return; }
-                badge(cx + side[d][0], cy + side[d][1], VICTIM[v as string] || '?', t.victim_is_fake);
+                // where it is along its wall (lib/model's victimPlace)
+                const off = Number(t.victim_offset) || 0;
+                const x = cx + side[d][0] + (side[d][0] ? 0 : off), y = cy + side[d][1] + (side[d][0] ? off : 0);
+                if (code) { ctBadge(x, y, code); return; }
+                badge(x, y, VICTIM[v as string] || '?', t.victim_is_fake);
             });
             for (let i = 0; i < 16; i++) {
                 const v = t.halfWallVic && t.halfWallVic[i];
                 const code = t.halfWallCognitives && t.halfWallCognitives[i];
                 if ((!v || v == 0) && !code) continue;
-                // on its wall: beside the face of the arc in a curved quarter, joined to it (as room 4 shows)
-                const pt = L.slotPoint(p[0], p[1], i, t.curve);
+                // on its wall, where it is along it: beside the face of the arc in a curved quarter, joined
+                // to it (as room 4 shows)
+                const pt = L.slotPoint(p[0], p[1], i, t.curve, t.halfWallVicOffsets ? Number(t.halfWallVicOffsets[i]) || 0 : 0);
                 if (pt.curved) {
                     ctx.save();
                     ctx.strokeStyle = '#475569';

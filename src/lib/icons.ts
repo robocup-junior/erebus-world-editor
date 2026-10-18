@@ -3,10 +3,14 @@
 //   letter victims (Φ Ψ Ω): a filled disc with the letter (blue; fakes grey)
 //   cognitive targets: a target - its five rings in the colours of its code (outside in), with an
 //   outer rim in the colour of its type; a target without a code (a room 4 stamp of a type) shows
-//   rings of the type colour
+//   rings of the type colour. Small (the map, the panels' buttons) it is the type's mark: rings of
+//   the type colour and white, as the buttons of the victim panels show it
 
 const RING: Record<string, string> = { K: '#111827', R: '#dc2626', Y: '#facc15', G: '#16a34a', B: '#2563eb' };
-const TYPE: Record<string, string> = { F: '#d32f2f', P: '#6a1b9a', C: '#1565c0', O: '#e65100', X: '#6c757d' };
+// the type colours: each its own hue, after what it is - flammable gas the red of fire, poison
+// purple, corrosive black (as its hazard label) and organic peroxide yellow (as an oxidizer's); fake
+// a light grey. Kept in room4World2026's stampTypes too
+const TYPE: Record<string, string> = { F: '#dc2626', P: '#7e22ce', C: '#1f2937', O: '#eab308', X: '#a8b0bb' };
 const VICTIM = '#2563eb', FAKE = '#94a3b8';
 // the ring colours as the pickers list them: K R Y G B with their values
 const RING_LIST = [
@@ -78,20 +82,32 @@ function target(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, 
     ctx.restore();
 }
 
-// A cognitive target small enough that its rings would not show (the map): a disc in its type
-// colour with the type letter (× when the code is not valid) and a thin inner ring. Without a
-// code (a room 4 stamp of a type) `letter` gives the letter.
-function targetLetter(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, code: string | null | undefined, color: string, outline?: number, letter?: string) {
-    const t = code ? typeOf(code) : null;
-    letter = letter || (t ? (t === 'X' ? '×' : t) : '?');
-    victim(ctx, x, y, r, letter, color || TYPE[t || 'X'], outline);
+// A cognitive target small enough that its own rings would not show (the map): the mark of its
+// type (grey when the code is not valid). Without a code (a room 4 stamp of a type) `color` gives
+// the type's colour.
+function targetMark(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, code: string | null | undefined, color: string, outline?: number) {
+    const c = color || TYPE[typeOf(code)];
     ctx.save();
-    ctx.beginPath();
-    ctx.arc(x, y, r * 0.8, 0, 2 * Math.PI);
-    ctx.lineWidth = Math.max(r * 0.07, 0.05);
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
-    ctx.stroke();
+    // from the outside in, as markBackground's stops
+    [1, 0.7, 0.535, 0.355, 0.185].forEach(function (f, i) {
+        ctx.beginPath();
+        ctx.arc(x, y, r * f, 0, 2 * Math.PI);
+        ctx.fillStyle = i % 2 ? '#fff' : c;
+        ctx.fill();
+    });
+    if (outline) {
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, 2 * Math.PI);
+        ctx.lineWidth = outline;
+        ctx.strokeStyle = '#fff';
+        ctx.stroke();
+    }
     ctx.restore();
+}
+
+// For HTML: the type's mark as a CSS background (same look as `targetMark`)
+function markBackground(color: string) {
+    return 'radial-gradient(circle closest-side, ' + color + ' 0 18%, #fff 19% 35%, ' + color + ' 36% 53%, #fff 54% 70%, ' + color + ' 71%)';
 }
 
 // For HTML: the target as a CSS background (same look as `target`)
@@ -129,7 +145,8 @@ export {
     FAKE,
     victim,
     target,
-    targetLetter,
+    targetMark,
+    markBackground,
     targetBackground,
     typeOf
 

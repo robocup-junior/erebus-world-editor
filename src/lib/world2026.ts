@@ -440,6 +440,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                 wall_token_front_rot       : 0,
                 wall_token_is_fake         : false,
                 wall_token_cognitive_code  : '',
+                wall_token_offset          : 0,
 
                 inner_half_walls           : '',
                 outer_half_walls           : '',
@@ -450,6 +451,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                 half_wall_tokens_front_rot : [],
                 half_wall_tokens_fakes     : [],
                 half_wall_tokens_cognitive_codes : [],
+                half_wall_tokens_offsets   : [],
 
                 floor_color                : '0.635 0.635 0.635',
                 room_number                : 0,
@@ -572,6 +574,9 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                 tile.wall_token_is_fake = true;
             }
 
+            // moved along its wall in the editor: cm from the middle of the face
+            tile.wall_token_offset = Number(thisCell.tile.victim_offset) || 0;
+
             if (thisCell.tile.color) {
                 floorColor = '';
                 if (thisCell.tile.color == '#08D508') // area 1 <-> 4
@@ -602,6 +607,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                 Object.keys(val).forEach(function(k) { arr[parseInt(k)] = val[k]; });
                 return arr;
             }
+            tile.half_wall_tokens_offsets = objToArray(thisCell.tile.halfWallVicOffsets);
             arr2 = objToArray(tile.half_wall_tokens_cognitive_codes);
             tile.half_wall_tokens_cognitive_codes = arr2;
             arr1 = objToArray(thisCell.tile.halfWallVic);
@@ -1185,6 +1191,11 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                     }
                 }
                 randomOffset=[0,0] //remove random offset because its causing too many issues with CT
+                // where the editor moved it along its wall (1 cm of the editor is 0.01 m here)
+                if (tile.wall_token_offset) {
+                    randomOffset = (tile.wall_token_place == HUMAN_PLACE_TOP || tile.wall_token_place == HUMAN_PLACE_BOTTOM)
+                        ? [tile.wall_token_offset * 0.01, 0] : [0, tile.wall_token_offset * 0.01]
+                }
                 if (tile.wall_token_type >= 5){ //hazards (includes HUMAN_CT_FAKE=9)
                     humanPos[0] = humanPos[0] + hazardOffset[tile.wall_token_place][0] + randomOffset[0]
                     humanPos[1] = humanPos[1] + hazardOffset[tile.wall_token_place][1] + randomOffset[1]
@@ -1259,6 +1270,19 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                             } else {
                                 console.log("inside");
                             }
+                            // where the editor moved it round the arc (cm of arc, + clockwise as drawn): its
+                            // place turned about the arc's centre, and its facing with it
+                            let arcTurn = (Number(tile.half_wall_tokens_offsets && tile.half_wall_tokens_offsets[i]) || 0) / 6;
+                            let q = parseInt(String(i / 4)), corner = [[0, 6], [0, 0], [6, 0], [6, 6]][curveWallArr[q] - 1];
+                            let arcCentre = [humanPos[0] + (-6 + (q % 2) * 6 + corner[0]) * 0.01, humanPos[1] + (-6 + Math.floor(q / 2) * 6 + corner[1]) * 0.01];
+                            let onArc = function (part: VictimPart): VictimPart {
+                                if (!arcTurn) return part;
+                                let dx = part.x - arcCentre[0], dz = part.z - arcCentre[1];
+                                part.x = arcCentre[0] + dx * Math.cos(arcTurn) - dz * Math.sin(arcTurn);
+                                part.z = arcCentre[1] + dx * Math.sin(arcTurn) + dz * Math.cos(arcTurn);
+                                part.rot = part.rot - arcTurn;
+                                return part;
+                            }
                             if (humanType >= 0 && humanType <= 3) { // is human victim
                                 console.log("HP: " + humanPos);
                                 console.log("Curve Offset: " + curveWallVicPos[ind] + " " + ind + " " + i);
@@ -1271,7 +1295,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                                 score = score / 2;
                                 //allHumans = allHumans + visualHumanPart({x: humanPos[0], z: humanPos[1], rot: humanRotationCurve[curveDir], id: humanId, type: humanTypesVisual[walls[z][x][13][i] - 1], score: score})
                                 if (humanIsFake) {
-                                    allFakes = allFakes + visualHumanPart({
+                                    allFakes = allFakes + visualHumanPart(onArc({
                                         x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * inside,
                                         z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * inside,
                                         rot: humanRotationCurve[curveDir],
@@ -1280,11 +1304,11 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                                         id: humanId,
                                         type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
                                         score: 0
-                                    })
+                                    }))
                                     fakeHumanId = fakeHumanId + 1
 
                                 } else {
-                                    allHumans = allHumans + visualHumanPart({
+                                    allHumans = allHumans + visualHumanPart(onArc({
                                         x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * inside,
                                         z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * inside,
                                         rot: humanRotationCurve[curveDir],
@@ -1293,13 +1317,13 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                                         id: humanId,
                                         type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
                                         score: score
-                                    })
+                                    }))
                                     humanId = humanId + 1
                                 }
                             } else if (humanType >= 5) { // is hazmat sign (includes CTfake=9)
                                 let cogOffsetFactor = inside ? inside : 0.25;
                                 let hazScore = (humanType === HUMAN_CT_FAKE) ? 0 : score;
-                                allHazards = allHazards + hazardPart({
+                                allHazards = allHazards + hazardPart(onArc({
                                     x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * cogOffsetFactor,
                                     z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * cogOffsetFactor,
                                     rot: humanRotationCurve[curveDir],
@@ -1308,11 +1332,11 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                                     id: hazardId,
                                     type: tile.half_wall_tokens_cognitive_codes[i],
                                     score: hazScore
-                                })
+                                }))
                                 hazardId = hazardId + 1
                             } else if (isNaN(humanType) && tile.half_wall_tokens_cognitive_codes[i]) { // invalid CT code (legacy fallback)
                                 let cogOffsetFactor = inside ? inside : 0.25;
-                                allHazards = allHazards + hazardPart({
+                                allHazards = allHazards + hazardPart(onArc({
                                     x: humanPos[0] + curveWallVicPos[ind][0] + humanOffsetCurve[curveDir][0] * cogOffsetFactor,
                                     z: humanPos[1] + curveWallVicPos[ind][1] + humanOffsetCurve[curveDir][1] * cogOffsetFactor,
                                     rot: humanRotationCurve[curveDir],
@@ -1321,18 +1345,21 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                                     id: hazardId,
                                     type: tile.half_wall_tokens_cognitive_codes[i],
                                     score: 0
-                                })
+                                }))
                                 hazardId = hazardId + 1
                             }
                         }
                         //Half Wall Humans
                         else {
+                            // where the editor moved it along its 6 cm wall: x on a top or bottom face, z on a side one
+                            let along = Number(tile.half_wall_tokens_offsets && tile.half_wall_tokens_offsets[i]) || 0;
+                            let halfOff = (i % 2 == 0) ? [along * 0.01, 0] : [0, along * 0.01];
                             if (humanType >= 0 && humanType <= 3) {
                                 score = score / 2;
                                 if (humanIsFake) {
                                     allFakes = allFakes + visualHumanPart({
-                                        x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0],
-                                        z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
+                                        x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0] + halfOff[0],
+                                        z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2] + halfOff[1],
                                         rot: humanRotation[i % 4],
                                         frontRotation: humanFrontRotation,
                                         is_fake: humanIsFake,
@@ -1343,8 +1370,8 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                                     fakeHumanId = fakeHumanId + 1
                                 } else {
                                     allHumans = allHumans + visualHumanPart({
-                                        x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0],
-                                        z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
+                                        x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0] + halfOff[0],
+                                        z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2] + halfOff[1],
                                         rot: humanRotation[i % 4],
                                         frontRotation: humanFrontRotation,
                                         is_fake: humanIsFake,
@@ -1358,8 +1385,8 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                             else if (humanType >= 5) { // is hazmat sign (includes CTfake=9)
                                 let hazScore = (humanType === HUMAN_CT_FAKE) ? 0 : score;
                                 allHazards = allHazards + hazardPart({
-                                    x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0],
-                                    z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
+                                    x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0] + halfOff[0],
+                                    z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2] + halfOff[1],
                                     rot: humanRotation[i % 4],
                                     frontRotation: humanFrontRotation,
                                     is_fake: humanIsFake,
@@ -1370,8 +1397,8 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                                 hazardId = hazardId + 1
                             } else if (isNaN(humanType) && tile.half_wall_tokens_cognitive_codes[i]) { // invalid CT code (legacy fallback)
                                 allHazards = allHazards + hazardPart({
-                                    x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0],
-                                    z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2],
+                                    x: humanPos[0] + halfWallVicPos[i][0] * tileScale[0] + halfOff[0],
+                                    z: humanPos[1] + halfWallVicPos[i][1] * tileScale[2] + halfOff[1],
                                     rot: humanRotation[i % 4],
                                     frontRotation: humanFrontRotation,
                                     is_fake: humanIsFake,

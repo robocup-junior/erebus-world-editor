@@ -469,3 +469,19 @@ test('a gap between rooms gets its border wall back, and a custom room 4 picture
   const pic = M.problems(map).find((p) => p.key === 'customRoom4NoPicture');
   assert.strictEqual(M.fixProblem(map, pic, borders), null);
 });
+
+test('no victims in a passage between areas (rule 3.7.2): refused there, pointed out when a passage comes', () => {
+  const map = M.newMap(4, 2);
+  M.setFloor(map, 1, 1, 'start');
+  let borders = paint(map, 2, [[2, 0], [3, 0], [2, 1], [3, 1]], new Set());
+  assert.ok(M.setVictim(map, 3, 1, 'top', 'H', false), 'not a passage yet');
+  assert.ok(M.togglePassage(map, 4, 1));
+  borders = M.syncBorderWalls(map, borders);
+  assert.deepStrictEqual(M.victimRule(map, 3, 1, 'top'), { ok: false, reason: 'passage' });
+  const p = M.problems(map).find((q) => q.key === 'victimInPassage')!;
+  assert.ok(p && p.block);
+  assert.ok(M.FIXABLE.indexOf('victimInPassage') > -1);
+  M.fixProblem(map, p, borders);
+  assert.ok(!M.edgeVictim(map, 3, 1), 'taken out by the fix');
+  assert.ok(!M.setVictim(map, 3, 1, 'top', 'H', false));
+});

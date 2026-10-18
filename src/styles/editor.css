@@ -565,7 +565,10 @@
     background: #f8fafc;
     font-size: 0.8rem;
     color: var(--sbx-muted);
-    min-height: 32px;
+    /* one height whatever it says (its buttons' 24 px): a hint in other fonts would make it a little
+       taller or lower, and the map with it */
+    height: calc(24px + 0.7rem + 1px);
+    box-sizing: border-box;
 }
 
 /* the language and the guide, at the right end of the status line (the guide last, at the corner),
@@ -597,6 +600,8 @@
     color: #1d4ed8;
     font-weight: 600;
 }
+/* on one line: what does not fit ends in … (the whole text in its title) */
+.sbx-hint-text { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 /* the tool's how-to: quieter than what the pointer is on */
 .sbx-tool-hint { color: var(--sbx-text); font-weight: 500; }
 .sbx-tool-hint .fas { color: #d97706; }
@@ -1290,7 +1295,23 @@
 .sbx-score-notes { margin: 0.6rem 0 0; padding-left: 1.1rem; font-size: 0.72rem; line-height: 1.5; color: var(--sbx-muted); }
 
 /* the copyright, small, just before the buttons at the right end of the status line */
-.sbx-copyright { flex: none; margin-left: auto; font-size: 0.7rem; color: #94a3b8; white-space: nowrap; }
+.sbx-copyright { position: relative; flex: none; margin-left: auto; font-size: 0.7rem; color: #94a3b8; white-space: nowrap; }
+/* clicked: what this build is (components/BuildInfo.vue), in a card above it */
+.sbx-copyright-btn { padding: 0; border: none; background: none; color: inherit; font: inherit; cursor: pointer; }
+.sbx-copyright-btn:hover { color: #475569; text-decoration: underline; }
+.sbx-build {
+    position: absolute; right: 0; bottom: calc(100% + 8px); z-index: 50; min-width: 20rem; padding: 0.7rem 0.8rem;
+    border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+    color: #334155; font-size: 0.78rem; white-space: normal;
+}
+.sbx-build-head { margin-bottom: 0.4rem; font-weight: 700; color: #1e293b; }
+.sbx-build dl { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 0.8rem; margin: 0; }
+.sbx-build dt { font-weight: 400; color: #64748b; }
+.sbx-build dd { margin: 0; font-variant-numeric: tabular-nums; }
+.sbx-build code { color: #1d4ed8; }
+.sbx-build-dirty { margin-left: 0.4rem; color: #d97706; }
+.sbx-build-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 0.6rem; padding-top: 0.5rem; border-top: 1px solid #f1f5f9; }
+.sbx-build-foot a, .sbx-build-foot .btn-link { font-size: 0.75rem; }
 @media (max-width: 1280px) {
     /* the number only, so the top bar keeps to one row */
     .sbx-score-word { display: none; }
@@ -1323,3 +1344,25 @@
 .sbx-pick-keys { display: inline-flex; align-items: center; gap: 0.4rem; margin-right: auto; padding: 0.3rem 0.5rem; border: none; border-radius: 7px; background: transparent; color: #475569; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
 .sbx-pick-keys:hover { background: #f1f5f9; color: #1d4ed8; }
 @media (max-width: 600px) { .sbx-keys { grid-template-columns: 1fr; } }
+
+/* the selected victim's place along its wall */
+.sbx-along-row { display: flex; align-items: center; gap: 0.6rem; }
+.sbx-along-range { flex: 1 1 auto; min-width: 0; accent-color: #2563eb; }
+.sbx-along-value { flex: none; min-width: 4.2rem; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--sbx-text); }
+.sbx-along-foot { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-top: 0.2rem; font-size: 0.72rem; color: #94a3b8; }
+.sbx-along-foot .btn-link { flex: none; font-size: 0.75rem; white-space: nowrap; }
+
+/* the language button's list (components/LangMenu.vue) */
+.sbx-lang-wrap { position: relative; display: inline-flex; }
+.sbx-lang-menu {
+    position: absolute; right: 0; bottom: calc(100% + 6px); z-index: 50; min-width: 9rem; padding: 0.3rem;
+    border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+}
+.sbx-lang-item {
+    display: flex; align-items: center; gap: 0.5rem; width: 100%; padding: 0.35rem 0.6rem; border: none; border-radius: 6px;
+    background: transparent; color: #334155; font-size: 0.8rem; text-align: left; white-space: nowrap; cursor: pointer;
+}
+.sbx-lang-item:hover { background: #f1f5f9; }
+.sbx-lang-item.active { color: #1d4ed8; font-weight: 600; }
+.sbx-lang-item .fa-check { font-size: 0.7rem; }
+.sbx-lang-caret { font-size: 0.65rem; opacity: 0.6; }

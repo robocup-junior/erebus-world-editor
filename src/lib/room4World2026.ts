@@ -474,11 +474,11 @@ const stampTypes = [
     { idx: 9,  kind: 'fake', symbol: 'Φ', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeHarmed' },
     { idx: 8,  kind: 'fake', symbol: 'Ψ', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeStable' },
     { idx: 10, kind: 'fake', symbol: 'Ω', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeUnharmed' },
-    { idx: 5,  kind: 'ct', symbol: 'F', color: '#d32f2f', name: 'admin.simMapEditor.ctF' },
-    { idx: 3,  kind: 'ct', symbol: 'P', color: '#6a1b9a', name: 'admin.simMapEditor.ctP' },
-    { idx: 6,  kind: 'ct', symbol: 'C', color: '#1565c0', name: 'admin.simMapEditor.ctC' },
-    { idx: 4,  kind: 'ct', symbol: 'O', color: '#e65100', name: 'admin.simMapEditor.ctO' },
-    { idx: 7,  kind: 'fakect', symbol: '×', color: '#6c757d', name: 'admin.simMapEditor.ctFake' }
+    { idx: 5,  kind: 'ct', symbol: 'F', color: '#dc2626', name: 'admin.simMapEditor.ctF' },
+    { idx: 3,  kind: 'ct', symbol: 'P', color: '#7e22ce', name: 'admin.simMapEditor.ctP' },
+    { idx: 6,  kind: 'ct', symbol: 'C', color: '#1f2937', name: 'admin.simMapEditor.ctC' },
+    { idx: 4,  kind: 'ct', symbol: 'O', color: '#eab308', name: 'admin.simMapEditor.ctO' },
+    { idx: 7,  kind: 'fakect', symbol: '×', color: '#a8b0bb', name: 'admin.simMapEditor.ctFake' }
 ];
 
 export {
