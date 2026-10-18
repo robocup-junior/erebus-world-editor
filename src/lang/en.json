@@ -4,7 +4,7 @@
             "fake": "Fake victim",
             "width": "Across",
             "length": "Down",
-            "title": "Erebus World Editor 2026",
+            "title": "Erebus World Editor",
             "new": "New map",
             "open": "Open a map (JSON)",
             "save": "Save as JSON",
@@ -218,7 +218,7 @@
             "discardGo": "Don’t save",
             "exportBlockedLead": "Fix these {{count}} to export. Click one to see where it is.",
             "betaMenu": "About this editor",
-            "betaLead": "Erebus World Editor 2026 (beta). It reads and writes the same JSON as the classic editor, so a saved map opens in either.",
+            "betaLead": "Erebus World Editor (beta). It reads and writes the same JSON as the classic editor, so a saved map opens in either.",
             "backToClassicNote": "Save the map you are working on (Save, JSON) first",
             "tourStart": "Guide (lesson, screen tour, making room 4)",
             "tourShort": "Guide",
@@ -231,7 +231,9 @@
                 "soon": "Coming soon",
                 "switchTitle": "Switch to the {{year}} rules?",
                 "switchLead": "This map goes from the {{from}} rules to the {{to}} rules. Walls and victims that do not fit the new rules are pointed out in the checks (undo: Ctrl+Z).",
-                "switch": "Switch"
+                "switch": "Switch",
+                "pick": "Which year's rules?",
+                "pickNote": "A saved map opens with its own rules. You can switch later in the top bar too."
             },
             "build": {
                 "title": "About this build",
@@ -298,7 +300,7 @@
                     "finish": "Finish and export"
                 },
                 "welcome": {
-                    "title": "Welcome to Erebus World Editor 2026",
+                    "title": "Welcome to Erebus World Editor",
                     "body": "This editor makes worlds for the RoboCupJunior Rescue Simulation (Erebus) 2026 rules. You draw the map straight on the canvas, and walls and victims snap to the places the rules of the room under the pointer allow.\nThis tour goes through each part of the screen and each tool (about 3 minutes). The part being explained is lit up.\nPress → or Enter for the next step, ← to go back, and Esc to end at any time. To learn hands on, choose Learn by making a sample map from Guide at the bottom right."
                 },
                 "file": {

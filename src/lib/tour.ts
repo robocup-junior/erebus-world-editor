@@ -1,4 +1,4 @@
-// Erebus World Editor 2026: the guide. Three ways through the editor, run by the editor (useEditor):
+// Erebus World Editor: the guide. Three ways through the editor, run by the editor (useEditor):
 //
 // - TOUR: with a map open, one part of the screen lit up at a time, with a card saying what it does.
 // - LESSON: from a blank start, a sample map built step by step - each step asks for one thing, sees

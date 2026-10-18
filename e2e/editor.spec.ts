@@ -23,6 +23,17 @@ test('empty screen (en), then the language switched', async ({ page }) => {
     expect(await page.evaluate(() => document.documentElement.lang)).toBe('ja');
 });
 
+test('the start screen asks the year of the rules: 2026 chosen, 2027 on its way; a new map is of the year chosen', async ({ page }) => {
+    await boot(page);
+    const choices = page.locator('.sbx-empty-rules-choices button');
+    await expect(choices.filter({ hasText: '2026' })).toHaveAttribute('aria-checked', 'true');
+    await expect(choices.filter({ hasText: '2027' })).toBeDisabled();
+    await expect(page.locator('.sbx-title')).not.toContainText('2026');
+    await page.locator('.sbx-empty-actions .btn-primary').click();
+    await settle(page);
+    await expect(page.locator('.sbx-rules-btn')).toContainText('2026');
+});
+
 test('the rules menu: the map\'s year, its rule book, and 2027 on its way, not to be picked yet', async ({ page }) => {
     await boot(page);
     await openMap(page, 'mapA.json');

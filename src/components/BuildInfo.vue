@@ -17,7 +17,7 @@ function when(iso: string) {
 }
 // one line for a bug report
 function line() {
-    return 'Erebus World Editor 2026 (' + (short(B.commit) || '?') + (B.dirty ? '+' : '')
+    return 'Erebus World Editor (' + (short(B.commit) || '?') + (B.dirty ? '+' : '')
         + (B.branch ? ', ' + B.branch : '') + ', built ' + B.builtAt + ')';
 }
 function copy() {
@@ -41,7 +41,7 @@ onBeforeUnmount(stop);
   <span class="sbx-copyright" ref="root">
     <button class="sbx-copyright-btn" type="button" @click="toggle" :aria-expanded="open" :title="t('admin.simBeta.build.title')">©︎ 2021-2026 Erebus Development Team</button>
     <div class="sbx-build" v-if="open" role="dialog" :aria-label="t('admin.simBeta.build.title')">
-      <div class="sbx-build-head">Erebus World Editor 2026</div>
+      <div class="sbx-build-head">Erebus World Editor</div>
       <dl>
         <dt>{{ t('admin.simBeta.build.commit') }}</dt>
         <dd>

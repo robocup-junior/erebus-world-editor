@@ -2,7 +2,7 @@
   "name": "erebus-world-editor",
   "version": "26.1.1",
   "private": true,
-  "description": "Erebus World Editor 2026: the RoboCupJunior Rescue Simulation (Erebus) 2026 world editor, as a static site (Vue 3, TypeScript, Vite)",
+  "description": "Erebus World Editor: the RoboCupJunior Rescue Simulation (Erebus) world editor, for the rules of 2026 and later, as a static site (Vue 3, TypeScript, Vite)",
   "license": "MIT",
   "engines": {
     "node": ">=22.12"

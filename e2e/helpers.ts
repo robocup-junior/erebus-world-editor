@@ -54,7 +54,7 @@ export async function boot(page: Page, opts: { lang?: string; fresh?: boolean } 
     }, { lang: opts.lang || 'ja', fresh: !!opts.fresh });
     await page.clock.setFixedTime(new Date('2026-10-17T10:00:00+09:00'));
     await page.goto('/');
-    await expect(page.locator('.sbx-title')).toContainText('Erebus World Editor 2026');
+    await expect(page.locator('.sbx-title')).toContainText('Erebus World Editor');
     await expect(page.locator('.sbx-empty h2')).not.toContainText('admin.');
     await settle(page);
 }

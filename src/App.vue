@@ -353,6 +353,19 @@ onMounted(function () {
               <i class="fas fa-drafting-compass sbx-empty-icon"></i>
               <h2>{{ t('admin.simBeta.emptyTitle') }}</h2>
               <p>{{ t('admin.simBeta.emptyLead') }}</p>
+              <!-- the rules a new map is made with: the years the editor takes, and those on their way -->
+              <div class="sbx-empty-rules">
+                <span class="sbx-empty-rules-label" id="sbxEmptyRules"><i class="fas fa-book"></i>{{ t('admin.simBeta.rules.pick') }}</span>
+                <div class="sbx-empty-rules-choices" role="radiogroup" aria-labelledby="sbxEmptyRules">
+                  <button type="button" role="radio" v-for="y in S.ruleYears" :key="y.year" :aria-checked="S.ui.newYear === y.year" :class="{ active: S.ui.newYear === y.year }" @click="S.ui.newYear = y.year">
+                    <i class="fas fa-check-circle"></i>{{ t('admin.simBeta.rules.label', { year: y.year }) }}
+                  </button>
+                  <button type="button" role="radio" class="soon" v-for="y in S.upcomingYears" :key="y" aria-checked="false" disabled>
+                    {{ t('admin.simBeta.rules.label', { year: y }) }}<span class="sbx-rules-soon">{{ t('admin.simBeta.rules.soon') }}</span>
+                  </button>
+                </div>
+                <small class="sbx-empty-rules-note">{{ t('admin.simBeta.rules.pickNote') }}</small>
+              </div>
               <div class="sbx-empty-actions">
                 <button class="btn btn-primary" type="button" @click="E.newMap()"><i class="fas fa-file mr-2"></i>{{ t('admin.simBeta.new') }}</button>
                 <button class="btn btn-outline-secondary" type="button" @click="chooseFile()">

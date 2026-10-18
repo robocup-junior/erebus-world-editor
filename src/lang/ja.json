@@ -4,7 +4,7 @@
             "fake": "偽物にする",
             "width": "横",
             "length": "縦",
-            "title": "Erebus World Editor 2026",
+            "title": "Erebus World Editor",
             "new": "新しいマップ",
             "open": "マップ（JSON）を開く",
             "save": "JSONで保存",
@@ -218,7 +218,7 @@
             "discardGo": "保存せず進む",
             "exportBlockedLead": "次の{{count}}件を直すと出力できます。項目をクリックするとその場所を表示します。",
             "betaMenu": "このエディタについて",
-            "betaLead": "Erebus World Editor 2026（β版）です。今までのエディタと同じJSONを読み書きするので、保存したマップはどちらでも開けます。",
+            "betaLead": "Erebus World Editor（β版）です。今までのエディタと同じJSONを読み書きするので、保存したマップはどちらでも開けます。",
             "backToClassicNote": "作業中のマップは、先に「保存」でJSONに保存してから開いてください",
             "tourStart": "使い方（チュートリアル・画面の案内・部屋4の作り方）",
             "tourShort": "使い方",
@@ -231,7 +231,9 @@
                 "soon": "準備中",
                 "switchTitle": "{{year}}年のルールに切り替えますか？",
                 "switchLead": "このマップを{{from}}年のルールから{{to}}年のルールに切り替えます。新しいルールに合わない壁や被災者は、確認に表示されます（元に戻す：Ctrl+Z）。",
-                "switch": "切り替える"
+                "switch": "切り替える",
+                "pick": "どの年度のルールで作りますか？",
+                "pickNote": "保存したマップを開くと、そのマップのルールになります。あとから上のバーで切り替えることもできます。"
             },
             "build": {
                 "title": "このビルドの情報",
@@ -298,7 +300,7 @@
                     "finish": "仕上げと書き出し"
                 },
                 "welcome": {
-                    "title": "Erebus World Editor 2026 へようこそ",
+                    "title": "Erebus World Editor へようこそ",
                     "body": "RoboCupJunior Rescue Simulation（Erebus）2026年ルールのワールドを作るエディタです。マップをキャンバスに直接描けて、壁や被災者はポインターのある部屋のルールに合った場所へ自動で吸着します。\nこの案内では、画面の各部分とツールを順番に説明します（約3分）。説明している部分が明るく表示されます。\n「→」か「Enter」で次へ、「←」で戻る、「Esc」でいつでも終了できます。実際に操作しながら覚えたいときは、右下の「使い方」から「サンプルマップを作って学ぶ」を選んでください。"
                 },
                 "file": {

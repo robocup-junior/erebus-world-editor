@@ -1,4 +1,4 @@
-// Erebus World Editor 2026: the map drawn on a canvas, with tools that follow the rules of the room
+// Erebus World Editor: the map drawn on a canvas, with tools that follow the rules of the room
 // under the pointer. Maps are the classic editor's JSON. Rooms with their border walls and passages,
 // walls on the 12 / 6 cm grid, curves (room 3), floors, victims, a custom room 4 (drawn in the room 4
 // creator; presets are left to the classic editor), undo, problems with where they are, JSON and .wbt.
@@ -166,6 +166,8 @@ export function createEditor() {
         selected: null as Selected | null,
         ui: {
             tool: 'line', room: 2, floor: 'checkpoint', victim: 'H', fake: false,
+            // the year of the rules a new map is made with (asked on the start screen)
+            newYear: LATEST_YEAR,
             rings: 'GYYKG'.split(''), ring: 0, rot: 0, randomRot: true, shapeMode: 'outline', showLinear: false,
             checksFolded: false, freshMap: false, betaMenu: false, scoreMenu: false, guidePick: false as false | string
         },
@@ -632,7 +634,7 @@ export function createEditor() {
 
     function newMap() {
         whenDiscarded(function () {
-            load(M.newMap(8, 6), '');
+            load(M.newMap(8, 6, ui.newYear), '');
             // a new map starts with its size: the outline tool, whose panel holds it
             setTool('shape');
             ui.shapeMode = 'outline';
@@ -2089,11 +2091,10 @@ export function createEditor() {
         });
     }
 
-    // a blank start (the lesson's: of the year the lesson is written for; else of the latest year)
+    // a blank start (the lesson's: of the year the lesson is written for; else of the year chosen for
+    // new maps)
     function newBlank(year?: number) {
-        const m = M.newMap(8, 6);
-        if (year) m.rules = year;
-        load(m, '');
+        load(M.newMap(8, 6, year || ui.newYear), '');
         setTool('shape');
         ui.shapeMode = 'outline';
         ui.freshMap = true;

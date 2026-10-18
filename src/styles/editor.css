@@ -1403,3 +1403,19 @@
 .sbx-rules-item a:hover { color: #1d4ed8; }
 .sbx-rules-item.soon button { color: #94a3b8; cursor: not-allowed; }
 .sbx-rules-soon { flex: none; margin-right: 0.5rem; padding: 0.05rem 0.45rem; border-radius: 999px; background: #fef3c7; color: #b45309; font-size: 0.68rem; font-weight: 600; white-space: nowrap; }
+
+/* the start screen: the year of the rules a new map is made with */
+.sbx-empty-rules { margin: 0.2rem 0 0.9rem; text-align: left; }
+.sbx-empty-rules-label { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.35rem; font-size: 0.8rem; font-weight: 600; color: #334155; }
+.sbx-empty-rules-label .fa-book { color: #2563eb; }
+.sbx-empty-rules-choices { display: flex; gap: 0.4rem; }
+.sbx-empty-rules-choices button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; flex: 1 1 0; padding: 0.45rem 0.5rem;
+    border: 1px solid var(--sbx-line); border-radius: 8px; background: #fff; color: #475569; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.sbx-empty-rules-choices button .fa-check-circle { visibility: hidden; color: #2563eb; }
+.sbx-empty-rules-choices button.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; }
+.sbx-empty-rules-choices button.active .fa-check-circle { visibility: visible; }
+.sbx-empty-rules-choices button.soon { background: #f8fafc; color: #94a3b8; cursor: not-allowed; }
+.sbx-empty-rules-choices button.soon .sbx-rules-soon { margin: 0; }
+.sbx-empty-rules-note { display: block; margin-top: 0.35rem; font-size: 0.7rem; color: #94a3b8; line-height: 1.5; }
