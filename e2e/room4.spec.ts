@@ -19,7 +19,7 @@ async function openCreator(page: Page): Promise<void> {
 test('the creator: every tool and its panel', async ({ page }) => {
     await openCreator(page);
     await shot(page, 'r4-open');
-    for (const id of ['select', 'pen', 'line', 'curve', 'arc', 'rect', 'circle', 'ellipse', 'polygon', 'stamp', 'floor', 'erase', 'template']) {
+    for (const id of ['select', 'template', 'pen', 'line', 'curve', 'arc', 'rect', 'circle', 'ellipse', 'polygon', 'erase', 'floor', 'stamp']) {
         await r4tool(page, id);
         await shot(page, 'r4-tool-' + id);
     }

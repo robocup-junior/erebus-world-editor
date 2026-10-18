@@ -44,8 +44,22 @@ const TILE = 12;                 // cm
 const WALL = 1;                  // wall thickness, cm
 const ROOM_FILL: Record<number, string> = { 1: '#ffffff', 2: '#dcebfb', 3: '#f7e3f7', 4: '#e6d9ff' };
 const ROOM_EDGE: Record<number, string> = { 2: '#359ef4', 3: '#c86fca', 4: '#7500ff' };
-const VICTIM: Record<string, string> = { H: 'Φ', S: 'Ψ', U: 'Ω', F: 'F', P: 'P', C: 'C', O: 'O' };
-const HALF_VICTIM: Record<string, string> = { 1: 'Φ', 2: 'Ω', 3: 'Ψ', 5: 'F', 6: 'P', 7: 'C', 8: 'O' };
+
+// How a victim of the map file shows (the map's year's kinds): by its letter on a tile side, or its
+// value on a 6 cm face (rules: TokenKind edge / slot)
+interface Glyph { symbol: string; face?: string; color?: string }
+function edgeGlyph(map: MapData, letter: string): Glyph {
+    const k = rulesOf(map).tokens.kinds.find(function (k) { return k.edge === letter; });
+    return k ? { symbol: k.symbol, face: k.face, color: k.color } : { symbol: letter || '?' };
+}
+function slotGlyph(map: MapData, value: string): Glyph {
+    const tokens = rulesOf(map).tokens;
+    const k = tokens.kinds.find(function (k) { return k.slot === value; });
+    if (k) return { symbol: k.symbol, face: k.face, color: k.color };
+    // a ring target's type
+    const type = Object.keys(tokens.target.slot).find(function (l) { return String(tokens.target.slot[l]) === value; });
+    return { symbol: type || '?' };
+}
 
 // Room (1-4) of every first-floor tile, keyed by the tile's cell "x,y"
 function tileRooms(map: MapData): Record<string, number> {
@@ -345,7 +359,7 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
             if (edge && (!a || Math.hypot(edge.x - c.cx, edge.y - c.cy) < Math.hypot(a.x - c.cx, a.y - c.cy))) a = { x: edge.x, y: edge.y, thick: 1 };
             const at = R4.badgeOnWall(c, a, 1.6);
             if (type && (type.kind === 'ct' || type.kind === 'fakect')) ctBadge(at.x, at.y, null, type.color);
-            else badge(at.x, at.y, type ? type.symbol : '?', false, type ? type.color : Icons.FAKE);
+            else badge(at.x, at.y, type ? { symbol: type.symbol, face: type.face, color: type.color } : { symbol: '?', color: Icons.FAKE }, !!type && type.kind === 'fake');
         });
     }
 
@@ -375,8 +389,9 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
     }
 
     // Victims and cognitive targets with the icons shared with the room 4 creator (SimIcons)
-    function badge(x: number, y: number, text: string, fake?: boolean | number, color?: string) {
-        Icons.victim(ctx, x, y, 1.6, text, color || (fake ? Icons.FAKE : Icons.VICTIM), 0.25);
+    // a victim in the colour of its type (lib/icons), hollow when it is a fake
+    function badge(x: number, y: number, glyph: Glyph, fake?: boolean | number) {
+        Icons.victim(ctx, x, y, 1.6, glyph.symbol, glyph.color || (fake ? Icons.FAKE : Icons.VICTIM), 0.25, glyph.face, !!fake);
     }
 
     // on the map a cognitive target shows its type's mark: its own rings would be too small to see
@@ -400,7 +415,7 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
                 const off = Number(t.victim_offset) || 0;
                 const x = cx + side[d][0] + (side[d][0] ? 0 : off), y = cy + side[d][1] + (side[d][0] ? off : 0);
                 if (code) { ctBadge(x, y, code); return; }
-                badge(x, y, VICTIM[v as string] || '?', t.victim_is_fake);
+                badge(x, y, edgeGlyph(map!, v as string), t.victim_is_fake);
             });
             for (let i = 0; i < 16; i++) {
                 const v = t.halfWallVic && t.halfWallVic[i];
@@ -420,7 +435,7 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
                     ctx.restore();
                 }
                 if (code) { ctBadge(pt.at[0], pt.at[1], code); continue; }
-                badge(pt.at[0], pt.at[1], HALF_VICTIM[v as string] || '?', t.halfWallVicFakes && t.halfWallVicFakes[i]);
+                badge(pt.at[0], pt.at[1], slotGlyph(map!, String(v)), t.halfWallVicFakes && t.halfWallVicFakes[i]);
             }
         });
     }

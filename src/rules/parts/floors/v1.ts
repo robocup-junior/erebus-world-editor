@@ -3,7 +3,7 @@
 import type { FloorKind } from '../../types';
 
 export const floors: FloorKind[] = [
-    { id: 'checkpoint', icon: 'fa-flag-checkered', color: '#cbd5e1', hole: false, checkpoint: true },
-    { id: 'black', icon: 'fa-square', color: '#111', hole: true, checkpoint: false },
-    { id: 'swamp', icon: 'fa-water', color: '#cd853f', hole: false, checkpoint: false }
+    { id: 'checkpoint', icon: 'fa-flag-checkered', color: '#cbd5e1', hole: false, checkpoint: true, outerOnly: false },
+    { id: 'black', icon: 'fa-square', color: '#111', hole: true, checkpoint: false, outerOnly: false },
+    { id: 'swamp', icon: 'fa-water', color: '#cd853f', hole: false, checkpoint: false, outerOnly: false }
 ];

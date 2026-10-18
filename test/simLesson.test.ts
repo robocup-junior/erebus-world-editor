@@ -1,9 +1,10 @@
-// Erebus World Editor 2026's lesson: the sample map built step by step. Each step is not done before it
-// starts, its "do it for me" does it, and the whole lesson ends with a map the world can be exported
-// from, with nothing left to look at.
+// Erebus World Editor's lesson: the sample map built step by step, in each year's rules (the lesson
+// is of the year of the rules chosen). Each step is not done before it starts, its "do it for me"
+// does it, and the whole lesson ends with a map the world can be exported from, with nothing left to
+// look at.
 import { test } from 'vitest';
 import assert from 'node:assert';
-import { LESSON_YEAR } from '../src/rules/registry';
+import * as R from '../src/rules/registry';
 import * as M from '../src/lib/model';
 import * as L from '../src/lib/lattice';
 import * as W from '../src/lib/field';
@@ -11,7 +12,7 @@ import * as T from '../src/lib/tour';
 
 // the editor's side, as the page gives it
 type TestEnv = T.TourEnv & { refresh(): void };
-function makeEnv() {
+function makeEnv(year = R.LATEST_YEAR) {
   const env = { M, W, L, map: null, ui: { showLinear: false }, selected: null, region: null, creator: null, problems: [] } as unknown as TestEnv;
   let borders = new Set<string>();
   const refresh = () => {
@@ -21,7 +22,7 @@ function makeEnv() {
   };
   env.sync = () => { borders = M.resyncBorderWalls(env.map, borders); };
   env.act = {
-    newMap() { env.map = M.normalize(M.newMap(8, 6, LESSON_YEAR)); borders = M.borderEdges(env.map); },
+    newMap() { env.map = M.normalize(M.newMap(8, 6, year)); borders = M.borderEdges(env.map); },
     resize(w, l) { M.resize(env.map, w, l); borders = M.syncBorderWalls(env.map, borders); },
     openRoom4() {
       if (env.map.area4Room.type !== 1) { env.map.area4Room = W.area4Presets()[1]; env.sync(); }
@@ -62,8 +63,8 @@ test('every lesson step has its texts and a chapter; the room 4 part is in it, i
   assert.strictEqual(T.ROOM4[T.ROOM4.length - 1].id, 'r4ok');
 });
 
-test('each step is not done when it starts, and is done by its "do it for me"', () => {
-  const env = makeEnv();
+for (const year of R.years()) test(`${year}: each step is not done when it starts, and is done by its "do it for me"`, () => {
+  const env = makeEnv(year);
   let prev: T.TourStep | null = null;
   for (const s of T.LESSON) {
     env.refresh();
@@ -97,6 +98,8 @@ test('each step is not done when it starts, and is done by its "do it for me"', 
   assert.ok(kinds.some((v) => v.type === 'CT') && kinds.some((v) => v.fake) && kinds.some((v) => v.type === 'H'));
   // a room 4 entrance checkpoint was set by itself
   assert.ok(Object.values(map.cells).some((cl) => cl.tile && cl.tile.cpAuto && cl.tile.checkpoint));
+  // a tile of each kind of floor of the year
+  for (const k of R.rulesFor(year)!.floors) assert.ok(Object.values(map.cells).some((cl) => cl.tile && cl.tile[k.id]), k.id);
 });
 
 test('the walls along the guides are the 6 cm segments between their points', () => {
@@ -104,8 +107,8 @@ test('the walls along the guides are the 6 cm segments between their points', ()
   assert.deepStrictEqual(segs, ['h,8,2', 'v,9,2']);
 });
 
-test('what to do follows the map: too much done, something else done, part of it left', () => {
-  const env = makeEnv();
+for (const year of R.years()) test(`${year}: what to do follows the map: too much done, something else done, part of it left`, () => {
+  const env = makeEnv(year);
   env.act.newMap();
   const step = (id: string) => T.LESSON.find((s) => s.id === id);
   const look = (id: string, st: T.StepState = {}) => { env.refresh(); const s = step(id); return { done: s.goal(env, st), state: s.state ? s.state(env, st) : null }; };
@@ -141,7 +144,8 @@ test('what to do follows the map: too much done, something else done, part of it
   step('room2').auto(env, {});
   // floors: what is left, by name
   M.setFloor(env.map, 3, 7, 'black');
-  assert.deepStrictEqual(look('floors').state, { key: 'left', params: { list: ['checkpoint', 'swamp'], listOf: 'admin.simBeta.floors.' } });
+  const left = R.rulesFor(year)!.floors.map((k) => k.id).filter((k) => k !== 'black');
+  assert.deepStrictEqual(look('floors').state, { key: 'left', params: { list: left, listOf: 'admin.simBeta.floors.' } });
 });
 
 test('the eraser step lights up the swamp where it was put, also once it is taken off', () => {
@@ -164,7 +168,7 @@ test('the eraser step lights up the swamp where it was put, also once it is take
   none.act.newMap();
   const st2: T.StepState = {};
   step.enter(none, st2);
-  assert.deepStrictEqual(step.region(none, st2), [[T.SAMPLE.swamp[0], T.SAMPLE.swamp[1], T.SAMPLE.swamp[0], T.SAMPLE.swamp[1]]]);
+  assert.deepStrictEqual(step.region(none, st2), [[T.SAMPLE.floors.swamp[0], T.SAMPLE.floors.swamp[1], T.SAMPLE.floors.swamp[0], T.SAMPLE.floors.swamp[1]]]);
 });
 
 test('the step to pick a victim lights up the victims where they were put', () => {

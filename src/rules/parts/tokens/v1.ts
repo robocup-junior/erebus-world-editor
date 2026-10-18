@@ -6,16 +6,21 @@
 import type { Tokens, StampType } from '../../types';
 import { cognitiveCodeToVictimLetter, randomCognitiveCode } from './cognitive';
 
+// The colours of the victims by type, so a map shows at a glance which is where: harmed orange,
+// stable blue, unharmed green (apart from the targets' type colours); a fake is drawn hollow in its
+// type's colour
+const HARMED = '#ea580c', STABLE = '#2563eb', UNHARMED = '#16a34a';
+
 // The stamps of the room 4 picture: idx is the type the picture's colour names (lib/room4); coloured
-// as the victims of the editor - letter victims blue, fakes grey, targets by type
+// as the victims of the editor - victims by their type (fakes hollow), targets by type
 const stamps: StampType[] = [
-    { idx: 0,  kind: 'victim', symbol: 'Φ', color: '#2563eb', name: 'admin.simMapEditor.room4Creator.types.harmed' },
-    { idx: 1,  kind: 'victim', symbol: 'Ψ', color: '#2563eb', name: 'admin.simMapEditor.room4Creator.types.stable' },
-    { idx: 2,  kind: 'victim', symbol: 'Ω', color: '#2563eb', name: 'admin.simMapEditor.room4Creator.types.unharmed' },
+    { idx: 0,  kind: 'victim', symbol: 'Φ', color: HARMED, name: 'admin.simMapEditor.room4Creator.types.harmed' },
+    { idx: 1,  kind: 'victim', symbol: 'Ψ', color: STABLE, name: 'admin.simMapEditor.room4Creator.types.stable' },
+    { idx: 2,  kind: 'victim', symbol: 'Ω', color: UNHARMED, name: 'admin.simMapEditor.room4Creator.types.unharmed' },
     // fake victims are letter victims too (3D letters), so they sit with them
-    { idx: 9,  kind: 'fake', symbol: 'Φ', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeHarmed' },
-    { idx: 8,  kind: 'fake', symbol: 'Ψ', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeStable' },
-    { idx: 10, kind: 'fake', symbol: 'Ω', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeUnharmed' },
+    { idx: 9,  kind: 'fake', symbol: 'Φ', color: HARMED, name: 'admin.simMapEditor.room4Creator.types.fakeHarmed' },
+    { idx: 8,  kind: 'fake', symbol: 'Ψ', color: STABLE, name: 'admin.simMapEditor.room4Creator.types.fakeStable' },
+    { idx: 10, kind: 'fake', symbol: 'Ω', color: UNHARMED, name: 'admin.simMapEditor.room4Creator.types.fakeUnharmed' },
     { idx: 5,  kind: 'ct', symbol: 'F', color: '#dc2626', name: 'admin.simMapEditor.ctF' },
     { idx: 3,  kind: 'ct', symbol: 'P', color: '#7e22ce', name: 'admin.simMapEditor.ctP' },
     { idx: 6,  kind: 'ct', symbol: 'C', color: '#1f2937', name: 'admin.simMapEditor.ctC' },
@@ -25,9 +30,9 @@ const stamps: StampType[] = [
 
 export const tokens: Tokens = {
     kinds: [
-        { id: 'H', family: 'letter', symbol: 'Φ', nameKey: 'admin.simMapEditor.room4Creator.types.harmed', widthCm: 2, fakeable: true, edge: 'H', slot: '1' },
-        { id: 'S', family: 'letter', symbol: 'Ψ', nameKey: 'admin.simMapEditor.room4Creator.types.stable', widthCm: 2, fakeable: true, edge: 'S', slot: '3' },
-        { id: 'U', family: 'letter', symbol: 'Ω', nameKey: 'admin.simMapEditor.room4Creator.types.unharmed', widthCm: 2, fakeable: true, edge: 'U', slot: '2' },
+        { id: 'H', family: 'letter', symbol: 'Φ', nameKey: 'admin.simMapEditor.room4Creator.types.harmed', widthCm: 2, fakeable: true, edge: 'H', slot: '1', color: HARMED },
+        { id: 'S', family: 'letter', symbol: 'Ψ', nameKey: 'admin.simMapEditor.room4Creator.types.stable', widthCm: 2, fakeable: true, edge: 'S', slot: '3', color: STABLE },
+        { id: 'U', family: 'letter', symbol: 'Ω', nameKey: 'admin.simMapEditor.room4Creator.types.unharmed', widthCm: 2, fakeable: true, edge: 'U', slot: '2', color: UNHARMED },
         { id: 'CT', family: 'target', symbol: 'CT', nameKey: 'admin.simMapEditor.room4Creator.groups.ct', widthCm: 5, fakeable: false }
     ],
     gapCm: 0.5,

@@ -164,6 +164,32 @@ function isOuterEdge(map: MapData, ex: number, ey: number) {
     return isInside(map, t[0][0], t[0][1]) !== isInside(map, t[1][0], t[1][1]);
 }
 
+// Whether tile (x, y) is beside the field's outside: a side of it on the outer wall
+function touchesOutside(map: MapData, x: number, y: number) {
+    return isInside(map, x, y) && Object.keys(SIDES).some(function (d) { return isOuterEdge(map, x + SIDES[d][0], y + SIDES[d][1]); });
+}
+
+// Whether a floor of `kind` may be on tile (x, y): one only beside the outside (a contact tile) is not
+// on a tile inside the field
+function floorFits(map: MapData, x: number, y: number, kind: string) {
+    const k = rulesOf(map).floors.find(function (f) { return f.id === kind; });
+    return !k || !k.outerOnly || touchesOutside(map, x, y);
+}
+
+// The tiles whose floor is only for a tile beside the outside (a contact tile), but are not
+function floorsOffOuter(map: MapData): Pt[] {
+    const kinds = rulesOf(map).floors.filter(function (f) { return f.outerOnly; });
+    const out: Pt[] = [];
+    if (!kinds.length) return out;
+    for (let x = 1; x < 2 * map.width; x += 2) {
+        for (let y = 1; y < 2 * map.length; y += 2) {
+            const t = tileOf(map, x, y);
+            if (t && kinds.some(function (k) { return !!t[k.id]; }) && !touchesOutside(map, x, y)) out.push([x, y]);
+        }
+    }
+    return out;
+}
+
 // The outer walls are always there (as the classic editor's "outer walls" button makes them)
 function outerWalls(map: MapData) {
     syncBorderWalls(map, new Set());
@@ -507,15 +533,17 @@ function segNear(map: MapData, x: number, y: number, reach: number): string | nu
 
 // ---- Floors and victims ------------------------------------------------------------------------
 
-// kind: black, swamp, checkpoint (each turns the others off; again turns it off), start, clear
+// kind: a floor of the year's rules (each turns the others off; again turns it off), start, clear.
+// A floor that does not fit there (floorFits) is not put.
 function setFloor(map: MapData, x: number, y: number, kind: string) {
     if (!isInside(map, x, y)) return false;
     if (kind === 'start') {
         map.startTile = { x: x, y: y, z: 0 };
         return true;
     }
+    const was = !!(tileOf(map, x, y) || {})[kind];
+    if (!was && !floorFits(map, x, y, kind)) return false;
     const t = ensureTile(map, x, y);
-    const was = !!t[kind];
     clearFloors(map, t);
     if (kind !== 'clear') t[kind] = !was;
     delete t.cpAuto;
@@ -526,6 +554,7 @@ function setFloor(map: MapData, x: number, y: number, kind: string) {
 // switched as setFloor does (the room 4 creator gives the floors it ends with). Whether it changed.
 function setFloorKind(map: MapData, x: number, y: number, kind: string) {
     if (!isInside(map, x, y)) return false;
+    if (kind && !floorFits(map, x, y, kind)) return false;
     const now = tileOf(map, x, y);
     if (floorIds(map).every(function (f) { return !!(now && now[f]) === (f === kind); })) return false;
     const t = ensureTile(map, x, y);
@@ -1509,6 +1538,10 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
         return w.kind === 'edge' ? hasWall(map, w.x, w.y, w.dir) : slotHasWall(map, w.x, w.y, w.i);
     }).map(function (w) { return victimPlace(map, w).at; });
     if (misplaced.length) out.push({ key: 'victimMisplaced', params: { count: misplaced.length }, block: true, at: misplaced[0], show: { points: misplaced } });
+    // contact tiles not beside the outside (the field's outline changed under them): a contact tile
+    // is in contact with the outside (2027: rule 4.3)
+    const offOuter = floorsOffOuter(map).map(function (p) { return [(p[0] - 1) / 2, (p[1] - 1) / 2]; });
+    if (offOuter.length) out.push({ key: 'contactInside', params: { count: offOuter.length }, block: true, at: centre(offOuter[0]), show: { tiles: offOuter } });
     // victims the robot cannot get to (walls too close round them): there are none there (rule 3.2.4)
     const reach = robotReach(map, picture);
     if (reach && reach.victims.length) {
@@ -1547,7 +1580,7 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
 // has to be drawn). FIXABLE: the problems it handles.
 
 const FIXABLE = ['noStart', 'presetNotSupported', 'room4Checkpoint', 'conn.notConnected', 'conn.passageNoRoom',
-    'conn.passageMisplaced', 'conn.unmarkedGap', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable', 'wallRule'];
+    'conn.passageMisplaced', 'conn.unmarkedGap', 'contactInside', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable', 'wallRule'];
 // fixed by drawing in the room 4 creator
 const DRAW_FIX = ['customRoom4NoPicture', 'room4Untyped', 'room4Unreachable'];
 
@@ -1628,6 +1661,10 @@ function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string>
         return [2, 3, 4].reduce(function (b, room) { return connectRoom(map, room, b); }, after);
     }
     if (key === 'conn.unmarkedGap') return resyncBorderWalls(map, borders);
+    if (key === 'contactInside') {
+        floorsOffOuter(map).forEach(function (p) { clearFloors(map, tileOf(map, p[0], p[1])!); });
+        return borders;
+    }
     if (key === 'victimNoWall') {
         for (let x = 1; x < 2 * map.width; x += 2) {
             for (let y = 1; y < 2 * map.length; y += 2) {
@@ -1716,6 +1753,8 @@ export {
     tokenKind,
     isTarget,
     setFloorKind,
+    floorFits,
+    touchesOutside,
     floorKind,
     BrokenWorld,
     SIDES,

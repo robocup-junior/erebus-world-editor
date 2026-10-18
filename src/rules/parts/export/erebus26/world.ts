@@ -1,7 +1,7 @@
 // The world file (.wbt) for Erebus 26.x: the tiles of the map (worldTile / halfTile), its walls,
 // curves, victims and cognitive targets, room 4 (a preset, or a custom picture through the hooks of
 // ./room4) and the supervisor. Works on a copy of the map the field has been worked out on
-// (lib/field: recalculate).
+// (lib/field: recalculate). Erebus 27 (../erebus27) writes the same file with what it adds (Flavor).
 import type { MapData, Tile, Pt } from '../../../../lib/types';
 import type { WorldHooks } from '../../../types';
 import { noRandom, getRandomAngle, checkRoomNumber } from '../../../../lib/field';
@@ -269,10 +269,21 @@ function cognitive_string_to_hazmat(str: string): number | undefined {
 // (its fields change type while the export works: walls as arrays, then as strings for the file)
 type WorldTile = Record<string, any>;
 
+// What a version of Erebus writes otherwise than 26.x: contact tiles (a tile's contact field), and
+// the model of a fake victim (Fake's type) for each type of victim
+export interface Flavor {
+    contact: boolean;
+    fakeModel: Record<string, string>;
+}
+export const EREBUS26: Flavor = {
+    contact: false,
+    fakeModel: { harmed: 'phi', stable: 'psi', unharmed: 'omega' }
+};
+
 // A victim or cognitive target as the world file lists it
 interface VictimPart { x: number; z: number; rot: number; frontRotation: number; is_fake?: boolean; id: number; type: string | undefined; score: number }
 
-function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
+function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor = EREBUS26): string {
     // (these were the page's globals: set and read within one export)
     let tile: any, tile_string: any, r: any, arr1: any, arr2: any, room4: any, connect14: any, connect34: any, area4X: any, area4Y: any, area4Rot: any,
         startTrans: any, xOffset: any, zOffset: any, area4Humans: any, vicPosTrans: any, thisHuman: any,
@@ -293,6 +304,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
                 is_black                   : false,
                 is_start                   : false,
                 is_swamp                   : false,
+                is_contact                 : false,
                 is_obstacle                : false,
                 is_linear                  : false,
 
@@ -456,6 +468,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
             tile.is_checkpoint              = is_truthy(thisCell.tile.checkpoint);
             tile.is_black                   = is_truthy(thisCell.tile.black);
             tile.is_swamp                   = is_truthy(thisCell.tile.swamp);
+            tile.is_contact                 = is_truthy(thisCell.tile.contact);
             tile.is_obstacle                = is_truthy(thisCell.tile.obstacle);
             tile.is_linear                  = is_truthy(thisCell.isLinear);
             tile.is_start                   = (x == map.startTile.x && y == map.startTile.y);
@@ -561,12 +574,9 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
 
 
     function hsu_to_greek_letters(hsu: string): string | undefined {
-        switch(hsu) {
-            case "harmed": return "phi"
-            case "stable": return  "psi"
-            case "unharmed": return "omega"
-        }
-        console.log("UNREACHABLE: invalid victim name")
+        const model = flavor.fakeModel[hsu];
+        if (!model) console.log("UNREACHABLE: invalid victim name");
+        return model;
     }
 
     function visualHumanPart({x, z, rot, frontRotation, is_fake, id, type, score}: VictimPart) {
@@ -934,7 +944,8 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
             start ${tile.is_start}
             trap ${tile.is_black}
             checkpoint ${tile.is_checkpoint}
-            swamp ${tile.is_swamp}
+            swamp ${tile.is_swamp}${flavor.contact ? `
+            contact ${tile.is_contact}` : ''}
             width ${width}
             height ${height}
             id "${tileId}"
@@ -965,7 +976,8 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>): string {
             start ${tile.is_start}
             trap ${tile.is_black}
             checkpoint ${tile.is_checkpoint}
-            swamp ${tile.is_swamp}
+            swamp ${tile.is_swamp}${flavor.contact ? `
+            contact ${tile.is_contact}` : ''}
             width ${width}
             height ${height}
             id "${tileId}"

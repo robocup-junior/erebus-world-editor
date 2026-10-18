@@ -15,7 +15,7 @@ import * as View from '../lib/view';
 import * as T from '../lib/tour';
 import * as Keys from '../lib/keys';
 import { fixed } from './format';
-import { rulesOf, rulesFor, years, upcomingYears, LATEST_YEAR, LESSON_YEAR } from '../rules/registry';
+import { rulesOf, rulesFor, years, upcomingYears, FIRST_YEAR, LATEST_YEAR } from '../rules/registry';
 import type { Ruleset, MaxScore, StampType, Tokens, FloorKind } from '../rules/types';
 import * as OpenCV from '../lib/opencv';
 import type { MapData, Room4Token } from '../lib/types';
@@ -27,7 +27,7 @@ import { tick, digest, apply, later, cancel, applyAsync } from './runtime';
 const TILE = 12;
 
 export interface Tool { id: string; icon: string; key: string }
-interface StampChoice { id?: string; letter?: string; fake?: boolean; kind: string; symbol: string; color: string; name: string }
+interface StampChoice { id?: string; letter?: string; fake?: boolean; kind: string; symbol: string; face?: string; color: string; name: string }
 interface ProblemItem { text: string; block: boolean; at: number[] | null; show: Show | null; raw: Problem; fix: string }
 interface DialogAction { label: string; value: unknown; style: string; icon?: string }
 interface Dialog {
@@ -56,6 +56,9 @@ export interface Room4Host {
     // room 4
     room4FloorKinds: FloorKind[];
     room4Checkpoints: boolean;
+    // whether a floor of that kind may be on the tile of cell (x, y) (a contact tile only beside the
+    // field's outside)
+    room4FloorFits(x: number, y: number, kind: string): boolean;
     // the floor of each room 4 tile ('black', 'swamp', 'checkpoint'; none left out), by its cell key
     // "x,y": set in the creator, put on the map when it closes
     room4Floors: Record<string, string>;
@@ -118,12 +121,12 @@ export function createEditor() {
             ].map(function (row) {
                 return {
                     label: row.label,
-                    types: row.types.map(function (x): StampChoice { return { id: idOf(x.symbol), fake: x.kind === 'fake', kind: x.kind, symbol: x.symbol, color: x.color, name: x.name }; })
+                    types: row.types.map(function (x): StampChoice { return { id: idOf(x.symbol), fake: x.kind === 'fake', kind: x.kind, symbol: x.symbol, face: x.face, color: x.color, name: x.name }; })
                 };
             }),
             ctStamps: stamps.filter(function (x) { return x.kind === 'ct' || x.kind === 'fakect'; })
                 .map(function (x): StampChoice { return { letter: x.kind === 'fakect' ? 'X' : x.symbol, kind: x.kind, symbol: x.symbol, color: x.color, name: x.name }; }),
-            victimChoices: kinds.map(function (k) { return { id: k.id, symbol: k.symbol }; }),
+            victimChoices: kinds.map(function (k) { return { id: k.id, symbol: k.symbol, face: k.face }; }),
             // the kind that is a ring target ('' when the year has none)
             targetId: target ? target.id : ''
         };
@@ -150,7 +153,7 @@ export function createEditor() {
         // the rules menu: the year of the map open, the years the editor takes (with their rule
         // books) and those on their way
         ruleYear: LATEST_YEAR,
-        ruleYears: years().map(function (y) { return { year: y, book: rulesFor(y)!.book }; }),
+        ruleYears: years().map(function (y) { return { year: y, book: rulesFor(y)!.book, draft: rulesFor(y)!.draft }; }),
         upcomingYears: upcomingYears(),
         victimRows: firstPanel.victimRows,
         ctStamps: firstPanel.ctStamps,
@@ -186,7 +189,7 @@ export function createEditor() {
         error: '',
         errorParams: {} as Record<string, unknown>,
         dialog: null as Dialog | null,
-        kept: null as { time: number; name: string; map: MapData } | null,
+        kept: null as { time: number; name: string; year: number; map: MapData } | null,
         region: null as Region | null,
         hasClip: false,
         tour: null as Tour | null,
@@ -198,9 +201,9 @@ export function createEditor() {
     });
     const ui = S.ui;
 
-    // the rules of the map open (of the latest year before one is)
+    // the rules of the map open (before one is, of the year chosen for new maps)
     function rules(): Ruleset {
-        return map ? rulesOf(map) : rulesFor(LATEST_YEAR)!;
+        return map ? rulesOf(map) : rulesFor(ui.newYear) || rulesFor(LATEST_YEAR)!;
     }
     // whether a kind of victim is the ring target kind
     function isTarget(id: string) {
@@ -210,6 +213,16 @@ export function createEditor() {
     function symbolOf(id: string) {
         const k = rules().tokens.kinds.find(function (k) { return k.id === id; });
         return k ? k.symbol : '';
+    }
+    // its colour (a victim's type; '' for none)
+    function colorOf(id: string) {
+        const k = rules().tokens.kinds.find(function (k) { return k.id === id; });
+        return k && k.color ? k.color : '';
+    }
+    // the face it shows instead (a smiley victim), or ''
+    function faceOf(id: string) {
+        const k = rules().tokens.kinds.find(function (k) { return k.id === id; });
+        return k && k.face ? k.face : '';
     }
 
     function pickVictim(v: StampChoice) { ui.victim = v.id!; ui.fake = !!v.fake; }
@@ -258,6 +271,9 @@ export function createEditor() {
     function victimSymbol() {
         if (isTarget(ui.victim)) { const l = ctLetter(); return l === 'X' ? '×' : l; }
         return symbolOf(ui.victim);
+    }
+    function victimFace() {
+        return isTarget(ui.victim) ? '' : faceOf(ui.victim);
     }
     function randomCode(type: string) { ui.rings = rules().tokens.target.randomCode(type).split(''); }
 
@@ -557,6 +573,8 @@ export function createEditor() {
     }
     // before a map is open: the latest year's
     setRuleTexts(LATEST_YEAR, rulesFor(LATEST_YEAR)!.refs);
+    // on the start screen the texts and panels follow the year chosen for new maps
+    watch(function () { return ui.newYear; }, function () { if (!map) followRules(); });
 
     // A custom room 4 picture read for the checks and the score (its walls and its stamps): read once
     // per picture; it loads first, and the map is looked at again then
@@ -660,7 +678,12 @@ export function createEditor() {
         }
         S.error = '';
         S.errorParams = {};
+        // a map opens in the rules of its own year, whatever year was chosen: said when it is another,
+        // with the way to switch it (the rules menu)
+        const chosen = rules().year;
         load(data, fileName);
+        const year = rulesOf(map).year;
+        if (year !== chosen) notify('openedOtherYear', { year: year, chosen: chosen }, 'info', 9000);
     }
 
     function download(data: string, type: string, name: string) {
@@ -781,6 +804,7 @@ export function createEditor() {
             room4Target: rulesOf(map).tokens.target,
             room4FloorKinds: rulesOf(map).floors,
             room4Checkpoints: rulesOf(map).passages.room4Checkpoints,
+            room4FloorFits: function (x, y, kind) { return M.floorFits(map, x, y, kind); },
             room4Floors: floors
         };
         room4Done = function () {
@@ -871,11 +895,16 @@ export function createEditor() {
     }
     try {
         const kept = JSON.parse(localStorage.getItem(AUTOSAVE) || 'null');
-        if (kept && kept.map && kept.map.cells) S.kept = { time: kept.time, name: kept.map.name, map: markRaw(kept.map) };
+        if (kept && kept.map && kept.map.cells) S.kept = { time: kept.time, name: kept.map.name, year: Number(kept.map.rules) || FIRST_YEAR, map: markRaw(kept.map) };
     } catch (e) { S.kept = null; }
 
+    // The work kept is opened in the rules of its year only when that year is the one chosen: a map
+    // goes to another year's rules by the rules menu, asked (changeRules), not by opening it
+    function keptOtherYear() {
+        return !!S.kept && S.kept.year !== ui.newYear;
+    }
     function restoreKept() {
-        if (!S.kept) return;
+        if (!S.kept || keptOtherYear()) return;
         load(JSON.parse(JSON.stringify(S.kept.map)), '');
         dirty = true;
     }
@@ -1089,7 +1118,9 @@ export function createEditor() {
             } else notify('noBorder', null, 'warn');
         } else if (tool === 'floor') {
             const tl = tileAt(p);
-            if (tl) M.setFloor(map, tl.x, tl.y, ui.floor);
+            if (tl && !M.setFloor(map, tl.x, tl.y, ui.floor) && !M.floorFits(map, tl.x, tl.y, ui.floor)) {
+                notify('floor_notOuter', { floor: t('admin.simBeta.floors.' + ui.floor) }, 'warn');
+            }
         } else if (tool === 'victim' && stroke.victim) {
             dropVictim();
         } else if (tool === 'victim') {
@@ -1648,6 +1679,7 @@ export function createEditor() {
             else if (kind === 'start') say(st && st.x === tl.x && st.y === tl.y ? 'floor_isStart' : 'floor_start');
             else if (kind === 'clear') say('floor_clear');
             else if (tile && tile[kind]) say('floor_off', { floor: name });
+            else if (!M.floorFits(map, tl.x, tl.y, kind)) { say('floor_notOuter', { floor: name }); return { kind: 'tile', tile: tl, color: '#dc2626' }; }
             else say('floor_on', { floor: name });
             return { kind: 'tile', tile: tl };
         }
@@ -2030,6 +2062,12 @@ export function createEditor() {
         };
     })();
 
+    // The year of the lesson's sample map: that of the rules chosen now (the map open, else the year
+    // chosen for new maps); the lesson's steps and texts follow it
+    function lessonYear() {
+        return rules().year;
+    }
+
     // kind: 'tour' (the screen), 'lesson' (the sample map) or 'room4' (the room 4 creator's part)
     function startTour(kind?: string) {
         if (S.dialog) return;
@@ -2037,8 +2075,9 @@ export function createEditor() {
         ui.guidePick = false;
         kind = kind || (map ? 'tour' : 'lesson');
         if (kind === 'lesson' && map) {
-            // the lesson builds its own map: from a new one, once the open one may go
-            whenDiscarded(function () { newBlank(LESSON_YEAR); beginTour('lesson'); });
+            // the lesson builds its own map: from a new one of the same year, once the open one may go
+            const year = lessonYear();
+            whenDiscarded(function () { newBlank(year); beginTour('lesson'); });
             return;
         }
         beginTour(kind);
@@ -2091,8 +2130,7 @@ export function createEditor() {
         });
     }
 
-    // a blank start (the lesson's: of the year the lesson is written for; else of the year chosen for
-    // new maps)
+    // a blank start (the lesson's: of the year of its rules; else of the year chosen for new maps)
     function newBlank(year?: number) {
         load(M.newMap(8, 6, year || ui.newYear), '');
         setTool('shape');
@@ -2150,7 +2188,7 @@ export function createEditor() {
             creator: creatorScope(), room4State: room4State(), problems: S.problems,
             sync: function () { borders = M.resyncBorderWalls(map, borders); },
             act: {
-                newMap: function () { newBlank(LESSON_YEAR); },
+                newMap: function () { newBlank(lessonYear()); },
                 resize: function (w, l) { resize(w - map.width, l - map.length); },
                 openRoom4: function () { openRoom4(); },
                 fixAll: function () { fixAll(); },
@@ -2495,7 +2533,7 @@ export function createEditor() {
         canvasDblClick: canvasDblClick,
         room4Gone: room4Gone,
         // read while drawing the page
-        changeRules: act(changeRules), ctLetter: ctLetter, isTarget: isTarget, symbolOf: symbolOf, pickerRings: pickerRings, ringColor: ringColor, ctSum: ctSum, victimSymbol: victimSymbol,
+        changeRules: act(changeRules), ctLetter: ctLetter, isTarget: isTarget, symbolOf: symbolOf, faceOf: faceOf, colorOf: colorOf, victimFace: victimFace, pickerRings: pickerRings, ringColor: ringColor, ctSum: ctSum, victimSymbol: victimSymbol,
         targetStyle: targetStyle, toolKey: function (id: string) { return (byId(id) || {} as Tool).key; },
         linearNoStart: linearNoStart, linearUnreached: linearUnreached, room4State: room4State, canFixAll: canFixAll,
         regionSize: regionSize, toolHint: toolHint, room4Ready: room4Ready, tourLook: tourLook, tourStep: tourStep,
@@ -2506,7 +2544,7 @@ export function createEditor() {
         undo: act(undo), redo: act(redo), toggleLinear: act(toggleLinear), closeDialog: act(closeDialog), dialogItem: act(dialogItem),
         newMap: act(newMap), saveJson: act(saveJson), exportWorld: act(exportWorld), openRoom4: act(openRoom4),
         closeRoom4: closeRoom4, showProblem: act(showProblem), fixProblem: act(fixProblem), fixAll: act(fixAll),
-        pointProblem: act(pointProblem), restoreKept: act(restoreKept), resize: act(resize), setSize: act(setSize), toCustomRoom4: act(toCustomRoom4),
+        pointProblem: act(pointProblem), restoreKept: act(restoreKept), keptOtherYear: keptOtherYear, resize: act(resize), setSize: act(setSize), toCustomRoom4: act(toCustomRoom4),
         renamed: act(renamed), zoomIn: act(zoomIn), zoomOut: act(zoomOut), fit: act(fit), setTool: act(setTool),
         copyRegion: act(copyRegion), cutRegion: act(cutRegion), clearRegion: act(clearRegion), pasteRegion: act(pasteRegion),
         duplicateRegion: act(duplicateRegion), selectNone: act(selectNone), changeSelected: act(changeSelected), moveSelected: act(moveSelected), slideSelected: act(slideSelected), slideDone: act(slideDone), selectedRange: selectedRange, offsetText: offsetText,

@@ -135,16 +135,18 @@ const CHAPTERS = ['start', 'screen', 'tools', 'finish'];
 
 // ---- the sample map of the lesson ----------------------------------------------------------
 // 9 x 6 tiles: room 1 on the left (its top left corner taken out of the map), room 2 top middle,
-// room 3 bottom middle, room 4 on the right; passages 1-2, 2-3 and 3-4; the start bottom left.
+// room 3 bottom middle, room 4 on the right; passages 1-2, 2-3 and 3-4; the start bottom left. A
+// tile for each kind of floor there is (the map's year has its own: rules floors): a contact tile on
+// the outer wall of room 1.
 const SAMPLE: {
     width: number; length: number; outside: number[]; rooms: Record<number, number[]>; start: number[];
-    hole: number[]; checkpoint: number[]; swamp: number[]; wall1: number[][]; wall2: number[][]; curve: { tile: number[]; q: number; v: number };
+    floors: Record<string, number[]>; wall1: number[][]; wall2: number[][]; curve: { tile: number[]; q: number; v: number };
 } = {
     width: 9, length: 6,
     outside: [0, 0],
     rooms: { 2: [3, 0, 5, 2], 3: [3, 3, 5, 5], 4: [6, 0, 8, 5] },
     start: [0, 5],
-    hole: [1, 3], checkpoint: [5, 0], swamp: [4, 5],
+    floors: { checkpoint: [5, 0], black: [1, 3], swamp: [4, 5], contact: [0, 2] },
     // a wall along a tile edge in room 1, and a staircase on the 6 cm grid in room 2 (cm)
     wall1: [[12, 24], [36, 24]],
     wall2: [[48, 12], [54, 12], [54, 18], [60, 18], [60, 24]],
@@ -171,6 +173,10 @@ function victims(env: TourEnv) {
         }
     });
     return out;
+}
+// the kinds of floor the lesson puts: those of the map's year (with a tile of the sample)
+function floorKinds(env: TourEnv) {
+    return env.M.rulesOf(env.map).floors.map(function (k) { return k.id; }).filter(function (id) { return !!SAMPLE.floors[id]; });
 }
 function floorCount(env: TourEnv, kind: string) {
     let n = 0;
@@ -585,17 +591,17 @@ const LESSON: TourStep[] = ([
     },
     {
         id: 'floors', chapter: 'floors', target: PANEL, tool: 'floor', floor: 'checkpoint',
-        region: function () { return [tileBox(SAMPLE.checkpoint), tileBox(SAMPLE.hole), tileBox(SAMPLE.swamp)]; },
-        goal: function (env) { return floorCount(env, 'checkpoint') > 0 && floorCount(env, 'black') > 0 && floorCount(env, 'swamp') > 0; },
+        region: function (env) { return floorKinds(env).map(function (k) { return tileBox(SAMPLE.floors[k]); }); },
+        goal: function (env) { return floorKinds(env).every(function (k) { return floorCount(env, k) > 0; }); },
         auto: function (env) {
-            ([['checkpoint', SAMPLE.checkpoint], ['black', SAMPLE.hole], ['swamp', SAMPLE.swamp]] as [string, number[]][]).forEach(function (f) {
-                if (floorCount(env, f[0]) > 0) return;
-                env.M.setFloor(env.map, c(f[1][0]), c(f[1][1]), f[0]);
+            floorKinds(env).forEach(function (k) {
+                if (floorCount(env, k) > 0) return;
+                env.M.setFloor(env.map, c(SAMPLE.floors[k][0]), c(SAMPLE.floors[k][1]), k);
             });
         },
         state: function (env) {
-            const left = ['checkpoint', 'black', 'swamp'].filter(function (k) { return !floorCount(env, k); });
-            return left.length && left.length < 3 ? { key: 'left', params: { list: left, listOf: 'admin.simBeta.floors.' } } : null;
+            const kinds = floorKinds(env), left = kinds.filter(function (k) { return !floorCount(env, k); });
+            return left.length && left.length < kinds.length ? { key: 'left', params: { list: left, listOf: 'admin.simBeta.floors.' } } : null;
         }
     },
     {
@@ -603,7 +609,7 @@ const LESSON: TourStep[] = ([
         // the swamps placed (where they were when the step started: one taken off is still shown)
         region: function (env, st) {
             const at = st.swamps && st.swamps.length ? st.swamps : floorTiles(env, 'swamp');
-            return (at.length ? at : [SAMPLE.swamp]).map(tileBox);
+            return (at.length ? at : [SAMPLE.floors.swamp]).map(tileBox);
         },
         // the swamp taken off, then back with undo
         enter: function (env, st) { st.gone = false; st.n0 = floorCount(env, 'swamp'); st.swamps = floorTiles(env, 'swamp'); },

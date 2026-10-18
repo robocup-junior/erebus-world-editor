@@ -575,7 +575,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         // type colour with the type letter (× a fake one)
         const at = R4.badgeOnWall(t, t.anchor, r);
         if (type && (type.kind === 'ct' || type.kind === 'fakect')) Icons.targetMark(octx, at.x, at.y, r, null, type.color, 2 * k);
-        else Icons.victim(octx, at.x, at.y, r, type ? type.symbol : '?', type ? type.color : '#94a3b8', 2 * k);
+        else Icons.victim(octx, at.x, at.y, r, type ? type.symbol : '?', type ? type.color : '#94a3b8', 2 * k, type ? type.face : undefined, !!type && type.kind === 'fake');
         if (!t.nearWall || t.unreachable) {
             octx.save();
             octx.beginPath();
@@ -785,9 +785,14 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         const tx = Math.floor(p.x / block), ty = Math.floor(p.y / block);
         return inRoom[tx + ',' + ty] ? { tx: tx, ty: ty } : null;
     }
+    // whether the floor `to` may be on the tile (a contact tile only beside the field's outside)
+    function floorFits(tx: number, ty: number, to: string) {
+        const c = floorKey(tx, ty).split(',').map(Number);
+        return !to || editor.room4FloorFits(c[0], c[1], to);
+    }
     function setFloor(tx: number, ty: number, to: string) {
         const key = floorKey(tx, ty);
-        if ((floors[key] || '') === to) return false;
+        if ((floors[key] || '') === to || !floorFits(tx, ty, to)) return false;
         if (to) floors[key] = to; else delete floors[key];
         return true;
     }
@@ -1005,7 +1010,8 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
                 // the tile it would change, or a cross off room 4
                 const ft = floorTile(hover);
                 if (ft) {
-                    octx.strokeStyle = '#2563eb';
+                    const off = r4.floor !== 'clear' && floorAt(ft.tx, ft.ty) !== r4.floor && !floorFits(ft.tx, ft.ty, r4.floor);
+                    octx.strokeStyle = off ? '#dc2626' : '#2563eb';
                     octx.lineWidth = 2.5 * k;
                     octx.strokeRect(ft.tx * block + 1.5 * k, ft.ty * block + 1.5 * k, block - 3 * k, block - 3 * k);
                 } else {
@@ -1848,6 +1854,10 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
             const ft = floorTile(p);
             if (!ft) return;
             const to = r4.floor === 'clear' || floorAt(ft.tx, ft.ty) === r4.floor ? '' : r4.floor;
+            if (!floorFits(ft.tx, ft.ty, to)) {
+                scope.$applyAsync(function () { r4.message = 'floorNotOuter'; r4.messageParams = {}; });
+                return;
+            }
             checkpoint();
             drag = { floor: to, changed: setFloor(ft.tx, ft.ty, to) };
             drawOverlay();

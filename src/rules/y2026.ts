@@ -10,6 +10,7 @@ import { exporter } from './parts/export/erebus26/index';
 
 export const rules: Ruleset = {
     year: 2026,
+    draft: false,
     book: 'https://junior.robocup.org/wp-content/uploads/2026/02/RCJRescueSimulation2026-final.pdf',
     geometry: geometry,
     rooms: rooms,

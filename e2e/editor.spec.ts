@@ -23,33 +23,76 @@ test('empty screen (en), then the language switched', async ({ page }) => {
     expect(await page.evaluate(() => document.documentElement.lang)).toBe('ja');
 });
 
-test('the start screen asks the year of the rules: 2026 chosen, 2027 on its way; a new map is of the year chosen', async ({ page }) => {
+test('the start screen asks the year of the rules: 2027 (a draft) chosen, 2026 to choose; a new map is of the year chosen', async ({ page }) => {
     await boot(page);
     const choices = page.locator('.sbx-empty-rules-choices button');
-    await expect(choices.filter({ hasText: '2026' })).toHaveAttribute('aria-checked', 'true');
-    await expect(choices.filter({ hasText: '2027' })).toBeDisabled();
+    await expect(choices.filter({ hasText: '2027' })).toHaveAttribute('aria-checked', 'true');
+    await expect(choices.filter({ hasText: '2027' }).locator('.sbx-rules-draft')).toBeVisible();
+    await expect(choices.filter({ hasText: '2026' }).locator('.sbx-rules-draft')).toHaveCount(0);
     await expect(page.locator('.sbx-title')).not.toContainText('2026');
+    await choices.filter({ hasText: '2026' }).click();
     await page.locator('.sbx-empty-actions .btn-primary').click();
     await settle(page);
     await expect(page.locator('.sbx-rules-btn')).toContainText('2026');
 });
 
-test('the rules menu: the map\'s year, its rule book, and 2027 on its way, not to be picked yet', async ({ page }) => {
+test('the rules menu: the map\'s year, its rule book, and 2027 (a draft) to switch to, asked first', async ({ page }) => {
     await boot(page);
-    await openMap(page, 'mapA.json');
-    // a map file from before maps kept their year: of 2026
+    await openMap(page, 'mapA.json', { year: null });
+    // a map file from before maps kept their year: of 2026, whatever year was chosen (2027)
     await expect(page.locator('.sbx-rules-btn')).toContainText('2026');
+    await expect(page.locator('.sbx-notice')).toContainText('2026');
     await page.locator('.sbx-rules-btn').click();
     await shot(page, 'rules-menu');
     await expect(page.locator('.sbx-rules-item.active a')).toHaveAttribute('href', /RCJRescueSimulation2026/);
-    const soon = page.locator('.sbx-rules-item.soon');
-    await expect(soon).toContainText('2027');
-    await expect(soon.locator('button')).toBeDisabled();
-    await soon.locator('button').click({ force: true });
-    await expect(page.locator('.sbx-dialog')).toHaveCount(0);
-    await page.keyboard.press('Escape');
-    await expect(page.locator('.sbx-rules-menu')).toHaveCount(0);
+    const y2027 = page.locator('.sbx-rules-item', { hasText: '2027' });
+    await expect(y2027.locator('a')).toHaveAttribute('href', /RCJRescueSimulation2027-draft/);
+    await expect(y2027.locator('.sbx-rules-draft')).toBeVisible();
+    await y2027.locator('button').click();
+    await expect(page.locator('.sbx-dialog')).toBeVisible();
+    await page.locator('.sbx-dialog-btn', { hasText: '切り替える' }).click();
+    await settle(page);
+    await expect(page.locator('.sbx-rules-btn')).toContainText('2027');
+    await page.keyboard.press('Control+z');
+    await settle(page);
     await expect(page.locator('.sbx-rules-btn')).toContainText('2026');
+});
+
+test('the work kept opens only in the rules of its year: chosen first, switched after by the rules menu', async ({ page }) => {
+    await boot(page);
+    await page.evaluate(() => {
+        const map = { name: 'Kept 2026', width: 2, length: 1, height: 1, cells: {}, roomTiles: [[], [], []], startTile: { x: 0, y: 0, z: 0 }, rules: 2026 };
+        localStorage.setItem('simBeta2026.autosave', JSON.stringify({ time: Date.now(), map }));
+    });
+    await page.reload();
+    await settle(page, 400);
+    const restore = page.locator('.sbx-restore');
+    await expect(restore).toContainText('2026');
+    await expect(restore).toBeDisabled();
+    await expect(page.locator('.sbx-restore-note')).toBeVisible();
+    await shot(page, 'restore-other-year');
+    await page.locator('.sbx-empty-rules-choices button', { hasText: '2026' }).click();
+    await expect(restore).toBeEnabled();
+    await expect(page.locator('.sbx-restore-note')).toHaveCount(0);
+    await restore.click();
+    await settle(page);
+    await expect(page.locator('.sbx-rules-btn')).toContainText('2026');
+});
+
+test('2027: contact tiles only beside the outer wall, smiley victims', async ({ page }) => {
+    await boot(page);
+    await page.locator('.sbx-empty-actions .btn-primary').click();
+    await settle(page, 400);
+    await tool(page, 'floor');
+    await page.locator('.sbx-choice', { hasText: 'コンタクトタイル' }).click();
+    // a tile inside: refused, and said why
+    await click(page, 30, 30);
+    await expect(page.locator('.sbx-status')).toContainText('外周の壁に接するタイルにだけ');
+    await click(page, 6, 30);
+    await tool(page, 'victim');
+    await click(page, 18, 1);
+    await hover(page, 66, 2);
+    await shot(page, 'contact-smiley-2027');
 });
 
 test('the β menu, with the link to the classic editor', async ({ page }) => {
@@ -331,6 +374,9 @@ test('unsaved changes: asked before a new map; the work kept is offered again', 
     await settle(page, 1000);
     await page.reload();
     await settle(page, 500);
+    // the work kept is of 2026: opened with 2026 chosen
+    await page.locator('.sbx-empty-rules-choices button', { hasText: '2026' }).click();
+    await settle(page);
     await shot(page, 'restore-offered');
     await page.locator('.sbx-restore').click();
     await settle(page, 400);

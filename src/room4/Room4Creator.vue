@@ -11,6 +11,7 @@ import type { Editor } from '../editor/editor';
 import CtRings from '../components/CtRings.vue';
 import LangMenu from '../components/LangMenu.vue';
 import RotationDial from '../components/RotationDial.vue';
+import VictimGlyph from '../components/VictimGlyph.vue';
 import { mountCanvas } from './canvas';
 import { scopeTools, type CreatorScope, type R4State, type StampType, type ShapeIcon } from './scope';
 import * as FaIcons from './faIcons';
@@ -92,6 +93,7 @@ const stampGroups = [
 
 const tools = [
     { id: 'select', icon: 'fas fa-mouse-pointer', key: 'S' },
+    { id: 'template', icon: 'fas fa-th-large', key: 'T' },
     { id: 'pen', icon: 'fas fa-pen', key: 'P' },
     { id: 'line', icon: 'fas fa-slash', key: 'L' },
     { id: 'curve', icon: 'fas fa-bezier-curve', key: 'B' },
@@ -101,15 +103,16 @@ const tools = [
     { id: 'ellipse', icon: 'far fa-dot-circle', key: 'O' },
     { id: 'polygon', icon: 'fas fa-draw-polygon', key: 'G' },
     { id: 'shape', icon: 'fas fa-icons', key: 'I' },
-    { id: 'stamp', icon: 'fas fa-user-injured', key: 'V' },
-    { id: 'floor', icon: 'fas fa-fill-drip', key: 'F' },
     { id: 'erase', icon: 'fas fa-eraser', key: 'E' },
-    { id: 'template', icon: 'fas fa-th-large', key: 'T' }
+    { id: 'floor', icon: 'fas fa-fill-drip', key: 'F' },
+    { id: 'stamp', icon: 'fas fa-user-injured', key: 'V' }
 ];
-// The rail groups the tools: select, lines, shapes, victims and floors, eraser, templates
+// The rail groups the tools in the order of the map editor's rail: looking (select), the room's
+// layout (templates, as the map editor's map and rooms), walls (lines, then shapes and the eraser)
+// and floors and victims
 const byId: Record<string, (typeof tools)[number]> = {};
 tools.forEach(function (x) { byId[x.id] = x; });
-const toolGroups = [['select'], ['pen', 'line', 'curve', 'arc'], ['rect', 'circle', 'ellipse', 'polygon', 'shape'], ['stamp', 'floor'], ['erase'], ['template']]
+const toolGroups = [['select'], ['template'], ['pen', 'line', 'curve', 'arc'], ['rect', 'circle', 'ellipse', 'polygon', 'shape', 'erase'], ['floor', 'stamp']]
     .map(function (g) { return g.map(function (id) { return byId[id]; }); });
 function toolKey(id: string) {
     return byId[id] ? byId[id].key : '';
@@ -310,7 +313,7 @@ onBeforeUnmount(function () {
               <div class="sim-r4-stamp-row" v-for="(row, ri) in g.rows" :key="ri" :class="g.kind === 'victim' ? 'cols-3' : 'cols-2'">
                 <span class="sim-r4-stamp-row-label" v-if="row.label">{{ t('admin.simMapEditor.room4Creator.rows.' + row.label) }}</span>
                 <button type="button" class="sim-r4-stamp" v-for="x in row.types" :key="x.idx" :class="['kind-' + x.kind, { active: r4.stamp === x.idx }]" @click="setStamp(x.idx)" :title="t(x.name)" :style="{ '--stamp-color': x.color }">
-                  <span class="sim-r4-stamp-badge">{{ x.symbol }}</span><span class="sim-r4-stamp-name">{{ t(x.name) }}</span>
+                  <span class="sim-r4-stamp-badge"><VictimGlyph :symbol="x.symbol" :face="x.face" :color="x.color" :hollow="x.kind === 'fake'"></VictimGlyph></span><span class="sim-r4-stamp-name">{{ t(x.name) }}</span>
                 </button>
               </div>
             </div>
@@ -326,7 +329,7 @@ onBeforeUnmount(function () {
                   <button type="button" :class="{ active: r4.randomRot }" @click="r4.randomRot = true"><i class="fas fa-dice mr-1"></i>{{ t('admin.simBeta.rotRandom') }}</button>
                 </div>
                 <p class="sbx-rot-note" v-if="r4.randomRot">{{ t('admin.simBeta.rotRandomNote') }}</p>
-                <RotationDial class="sbx-dial" v-if="!r4.randomRot" v-model="r4.rot" :symbol="stampType(r4.stamp)?.symbol" :mark="ctLetterOf(r4.stamp) ? stampType(r4.stamp)?.color : null"></RotationDial>
+                <RotationDial class="sbx-dial" v-if="!r4.randomRot" v-model="r4.rot" :symbol="stampType(r4.stamp)?.symbol" :face="stampType(r4.stamp)?.face" :mark="ctLetterOf(r4.stamp) ? stampType(r4.stamp)?.color : null"></RotationDial>
               </div>
             </div>
 
@@ -338,7 +341,7 @@ onBeforeUnmount(function () {
               </div>
               <div class="sbx-sel-head mt-2">
                 <span class="sbx-sel-symbol target" v-if="ctLetterOf(r4.sel.idx)" :style="targetStyle(r4.sel.code, r4.sel.idx)"></span>
-                <span class="sbx-sel-symbol" v-if="!ctLetterOf(r4.sel.idx)" :style="{ background: stampType(r4.sel.idx)?.color }">{{ stampType(r4.sel.idx)?.symbol }}</span>
+                <span class="sbx-sel-symbol" v-if="!ctLetterOf(r4.sel.idx)" :class="{ fake: stampType(r4.sel.idx)?.kind === 'fake' }" :style="{ '--victim-color': stampType(r4.sel.idx)?.color }"><VictimGlyph :symbol="stampType(r4.sel.idx)?.symbol" :face="stampType(r4.sel.idx)?.face" :color="stampType(r4.sel.idx)?.color" :hollow="stampType(r4.sel.idx)?.kind === 'fake'"></VictimGlyph></span>
                 <span>{{ stampType(r4.sel.idx) ? t(stampType(r4.sel.idx)!.name) : '' }}</span>
               </div>
               <div v-if="ctLetterOf(r4.sel.idx)">
@@ -351,7 +354,7 @@ onBeforeUnmount(function () {
                   <button type="button" :class="{ active: r4.sel.rot === null }" @click="setSelRandomRot(true)"><i class="fas fa-dice mr-1"></i>{{ t('admin.simBeta.rotRandom') }}</button>
                 </div>
                 <p class="sbx-rot-note" v-if="r4.sel.rot === null">{{ t('admin.simBeta.rotRandomNote') }}</p>
-                <RotationDial class="sbx-dial" v-if="r4.sel.rot !== null" :model-value="r4.sel.rot" @update:model-value="(v: number) => r4.sel!.rot = v" @change="setSelRot(r4.sel!.rot!)" :symbol="stampType(r4.sel.idx)?.symbol" :mark="ctLetterOf(r4.sel.idx) ? stampType(r4.sel.idx)?.color : null"></RotationDial>
+                <RotationDial class="sbx-dial" v-if="r4.sel.rot !== null" :model-value="r4.sel.rot" @update:model-value="(v: number) => r4.sel!.rot = v" @change="setSelRot(r4.sel!.rot!)" :symbol="stampType(r4.sel.idx)?.symbol" :face="stampType(r4.sel.idx)?.face" :mark="ctLetterOf(r4.sel.idx) ? stampType(r4.sel.idx)?.color : null"></RotationDial>
               </div>
               <button type="button" class="btn btn-sm btn-outline-danger btn-block mt-3" @click="removeSel()"><i class="fas fa-trash-alt mr-1"></i>{{ t('admin.simBeta.remove') }}</button>
             </div>
@@ -547,7 +550,7 @@ onBeforeUnmount(function () {
           <div class="sim-r4-status">
             <span class="sim-r4-summary-title"><i class="fas fa-user-injured"></i>{{ t('admin.simMapEditor.room4Creator.tokens', { count: r4.tokenCount }) }}</span>
             <span class="sim-r4-summary-chip" v-for="s in r4.summary" :key="s.idx" :class="stampType(s.idx) ? 'kind-' + stampType(s.idx)!.kind : 'kind-random'" :style="{ '--stamp-color': stampType(s.idx)?.color }">
-              <span class="sim-r4-stamp-badge">{{ stampType(s.idx) ? stampType(s.idx)!.symbol : '?' }}</span>× {{ s.count }}
+              <span class="sim-r4-stamp-badge"><VictimGlyph :symbol="stampType(s.idx) ? stampType(s.idx)!.symbol : '?'" :face="stampType(s.idx)?.face" :color="stampType(s.idx)?.color" :hollow="stampType(s.idx)?.kind === 'fake'"></VictimGlyph></span>× {{ s.count }}
             </span>
             <span class="sim-r4-summary-warn" v-if="r4.unreachCount" :title="t('admin.simMapEditor.room4Creator.unreachable', { count: r4.unreachCount })"><i class="fas fa-exclamation-circle"></i>{{ t('admin.simMapEditor.room4Creator.unreachableShort', { count: r4.unreachCount }) }}</span>
             <span class="sim-r4-summary-warn" v-if="r4.farCount" :title="t('admin.simMapEditor.room4Creator.farFromWall', { count: r4.farCount })"><i class="fas fa-exclamation-circle"></i>{{ t('admin.simMapEditor.room4Creator.farShort', { count: r4.farCount }) }}</span>

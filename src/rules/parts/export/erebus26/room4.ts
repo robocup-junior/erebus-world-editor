@@ -3,7 +3,7 @@
 // room4CorrectSize } for a map as the editor holds it, with room4Img (an Image of room4CanvasSave,
 // loaded) and canvasWidth / canvasHeight; they go to ./world's createWorld as its hooks.
 import earcut from 'earcut';
-import { calculateWallTokenRot } from './world';
+import { calculateWallTokenRot, EREBUS26, type Flavor } from './world';
 import * as F from '../../../../lib/field';
 import * as R4 from '../../../../lib/room4';
 import { cognitiveCodeToVictimLetter, randomCognitiveCode } from '../../tokens/cognitive';
@@ -66,7 +66,7 @@ function tokenTurn(prev: number[], next: number[], centre: number[], wall: numbe
     return angle;
 }
 
-function create(map: MapData) {
+function create(map: MapData, flavor: Flavor = EREBUS26) {
     function wallShapes() {
         return F.wallShapes(map);
     }
@@ -307,9 +307,9 @@ function createArea4Victims(startHumanId: number, startHazardId: number): [strin
         { type: "F",        weight: 1/11, category: "hazard" },
         { type: "C",        weight: 1/11, category: "hazard" },
         { type: "X",        weight: 1/11, category: "hazard" },
-        { type: "psi",      weight: 1/11, category: "fake"   },
-        { type: "phi",      weight: 1/11, category: "fake"   },
-        { type: "omega",    weight: 1/11, category: "fake"   },
+        { type: "stable",   weight: 1/11, category: "fake"   },
+        { type: "harmed",   weight: 1/11, category: "fake"   },
+        { type: "unharmed", weight: 1/11, category: "fake"   },
     ];
     function weightedRandomType() {
         let r = Math.random();
@@ -472,14 +472,14 @@ function createArea4Victims(startHumanId: number, startHazardId: number): [strin
                 }
                 `;
             startHazardId += 1;
-        } else { // fake: psi, phi, omega; turned at random like the real victims (rule 3.7.11)
+        } else { // fake: the model of its type of victim; turned at random like the real victims (rule 3.7.11)
             let fakeAngles = calculateWallTokenRot(angle, frontAngle);
             outputStrFake +=
             `Fake {
                     translation ` + vicX.toString() + ' 0 ' + vicY.toString() + `
                     rotation ${fakeAngles.x} ${fakeAngles.y} ${fakeAngles.z} ${fakeAngles.angle}
                     name "Fake` + startHumanId.toString() + `"
-                    type "` + chosen.type + `"
+                    type "` + flavor.fakeModel[chosen.type] + `"
                     scoreWorth 0
                 }
                 `;

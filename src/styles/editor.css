@@ -403,10 +403,10 @@
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
-    background: var(--sbx-accent);
+    background: var(--victim-color, var(--sbx-accent));
 }
 
-.sbx-sel-symbol.fake { background: #94a3b8; }
+.sbx-sel-symbol.fake { background: #fff; color: var(--victim-color, #94a3b8); box-shadow: inset 0 0 0 3px var(--victim-color, #94a3b8); }
 .sbx-sel-symbol.target { box-shadow: 0 0 0 2px #fff, 0 0 0 3px #e2e8f0; }
 
 /* ---- the map ---- */
@@ -1260,6 +1260,8 @@
 /* the last work kept in this browser: what it is under the button's label */
 .sbx-restore { display: flex; flex-direction: column; align-items: center; min-width: 0; }
 .sbx-restore-what { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0.8; }
+.sbx-restore:disabled { cursor: not-allowed; }
+.sbx-restore-note { display: flex; align-items: baseline; gap: 0.35rem; margin-top: 0.35rem; font-size: 0.72rem; color: #64748b; line-height: 1.5; text-align: left; }
 
 /* the most the map can score: its button in the top bar, and the card it opens */
 .sbx-score { position: relative; }
@@ -1380,16 +1382,18 @@
 }
 /* narrower still: the year alone, and the map's name gives way a little, so the bar keeps to its width */
 @media (max-width: 1024px) {
-    .sbx-rules-btn .fa-book, .sbx-rules-caret { display: none; }
+    .sbx-rules-btn .fa-book, .sbx-rules-caret, .sbx-rules-btn .sbx-rules-draft { display: none; }
     .sbx-name { min-width: 5.5rem; }
 }
 .sbx-rules-btn .fa-book { color: #2563eb; }
 .sbx-rules-caret { font-size: 0.7rem; opacity: 0.6; }
+/* as wide as its widest year (a draft's badge too), so the rule books' links line up on the right;
+   the lead wraps to that width and does not widen it */
 .sbx-rules-menu {
-    position: absolute; left: 0; top: calc(100% + 6px); z-index: 60; width: 19rem; padding: 0.4rem;
+    position: absolute; left: 0; top: calc(100% + 6px); z-index: 60; width: max-content; min-width: 19rem; padding: 0.4rem;
     border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
 }
-.sbx-rules-lead { margin: 0.2rem 0.4rem 0.4rem; font-size: 0.72rem; color: #64748b; line-height: 1.5; white-space: normal; }
+.sbx-rules-lead { width: 0; min-width: calc(100% - 0.8rem); margin: 0.2rem 0.4rem 0.4rem; font-size: 0.72rem; color: #64748b; line-height: 1.5; white-space: normal; }
 .sbx-rules-item { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; border-radius: 6px; }
 .sbx-rules-item:hover:not(.soon) { background: #f1f5f9; }
 .sbx-rules-item button {
@@ -1402,6 +1406,9 @@
 .sbx-rules-item a .fas { margin-right: 0.25rem; }
 .sbx-rules-item a:hover { color: #1d4ed8; }
 .sbx-rules-item.soon button { color: #94a3b8; cursor: not-allowed; }
+/* a year whose rules are a draft */
+.sbx-rules-draft { flex: none; padding: 0.02rem 0.4rem; border-radius: 999px; background: #fef3c7; color: #b45309; font-size: 0.66rem; font-weight: 600; white-space: nowrap; }
+.sbx-rules-btn .sbx-rules-draft { margin-left: 0.15rem; }
 .sbx-rules-soon { flex: none; margin-right: 0.5rem; padding: 0.05rem 0.45rem; border-radius: 999px; background: #fef3c7; color: #b45309; font-size: 0.68rem; font-weight: 600; white-space: nowrap; }
 
 /* the start screen: the year of the rules a new map is made with */
@@ -1418,4 +1425,14 @@
 .sbx-empty-rules-choices button.active .fa-check-circle { visibility: visible; }
 .sbx-empty-rules-choices button.soon { background: #f8fafc; color: #94a3b8; cursor: not-allowed; }
 .sbx-empty-rules-choices button.soon .sbx-rules-soon { margin: 0; }
+/* a draft year: its badge on the top right corner of the choice, so the choice keeps to one line */
+.sbx-empty-rules-choices button { position: relative; white-space: nowrap; }
+.sbx-empty-rules-choices .sbx-rules-draft { position: absolute; top: -0.6rem; right: -0.4rem; box-shadow: 0 0 0 2px #fff; }
 .sbx-empty-rules-note { display: block; margin-top: 0.35rem; font-size: 0.7rem; color: #94a3b8; line-height: 1.5; }
+
+/* a smiley victim's face in the panels: its square, as tall as the text; on a badge, the face and
+   its disc in one picture filling the badge (the badge's own disc left out) */
+.sbx-glyph-face { display: block; width: 1em; height: 1em; }
+.sbx-glyph-disc { display: block; width: 100%; height: 100%; }
+.sim-r4-stamp-badge:has(> .sbx-glyph-disc), .sbx-sel-symbol:has(> .sbx-glyph-disc) { padding: 0; background: none; box-shadow: none; }
+.sim-r4-stamp-badge:has(> .sbx-glyph-disc) { width: 20px; }

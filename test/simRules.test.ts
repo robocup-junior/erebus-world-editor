@@ -33,7 +33,6 @@ test('the registry: years oldest first, a map without a year is of the first, an
   assert.strictEqual(M.newMap(2, 2).rules, R.LATEST_YEAR, 'a new map is of the latest year');
   assert.throws(() => R.rulesOf(Object.assign(M.newMap(2, 2), { rules: 1999 })));
   assert.strictEqual(R.rulesFor(1999), null);
-  assert.ok(R.rulesFor(R.LESSON_YEAR), 'the year the lesson is written for is one the editor takes');
   // years on their way: newer than every year in, and not in yet
   for (const y of R.upcomingYears()) {
     assert.ok(y > R.LATEST_YEAR, `${y} is on its way, after the latest`);
@@ -41,15 +40,17 @@ test('the registry: years oldest first, a map without a year is of the first, an
   }
 });
 
-// the parameters {{rule_x}} the texts use
-const cited = (() => {
+// the parameters {{rule_x}} the texts of a year use: the texts all years have, and its own
+const cited = (year: number) => {
   const out = new Set<string>();
   const walk = (o: any) => Object.values(o).forEach((v) => typeof v === 'string'
     ? (v.match(/\{\{\s*rule_(\w+)\s*\}\}/g) || []).forEach((m) => out.add(m.replace(/[{}\s]|rule_/g, '')))
     : walk(v));
-  walk(lang('en'));
+  const { years, ...texts } = lang('en');
+  walk(texts);
+  walk((years || {})[year] || {});
   return out;
-})();
+};
 
 for (const year of R.years()) {
   const rules = R.rulesFor(year)!;
@@ -66,7 +67,7 @@ for (const year of R.years()) {
     assert.strictEqual(new Set(letters.map((k) => k.edge)).size, letters.length);
     assert.strictEqual(new Set(letters.map((k) => k.slot)).size, letters.length);
     assert.ok(kinds.every((k) => k.widthCm > 0 && k.symbol && k.nameKey));
-    for (const ref of cited) assert.ok(rules.refs[ref], `refs.${ref} (a text cites it)`);
+    for (const ref of cited(year)) assert.ok(rules.refs[ref], `refs.${ref} (a text cites it)`);
   });
 
   test(`${year}: floors and passages - each kind of floor its own flag, one checkpoint kind, a passage for each pair of rooms`, () => {

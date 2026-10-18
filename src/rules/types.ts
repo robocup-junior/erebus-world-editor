@@ -32,6 +32,7 @@ export interface FloorKind {
     color: string;              // how the map shows it
     hole: boolean;              // no floor there: the robot keeps off the tile
     checkpoint: boolean;        // a checkpoint (scores; wanted behind passages, see Passages)
+    outerOnly: boolean;         // only on a tile beside the field's outside (a side of it on the outer wall)
 }
 
 // The passage between two rooms: a tile in its colour (in the map file, the tile's colour)
@@ -49,9 +50,13 @@ export interface Passages {
 // A kind of victim (wall token)
 export interface TokenKind {
     id: string;                 // as the map keeps it ('H', 'S', 'U', 'CT')
-    family: 'letter' | 'target';    // a letter (its symbol; turned; can be fake) or a ring target
-                                    // (its ring code; its type from the code, or fake)
-    symbol: string;             // what the editor shows for it
+    family: 'letter' | 'target';    // a victim of a symbol - a letter, or a smiley face - (turned; can
+                                    // be fake) or a ring target (its ring code; its type from the
+                                    // code, or fake)
+    symbol: string;             // what the editor shows for it (a letter, or the type's letter for a face)
+    face?: string;              // drawn as this Font Awesome face (its name: face-smile) in place of the symbol
+    color?: string;             // a victim's colour on the map and in the panels, by its type (a fake:
+                                // drawn hollow in it)
     nameKey: string;            // its name (text key)
     widthCm: number;            // across, on its wall
     fakeable: boolean;          // can be a fake (3D letters)
@@ -66,7 +71,8 @@ export interface StampType {
     idx: number;
     kind: string;               // 'victim', 'fake', 'ct', 'fakect'
     symbol: string;
-    color: string;
+    face?: string;              // as TokenKind's
+    color: string;              // its colour: a victim's, real or fake (drawn hollow), that of its type
     name: string;
 }
 
@@ -128,6 +134,7 @@ export interface Exporter {
 
 export interface Ruleset {
     year: number;
+    draft: boolean;                     // rules not final yet (a draft rule book)
     book: string;                       // the rule book (its URL)
     geometry: Geometry;
     rooms: Record<number, RoomRules>;   // rooms 1-4

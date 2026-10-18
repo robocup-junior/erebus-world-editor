@@ -9,6 +9,7 @@ import { t } from './i18n';
 import * as Keys from './lib/keys';
 import type { AreaScore } from './rules/types';
 import RotationDial from './components/RotationDial.vue';
+import VictimGlyph from './components/VictimGlyph.vue';
 import CtRings from './components/CtRings.vue';
 import Modal from './components/Modal.vue';
 import BuildInfo from './components/BuildInfo.vue';
@@ -253,19 +254,19 @@ onMounted(function () {
               </div>
               <div class="sbx-sel-head">
                 <span class="sbx-sel-symbol target" v-if="E.isTarget(S.selected.victim.type)" :style="E.targetStyle(S.selected.victim.code)"></span>
-                <span class="sbx-sel-symbol" v-if="!E.isTarget(S.selected.victim.type)" :class="{ fake: S.selected.victim.fake }">{{ E.symbolOf(S.selected.victim.type) }}</span>
+                <span class="sbx-sel-symbol" v-if="!E.isTarget(S.selected.victim.type)" :class="{ fake: S.selected.victim.fake }" :style="{ '--victim-color': E.colorOf(S.selected.victim.type) || undefined }"><VictimGlyph :symbol="E.symbolOf(S.selected.victim.type)" :face="E.faceOf(S.selected.victim.type)" :color="E.colorOf(S.selected.victim.type)" :hollow="!!S.selected.victim.fake"></VictimGlyph></span>
                 <span v-if="E.isTarget(S.selected.victim.type)">{{ t(S.selected.letter === 'X' ? 'admin.simMapEditor.ctFake' : 'admin.simMapEditor.ct' + S.selected.letter) }}</span>
                 <span v-if="!E.isTarget(S.selected.victim.type) && S.selected.victim.fake">{{ t('admin.simBeta.fake') }}</span>
               </div>
               <div class="sbx-label" v-if="!E.isTarget(S.selected.victim.type)">{{ t('admin.simBeta.kind') }}</div>
               <div class="sbx-choices" v-if="!E.isTarget(S.selected.victim.type)">
-                <button class="sbx-choice letter" type="button" v-for="v in S.victimChoices.slice(0, 3)" :key="v.id" :class="{ active: S.selected.victim.type === v.id }" @click="E.changeSelected({ type: v.id })">{{ v.symbol }}</button>
+                <button class="sbx-choice letter" type="button" v-for="v in S.victimChoices.slice(0, 3)" :key="v.id" :class="{ active: S.selected.victim.type === v.id }" @click="E.changeSelected({ type: v.id })" :style="{ color: E.colorOf(v.id) || undefined }"><VictimGlyph :symbol="v.symbol" :face="v.face"></VictimGlyph></button>
               </div>
               <label class="sbx-check" v-if="!E.isTarget(S.selected.victim.type)">
                 <input type="checkbox" :checked="S.selected.victim.fake" @click="E.changeSelected({ fake: !S.selected.victim.fake })">{{ t('admin.simBeta.fake') }}</label>
               <div v-if="!E.isTarget(S.selected.victim.type)">
                 <div class="sbx-label">{{ t('admin.simBeta.rot') }}</div>
-                <RotationDial class="sbx-dial" :model-value="S.selected.rot" @update:model-value="(v: number) => S.selected!.rot = v" @change="E.changeSelected({ rot: S.selected!.rot })" :symbol="E.symbolOf(S.selected.victim.type)"></RotationDial>
+                <RotationDial class="sbx-dial" :model-value="S.selected.rot" @update:model-value="(v: number) => S.selected!.rot = v" @change="E.changeSelected({ rot: S.selected!.rot })" :symbol="E.symbolOf(S.selected.victim.type)" :face="E.faceOf(S.selected.victim.type)"></RotationDial>
               </div>
               <!-- where along its wall: dragged on the map, or here -->
               <div class="sbx-along" v-for="r in [E.selectedRange()]" :key="'along'">
@@ -293,7 +294,7 @@ onMounted(function () {
                   <div class="sim-r4-stamp-row cols-3" v-for="row in S.victimRows" :key="row.label">
                     <span class="sim-r4-stamp-row-label">{{ t('admin.simMapEditor.room4Creator.rows.' + row.label) }}</span>
                     <button class="sim-r4-stamp" type="button" v-for="v in row.types" :key="v.name" :class="['kind-' + v.kind, { active: S.ui.victim === v.id && !!S.ui.fake === v.fake }]" @click="E.pickVictim(v)" :style="{ '--stamp-color': v.color }" :title="t(v.name)">
-                      <span class="sim-r4-stamp-badge">{{ v.symbol }}</span><span class="sim-r4-stamp-name">{{ t(v.name) }}</span>
+                      <span class="sim-r4-stamp-badge"><VictimGlyph :symbol="v.symbol" :face="v.face" :color="v.color" :hollow="v.kind === 'fake'"></VictimGlyph></span><span class="sim-r4-stamp-name">{{ t(v.name) }}</span>
                     </button>
                   </div>
                 </div>
@@ -319,7 +320,7 @@ onMounted(function () {
                 </button>
               </div>
               <p class="sbx-rot-note" v-if="S.ui.randomRot">{{ t('admin.simBeta.rotRandomNote') }}</p>
-              <RotationDial class="sbx-dial" v-if="!S.ui.randomRot" v-model="S.ui.rot" :symbol="E.victimSymbol()"></RotationDial>
+              <RotationDial class="sbx-dial" v-if="!S.ui.randomRot" v-model="S.ui.rot" :symbol="E.victimSymbol()" :face="E.victimFace()"></RotationDial>
             </div>
           </div>
         </aside>
@@ -358,7 +359,7 @@ onMounted(function () {
                 <span class="sbx-empty-rules-label" id="sbxEmptyRules"><i class="fas fa-book"></i>{{ t('admin.simBeta.rules.pick') }}</span>
                 <div class="sbx-empty-rules-choices" role="radiogroup" aria-labelledby="sbxEmptyRules">
                   <button type="button" role="radio" v-for="y in S.ruleYears" :key="y.year" :aria-checked="S.ui.newYear === y.year" :class="{ active: S.ui.newYear === y.year }" @click="S.ui.newYear = y.year">
-                    <i class="fas fa-check-circle"></i>{{ t('admin.simBeta.rules.label', { year: y.year }) }}
+                    <i class="fas fa-check-circle"></i>{{ t('admin.simBeta.rules.label', { year: y.year }) }}<span class="sbx-rules-draft" v-if="y.draft">{{ t('admin.simBeta.rules.draft') }}</span>
                   </button>
                   <button type="button" role="radio" class="soon" v-for="y in S.upcomingYears" :key="y" aria-checked="false" disabled>
                     {{ t('admin.simBeta.rules.label', { year: y }) }}<span class="sbx-rules-soon">{{ t('admin.simBeta.rules.soon') }}</span>
@@ -372,10 +373,12 @@ onMounted(function () {
                   <i class="fas fa-folder-open mr-2"></i>{{ t('admin.simBeta.openJson') }}
                 </button>
               </div>
-              <button class="btn btn-outline-primary btn-block mt-2 sbx-restore" type="button" v-if="S.kept" @click="E.restoreKept()">
+              <!-- the work kept: opened only in the rules of its year (another year is switched to by the rules menu) -->
+              <button class="btn btn-outline-primary btn-block mt-2 sbx-restore" type="button" v-if="S.kept" :disabled="E.keptOtherYear()" @click="E.restoreKept()">
                 <span><i class="fas fa-history mr-2"></i>{{ t('admin.simBeta.restore') }}</span>
-                <small class="sbx-restore-what">{{ S.kept.name }} · {{ monthDayTime(S.kept.time) }}</small>
+                <small class="sbx-restore-what">{{ S.kept.name }} · {{ t('admin.simBeta.rules.label', { year: S.kept.year }) }} · {{ monthDayTime(S.kept.time) }}</small>
               </button>
+              <small class="sbx-restore-note" v-if="S.kept && E.keptOtherYear()"><i class="fas fa-info-circle"></i>{{ t('admin.simBeta.restoreOtherYear', { year: S.kept.year }) }}</small>
               <div class="sbx-empty-drop">{{ t('admin.simBeta.dropHere') }}</div>
               <button class="sbx-empty-tour" type="button" @click="E.openGuidePick()">
                 <i class="fas fa-graduation-cap"></i>

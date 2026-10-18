@@ -52,6 +52,7 @@ test('the tour of the screen, step by step', async ({ page }) => {
 
 test('the lesson: steps done for you', async ({ page }) => {
     await boot(page);
+    await page.locator('.sbx-empty-rules-choices button', { hasText: '2026' }).click();
     await page.locator('.sbx-empty-tour').click();
     await page.locator('.sbx-pick-option').nth(0).click();
     await settle(page, 500);
@@ -66,6 +67,30 @@ test('the lesson: steps done for you', async ({ page }) => {
     await page.locator('.sbx-tour-fold').click();
     await settle(page, 300);
     await shot(page, 'lesson-folded');
+});
+
+// the lesson is of the year of the rules chosen: in 2027's, the floors step puts a contact tile too,
+// and the victims are smiley faces
+test('the lesson in the 2027 rules: its floors and victims', async ({ page }) => {
+    await boot(page);
+    await page.locator('.sbx-empty-rules-choices button', { hasText: '2027' }).click();
+    await page.locator('.sbx-empty-tour').click();
+    await page.locator('.sbx-pick-option').nth(0).click();
+    await settle(page, 500);
+    const card = page.locator('.sbx-tour-card');
+    const shots: string[] = [];
+    for (let i = 0; i < 40 && shots.length < 4; i++) {
+        const text = await card.innerText();
+        const name = /コンタクトタイルを1つずつ/.test(text) ? 'lesson2027-floors' : /「負傷」（悲しい顔）/.test(text) ? 'lesson2027-victim' : null;
+        const doIt = page.locator('.sbx-tour-nav.auto');
+        if (name && !shots.includes(name)) { shots.push(name); await shot(page, name); }
+        if (await doIt.count()) { await doIt.click(); await settle(page, 450); }
+        if (name && !shots.includes(name + '-done')) { shots.push(name + '-done'); await shot(page, name + '-done'); }
+        await page.locator('.sbx-tour-nav.primary').click();
+        await settle(page, 450);
+    }
+    expect(shots).toEqual(['lesson2027-floors', 'lesson2027-floors-done', 'lesson2027-victim', 'lesson2027-victim-done']);
+    await expect(page.locator('.sbx-rules-btn')).toContainText('2027');
 });
 
 test('the room 4 guide opens the creator', async ({ page }) => {

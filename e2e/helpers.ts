@@ -65,7 +65,12 @@ export async function settle(page: Page, ms = 250): Promise<void> {
     await page.waitForTimeout(ms);
 }
 
-export async function openMap(page: Page, name: string): Promise<void> {
+// The sample maps are of the 2026 rules: opened from the start screen with 2026 chosen (year), so
+// they open in the year chosen; year null leaves the year chosen as it is
+export async function openMap(page: Page, name: string, opts: { year?: number | null } = {}): Promise<void> {
+    const year = opts.year === undefined ? 2026 : opts.year;
+    const choice = page.locator('.sbx-empty-rules-choices button', { hasText: String(year) });
+    if (year && await choice.count()) await choice.click();
     await page.locator('#simBetaFile').setInputFiles(path.join(FIXTURES, name));
     await expect(page.locator('.sbx-name-input')).toBeVisible();
     await settle(page, 400);

@@ -7,22 +7,18 @@
 import type { MapData } from '../lib/types';
 import type { Ruleset } from './types';
 import { rules as y2026 } from './y2026';
+import { rules as y2027 } from './y2027';
 
 // oldest first
-const YEARS: Ruleset[] = [y2026];
+const YEARS: Ruleset[] = [y2026, y2027];
 
 // Years whose rules are on their way: the rules menu lists them, not to be picked yet. A year moves
 // from here to YEARS once it is in.
-const UPCOMING = [2027];
+const UPCOMING: number[] = [];
 
 // A map file without a year is of the first year the editor made (2026)
 export const FIRST_YEAR = 2026;
 export const LATEST_YEAR = YEARS[YEARS.length - 1].year;
-
-// The year the guide's lesson (lib/tour) is written for: its steps place that year's walls, floors
-// and victims, so its sample map is of that year whatever year is the latest. When a lesson is
-// written for a new year, change it with the lesson's steps and texts.
-export const LESSON_YEAR = 2026;
 
 export function years(): number[] {
     return YEARS.map(function (r) { return r.year; });

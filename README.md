@@ -78,22 +78,22 @@ e2e/                end-to-end tests (Playwright): screenshots, and the files th
 
 ### Rules by year
 
-One editor, one build, every year's rules in it: a map file keeps its year (`"rules": 2026`; a file without one is of 2026), a new map is of the latest year, and the editor does what that year's rules say. The year's rules are a manifest (`src/rules/y2026.ts`) that picks a version of each part:
+One editor, one build, every year's rules in it - 2026, and 2027 (draft) - : a map file keeps its year (`"rules": 2026`; a file without one is of 2026) and opens in it, a new map is of the year chosen on the start screen (the latest at first), and the editor does what that year's rules say. A map goes to another year's rules only by the rules menu in the top bar (asked first; undo takes it back); the work kept in the browser opens only with its year chosen. The year's rules are a manifest (`src/rules/y2026.ts`, `y2027.ts`) that picks a version of each part:
 
 | Part | What it holds |
 | --- | --- |
 | `geometry` | tile, wall thickness, the robot's size, how near it comes to identify a token |
 | `rooms` | for each room, the kinds of wall it takes (whole or half tile edges, walls inside a tile, curves, a picture) and where its victims go |
-| `floors` | the kinds of floor (each: its flag in the map file, its icon and colour, whether it is a hole - no floor, the robot keeps off it - or a checkpoint) |
+| `floors` | the kinds of floor (each: its flag in the map file, its icon and colour, whether it is a hole - no floor, the robot keeps off it -, a checkpoint, or only for a tile beside the outer wall - 2027's contact tiles) |
 | `passages` | the colour of the passage between each pair of rooms, and whether a checkpoint is wanted right behind each passage into room 4 |
-| `tokens` | the kinds of victim (each: family - a letter or a ring target -, symbol, width, whether it can be fake, its codes in the map file), the room between them, whether they may go in passages, the ring target types, the room 4 stamps |
+| `tokens` | the kinds of victim (each: family - a victim of a symbol, a letter or a smiley face, or a ring target -, symbol, face, width, whether it can be fake, its codes in the map file), the room between them, whether they may go in passages, the ring target types, the room 4 stamps |
 | `scoring` | the most a map can score |
-| `export` | the world file, for the Erebus version the year is played on (`parts/export/erebus26/`: the tiles, walls and tokens, and a custom room 4 read from its picture) |
+| `export` | the world file, for the Erebus version the year is played on (`parts/export/erebus26/`: the tiles, walls and tokens, and a custom room 4 read from its picture; `parts/export/erebus27/`: the same with what Erebus 27 adds - contact tiles, the smiley fakes' models) |
 | `refs` | the rule numbers the texts cite (`{{rule_reach}}` in a text is the year's `refs.reach`) |
 
 The rest of the editor asks `rulesOf(map)` (`src/rules/registry.ts`) and never names or compares a year; `test/simRules.test.ts` fails if it does, checks each year is complete, and makes a world and a score with each.
 
-- **A new year**: copy the latest manifest to `src/rules/yYYYY.ts` and add it to `YEARS` in the registry. For each part the year changes, copy the part's latest version to the next one (`parts/tokens/v2.ts`) and change the copy; the parts it does not change stay shared. A text the year words otherwise goes under `"years": { "YYYY": { ... } }` in each language file, at the key's path. Give the year sample maps and expected world files in its tests. A test of one year's rules makes its maps of that year (`M.newMap(w, l, 2026)`; a map without a year is of the latest), so it keeps testing that year once a newer one is added. The guide's lesson builds its sample map on `LESSON_YEAR` (registry), the year its steps are written for.
+- **A new year**: copy the latest manifest to `src/rules/yYYYY.ts` and add it to `YEARS` in the registry. For each part the year changes, copy the part's latest version to the next one (`parts/tokens/v2.ts`) and change the copy; the parts it does not change stay shared. A text the year words otherwise goes under `"years": { "YYYY": { ... } }` in each language file, at the key's path. Give the year sample maps and expected world files in its tests. A test of one year's rules makes its maps of that year (`M.newMap(w, l, 2026)`; a map without a year is of the latest), so it keeps testing that year once a newer one is added. The guide's lesson builds its sample map in the year of the rules chosen (the map open, else the start screen's), its steps taking that year's floors and its texts that year's words; `test/simLesson.test.ts` runs it in every year.
 - **A change to a year's rules** (a correction to its rule book): change that year's part version, or give the year a new version if other years share it.
 - **Dropping a year**: take it out of `YEARS` and delete its manifest; then delete the parts and `"years"` texts nothing uses any more.
 

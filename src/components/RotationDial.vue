@@ -5,9 +5,11 @@
 import { ref, watch } from 'vue';
 import { t } from '../i18n';
 import * as Icons from '../lib/icons';
+import VictimGlyph from './VictimGlyph.vue';
 
-// mark: a cognitive target's type colour (its mark is shown instead of a symbol)
-const props = defineProps<{ modelValue: number | null | undefined; symbol?: string | null; image?: string | null; mark?: string | null; disabled?: boolean }>();
+// mark: a cognitive target's type colour (its mark is shown instead of a symbol); face: a smiley
+// victim's face (shown instead of its symbol)
+const props = defineProps<{ modelValue: number | null | undefined; symbol?: string | null; face?: string | null; image?: string | null; mark?: string | null; disabled?: boolean }>();
 const emit = defineEmits<{ (e: 'update:modelValue', v: number): void; (e: 'change', v: number): void }>();
 
 function normalize(value: unknown) {
@@ -101,7 +103,7 @@ function keyDown(event: KeyboardEvent) {
         <div class="sim-rot-card" :class="{ 'has-image': image }" :style="{ transform: 'translate(-50%, -50%) rotate(' + angle + 'deg)' }">
           <img class="sim-rot-image" v-if="image" :src="image" :alt="symbol || ''">
           <span class="sim-rot-mark" v-if="!image && mark" :style="{ background: Icons.markBackground(mark) }"></span>
-          <span class="sim-rot-symbol" v-if="!image && !mark" :class="{ placeholder: !symbol }">{{ symbol || 'Φ' }}</span>
+          <span class="sim-rot-symbol" v-if="!image && !mark" :class="{ placeholder: !symbol && !face }"><VictimGlyph :symbol="symbol || 'Φ'" :face="face"></VictimGlyph></span>
         </div>
       </div>
       <div class="sim-rot-controls">

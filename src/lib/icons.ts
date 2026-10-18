@@ -1,10 +1,13 @@
 // Victim and cognitive target icons, shared by the Simulation editors (the new editor's map and the
 // custom room 4 creator), so both show the same marks.
-//   letter victims (Φ Ψ Ω): a filled disc with the letter (blue; fakes grey)
+//   letter victims (Φ Ψ Ω): a disc in the colour of the victim's type with the letter - filled, or
+//   hollow for a fake; smiley victims the same with the face (lib/faces)
 //   cognitive targets: a target - its five rings in the colours of its code (outside in), with an
 //   outer rim in the colour of its type; a target without a code (a room 4 stamp of a type) shows
 //   rings of the type colour. Small (the map, the panels' buttons) it is the type's mark: rings of
 //   the type colour and white, as the buttons of the victim panels show it
+
+import { FACES, FACE_BOX } from './faces';
 
 const RING: Record<string, string> = { K: '#111827', R: '#dc2626', Y: '#facc15', G: '#16a34a', B: '#2563eb' };
 // the type colours: each its own hue, after what it is - flammable gas the red of fire, poison
@@ -34,20 +37,36 @@ function centredText(ctx: CanvasRenderingContext2D, text: string, x: number, y: 
     ctx.fillText(text, x, y);
 }
 
-function victim(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, symbol: string, color: string, outline?: number) {
+function victim(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, symbol: string, color: string, outline?: number, face?: string, hollow?: boolean) {
     ctx.save();
     ctx.beginPath();
     ctx.arc(x, y, r, 0, 2 * Math.PI);
-    ctx.fillStyle = color || VICTIM;
+    ctx.fillStyle = hollow ? '#fff' : color || VICTIM;
     ctx.fill();
     if (outline) {
         ctx.lineWidth = outline;
         ctx.strokeStyle = '#fff';
         ctx.stroke();
     }
-    ctx.fillStyle = '#fff';
-    ctx.font = '700 ' + (r * 1.35) + 'px system-ui, sans-serif';
-    centredText(ctx, symbol, x, y);
+    // a fake: a ring in the colour, inside the outline
+    if (hollow) {
+        ctx.beginPath();
+        ctx.arc(x, y, r * 0.87, 0, 2 * Math.PI);
+        ctx.lineWidth = r * 0.2;
+        ctx.strokeStyle = color || FAKE;
+        ctx.stroke();
+    }
+    ctx.fillStyle = hollow ? color || FAKE : '#fff';
+    if (face && FACES[face]) {
+        // the face's square centred on (x, y)
+        const s = r * 1.3;
+        ctx.translate(x - s / 2, y - s / 2);
+        ctx.scale(s / FACE_BOX, s / FACE_BOX);
+        ctx.fill(new Path2D(FACES[face]));
+    } else {
+        ctx.font = '700 ' + (r * 1.35) + 'px system-ui, sans-serif';
+        centredText(ctx, symbol, x, y);
+    }
     ctx.restore();
 }
 
