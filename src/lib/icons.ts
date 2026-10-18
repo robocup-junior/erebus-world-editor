@@ -64,8 +64,13 @@ function victim(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, 
         ctx.scale(s / FACE_BOX, s / FACE_BOX);
         ctx.fill(new Path2D(FACES[face]));
     } else {
-        ctx.font = '700 ' + (r * 1.35) + 'px system-ui, sans-serif';
-        centredText(ctx, symbol, x, y);
+        // measured and drawn at a large size, then scaled: the map draws its victims a few units
+        // across, where the font's metrics come rounded and the letter would sit off the middle
+        const k = r * 1.35 / 100;
+        ctx.translate(x, y);
+        ctx.scale(k, k);
+        ctx.font = '700 100px system-ui, sans-serif';
+        centredText(ctx, symbol, 0, 0);
     }
     ctx.restore();
 }
