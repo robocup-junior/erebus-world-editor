@@ -1025,7 +1025,8 @@
                         "floor_clear": "Click to take the floor off (hole, swamp, checkpoint, contact tile)"
                     },
                     "problems": {
-                        "contactInside": "Contact tiles not beside the outer wall ({{count}}). A contact tile goes only on a tile beside the outside (rule {{rule_contactTile}})"
+                        "contactInside": "Contact tiles not beside the outer wall ({{count}}). A contact tile goes only on a tile beside the outside (rule {{rule_contactTile}})",
+                        "presetNotSupported": "Room 4 presets are not available in this editor (switch to custom)"
                     },
                     "help": {
                         "eraser": "Click or drag over walls, curves and victims to remove them. Away from walls it takes a tile's floor off (hole, swamp, checkpoint, contact tile); a click takes the start off. The outer walls stay."
@@ -1057,7 +1058,8 @@
                         "erase": {
                             "body": "The eraser removes walls, curves and victims with a click or a drag. Away from walls it takes a tile's floor off (hole, swamp, checkpoint, contact tile); the start goes on a click only. The outer walls stay.\nIf you rub out the wrong thing, undo (Ctrl+Z, or ↶ in the top bar) brings it back; redo (Ctrl+Shift+Z, or ↷) goes forward again."
                         }
-                    }
+                    },
+                    "betaLead": "Erebus World Editor (beta). Maps of the 2027 rules are made in this editor only (there is no classic editor for them)."
                 },
                 "simMapEditor": {
                     "room4Creator": {

@@ -64,7 +64,8 @@ onMounted(function () {
           <div class="sbx-beta-back" v-if="S.ui.betaMenu" @click="S.ui.betaMenu = false"></div>
           <div class="sbx-beta-menu" v-if="S.ui.betaMenu" role="menu">
             <p class="sbx-beta-menu-lead">{{ t('admin.simBeta.betaLead') }}</p>
-            <a class="sbx-beta-menu-item" href="https://osaka.rcj.cloud/service/editor/simulation/2026/classic" target="_blank" rel="noopener" role="menuitem">
+            <!-- the classic editor, for a year that has one -->
+            <a class="sbx-beta-menu-item" v-if="S.classic" :href="S.classic" target="_blank" rel="noopener" role="menuitem">
               <i class="fas fa-external-link-alt fa-fw"></i>
               <span><strong>{{ t('admin.simBeta.backToClassic') }}</strong><small>{{ t('admin.simBeta.backToClassicNote') }}</small></span>
             </a>

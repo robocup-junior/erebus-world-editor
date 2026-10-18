@@ -95,8 +95,14 @@ test('2027: contact tiles only beside the outer wall, smiley victims', async ({ 
     await shot(page, 'contact-smiley-2027');
 });
 
-test('the β menu, with the link to the classic editor', async ({ page }) => {
+test('the β menu: the link to the classic editor of 2026; 2027 has none', async ({ page }) => {
     await boot(page);
+    await page.locator('.sbx-beta-btn').click();
+    await expect(page.locator('.sbx-beta-menu')).toBeVisible();
+    await expect(page.locator('.sbx-beta-menu-item')).toHaveCount(0);
+    await shot(page, 'beta-menu-2027');
+    await page.locator('.sbx-beta-back').click();
+    await page.locator('.sbx-empty-rules-choices button', { hasText: '2026' }).click();
     await page.locator('.sbx-beta-btn').click();
     await shot(page, 'beta-menu');
     const link = page.locator('.sbx-beta-menu-item');

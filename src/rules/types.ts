@@ -136,6 +136,7 @@ export interface Ruleset {
     year: number;
     draft: boolean;                     // rules not final yet (a draft rule book)
     book: string;                       // the rule book (its URL)
+    classic: string;                    // the classic editor of the year (its URL; '' when it has none)
     geometry: Geometry;
     rooms: Record<number, RoomRules>;   // rooms 1-4
     floors: FloorKind[];

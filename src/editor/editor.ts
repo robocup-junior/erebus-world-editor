@@ -153,6 +153,8 @@ export function createEditor() {
         // the rules menu: the year of the map open, the years the editor takes (with their rule
         // books) and those on their way
         ruleYear: LATEST_YEAR,
+        // the classic editor of the year, if it has one (the β menu links to it)
+        classic: rulesFor(LATEST_YEAR)!.classic,
         ruleYears: years().map(function (y) { return { year: y, book: rulesFor(y)!.book, draft: rulesFor(y)!.draft }; }),
         upcomingYears: upcomingYears(),
         victimRows: firstPanel.victimRows,
@@ -564,6 +566,7 @@ export function createEditor() {
         const r = rules();
         setRuleTexts(r.year, r.refs);
         S.ruleYear = r.year;
+        S.classic = r.classic;
         if (r.year === panelYear) return;
         panelYear = r.year;
         Object.assign(S, victimPanel(r));

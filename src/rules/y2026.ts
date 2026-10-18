@@ -12,6 +12,7 @@ export const rules: Ruleset = {
     year: 2026,
     draft: false,
     book: 'https://junior.robocup.org/wp-content/uploads/2026/02/RCJRescueSimulation2026-final.pdf',
+    classic: 'https://osaka.rcj.cloud/service/editor/simulation/2026/classic',
     geometry: geometry,
     rooms: rooms,
     floors: floors,

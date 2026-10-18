@@ -929,6 +929,8 @@
     font-weight: 400;
 }
 .sbx-beta-menu-lead { margin: 0 0 0.55rem; font-size: 0.8rem; line-height: 1.5; color: #475569; white-space: normal; }
+/* alone (a year with no classic editor to link to) */
+.sbx-beta-menu-lead:last-child { margin-bottom: 0; }
 .sbx-beta-menu-item { display: flex; align-items: flex-start; gap: 0.55rem; padding: 0.5rem 0.6rem; border-radius: 9px; color: #1e293b; text-decoration: none; }
 .sbx-beta-menu-item:hover { background: #f1f5f9; color: #1e293b; text-decoration: none; }
 .sbx-beta-menu-item .fa-fw { margin-top: 0.2rem; color: #64748b; }
