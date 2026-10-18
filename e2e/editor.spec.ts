@@ -23,6 +23,24 @@ test('empty screen (en), then the language switched', async ({ page }) => {
     expect(await page.evaluate(() => document.documentElement.lang)).toBe('ja');
 });
 
+test('the rules menu: the map\'s year, its rule book, and 2027 on its way, not to be picked yet', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    // a map file from before maps kept their year: of 2026
+    await expect(page.locator('.sbx-rules-btn')).toContainText('2026');
+    await page.locator('.sbx-rules-btn').click();
+    await shot(page, 'rules-menu');
+    await expect(page.locator('.sbx-rules-item.active a')).toHaveAttribute('href', /RCJRescueSimulation2026/);
+    const soon = page.locator('.sbx-rules-item.soon');
+    await expect(soon).toContainText('2027');
+    await expect(soon.locator('button')).toBeDisabled();
+    await soon.locator('button').click({ force: true });
+    await expect(page.locator('.sbx-dialog')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.sbx-rules-menu')).toHaveCount(0);
+    await expect(page.locator('.sbx-rules-btn')).toContainText('2026');
+});
+
 test('the β menu, with the link to the classic editor', async ({ page }) => {
     await boot(page);
     await page.locator('.sbx-beta-btn').click();
@@ -215,7 +233,8 @@ test('select: a region copied, pasted, moved and cleared', async ({ page }) => {
     await drag(page, [[70, 58], [94, 58]], { alt: true });
     await shot(page, 'region-pasted');
     await page.keyboard.press('Delete');
-    await settle(page);
+    // the notices of the paste and the move gone (they stay 4 s), so the shot is the same at any pace
+    await settle(page, 4200);
     await shot(page, 'region-cleared');
     const saved = await download(page, () => page.locator('.sbx-file button').nth(2).click());
     keep('region.json', saved.text);

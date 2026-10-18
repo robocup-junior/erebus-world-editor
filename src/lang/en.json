@@ -143,7 +143,8 @@
                 "victim_moveSlot": "Click to place \"{{name}}\" here (the victim on this face moves here)",
                 "victim_moving": "{{cm}} cm along its wall (it stops short of the wall's end and other victims)",
                 "victim_moved": "Moved to {{cm}} cm along its wall (undo: Ctrl+Z)",
-                "victim_noRoom": "No room for a victim here (too near the end of the wall or another victim)"
+                "victim_noRoom": "No room for a victim here (too near the end of the wall or another victim)",
+                "rulesSwitched": "Switched to the {{year}} rules (undo: Ctrl+Z)"
             },
             "drawRoom4": "Draw room 4",
             "drawRoom4Note": "Double-clicking the room 4 area opens it too",
@@ -222,6 +223,16 @@
             "tourStart": "Guide (lesson, screen tour, making room 4)",
             "tourShort": "Guide",
             "listSep": ", ",
+            "rules": {
+                "title": "The rules of this map",
+                "label": "{{year}} rules",
+                "lead": "The rules this map follows: the checks, the score and the world it exports go by them.",
+                "book": "Rule book",
+                "soon": "Coming soon",
+                "switchTitle": "Switch to the {{year}} rules?",
+                "switchLead": "This map goes from the {{from}} rules to the {{to}} rules. Walls and victims that do not fit the new rules are pointed out in the checks (undo: Ctrl+Z).",
+                "switch": "Switch"
+            },
             "build": {
                 "title": "About this build",
                 "commit": "Commit",

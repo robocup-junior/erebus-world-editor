@@ -128,6 +128,7 @@ export interface Exporter {
 
 export interface Ruleset {
     year: number;
+    book: string;                       // the rule book (its URL)
     geometry: Geometry;
     rooms: Record<number, RoomRules>;   // rooms 1-4
     floors: FloorKind[];

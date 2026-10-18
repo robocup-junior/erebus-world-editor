@@ -34,6 +34,11 @@ test('the registry: years oldest first, a map without a year is of the first, an
   assert.throws(() => R.rulesOf(Object.assign(M.newMap(2, 2), { rules: 1999 })));
   assert.strictEqual(R.rulesFor(1999), null);
   assert.ok(R.rulesFor(R.LESSON_YEAR), 'the year the lesson is written for is one the editor takes');
+  // years on their way: newer than every year in, and not in yet
+  for (const y of R.upcomingYears()) {
+    assert.ok(y > R.LATEST_YEAR, `${y} is on its way, after the latest`);
+    assert.strictEqual(R.rulesFor(y), null);
+  }
 });
 
 // the parameters {{rule_x}} the texts use
@@ -51,6 +56,7 @@ for (const year of R.years()) {
 
   test(`${year}: complete - rooms 1-4, a sound list of victims, every rule number the texts cite`, () => {
     for (const room of [1, 2, 3, 4]) assert.ok(rules.rooms[room], `room ${room}`);
+    assert.ok(/^https:\/\//.test(rules.book), 'its rule book');
     const kinds = rules.tokens.kinds;
     assert.ok(kinds.length);
     assert.strictEqual(new Set(kinds.map((k) => k.id)).size, kinds.length, 'kinds have their own ids');

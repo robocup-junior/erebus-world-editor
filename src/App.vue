@@ -13,6 +13,7 @@ import CtRings from './components/CtRings.vue';
 import Modal from './components/Modal.vue';
 import BuildInfo from './components/BuildInfo.vue';
 import LangMenu from './components/LangMenu.vue';
+import RulesMenu from './components/RulesMenu.vue';
 import Room4Creator from './room4/Room4Creator.vue';
 
 const E = createEditor();
@@ -73,6 +74,7 @@ onMounted(function () {
           <input class="sbx-name-input" v-if="S.map" type="text" :value="S.map.name" @input="rename" :placeholder="t('admin.simMapEditor.name')" :aria-label="t('admin.simMapEditor.name')">
           <span class="sbx-name-empty" v-if="!S.map">{{ t('admin.simBeta.noMap') }}</span>
         </div>
+        <RulesMenu v-if="S.map" :year="S.ruleYear" :years="S.ruleYears" :upcoming="S.upcomingYears" @pick="E.changeRules"></RulesMenu>
         <div class="sbx-group sbx-file">
           <button class="sbx-btn" type="button" @click="E.newMap()" :title="t('admin.simBeta.new')">
             <i class="fas fa-file"></i><span class="sbx-btn-label">{{ t('admin.simBeta.newShort') }}</span>

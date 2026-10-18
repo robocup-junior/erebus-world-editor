@@ -15,7 +15,7 @@ import * as View from '../lib/view';
 import * as T from '../lib/tour';
 import * as Keys from '../lib/keys';
 import { fixed } from './format';
-import { rulesOf, rulesFor, years, LATEST_YEAR, LESSON_YEAR } from '../rules/registry';
+import { rulesOf, rulesFor, years, upcomingYears, LATEST_YEAR, LESSON_YEAR } from '../rules/registry';
 import type { Ruleset, MaxScore, StampType, Tokens, FloorKind } from '../rules/types';
 import * as OpenCV from '../lib/opencv';
 import type { MapData, Room4Token } from '../lib/types';
@@ -147,6 +147,11 @@ export function createEditor() {
             { id: 'delRow', icon: 'fa-minus' }, { id: 'delCol', icon: 'fa-minus fa-rotate-90' }
         ],
         floorChoices: floorPanel(rulesFor(LATEST_YEAR)!),
+        // the rules menu: the year of the map open, the years the editor takes (with their rule
+        // books) and those on their way
+        ruleYear: LATEST_YEAR,
+        ruleYears: years().map(function (y) { return { year: y, book: rulesFor(y)!.book }; }),
+        upcomingYears: upcomingYears(),
         victimRows: firstPanel.victimRows,
         ctStamps: firstPanel.ctStamps,
         victimChoices: firstPanel.victimChoices,
@@ -540,6 +545,7 @@ export function createEditor() {
     function followRules() {
         const r = rules();
         setRuleTexts(r.year, r.refs);
+        S.ruleYear = r.year;
         if (r.year === panelYear) return;
         panelYear = r.year;
         Object.assign(S, victimPanel(r));
@@ -2063,6 +2069,26 @@ export function createEditor() {
     // still, the keys go through the steps, there are no tasks
     function tourLook() { return !!S.tour && (S.tour.kind === 'tour' || S.tour.kind === 'room4tour'); }
 
+    // The map switched to the rules of another year (the rules menu): asked first; what does not
+    // fit the new rules is pointed out by the checks, and undo takes the map back to its year
+    function changeRules(year: number) {
+        if (!map || !rulesFor(year) || year === rulesOf(map).year) return;
+        const from = rulesOf(map).year;
+        openDialog({
+            kind: 'warn', title: t('admin.simBeta.rules.switchTitle', { year: year }),
+            message: t('admin.simBeta.rules.switchLead', { from: from, to: year }),
+            actions: [{ label: t('admin.simBeta.cancel'), value: null, style: '' }, { label: t('admin.simBeta.rules.switch'), value: 'switch', style: 'primary', icon: 'fa-book' }]
+        }).then(function (v) {
+            if (v !== 'switch' || !map) return;
+            begin();
+            map.rules = year;
+            borders = M.syncBorderWalls(map, borders);
+            commit();
+            notify('rulesSwitched', { year: year }, 'ok');
+            digest();
+        });
+    }
+
     // a blank start (the lesson's: of the year the lesson is written for; else of the latest year)
     function newBlank(year?: number) {
         const m = M.newMap(8, 6);
@@ -2468,7 +2494,7 @@ export function createEditor() {
         canvasDblClick: canvasDblClick,
         room4Gone: room4Gone,
         // read while drawing the page
-        ctLetter: ctLetter, isTarget: isTarget, symbolOf: symbolOf, pickerRings: pickerRings, ringColor: ringColor, ctSum: ctSum, victimSymbol: victimSymbol,
+        changeRules: act(changeRules), ctLetter: ctLetter, isTarget: isTarget, symbolOf: symbolOf, pickerRings: pickerRings, ringColor: ringColor, ctSum: ctSum, victimSymbol: victimSymbol,
         targetStyle: targetStyle, toolKey: function (id: string) { return (byId(id) || {} as Tool).key; },
         linearNoStart: linearNoStart, linearUnreached: linearUnreached, room4State: room4State, canFixAll: canFixAll,
         regionSize: regionSize, toolHint: toolHint, room4Ready: room4Ready, tourLook: tourLook, tourStep: tourStep,

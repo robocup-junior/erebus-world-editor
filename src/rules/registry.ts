@@ -11,6 +11,10 @@ import { rules as y2026 } from './y2026';
 // oldest first
 const YEARS: Ruleset[] = [y2026];
 
+// Years whose rules are on their way: the rules menu lists them, not to be picked yet. A year moves
+// from here to YEARS once it is in.
+const UPCOMING = [2027];
+
 // A map file without a year is of the first year the editor made (2026)
 export const FIRST_YEAR = 2026;
 export const LATEST_YEAR = YEARS[YEARS.length - 1].year;
@@ -22,6 +26,10 @@ export const LESSON_YEAR = 2026;
 
 export function years(): number[] {
     return YEARS.map(function (r) { return r.year; });
+}
+
+export function upcomingYears(): number[] {
+    return UPCOMING.slice();
 }
 
 export function rulesFor(year: number): Ruleset | null {

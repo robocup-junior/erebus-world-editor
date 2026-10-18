@@ -1366,3 +1366,40 @@
 .sbx-lang-item.active { color: #1d4ed8; font-weight: 600; }
 .sbx-lang-item .fa-check { font-size: 0.7rem; }
 .sbx-lang-caret { font-size: 0.65rem; opacity: 0.6; }
+
+/* the rules of the map open (components/RulesMenu.vue): its year in the top bar, the years in a menu below */
+.sbx-rules { position: relative; display: inline-flex; flex: none; }
+.sbx-rules-btn { gap: 0.35rem; }
+/* the year stays on the button however narrow the bar (the other labels go) */
+.sbx-rules-year { font-size: 0.8rem; font-weight: 600; color: #334155; white-space: nowrap; }
+/* narrower: the year alone (the whole label is in the button's title) */
+.sbx-rules-year.short { display: none; }
+@media (max-width: 1280px) {
+    .sbx-rules-year { display: none; }
+    .sbx-rules-year.short { display: inline; }
+}
+/* narrower still: the year alone, and the map's name gives way a little, so the bar keeps to its width */
+@media (max-width: 1024px) {
+    .sbx-rules-btn .fa-book, .sbx-rules-caret { display: none; }
+    .sbx-name { min-width: 5.5rem; }
+}
+.sbx-rules-btn .fa-book { color: #2563eb; }
+.sbx-rules-caret { font-size: 0.7rem; opacity: 0.6; }
+.sbx-rules-menu {
+    position: absolute; left: 0; top: calc(100% + 6px); z-index: 60; width: 19rem; padding: 0.4rem;
+    border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+}
+.sbx-rules-lead { margin: 0.2rem 0.4rem 0.4rem; font-size: 0.72rem; color: #64748b; line-height: 1.5; white-space: normal; }
+.sbx-rules-item { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; border-radius: 6px; }
+.sbx-rules-item:hover:not(.soon) { background: #f1f5f9; }
+.sbx-rules-item button {
+    display: flex; align-items: center; gap: 0.5rem; flex: 1 1 auto; padding: 0.4rem 0.5rem; border: none;
+    background: transparent; color: #334155; font-size: 0.82rem; text-align: left; white-space: nowrap; cursor: pointer;
+}
+.sbx-rules-item.active button { color: #1d4ed8; font-weight: 600; }
+.sbx-rules-item button .fa-check { font-size: 0.7rem; }
+.sbx-rules-item a { flex: none; padding: 0 0.5rem; font-size: 0.72rem; color: #64748b; white-space: nowrap; }
+.sbx-rules-item a .fas { margin-right: 0.25rem; }
+.sbx-rules-item a:hover { color: #1d4ed8; }
+.sbx-rules-item.soon button { color: #94a3b8; cursor: not-allowed; }
+.sbx-rules-soon { flex: none; margin-right: 0.5rem; padding: 0.05rem 0.45rem; border-radius: 999px; background: #fef3c7; color: #b45309; font-size: 0.68rem; font-weight: 600; white-space: nowrap; }
