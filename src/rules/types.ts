@@ -5,7 +5,6 @@
 // year changes it, so the years that do not change it keep sharing it.
 import type { MapData } from '../lib/types';
 import type { Room4Picture } from '../lib/model';
-import type { WorldHooks } from '../lib/world2026';
 
 // Sizes of the field and the robot, cm
 export interface Geometry {
@@ -88,6 +87,13 @@ export interface MaxScore {
 
 export interface Scoring {
     maxScore(map: MapData, picture: Room4Picture | null): MaxScore | null;
+}
+
+// What a custom room 4 adds to the world file (read from its picture)
+export interface WorldHooks {
+    createArea4Solid(): string;
+    createArea4Victims(humanId: number, hazardId: number): [string, string, string];
+    room4CorrectSize?(): boolean;
 }
 
 // The world file, for the version of Erebus the year is played on

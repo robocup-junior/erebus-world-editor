@@ -3,9 +3,25 @@
 // whose rings add up to no type is a fake. None in a passage between areas (3.7.2). In the map file
 // (the classic editor's format) a letter victim is its letter on a tile side and 1-3 on a 6 cm face,
 // a target its ring code and the value of its type (5-8).
-import type { Tokens } from '../../types';
-import * as W from '../../../lib/world2026';
-import * as R4W from '../../../lib/room4World2026';
+import type { Tokens, StampType } from '../../types';
+import { cognitiveCodeToVictimLetter, randomCognitiveCode } from './cognitive';
+
+// The stamps of the room 4 picture: idx is the type the picture's colour names (lib/room4); coloured
+// as the victims of the editor - letter victims blue, fakes grey, targets by type
+const stamps: StampType[] = [
+    { idx: 0,  kind: 'victim', symbol: 'Φ', color: '#2563eb', name: 'admin.simMapEditor.room4Creator.types.harmed' },
+    { idx: 1,  kind: 'victim', symbol: 'Ψ', color: '#2563eb', name: 'admin.simMapEditor.room4Creator.types.stable' },
+    { idx: 2,  kind: 'victim', symbol: 'Ω', color: '#2563eb', name: 'admin.simMapEditor.room4Creator.types.unharmed' },
+    // fake victims are letter victims too (3D letters), so they sit with them
+    { idx: 9,  kind: 'fake', symbol: 'Φ', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeHarmed' },
+    { idx: 8,  kind: 'fake', symbol: 'Ψ', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeStable' },
+    { idx: 10, kind: 'fake', symbol: 'Ω', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeUnharmed' },
+    { idx: 5,  kind: 'ct', symbol: 'F', color: '#dc2626', name: 'admin.simMapEditor.ctF' },
+    { idx: 3,  kind: 'ct', symbol: 'P', color: '#7e22ce', name: 'admin.simMapEditor.ctP' },
+    { idx: 6,  kind: 'ct', symbol: 'C', color: '#1f2937', name: 'admin.simMapEditor.ctC' },
+    { idx: 4,  kind: 'ct', symbol: 'O', color: '#eab308', name: 'admin.simMapEditor.ctO' },
+    { idx: 7,  kind: 'fakect', symbol: '×', color: '#a8b0bb', name: 'admin.simMapEditor.ctFake' }
+];
 
 export const tokens: Tokens = {
     kinds: [
@@ -17,9 +33,9 @@ export const tokens: Tokens = {
     gapCm: 0.5,
     inPassages: false,
     target: {
-        typeOf: function (code) { return W.cognitiveCodeToVictimLetter(code); },
-        randomCode: function (type) { return W.randomCognitiveCode(type); },
+        typeOf: function (code) { return cognitiveCodeToVictimLetter(code); },
+        randomCode: function (type) { return randomCognitiveCode(type); },
         slot: { F: 5, P: 6, C: 7, O: 8 }
     },
-    stamps: R4W.stampTypes
+    stamps: stamps
 };

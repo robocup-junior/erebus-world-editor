@@ -9,14 +9,14 @@
 import { reactive, markRaw, watch } from 'vue';
 import * as M from '../lib/model';
 import * as L from '../lib/lattice';
-import * as W from '../lib/world2026';
+import * as W from '../lib/field';
 import * as Icons from '../lib/icons';
 import * as View from '../lib/view';
 import * as T from '../lib/tour';
 import * as Keys from '../lib/keys';
 import { fixed } from './format';
 import { rulesOf, rulesFor, years, LATEST_YEAR } from '../rules/registry';
-import type { Ruleset, MaxScore, StampType } from '../rules/types';
+import type { Ruleset, MaxScore, StampType, Tokens } from '../rules/types';
 import * as OpenCV from '../lib/opencv';
 import type { MapData, Room4Token } from '../lib/types';
 import type { Problem, Region, Where, VictimInfo, Clip, Show } from '../lib/model';
@@ -50,6 +50,8 @@ export interface Room4Host {
     room4CanvasSave: string | null;
     room4Tokens: Room4Token[];
     room4StampTypes: StampType[];
+    // the ring targets of the map's year: the type of a code, a random code of a type
+    room4Target: Tokens['target'];
     // the floor of each room 4 tile ('black', 'swamp', 'checkpoint'; none left out), by its cell key
     // "x,y": set in the creator, put on the map when it closes
     room4Floors: Record<string, string>;
@@ -754,11 +756,12 @@ export function createEditor() {
             roomTiles: map.roomTiles,
             canvasWidth: size.w,
             canvasHeight: size.h,
-            room4MapGeometry: function () { return W.mapGeometry(map, rulesOf(map).geometry); },
+            room4MapGeometry: function () { return W.mapGeometry(map); },
             room4Img: new Image(),
             room4CanvasSave: map.room4CanvasSave || null,
             room4Tokens: JSON.parse(JSON.stringify(map.room4Tokens || [])),
             room4StampTypes: rulesOf(map).tokens.stamps,
+            room4Target: rulesOf(map).tokens.target,
             room4Floors: floors
         };
         room4Done = function () {

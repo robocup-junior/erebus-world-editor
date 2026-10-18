@@ -1,9 +1,9 @@
-// The walls of a custom room 4 picture in the world file (src/lib/room4World2026.ts: wallMesh): a
+// The walls of a custom room 4 picture in the world file (src/rules/parts/export/erebus26/room4.ts: wallMesh): a
 // shape drawn round floor keeps that floor open - a face up each edge of its outline and of its hole,
 // and a top over the wall only
 import { test } from 'vitest';
 import assert from 'node:assert';
-import * as R4W from '../src/lib/room4World2026';
+import * as R4W from '../src/rules/parts/export/erebus26/room4';
 const wallMesh = R4W.wallMesh;
 
 // the mesh read back: points [x, y, z], faces [indices]

@@ -1,12 +1,12 @@
-// Editing a map for the new Simulation 2026 editor (beta): the map is kept in the format of the
-// Simulation 2026 editor (cells, roomTiles, startTile, area4Room ...), so either editor opens it.
-// Coordinates are the map's cell coordinates (tiles at odd x and y). Needs SimLattice and
-// SimWorld2026.
+// Editing a map: the map is kept in the format of the Simulation 2026 editor (cells, roomTiles,
+// startTile, area4Room ...), so either editor opens it. Coordinates are the map's cell coordinates
+// (tiles at odd x and y). What the map's year takes comes from its rules (rulesOf).
 import type { MapData, Cell, Tile, Pt } from './types';
 import * as L from './lattice';
-import * as W from './world2026';
+import * as W from './field';
 import * as R4 from './room4';
-import type { RoomPassage, WorldHooks } from './world2026';
+import type { RoomPassage } from './field';
+import type { WorldHooks } from '../rules/types';
 import { rulesOf, FIRST_YEAR, LATEST_YEAR } from '../rules/registry';
 import type { TokenKind } from '../rules/types';
 
@@ -1677,7 +1677,7 @@ function saved(map: MapData) {
 }
 
 // The world (.wbt) of the map; worked out on a copy, so the map is left as it is. A custom room 4
-// needs room4(copy) = the hooks that read its picture (SimRoom4World2026, browser only).
+// needs room4(copy) = the hooks that read its picture (the year's export: room4, browser only).
 // A value that is not a number in it (NaN, undefined) would make Webots read nothing at all and open
 // an empty world: it is not given out, but thrown as a BrokenWorld with the line it is on.
 function world(map: MapData, room4?: (copy: MapData) => Partial<WorldHooks>): string {

@@ -13,7 +13,7 @@
 // type, is a problem of the map (lib/model's problems); it is left out here.
 import type { MapData } from '../../../lib/types';
 import * as M from '../../../lib/model';
-import * as W from '../../../lib/world2026';
+import * as W from '../../../lib/field';
 import type { AreaScore, MaxScore } from '../../types';
 
 const MULTIPLIER: Record<number, number> = { 1: 1, 2: 1.25, 3: 1.5, 4: 2 };

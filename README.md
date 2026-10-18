@@ -66,8 +66,9 @@ src/
   room4/            the custom room 4 creator (Room4Creator.vue; its picture: canvas.ts)
   components/       rotation dial, cognitive target rings, modal, language button, build info
   rules/            the rules of each year (see "Rules by year"): registry, a manifest per year, parts
-  lib/              the map and its editing, framework-free (model, lattice, view, tour, icons, keys), and
-                    the Erebus 26 world export the 2026 rules use (world2026, room4World2026)
+  lib/              the map and its editing, framework-free: model, lattice, field (rooms, passages, the
+                    connection check, the tiles the robot reaches - the same for every year), view,
+                    tour, icons, keys
   lang/             the texts, one file per language (ja, en)
   styles/           base.css (from Bootstrap), page.css, sim_modern.css, editor.css
 public/             files served as they are (fonts, images, _headers)
@@ -85,7 +86,7 @@ One editor, one build, every year's rules in it: a map file keeps its year (`"ru
 | `rooms` | for each room, the kinds of wall it takes (whole or half tile edges, walls inside a tile, curves, a picture) and where its victims go |
 | `tokens` | the kinds of victim (each: family - a letter or a ring target -, symbol, width, whether it can be fake, its codes in the map file), the room between them, whether they may go in passages, the ring target types, the room 4 stamps |
 | `scoring` | the most a map can score |
-| `export` | the world file, for the Erebus version the year is played on |
+| `export` | the world file, for the Erebus version the year is played on (`parts/export/erebus26/`: the tiles, walls and tokens, and a custom room 4 read from its picture) |
 | `refs` | the rule numbers the texts cite (`{{rule_reach}}` in a text is the year's `refs.reach`) |
 
 The rest of the editor asks `rulesOf(map)` (`src/rules/registry.ts`) and never names or compares a year; `test/simRules.test.ts` fails if it does, checks each year is complete, and makes a world and a score with each.

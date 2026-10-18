@@ -29,7 +29,7 @@
 // LESSON and ROOM4 (title, body - paragraphs split by line breaks - and task, what to do).
 import type { MapData } from './types';
 import type * as Model from './model';
-import type * as World from './world2026';
+import type * as World from './field';
 import type * as Lattice from './lattice';
 
 // The room 4 creator as a step sees it (null while it is closed)

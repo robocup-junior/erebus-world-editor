@@ -1,16 +1,16 @@
-// Custom room 4 in the world export of the Simulation 2026 editor: walls and wall tokens read from
-// the room 4 picture with OpenCV (browser only). Shared with the new editor (beta).
-// SimRoom4World2026.create(map) gives { createArea4Solid, createArea4Victims, room4CorrectSize } for a
-// map as the editor holds it, with room4Img (an Image of room4CanvasSave, loaded) and canvasWidth /
-// canvasHeight; they go to SimWorld2026.createWorld as its hooks.
+// A custom room 4 in the world file for Erebus 26.x: walls and wall tokens read from the room 4
+// picture with OpenCV (browser only). create(map) gives { createArea4Solid, createArea4Victims,
+// room4CorrectSize } for a map as the editor holds it, with room4Img (an Image of room4CanvasSave,
+// loaded) and canvasWidth / canvasHeight; they go to ./world's createWorld as its hooks.
 import earcut from 'earcut';
-import * as W from './world2026';
-import * as R4 from './room4';
-import type { MapData, Room4Token } from './types';
+import { calculateWallTokenRot } from './world';
+import * as F from '../../../../lib/field';
+import * as R4 from '../../../../lib/room4';
+import { cognitiveCodeToVictimLetter, randomCognitiveCode } from '../../tokens/cognitive';
+import type { MapData, Room4Token } from '../../../../lib/types';
+import { rulesOf } from '../../../registry';
 
-const calculateWallTokenRot = W.calculateWallTokenRot;
-const getRandomAngle = W.getRandomAngle;
-const randomCognitiveCode = W.randomCognitiveCode;
+const getRandomAngle = F.getRandomAngle;
 
 // A wall of the room 4 picture as an IndexedFaceSet: a face up each edge of its outline and of each
 // hole in it (outline points [x, z] metres, each loop as OpenCV traces it, the wall always on the same
@@ -68,7 +68,7 @@ function tokenTurn(prev: number[], next: number[], centre: number[], wall: numbe
 
 function create(map: MapData) {
     function wallShapes() {
-        return W.wallShapes(map);
+        return F.wallShapes(map);
     }
 
     // The turn / ring code kept for the stamp whose centre is (cx, cy) picture pixels: the entry of
@@ -88,7 +88,7 @@ function create(map: MapData) {
     // A kept ring code, when it is of the type of the stamp (F P C O, or X for a fake target)
     function metaCode(meta: Room4Token | null, type: string) {
         if (!meta || !meta.code || !/^[KRYGB]{5}$/.test(meta.code)) return null;
-        const letter = W.cognitiveCodeToVictimLetter(meta.code) || 'X';
+        const letter = cognitiveCodeToVictimLetter(meta.code) || 'X';
         return letter === type ? meta.code : null;
     }
 
@@ -251,7 +251,7 @@ function createArea4Solid() {
 // wall as the loop around its two faces, 1 cm apart, like the outline of a wall drawn in the picture
 function mapWallRings(x0cm: number, y0cm: number, pxPerCm: number, imgW: number, imgH: number): number[][][] {
     const rings: number[][][] = [];
-    const half = W.WALL_HALF_CM;
+    const half = rulesOf(map).geometry.wallHalfCm;
     const toPx = function (p: number[]) { return [(p[1] - y0cm) * pxPerCm, (p[0] - x0cm) * pxPerCm]; };
     const inside = function (pts: number[][]) {
         return pts.some(function (q) { return q[0] >= -2 && q[1] >= -2 && q[0] <= imgH + 2 && q[1] <= imgW + 2; });
@@ -438,7 +438,7 @@ function createArea4Victims(startHumanId: number, startHazardId: number): [strin
         let randIdx = R4.contourType(src, vicContours.get(x));
         if (!scoringTypes[randIdx]) {
             if (!keepTypes || !scoringTypes[map.room4VicTypes[x]]) {
-                if (W.noRandom())
+                if (F.noRandom())
                     randIdx = parseInt(String(0.5 * scoringTypes.length));
                 else
                     randIdx = weightedRandomType();
@@ -499,25 +499,9 @@ function createArea4Victims(startHumanId: number, startHazardId: number): [strin
 }
 
 // Wall token types a custom room 4 stamp can carry; idx is the scoring type of createArea4Victims.
-// Colours as the victims of the new editor (beta): letter victims blue, fakes grey, CT by type.
-const stampTypes = [
-    { idx: 0,  kind: 'victim', symbol: 'Φ', color: '#2563eb', name: 'admin.simMapEditor.room4Creator.types.harmed' },
-    { idx: 1,  kind: 'victim', symbol: 'Ψ', color: '#2563eb', name: 'admin.simMapEditor.room4Creator.types.stable' },
-    { idx: 2,  kind: 'victim', symbol: 'Ω', color: '#2563eb', name: 'admin.simMapEditor.room4Creator.types.unharmed' },
-    // fake victims are letter victims too (3D letters), so they sit with them
-    { idx: 9,  kind: 'fake', symbol: 'Φ', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeHarmed' },
-    { idx: 8,  kind: 'fake', symbol: 'Ψ', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeStable' },
-    { idx: 10, kind: 'fake', symbol: 'Ω', color: '#94a3b8', name: 'admin.simMapEditor.room4Creator.types.fakeUnharmed' },
-    { idx: 5,  kind: 'ct', symbol: 'F', color: '#dc2626', name: 'admin.simMapEditor.ctF' },
-    { idx: 3,  kind: 'ct', symbol: 'P', color: '#7e22ce', name: 'admin.simMapEditor.ctP' },
-    { idx: 6,  kind: 'ct', symbol: 'C', color: '#1f2937', name: 'admin.simMapEditor.ctC' },
-    { idx: 4,  kind: 'ct', symbol: 'O', color: '#eab308', name: 'admin.simMapEditor.ctO' },
-    { idx: 7,  kind: 'fakect', symbol: '×', color: '#a8b0bb', name: 'admin.simMapEditor.ctFake' }
-];
 
 export {
     create,
     wallMesh,
-    tokenTurn,
-    stampTypes
+    tokenTurn
 };

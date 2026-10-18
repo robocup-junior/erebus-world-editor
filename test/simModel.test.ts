@@ -4,7 +4,7 @@ import assert from 'node:assert';
 import type { MapData } from '../src/lib/types';
 import * as M from '../src/lib/model';
 import * as L from '../src/lib/lattice';
-import * as W from '../src/lib/world2026';
+import * as W from '../src/lib/field';
 import fs from 'node:fs';
 import path from 'node:path';
 

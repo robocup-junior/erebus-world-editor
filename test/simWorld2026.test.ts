@@ -7,7 +7,11 @@ import assert from 'node:assert';
 import type { MapData } from '../src/lib/types';
 import fs from 'node:fs';
 import path from 'node:path';
-import * as W from '../src/lib/world2026';
+import * as F from '../src/lib/field';
+import { createWorld } from '../src/rules/parts/export/erebus26/world';
+
+// the field, and the world file of Erebus 26 (the 2026 rules')
+const W = { ...F, createWorld };
 
 const DIR = path.join(__dirname, 'fixtures', 'sim2026');
 const load = (name: string): MapData => {

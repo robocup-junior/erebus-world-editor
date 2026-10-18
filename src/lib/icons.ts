@@ -9,7 +9,7 @@
 const RING: Record<string, string> = { K: '#111827', R: '#dc2626', Y: '#facc15', G: '#16a34a', B: '#2563eb' };
 // the type colours: each its own hue, after what it is - flammable gas the red of fire, poison
 // purple, corrosive black (as its hazard label) and organic peroxide yellow (as an oxidizer's); fake
-// a light grey. Kept in room4World2026's stampTypes too
+// a light grey. Kept in the stamps of the rules' tokens too
 const TYPE: Record<string, string> = { F: '#dc2626', P: '#7e22ce', C: '#1f2937', O: '#eab308', X: '#a8b0bb' };
 const VICTIM = '#2563eb', FAKE = '#94a3b8';
 // the ring colours as the pickers list them: K R Y G B with their values

@@ -4,7 +4,6 @@
 // tools only draw on the picture (canvas.ts); the panels here choose how.
 import { computed, markRaw, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import * as Icons from '../lib/icons';
-import * as World from '../lib/world2026';
 import * as Keys from '../lib/keys';
 import { t } from '../i18n';
 import { tick } from '../editor/runtime';
@@ -200,7 +199,7 @@ function isLetterVictim(idx: number) {
     return !!x && (x.kind === 'victim' || x.kind === 'fake');
 }
 function randomCode(letter: string) {
-    r4.rings = World.randomCognitiveCode(letter).split('');
+    r4.rings = host.room4Target.randomCode(letter).split('');
 }
 function ringSum(rings: string[]) { return Icons.ringSum(rings); }
 function ringLetter(rings: string[]) { return Icons.typeOf(rings.join('')); }

@@ -6,7 +6,7 @@
 // here), its host (the editor's map side) and the few scope functions the drawing needs.
 import * as R4 from '../lib/room4';
 import * as Icons from '../lib/icons';
-import * as World from '../lib/world2026';
+import type * as World from '../lib/field';
 import type { CreatorScope } from './scope';
 import * as OpenCV from '../lib/opencv';
 import type { Room4Token } from '../lib/types';
@@ -399,7 +399,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         scope.$applyAsync(function () {
             r4.sel = { cx: t.cx, cy: t.cy, idx: t.type, rot: m.rot === undefined ? null : m.rot,
                 code: letter ? (m.code && Icons.typeOf(m.code) === letter ? m.code : '') : null };
-            if (letter && !r4.sel.code) r4.sel.code = World.randomCognitiveCode(letter);
+            if (letter && !r4.sel.code) r4.sel.code = editor.room4Target.randomCode(letter);
             r4.ring = 0;
         });
         drawOverlay();

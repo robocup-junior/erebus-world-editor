@@ -4,7 +4,7 @@ import { geometry } from './parts/geometry/v1';
 import { rooms } from './parts/rooms/v1';
 import { tokens } from './parts/tokens/v1';
 import * as scoring from './parts/scoring/v1';
-import { exporter } from './parts/export/erebus26';
+import { exporter } from './parts/export/erebus26/index';
 
 export const rules: Ruleset = {
     year: 2026,
