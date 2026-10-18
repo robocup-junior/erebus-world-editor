@@ -224,13 +224,16 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
             const cell = map!.cells[k + ',0'];
             const t = cell && cell.tile;
             if (!t) return;
-            if (t.black) { ctx.fillStyle = '#111'; ctx.fillRect(r[0], r[1], r[2], r[3]); }
-            else if (t.swamp) { ctx.fillStyle = '#cd853f'; ctx.fillRect(r[0], r[1], r[2], r[3]); }
-            else if (t.checkpoint) {
+            // its kind of floor (rules: floors; a hole first, a checkpoint last, should a tile have two):
+            // a checkpoint silver, the others in their colour
+            const kinds = rulesOf(map!).floors.filter(function (k) { return !!t[k.id]; })
+                .sort(function (a, b) { return Number(b.hole) - Number(a.hole) || Number(a.checkpoint) - Number(b.checkpoint); });
+            const floor = kinds[0];
+            if (floor && floor.checkpoint) {
                 const g = ctx.createLinearGradient(r[0] + TILE, r[1] + TILE, r[0], r[1]);
                 g.addColorStop(0, '#a5a5a5'); g.addColorStop(0.5, '#e8e8e8'); g.addColorStop(1, '#babac2');
                 ctx.fillStyle = g; ctx.fillRect(r[0], r[1], r[2], r[3]);
-            }
+            } else if (floor) { ctx.fillStyle = floor.color; ctx.fillRect(r[0], r[1], r[2], r[3]); }
             if (t.color) { ctx.fillStyle = t.color; ctx.globalAlpha = 0.75; ctx.fillRect(r[0], r[1], r[2], r[3]); ctx.globalAlpha = 1; }
         });
     }

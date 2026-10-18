@@ -16,7 +16,7 @@ import * as T from '../lib/tour';
 import * as Keys from '../lib/keys';
 import { fixed } from './format';
 import { rulesOf, rulesFor, years, LATEST_YEAR } from '../rules/registry';
-import type { Ruleset, MaxScore, StampType, Tokens } from '../rules/types';
+import type { Ruleset, MaxScore, StampType, Tokens, FloorKind } from '../rules/types';
 import * as OpenCV from '../lib/opencv';
 import type { MapData, Room4Token } from '../lib/types';
 import type { Problem, Region, Where, VictimInfo, Clip, Show } from '../lib/model';
@@ -52,6 +52,10 @@ export interface Room4Host {
     room4StampTypes: StampType[];
     // the ring targets of the map's year: the type of a code, a random code of a type
     room4Target: Tokens['target'];
+    // the kinds of floor of the map's year, and whether it wants a checkpoint behind each passage into
+    // room 4
+    room4FloorKinds: FloorKind[];
+    room4Checkpoints: boolean;
     // the floor of each room 4 tile ('black', 'swamp', 'checkpoint'; none left out), by its cell key
     // "x,y": set in the creator, put on the map when it closes
     room4Floors: Record<string, string>;
@@ -125,6 +129,12 @@ export function createEditor() {
         };
     }
     const firstPanel = victimPanel(rulesFor(LATEST_YEAR)!);
+    // The floor tool's choices: the kinds of floor of the map's year (rules: floors), the start tile
+    // and none
+    function floorPanel(rules: Ruleset) {
+        return rules.floors.map(function (k) { return { id: k.id, icon: k.icon }; })
+            .concat([{ id: 'start', icon: 'fa-play' }, { id: 'clear', icon: 'fa-times' }]);
+    }
     let panelYear = LATEST_YEAR;
 
     const S = reactive({
@@ -136,10 +146,7 @@ export function createEditor() {
             { id: 'outline', icon: 'fa-crop-alt' }, { id: 'addRow', icon: 'fa-grip-lines' }, { id: 'addCol', icon: 'fa-grip-lines-vertical' },
             { id: 'delRow', icon: 'fa-minus' }, { id: 'delCol', icon: 'fa-minus fa-rotate-90' }
         ],
-        floorChoices: [
-            { id: 'checkpoint', icon: 'fa-flag-checkered' }, { id: 'black', icon: 'fa-square' },
-            { id: 'swamp', icon: 'fa-water' }, { id: 'start', icon: 'fa-play' }, { id: 'clear', icon: 'fa-times' }
-        ],
+        floorChoices: floorPanel(rulesFor(LATEST_YEAR)!),
         victimRows: firstPanel.victimRows,
         ctStamps: firstPanel.ctStamps,
         victimChoices: firstPanel.victimChoices,
@@ -536,6 +543,8 @@ export function createEditor() {
         if (r.year === panelYear) return;
         panelYear = r.year;
         Object.assign(S, victimPanel(r));
+        S.floorChoices = floorPanel(r);
+        if (!S.floorChoices.some(function (f) { return f.id === ui.floor; })) ui.floor = S.floorChoices[0].id;
         if (!r.tokens.kinds.some(function (k) { return k.id === ui.victim; })) { ui.victim = r.tokens.kinds[0].id; ui.fake = false; }
     }
     // before a map is open: the latest year's
@@ -762,6 +771,8 @@ export function createEditor() {
             room4Tokens: JSON.parse(JSON.stringify(map.room4Tokens || [])),
             room4StampTypes: rulesOf(map).tokens.stamps,
             room4Target: rulesOf(map).tokens.target,
+            room4FloorKinds: rulesOf(map).floors,
+            room4Checkpoints: rulesOf(map).passages.room4Checkpoints,
             room4Floors: floors
         };
         room4Done = function () {
@@ -1258,7 +1269,7 @@ export function createEditor() {
         const at = tileAt(p);
         if (!at) return null;
         const tl = M.tileOf(map, at.x, at.y);
-        if (tl && (tl.black || tl.swamp || tl.checkpoint)) return { tile: at, kind: 'clear' };
+        if (W.floorKindOf(map, tl)) return { tile: at, kind: 'clear' };
         const st = map.startTile;
         if (click && st && st.x === at.x && st.y === at.y) return { tile: at, kind: 'start' };
         return null;
@@ -1672,7 +1683,7 @@ export function createEditor() {
                 return { kind: 'border', side: s, border: b, at: at };
             }
             const tl = M.tileOf(map, s.tile.x, s.tile.y);
-            const isPass = tl && tl.color && W.ROOM_PASSAGES.some(function (q: W.RoomPassage) { return q.color === tl.color; });
+            const isPass = tl && tl.color && W.passagesOf(map).some(function (q: W.RoomPassage) { return q.color === tl.color; });
             say(isPass ? 'passageRemove' : 'passageHere');
             return isPass ? { kind: 'tile', tile: s.tile, color: '#dc2626' } : null;
         }

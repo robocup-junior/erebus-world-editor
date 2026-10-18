@@ -118,6 +118,11 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     const box = { x: (minX - 1) / 2, y: (minY - 1) / 2 };
     function floorKey(tx: number, ty: number) { return (2 * (box.x + tx) + 1) + ',' + (2 * (box.y + ty) + 1); }
     function floorAt(tx: number, ty: number) { return floors[floorKey(tx, ty)] || ''; }
+    // the kind of floor (of the map's year) of a tile of the picture
+    function floorKindAt(tx: number, ty: number) {
+        const id = floorAt(tx, ty);
+        return id ? editor.room4FloorKinds.find(function (k) { return k.id === id; }) || null : null;
+    }
     // the holes on the reach grid: the map's, outside room 4, and room 4's as they are here
     function markHoles() {
         if (!reachBase || !geo) return;
@@ -130,7 +135,8 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         geo.holes.forEach(function (h) { if (!inRoom[(h[0] - box.x) + ',' + (h[1] - box.y)]) mark(h[0], h[1]); });
         Object.keys(inRoom).forEach(function (k) {
             const t = k.split(',').map(Number);
-            if (floorAt(t[0], t[1]) === 'black') mark(box.x + t[0], box.y + t[1]);
+            const kind = floorKindAt(t[0], t[1]);
+            if (kind && kind.hole) mark(box.x + t[0], box.y + t[1]);
         });
     }
     markHoles();
@@ -733,7 +739,8 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         guide.missing = [];
         guide.entrances.forEach(function (e: any) {
             const key = e.tx + ',' + e.ty;
-            if (e.passage && floorAt(e.tx, e.ty) !== 'checkpoint' && guide.missing.indexOf(key) < 0) guide.missing.push(key);
+            const kind = floorKindAt(e.tx, e.ty);
+            if (editor.room4Checkpoints && e.passage && !(kind && kind.checkpoint) && guide.missing.indexOf(key) < 0) guide.missing.push(key);
         });
         scope.$applyAsync(function () {
             r4.entranceCount = guide.entrances.length;
@@ -748,16 +755,10 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     function drawFloors() {
         octx.save();
         Object.keys(inRoom).forEach(function (key) {
-            const t = key.split(',').map(Number), kind = floorAt(t[0], t[1]);
+            const t = key.split(',').map(Number), kind = floorKindAt(t[0], t[1]);
             if (!kind) return;
             const x = t[0] * block, y = t[1] * block;
-            if (kind === 'black') {
-                octx.fillStyle = 'rgba(17, 17, 17, 0.6)';
-                octx.fillRect(x, y, block, block);
-            } else if (kind === 'swamp') {
-                octx.fillStyle = 'rgba(205, 133, 63, 0.45)';
-                octx.fillRect(x, y, block, block);
-            } else if (kind === 'checkpoint') {
+            if (kind.checkpoint) {
                 const g = octx.createLinearGradient(x, y, x + block, y + block);
                 g.addColorStop(0, 'rgba(148, 163, 184, 0.35)');
                 g.addColorStop(0.5, 'rgba(226, 232, 240, 0.35)');
@@ -768,6 +769,12 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
                 octx.font = '700 ' + (11 * k) + 'px system-ui, sans-serif';
                 octx.textBaseline = 'top';
                 octx.fillText('CP', x + 5 * k, y + 5 * k);
+            } else {
+                // a hole darker, so the walls over it still show
+                octx.globalAlpha = kind.hole ? 0.6 : 0.45;
+                octx.fillStyle = kind.color;
+                octx.fillRect(x, y, block, block);
+                octx.globalAlpha = 1;
             }
         });
         octx.restore();

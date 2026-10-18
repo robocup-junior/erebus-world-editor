@@ -21,7 +21,7 @@ const host = E.S.room4!.host;
 
 const r4 = reactive<R4State>({
     tool: 'pen',
-    floor: 'checkpoint',
+    floor: host.room4FloorKinds.length ? host.room4FloorKinds[0].id : 'clear',
     stamp: -1,
     snap: true,
     eraser: 'm',
@@ -128,10 +128,8 @@ const templates = [
 ];
 // The floor tool's floors, as the map editor's floor tool has them (a whole tile each, as Erebus
 // has them in room 4 too); no start tile, which is not in room 4
-const floorChoices = [
-    { id: 'checkpoint', icon: 'fa-flag-checkered' }, { id: 'black', icon: 'fa-square' },
-    { id: 'swamp', icon: 'fa-water' }, { id: 'clear', icon: 'fa-times' }
-];
+const floorChoices = host.room4FloorKinds.map(function (k) { return { id: k.id, icon: k.icon }; })
+    .concat([{ id: 'clear', icon: 'fa-times' }]);
 function stepCount(d: number) {
     r4.randomCount = Math.max(1, Math.min(30, (r4.randomCount || 1) + d));
 }

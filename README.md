@@ -84,6 +84,8 @@ One editor, one build, every year's rules in it: a map file keeps its year (`"ru
 | --- | --- |
 | `geometry` | tile, wall thickness, the robot's size, how near it comes to identify a token |
 | `rooms` | for each room, the kinds of wall it takes (whole or half tile edges, walls inside a tile, curves, a picture) and where its victims go |
+| `floors` | the kinds of floor (each: its flag in the map file, its icon and colour, whether it is a hole - no floor, the robot keeps off it - or a checkpoint) |
+| `passages` | the colour of the passage between each pair of rooms, and whether a checkpoint is wanted right behind each passage into room 4 |
 | `tokens` | the kinds of victim (each: family - a letter or a ring target -, symbol, width, whether it can be fake, its codes in the map file), the room between them, whether they may go in passages, the ring target types, the room 4 stamps |
 | `scoring` | the most a map can score |
 | `export` | the world file, for the Erebus version the year is played on (`parts/export/erebus26/`: the tiles, walls and tokens, and a custom room 4 read from its picture) |

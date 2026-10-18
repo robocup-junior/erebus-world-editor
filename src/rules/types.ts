@@ -25,6 +25,27 @@ export interface RoomRules {
                                             // its quarters, or stamps in its picture
 }
 
+// A kind of floor: in the map file, a flag of the tile (a tile has one kind at most)
+export interface FloorKind {
+    id: string;                 // the tile's flag ('black', 'swamp', 'checkpoint')
+    icon: string;               // the icon of its choice in the floor tools (Font Awesome)
+    color: string;              // how the map shows it
+    hole: boolean;              // no floor there: the robot keeps off the tile
+    checkpoint: boolean;        // a checkpoint (scores; wanted behind passages, see Passages)
+}
+
+// The passage between two rooms: a tile in its colour (in the map file, the tile's colour)
+export interface Passage {
+    from: number;
+    to: number;
+    color: string;
+    name: string;               // text key
+}
+export interface Passages {
+    list: Passage[];
+    room4Checkpoints: boolean;  // a checkpoint right behind each passage into room 4
+}
+
 // A kind of victim (wall token)
 export interface TokenKind {
     id: string;                 // as the map keeps it ('H', 'S', 'U', 'CT')
@@ -109,6 +130,8 @@ export interface Ruleset {
     year: number;
     geometry: Geometry;
     rooms: Record<number, RoomRules>;   // rooms 1-4
+    floors: FloorKind[];
+    passages: Passages;
     tokens: Tokens;
     scoring: Scoring;
     export: Exporter;

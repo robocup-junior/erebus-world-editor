@@ -89,7 +89,18 @@ function room4Unreached(map: MapData, picture: Room4Picture, reach: Reach): { in
 }
 
 const SIDES: Record<string, Pt> = { top: [0, -1], right: [1, 0], bottom: [0, 1], left: [-1, 0] };
-const FLOORS = ['black', 'swamp', 'checkpoint'];
+// The kinds of floor of the map's year (rules: floors): the tile flags of each, and the one that is
+// a checkpoint
+function floorIds(map: MapData): string[] {
+    return rulesOf(map).floors.map(function (k) { return k.id; });
+}
+function checkpointFloor(map: MapData): string {
+    const k = rulesOf(map).floors.find(function (k) { return k.checkpoint; });
+    return k ? k.id : 'checkpoint';
+}
+function clearFloors(map: MapData, t: Tile) {
+    floorIds(map).forEach(function (f) { t[f] = false; });
+}
 
 function key(x: number, y: number) {
     return x + ',' + y + ',0';
@@ -246,7 +257,7 @@ function setRoom(map: MapData, x: number, y: number, room: number) {
     const t = ensureTile(map, x, y);
     if (room === 0) {
         t.outside = true;
-        FLOORS.forEach(function (f) { t[f] = false; });
+        clearFloors(map, t);
         t.color = '';
         t.victims = {};
         t.cognitives = {};
@@ -280,8 +291,8 @@ function setRoom(map: MapData, x: number, y: number, room: number) {
 // none. The editor keeps the set it made and, after each change of rooms or passages, adds the
 // walls of new borders and takes away those of borders that are gone.
 
-function passageFor(a: number, b: number): RoomPassage | undefined {
-    return W.ROOM_PASSAGES.find(function (p) { return (p.from === a && p.to === b) || (p.from === b && p.to === a); });
+function passageFor(map: MapData, a: number, b: number): RoomPassage | undefined {
+    return W.passagesOf(map).find(function (p) { return (p.from === a && p.to === b) || (p.from === b && p.to === a); });
 }
 
 // The edges that get a wall by themselves: the outer walls (the map on one side only) and the
@@ -296,7 +307,7 @@ function borderEdges(map: MapData) {
         if (ra === rb) return;
         if (!ra || !rb) { edges.add(ex + ',' + ey); return; }
         if (preset && (ra === 4 || rb === 4)) return;
-        const color = passageFor(ra, rb)!.color;
+        const color = passageFor(map, ra, rb)!.color;
         const ta = tileOf(map, t[0][0], t[0][1]), tb = tileOf(map, t[1][0], t[1][1]);
         if ((ta && ta.color === color) || (tb && tb.color === color)) return;
         edges.add(ex + ',' + ey);
@@ -310,7 +321,7 @@ function borderEdges(map: MapData) {
 // out of it (rules: tokens.inPassages)
 function isPassage(map: MapData, x: number, y: number) {
     const t = tileOf(map, x, y);
-    return !!(t && t.color && W.ROOM_PASSAGES.some(function (p: RoomPassage) { return p.color === t.color; }));
+    return !!(t && t.color && W.passagesOf(map).some(function (p: RoomPassage) { return p.color === t.color; }));
 }
 
 // A passage tile that no longer lies between its two rooms loses its colour: it has to be in one
@@ -320,7 +331,7 @@ function prunePassages(map: MapData) {
     for (let x = 1; x < 2 * map.width; x += 2) {
         for (let y = 1; y < 2 * map.length; y += 2) {
             const t = tileOf(map, x, y);
-            const pass = t && t.color && W.ROOM_PASSAGES.find(function (p) { return p.color === t.color; });
+            const pass = t && t.color && W.passagesOf(map).find(function (p) { return p.color === t.color; });
             if (!pass) continue;
             const own = roomOf(map, x, y);
             const other = own === pass.from ? pass.to : own === pass.to ? pass.from : 0;
@@ -342,12 +353,14 @@ function syncArea4(map: MapData) {
     if (type !== want) map.area4Room = W.area4Presets()[want];
 }
 
-// Rule 3.5.3: a checkpoint right behind each passage into area 4. The room 4 tile inside each
-// passage becomes a checkpoint by itself (tile.cpAuto marks it); one set so that no passage needs
-// any more goes again. A checkpoint set by hand stays.
+// A checkpoint right behind each passage into room 4, when the map's year wants one (rules:
+// passages.room4Checkpoints; 2026: rule 3.5.3). The room 4 tile inside each passage becomes a
+// checkpoint by itself (tile.cpAuto marks it); one set so that no passage needs any more goes
+// again. A checkpoint set by hand stays.
 function room4Checkpoints(map: MapData) {
     const need: Record<string, boolean> = {};
-    if (map.area4Room && map.area4Room.type === 1) {
+    const cp = checkpointFloor(map);
+    if (map.area4Room && map.area4Room.type === 1 && rulesOf(map).passages.room4Checkpoints) {
         W.mapGeometry(map).entrances.forEach(function (e: any) {
             if (e.passage) need[(2 * e.tile[0] + 1) + ',' + (2 * e.tile[1] + 1)] = true;
         });
@@ -357,9 +370,9 @@ function room4Checkpoints(map: MapData) {
             const t = tileOf(map, x, y);
             if (!t) continue;
             if (need[x + ',' + y]) {
-                if (!t.checkpoint) { FLOORS.forEach(function (f) { t[f] = false; }); t.checkpoint = true; t.cpAuto = true; }
+                if (!t[cp]) { clearFloors(map, t); t[cp] = true; t.cpAuto = true; }
             } else if (t.cpAuto) {
-                t.checkpoint = false;
+                t[cp] = false;
                 delete t.cpAuto;
             }
         }
@@ -409,7 +422,7 @@ function borderAt(map: MapData, ex: number, ey: number): Border | null {
     const t = edgeTiles(ex, ey);
     const ra = roomOf(map, t[0][0], t[0][1]), rb = roomOf(map, t[1][0], t[1][1]);
     if (!ra || !rb || ra === rb) return null;
-    return { a: t[0], b: t[1], ra: ra, rb: rb, pass: passageFor(ra, rb)! };
+    return { a: t[0], b: t[1], ra: ra, rb: rb, pass: passageFor(map, ra, rb)! };
 }
 
 // The tile of a border that takes the passage colour when `side` ([x, y], one of its two tiles)
@@ -439,7 +452,7 @@ function togglePassage(map: MapData, ex: number, ey: number, side?: Pt | null): 
 // Takes the passage colour off the tile at (x, y)
 function clearPassage(map: MapData, x: number, y: number) {
     const t = tileOf(map, x, y);
-    if (!t || !t.color || !W.ROOM_PASSAGES.some(function (p: RoomPassage) { return p.color === t.color; })) return false;
+    if (!t || !t.color || !W.passagesOf(map).some(function (p: RoomPassage) { return p.color === t.color; })) return false;
     t.color = '';
     return true;
 }
@@ -502,7 +515,7 @@ function setFloor(map: MapData, x: number, y: number, kind: string) {
     }
     const t = ensureTile(map, x, y);
     const was = !!t[kind];
-    FLOORS.forEach(function (f) { t[f] = false; });
+    clearFloors(map, t);
     if (kind !== 'clear') t[kind] = !was;
     delete t.cpAuto;
     return true;
@@ -513,9 +526,9 @@ function setFloor(map: MapData, x: number, y: number, kind: string) {
 function setFloorKind(map: MapData, x: number, y: number, kind: string) {
     if (!isInside(map, x, y)) return false;
     const now = tileOf(map, x, y);
-    if (FLOORS.every(function (f) { return !!(now && now[f]) === (f === kind); })) return false;
+    if (floorIds(map).every(function (f) { return !!(now && now[f]) === (f === kind); })) return false;
     const t = ensureTile(map, x, y);
-    FLOORS.forEach(function (f) { t[f] = f === kind; });
+    floorIds(map).forEach(function (f) { t[f] = f === kind; });
     delete t.cpAuto;
     return true;
 }
@@ -523,7 +536,7 @@ function setFloorKind(map: MapData, x: number, y: number, kind: string) {
 // The floor kind of tile (x, y): 'black', 'swamp', 'checkpoint' or ''
 function floorKind(map: MapData, x: number, y: number) {
     const t = tileOf(map, x, y);
-    return (t && FLOORS.find(function (f) { return !!t[f]; })) || '';
+    return W.floorKindOf(map, t);
 }
 
 function hasWall(map: MapData, x: number, y: number, dir: string) {
@@ -1276,7 +1289,7 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
     for (let x = 1; x < 2 * map.width; x += 2) {
         for (let y = 1; y < 2 * map.length; y += 2) {
             const t = tileOf(map, x, y), off = isOutside(map, x, y);
-            if (!off && !(t && t.black)) continue;
+            if (!off && !W.isHole(map, t)) continue;
             for (let j = 6 * (y - 1) / res; j < 6 * (y + 1) / res; j++) {
                 for (let i = 6 * (x - 1) / res; i < 6 * (x + 1) / res; i++) {
                     outside[j * gw + i] = 1;
@@ -1439,8 +1452,8 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
             .map(function (k) { const p = k.split(',').map(Number); return [(p[0] - 1) / 2, (p[1] - 1) / 2]; });
     };
     if (type === 1 && !map.room4CanvasSave) out.push({ key: 'customRoom4NoPicture', block: true, at: regionAt, show: { tiles: tilesOf(4) } });
-    if (type === 1) {
-        // the room 4 tile behind each passage should be a checkpoint (rule 3.5.3), as the creator says
+    if (type === 1 && rulesOf(map).passages.room4Checkpoints) {
+        // the room 4 tile behind each passage should be a checkpoint (2026: rule 3.5.3), as the creator says
         const geo = W.mapGeometry(map);
         const cps: Record<string, boolean> = {};
         geo.checkpoints.forEach(function (t: number[]) { cps[t[0] + ',' + t[1]] = true; });
@@ -1542,7 +1555,7 @@ function fixStart(map: MapData) {
     for (let y = 2 * map.length - 1; y > 0; y -= 2) {
         for (let x = 1; x < 2 * map.width; x += 2) {
             const t = tileOf(map, x, y);
-            if (roomOf(map, x, y) !== 1 || !t || t.black || t.swamp || t.color) continue;
+            if (roomOf(map, x, y) !== 1 || !t || W.floorKindOf(map, t) || t.color) continue;
             map.startTile = { x: x, y: y, z: 0 };
             return true;
         }
@@ -1570,7 +1583,7 @@ function connectRoom(map: MapData, room: number, borders: Set<string>): Set<stri
                 const other = b.ra === room ? b.rb : b.rb === room ? b.ra : 0;
                 if (!other || !reached[other]) return;
                 const ta = tileOf(map, b.a[0], b.a[1]), tb = tileOf(map, b.b[0], b.b[1]);
-                if ((ta && (ta.black || ta.color)) || (tb && (tb.black || tb.color))) return;
+                if (W.isHole(map, ta) || W.isHole(map, tb) || (ta && ta.color) || (tb && tb.color)) return;
                 cands.push({ ex: x + d[0] / 2, ey: y + d[1] / 2, score: (other === 1 ? 0 : 1) });
             });
         }
@@ -1599,8 +1612,8 @@ function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string>
     if (key === 'room4Checkpoint') {
         (p.show && p.show.tiles || []).forEach(function (t) {
             const tile = ensureTile(map, 2 * t[0] + 1, 2 * t[1] + 1);
-            FLOORS.forEach(function (f) { tile[f] = false; });
-            tile.checkpoint = true;
+            clearFloors(map, tile);
+            tile[checkpointFloor(map)] = true;
             tile.cpAuto = true;
         });
         return borders;

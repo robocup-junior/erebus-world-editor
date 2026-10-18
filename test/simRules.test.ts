@@ -62,6 +62,19 @@ for (const year of R.years()) {
     for (const ref of cited) assert.ok(rules.refs[ref], `refs.${ref} (a text cites it)`);
   });
 
+  test(`${year}: floors and passages - each kind of floor its own flag, one checkpoint kind, a passage for each pair of rooms`, () => {
+    const floors = rules.floors;
+    assert.ok(floors.length);
+    assert.strictEqual(new Set(floors.map((k) => k.id)).size, floors.length);
+    assert.ok(floors.every((k) => k.id !== 'start' && k.id !== 'clear'), 'the floor tool keeps start and clear for itself');
+    assert.ok(floors.filter((k) => k.checkpoint).length <= 1);
+    const list = rules.passages.list;
+    assert.strictEqual(new Set(list.map((p) => p.color.toLowerCase())).size, list.length, 'a colour names one passage');
+    for (let a = 1; a <= 4; a++) for (let b = a + 1; b <= 4; b++) {
+      assert.strictEqual(list.filter((p) => (p.from === a && p.to === b) || (p.from === b && p.to === a)).length, 1, `rooms ${a} and ${b}`);
+    }
+  });
+
   test(`${year}: its own texts are of keys there are, in every language`, () => {
     for (const code of ['en', 'ja']) {
       const own = (lang(code).years || {})[year];

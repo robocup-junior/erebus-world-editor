@@ -152,18 +152,27 @@ function inMap(map: MapData, p: Pt): boolean {
 }
 
 // ---- Passages between rooms -----------------------------------------------------------
-// Areas are joined by one-tile passages with a coloured floor (rules 3.3.2 / 3.3.4 / 3.4). Where
-// two different rooms meet, every gap a robot might get through has to be such a passage tile
-// (or be closed by a wall). A passage tile belongs to one of its two rooms and opens onto both,
+// Areas are joined by one-tile passages with a coloured floor (the map's year's: rules: passages).
+// Where two different rooms meet, every gap a robot might get through has to be such a passage
+// tile (or be closed by a wall). A passage tile belongs to one of its two rooms and opens onto both,
 // and a room counts as connected once passages link it, directly or through other rooms, to room 1.
-const ROOM_PASSAGES = [
-    { color: '#1a1ae6', from: 1, to: 2, name: 'admin.simMapEditor.passageBlue' },
-    { color: '#e7e71a', from: 1, to: 3, name: 'admin.simMapEditor.passageYellow' },
-    { color: '#08D508', from: 1, to: 4, name: 'admin.simMapEditor.passageGreen' },
-    { color: '#4d1a99', from: 2, to: 3, name: 'admin.simMapEditor.passagePurple' },
-    { color: '#e7991a', from: 2, to: 4, name: 'admin.simMapEditor.passageOrange' },
-    { color: '#e71a1a', from: 3, to: 4, name: 'admin.simMapEditor.passageRed' }
-];
+function passagesOf(map: MapData): RoomPassage[] {
+    return rulesOf(map).passages.list;
+}
+
+// ---- Floors ---------------------------------------------------------------------------
+// The kinds of floor of the map's year (rules: floors): whether a tile is a hole (no floor: the
+// robot keeps off it), a checkpoint, or has a floor of any kind
+function isHole(map: MapData, t: Tile | undefined | null): boolean {
+    return !!t && rulesOf(map).floors.some(function (k) { return k.hole && !!t[k.id]; });
+}
+function isCheckpoint(map: MapData, t: Tile | undefined | null): boolean {
+    return !!t && rulesOf(map).floors.some(function (k) { return k.checkpoint && !!t[k.id]; });
+}
+function floorKindOf(map: MapData, t: Tile | undefined | null): string {
+    const k = t ? rulesOf(map).floors.find(function (k) { return !!t[k.id]; }) : null;
+    return k ? k.id : '';
+}
 
 // Room number of every tile on the first floor, keyed by tile index "x,y"
 function tileRooms(map: MapData): Record<string, number> {
@@ -273,7 +282,7 @@ function robotFits(map: MapData): (x: number, y: number) => boolean {
 // that edge its centre fits between the walls, and neither side is a hole
 function edgePassable(map: MapData, a: string, b: string, fits: (x: number, y: number) => boolean): boolean {
     const ta = tileAt(map, a), tb = tileAt(map, b);
-    if ((ta && ta.black) || (tb && tb.black)) return false;
+    if (isHole(map, ta) || isHole(map, tb)) return false;
     const p = a.split(',').map(Number), q = b.split(',').map(Number);
     for (let d = 0.125; d < TILE_CM; d += 0.25) {
         const x = p[0] === q[0] ? TILE_CM * p[0] + d : TILE_CM * Math.max(p[0], q[0]);
@@ -283,8 +292,8 @@ function edgePassable(map: MapData, a: string, b: string, fits: (x: number, y: n
     return false;
 }
 
-function passageBetween(r1: number, r2: number): RoomPassage | undefined {
-    return ROOM_PASSAGES.find(function (pass) {
+function passageBetween(map: MapData, r1: number, r2: number): RoomPassage | undefined {
+    return passagesOf(map).find(function (pass) {
         return (pass.from === r1 && pass.to === r2) || (pass.from === r2 && pass.to === r1);
     });
 }
@@ -302,7 +311,7 @@ function connectionStatus(map: MapData): any {
 
     // The passage tiles that are placed, and whether each really opens onto its two rooms
     const links: RoomPassage[] = [];
-    ROOM_PASSAGES.forEach(function (pass) {
+    passagesOf(map).forEach(function (pass) {
         let missing = 0, misplaced = false;
         keys.forEach(function (k) {
             const tile = tileAt(map, k);
@@ -333,7 +342,7 @@ function connectionStatus(map: MapData): any {
             if (k > n) return;   // each edge once
             const ra = rooms[k], rb = rooms[n];
             if (ra === rb || (presetRoom4 && (ra === 4 || rb === 4)) || !edgePassable(map, k, n, fits)) return;
-            const pass = passageBetween(ra, rb)!;
+            const pass = passageBetween(map, ra, rb)!;
             const tk = tileAt(map, k), tn = tileAt(map, n);
             if ((tk && tk.color === pass.color) || (tn && tn.color === pass.color)) return;
             if (!gaps[pass.color]) gaps[pass.color] = { key: 'unmarkedGap', pass: pass, count: 0 };
@@ -344,7 +353,7 @@ function connectionStatus(map: MapData): any {
             if (!status.marks[t] || status.marks[t].cls === 'hint') status.marks[t] = { cls: 'gap', style: { 'border-color': pass.color } };
         });
     });
-    ROOM_PASSAGES.forEach(function (pass) {
+    passagesOf(map).forEach(function (pass) {
         if (gaps[pass.color]) status.issues.push(gaps[pass.color]);
     });
 
@@ -362,12 +371,12 @@ function connectionStatus(map: MapData): any {
         if (!present[room]) return;
         status.show = true;
         const own = keys.filter(function (k) { return rooms[k] === room; });
-        const linked = ROOM_PASSAGES.filter(function (pass) {
+        const linked = passagesOf(map).filter(function (pass) {
             return (pass.from === room || pass.to === room) && links.indexOf(pass) > -1;
         });
         // Passages that could join this room: the rooms it borders, and the tiles on the border
         const options: { pass: RoomPassage; border: string[] }[] = [];
-        ROOM_PASSAGES.forEach(function (pass) {
+        passagesOf(map).forEach(function (pass) {
             if (pass.from !== room && pass.to !== room) return;
             const other = pass.from === room ? pass.to : pass.from;
             if (!present[other]) return;
@@ -402,7 +411,7 @@ function mapGeometry(map: MapData): MapGeometry {
     Object.keys(map.cells).forEach(function (key) {
         const p = key.split(',').map(Number);
         const cell = map.cells[key];
-        if (p[2] === 0 && cell.isTile && cell.tile && cell.tile.black) holes.push([(p[0] - 1) / 2, (p[1] - 1) / 2]);
+        if (p[2] === 0 && cell.isTile && isHole(map, cell.tile)) holes.push([(p[0] - 1) / 2, (p[1] - 1) / 2]);
     });
     const st = map.startTile;
     const hasStart = st && st.z == 0 && st.x > 0 && st.y > 0;
@@ -417,19 +426,19 @@ function mapGeometry(map: MapData): MapGeometry {
     Object.keys(room4).forEach(function (k) {
         const t = k.split(',').map(Number);
         const cell = map.cells[(2 * t[0] + 1) + ',' + (2 * t[1] + 1) + ',0'];
-        if (cell && cell.tile && cell.tile.checkpoint) checkpoints.push(t);
+        if (cell && isCheckpoint(map, cell.tile)) checkpoints.push(t);
         [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) {
             const nx = t[0] + d[0], ny = t[1] + d[1];
             if (nx < 0 || ny < 0 || nx >= map.width || ny >= map.length || room4[nx + ',' + ny]) return;
             const edge = map.cells[(2 * t[0] + 1 + d[0]) + ',' + (2 * t[1] + 1 + d[1]) + ',0'];
             if (edge && edge.isWall) return;
             const next = map.cells[(2 * nx + 1) + ',' + (2 * ny + 1) + ',0'];
-            if (next && next.tile && next.tile.black) return;
+            if (next && isHole(map, next.tile)) return;
             // the colour of the passage to the room on the other side (1-4 green, 2-4 orange,
             // 3-4 red), or of the passage tile itself when there is one
             const tileColor = (next && next.tile && next.tile.color) || '';
             const other = checkRoomNumberKey(map, (2 * nx + 1) + ',' + (2 * ny + 1) + ',0');
-            const pass = ROOM_PASSAGES.find(function (p) { return p.from === other && p.to === 4; });
+            const pass = passagesOf(map).find(function (p) { return p.from === other && p.to === 4; });
             entrances.push({ tile: t, dir: d, color: tileColor || (pass ? pass.color : ''), passage: !!tileColor,
                 room: other, half: !!(edge && Number(edge.halfWall) > 0) });
         });
@@ -502,7 +511,7 @@ function recalculate(map: MapData): void {
         let startTilePosition = map.startTile.x + "," + map.startTile.y + "," + map.startTile.z;
         for (var index in map.cells) {
             if (map.cells[index].tile) {
-                if (map.cells[index].tile!.black || index == startTilePosition) {
+                if (isHole(map, map.cells[index].tile) || index == startTilePosition) {
                     var x = Number(index.split(',')[0]);
                     var y = Number(index.split(',')[1]);
                     var z = Number(index.split(',')[2]);
@@ -1099,7 +1108,10 @@ export {
     checkRoomNumber,
     checkRoomNumberKey,
     recalculate,
-    ROOM_PASSAGES,
+    passagesOf,
+    isHole,
+    isCheckpoint,
+    floorKindOf,
     room4Region,
     inMap,
     tileRooms,
