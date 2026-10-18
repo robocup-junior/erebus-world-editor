@@ -15,6 +15,11 @@ const YEARS: Ruleset[] = [y2026];
 export const FIRST_YEAR = 2026;
 export const LATEST_YEAR = YEARS[YEARS.length - 1].year;
 
+// The year the guide's lesson (lib/tour) is written for: its steps place that year's walls, floors
+// and victims, so its sample map is of that year whatever year is the latest. When a lesson is
+// written for a new year, change it with the lesson's steps and texts.
+export const LESSON_YEAR = 2026;
+
 export function years(): number[] {
     return YEARS.map(function (r) { return r.year; });
 }

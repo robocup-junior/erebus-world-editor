@@ -33,6 +33,7 @@ test('the registry: years oldest first, a map without a year is of the first, an
   assert.strictEqual(M.newMap(2, 2).rules, R.LATEST_YEAR, 'a new map is of the latest year');
   assert.throws(() => R.rulesOf(Object.assign(M.newMap(2, 2), { rules: 1999 })));
   assert.strictEqual(R.rulesFor(1999), null);
+  assert.ok(R.rulesFor(R.LESSON_YEAR), 'the year the lesson is written for is one the editor takes');
 });
 
 // the parameters {{rule_x}} the texts use

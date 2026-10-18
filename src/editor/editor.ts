@@ -15,7 +15,7 @@ import * as View from '../lib/view';
 import * as T from '../lib/tour';
 import * as Keys from '../lib/keys';
 import { fixed } from './format';
-import { rulesOf, rulesFor, years, LATEST_YEAR } from '../rules/registry';
+import { rulesOf, rulesFor, years, LATEST_YEAR, LESSON_YEAR } from '../rules/registry';
 import type { Ruleset, MaxScore, StampType, Tokens, FloorKind } from '../rules/types';
 import * as OpenCV from '../lib/opencv';
 import type { MapData, Room4Token } from '../lib/types';
@@ -2030,7 +2030,7 @@ export function createEditor() {
         kind = kind || (map ? 'tour' : 'lesson');
         if (kind === 'lesson' && map) {
             // the lesson builds its own map: from a new one, once the open one may go
-            whenDiscarded(function () { newBlank(); beginTour('lesson'); });
+            whenDiscarded(function () { newBlank(LESSON_YEAR); beginTour('lesson'); });
             return;
         }
         beginTour(kind);
@@ -2063,8 +2063,11 @@ export function createEditor() {
     // still, the keys go through the steps, there are no tasks
     function tourLook() { return !!S.tour && (S.tour.kind === 'tour' || S.tour.kind === 'room4tour'); }
 
-    function newBlank() {
-        load(M.newMap(8, 6), '');
+    // a blank start (the lesson's: of the year the lesson is written for; else of the latest year)
+    function newBlank(year?: number) {
+        const m = M.newMap(8, 6);
+        if (year) m.rules = year;
+        load(m, '');
         setTool('shape');
         ui.shapeMode = 'outline';
         ui.freshMap = true;
@@ -2120,7 +2123,7 @@ export function createEditor() {
             creator: creatorScope(), room4State: room4State(), problems: S.problems,
             sync: function () { borders = M.resyncBorderWalls(map, borders); },
             act: {
-                newMap: newBlank,
+                newMap: function () { newBlank(LESSON_YEAR); },
                 resize: function (w, l) { resize(w - map.width, l - map.length); },
                 openRoom4: function () { openRoom4(); },
                 fixAll: function () { fixAll(); },

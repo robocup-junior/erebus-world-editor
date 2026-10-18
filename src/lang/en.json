@@ -344,7 +344,7 @@
                 },
                 "victim": {
                     "title": "Victim (V): victims and cognitive targets",
-                    "body": "Pick a kind in the panel (letter victims Φ, Ψ, Ω and fake ones, cognitive targets F, P, C, O and a fake one) and click near a wall: it goes on the wall where you click.\nThey go on tile sides in room 1 (one per tile), on the faces of the 6 cm walls in rooms 2 and 3, and on two places on a curve (inside and outside). Drag a placed one to move it along its wall. Where one cannot go, the status line says why.\nTurn the dial (Set the turn) for its rotation, or choose Random for a new one each time. For a cognitive target, click a ring of the target and then a colour below; the sum of the rings gives its type.\nClick a victim with the same kind to select it, then change its turn, rings or place along its wall, or remove it. Clicking it with another kind changes its kind."
+                    "body": "Pick a kind in the panel (letter victims Φ, Ψ, Ω and fake ones, cognitive targets of four types - flammable gas, poison, corrosive, organic peroxide - and a fake one) and click near a wall: it goes on the wall where you click.\nThey go on tile sides in room 1 (one per tile), on the faces of the 6 cm walls in rooms 2 and 3, and on two places on a curve (inside and outside). Drag a placed one to move it along its wall. Where one cannot go, the status line says why.\nTurn the dial (Set the turn) for its rotation, or choose Random for a new one each time. For a cognitive target, click a ring of the target and then a colour below; the sum of the rings gives its type.\nClick a victim with the same kind to select it, then change its turn, rings or place along its wall, or remove it. Clicking it with another kind changes its kind."
                 },
                 "room4": {
                     "title": "Drawing room 4",
@@ -536,7 +536,7 @@
                 },
                 "ct": {
                     "title": "Put a cognitive target",
-                    "body": "A cognitive target (F, P, C, O) is a target of five rings. Picking a type gives its ring colours; click a ring of the target and then a colour below to change it.\nThe sum of the rings gives the type; one that matches no type is a fake target.",
+                    "body": "A cognitive target (flammable gas, poison, corrosive or organic peroxide) is a target of five rings. Picking a type gives its ring colours; click a ring of the target and then a colour below to change it.\nThe sum of the rings gives the type; one that matches no type is a fake target.",
                     "task": "Pick a cognitive target and put it on the outer wall at the bottom of room 3 (the tile in the green frame)"
                 },
                 "pick": {
