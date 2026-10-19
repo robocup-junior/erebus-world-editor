@@ -21,6 +21,20 @@ html {
 html:lang(ja) {
     font-family: 'Outfit', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', 'Yu Gothic UI', 'Yu Gothic', Meiryo, 'Noto Sans JP', 'Noto Sans CJK JP', sans-serif;
 }
+/* the same for simplified Chinese and Korean: their own glyph shapes */
+html:lang(zh-CN) {
+    font-family: 'Outfit', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Noto Sans SC', 'Noto Sans CJK SC', sans-serif;
+}
+html:lang(ko) {
+    font-family: 'Outfit', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', 'Noto Sans CJK KR', sans-serif;
+}
+html:lang(zh-Hant) {
+    font-family: 'Outfit', 'PingFang HK', 'PingFang TC', 'Microsoft JhengHei UI', 'Microsoft JhengHei', 'Noto Sans HK', 'Noto Sans TC', 'Noto Sans CJK TC', sans-serif;
+}
+/* Thai: Outfit has none of its letters either */
+html:lang(th) {
+    font-family: 'Outfit', Thonburi, 'Leelawadee UI', 'Noto Sans Thai', sans-serif;
+}
 
 body {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;

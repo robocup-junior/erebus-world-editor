@@ -391,7 +391,7 @@
                 },
                 "more": {
                     "title": "Guide and language",
-                    "body": "Guide at the bottom right has the lesson that builds a sample map, this tour, and how to make room 4, at any time.\nThe globe button (it shows the language in use) picks the language."
+                    "body": "Guide at the bottom right has the lesson that builds a sample map, this tour, and how to make room 4, at any time.\nThe language button (it shows the flag and name of the language in use) picks the language."
                 },
                 "done": {
                     "title": "That is the tour",
@@ -728,7 +728,7 @@
                 },
                 "more": {
                     "title": "Guide and language",
-                    "body": "Guide at the bottom right has this lesson, the tour of the screen and how to make room 4, at any time. The room 4 creator's Guide button shows the room 4 part on its own.\nThe globe button (it shows the language in use) picks the language."
+                    "body": "Guide at the bottom right has this lesson, the tour of the screen and how to make room 4, at any time. The room 4 creator's Guide button shows the room 4 part on its own.\nThe language button (it shows the flag and name of the language in use) picks the language."
                 },
                 "done": {
                     "title": "Finished!",

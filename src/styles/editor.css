@@ -1372,6 +1372,8 @@
 .sbx-lang-item.active { color: #1d4ed8; font-weight: 600; }
 .sbx-lang-item .fa-check { font-size: 0.7rem; }
 .sbx-lang-caret { font-size: 0.65rem; opacity: 0.6; }
+/* a language's flag (4:3), with a hairline so white flags keep their edge */
+.sbx-lang-flag { flex: none; width: 1.2em; height: 0.9em; border-radius: 2px; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.15); object-fit: cover; }
 
 /* the rules of the map open (components/RulesMenu.vue): its year in the top bar, the years in a menu below */
 .sbx-rules { position: relative; display: inline-flex; flex: none; }

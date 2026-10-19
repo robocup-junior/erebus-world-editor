@@ -69,7 +69,7 @@ src/
   lib/              the map and its editing, framework-free: model, lattice, field (rooms, passages, the
                     connection check, the tiles the robot reaches - the same for every year), view,
                     tour, icons, keys
-  lang/             the texts, one file per language (ja, en)
+  lang/             the texts, one file per language (de, en, es, fr, id, ja, ko, pt-BR, th, tr, zh-CN, zh-Hant)
   styles/           base.css (from Bootstrap), page.css, sim_modern.css, editor.css
 public/             files served as they are (fonts, images, _headers)
 test/               unit tests (vitest) with sample maps
@@ -100,10 +100,10 @@ The rest of the editor asks `rulesOf(map)` (`src/rules/registry.ts`) and never n
 ### Adding a language
 
 1. Copy `src/lang/en.json` to `src/lang/<code>.json` (`<code>`: its BCP 47 code, such as `fr` or `pt-BR`) and translate the texts. Keep each `{{name}}` parameter as it is; it may move within the sentence. `listSep` is what joins the items of a list (`, ` in English, `・` in Japanese).
-2. Add it to `LANGUAGES` in `src/i18n.ts`: its code, its name in its own language, and its texts (imported like the others).
+2. Add it to `LANGUAGES` in `src/i18n.ts`: its code, its name in its own language (the list is in the order of these names: Latin script alphabetically, then the other scripts), the flag of the country most taken for it (from `flag-icons`, imported as a URL like the others), and its texts.
 3. `npm test`: `test/simLang.test.ts` checks that every language has each key English has, with the same parameters, and that each file is in `LANGUAGES`.
 
-A text not translated yet is shown in English. The language button (`src/components/LangMenu.vue`) shows the language in use and lists every language in `LANGUAGES` by its own name, so a new one appears there by itself. The page's `lang` attribute follows the language chosen, so the browser picks the right fonts for its script.
+A text not translated yet is shown in English. The language button (`src/components/LangMenu.vue`) shows the language in use and lists every language in `LANGUAGES` by its flag and its own name, so a new one appears there by itself. The page's `lang` attribute follows the language chosen, so the browser picks the right fonts for its script; for a language of Chinese characters, give it its own font list in `src/styles/page.css` (as `ja`, `zh-CN`, `zh-Hant` and `ko` have), or it may be drawn with another language's glyph shapes; a script Outfit lacks (Thai) gets one too. A browser's language finds its file by the exact code, else by its language (`pt-PT`: `pt-BR`); Chinese in traditional characters (`zh-TW`, `zh-HK`, `zh-Hant-*`) goes to `zh-Hant`.
 
 ### The end-to-end tests
 

@@ -1,0 +1,1080 @@
+{
+    "admin": {
+        "simBeta": {
+            "fake": "Víctima falsa",
+            "width": "Ancho",
+            "length": "Alto",
+            "title": "Erebus World Editor",
+            "new": "Nuevo mapa",
+            "open": "Abrir un mapa (JSON)",
+            "save": "Guardar como JSON",
+            "backToClassic": "Abrir el editor clásico",
+            "noMap": "No hay ningún mapa abierto",
+            "dropHere": "También puedes soltar un archivo JSON aquí",
+            "badFile": "No se pudo leer como un mapa del editor de Simulation 2026 (JSON)",
+            "unknownRules": "Este mapa es de las reglas de {{year}}; este editor admite las reglas de {{years}} (ábrelo en un editor más nuevo)",
+            "zoomIn": "Acercar",
+            "zoomOut": "Alejar",
+            "fit": "Ver todo el mapa",
+            "room": "Sala {{n}}",
+            "discard": "Si continúas, se descartan los cambios de este mapa (la copia guardada en este navegador se conserva).",
+            "exportBlocked": "Todavía no se puede exportar el mundo",
+            "room4": "Sala 4",
+            "problemsTitle": "Comprobaciones",
+            "noProblems": "Sin problemas",
+            "undo": "Deshacer",
+            "redo": "Rehacer",
+            "tools": {
+                "hand": "Mover",
+                "room": "Salas",
+                "passage": "Pasajes",
+                "line": "Línea",
+                "eraser": "Borrador",
+                "floor": "Suelo",
+                "victim": "Víctimas",
+                "curve": "Curva",
+                "select": "Seleccionar",
+                "shape": "Contorno"
+            },
+            "help": {
+                "hand": "Arrastra para mover el mapa.",
+                "room": "Pinta baldosas con una sala (la sala 1 las devuelve). Las paredes aparecen solas donde se unen las salas y alrededor del mapa. La sala 4 se dibuja como una imagen con el botón de abajo.",
+                "passage": "Haz clic cerca del borde entre salas: la baldosa del lado en que haces clic se convierte en el pasaje (otro clic lo cierra; un clic en el otro lado lo mueve allí). Haz clic en el centro de una baldosa de pasaje para quitarlo. Un pasaje que ya no encaja con sus salas desaparece solo.",
+                "line": "Arrastra para dibujar paredes. La línea gira con el puntero, así que un solo arrastre puede dibujar un zigzag (vuelve por donde viniste para deshacer un giro). Empieza con Shift pulsado para una sola línea recta. En la sala 1 se ajusta a 12 cm (bordes de baldosa) y en las salas 2 y 3 a 6 cm. No dentro de la sala 4.",
+                "eraser": "Haz clic o arrastra sobre paredes, curvas y víctimas para quitarlas. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control); un clic quita la salida. Las paredes exteriores se quedan.",
+                "floor": "Haz clic en una baldosa para cambiar su suelo.",
+                "victim": "Haz clic cerca de una pared: la víctima se coloca en la pared donde haces clic. Sala 1: en un lado de la baldosa (una por baldosa); salas 2 y 3: en una cara de las paredes de 6 cm (4 cuartos × 4 caras); una curva tiene dos sitios (dentro y fuera). Arrastra una víctima colocada para moverla a lo largo de su pared (se detiene antes del extremo de la pared y de otras víctimas). Haz clic en ella con su tipo elegido para seleccionarla y cambiar su giro, anillos o posición, o quitarla; con otro tipo elegido, toma ese tipo.",
+                "curve": "Señala un cuarto de baldosa en la sala 3 para ver sus cuatro curvas; la más cercana (azul) se coloca con un clic. Haz clic de nuevo en la misma para quitarla.",
+                "select": "Selecciona paredes, salas, suelos y víctimas a la vez para moverlos, copiarlos, pegarlos o borrarlos.",
+                "shape": "Cambia el tamaño y la forma del mapa; las paredes exteriores lo siguen solas. Contorno: haz clic o arrastra sobre baldosas para sacarlas del mapa o devolverlas. Insertar / quitar: añade o quita una fila o columna donde haces clic."
+            },
+            "floors": {
+                "checkpoint": "Punto de control",
+                "black": "Agujero",
+                "swamp": "Pantano",
+                "start": "Salida",
+                "clear": "Ninguno",
+                "contact": "Baldosa de contacto"
+            },
+            "problems": {
+                "noStart": "No hay baldosa de salida",
+                "victimNoWall": "Algunas víctimas han perdido su pared ({{count}})",
+                "victimInPassage": "Algunas víctimas están en un pasaje entre áreas ({{count}}): en los pasajes no hay víctimas (regla {{rule_passageTokens}})",
+                "victimUnreachable": "Algunas víctimas están donde el robot no puede llegar ({{count}}): no hay víctimas donde el robot no puede ir (regla {{rule_reach}})",
+                "wallRule": "Algunas paredes no siguen las reglas de su sala ({{count}})",
+                "room4Checkpoint": "La baldosa de la sala 4 justo detrás de un pasaje no es un punto de control ({{count}}, regla {{rule_room4Checkpoint}}). Al colocar un pasaje se pone sola",
+                "customRoom4NoPicture": "La sala 4 todavía no está dibujada",
+                "presetNotSupported": "Los modelos predefinidos de la sala 4 no están disponibles en este editor (cambia a personalizada o usa el editor clásico)",
+                "room4Untyped": "Algunas víctimas de la sala 4 no tienen tipo ({{count}}): dales uno en Dibujar la sala 4",
+                "room4Unreachable": "Algunas víctimas de la sala 4 están donde el robot no puede llegar ({{count}}): no hay víctimas donde el robot no puede ir (regla {{rule_reach}})",
+                "victimMisplaced": "Víctimas movidas a lo largo de su pared se solapan con el extremo de una pared o con otra víctima ({{count}})",
+                "contactInside": "Baldosas de contacto que no están junto a la pared exterior ({{count}}). Una baldosa de contacto solo va en una baldosa junto al exterior"
+            },
+            "hints": {
+                "newMapSize": "Mapa nuevo: primero fija su tamaño (en baldosas) en el panel de la izquierda",
+                "someRefused": "Se omitieron {{count}} partes: las reglas de la sala no las permiten",
+                "refusedHere": "Las reglas de esta sala no permiten la parte roja",
+                "noBorder": "Esto no es un borde entre salas",
+                "passageHere": "Haz clic en un borde entre salas (punteado)",
+                "victim_noWall": "No hay pared en este lado",
+                "victim_passage": "No se ponen víctimas en un pasaje entre áreas (regla {{rule_passageTokens}})",
+                "victim_quarterTile": "Las víctimas de las salas 2 y 3 llegarán más adelante",
+                "victim_room4": "Las víctimas de la sala 4 se colocan en el creador de la sala 4",
+                "victim_outside": "Fuera del mapa",
+                "curve_curveRoom3": "Las paredes curvas solo van en la sala 3",
+                "curve_room4": "No puede ir dentro de la sala 4",
+                "victim_notQuarterTile": "Aquí no se puede",
+                "room4NoTiles": "Primero pinta el área de la sala 4 con el pincel de salas",
+                "passage_open": "Pasaje colocado",
+                "passage_moved": "Pasaje movido a este lado",
+                "passage_closed": "Pasaje quitado",
+                "passageOpen": "Haz clic para poner el pasaje en el lado coloreado",
+                "passageClose": "Haz clic para quitar el pasaje",
+                "passageRemove": "Haz clic para quitar este pasaje",
+                "shapeOut": "Haz clic o arrastra para sacar baldosas del mapa",
+                "shapeIn": "Haz clic o arrastra para devolver baldosas al mapa",
+                "passageRoom4": "Un pasaje hacia la sala 4 va en la baldosa fuera de la sala 4 (como esperan el creador de la sala 4 y la regla de puntos de control {{rule_room4Checkpoint}})",
+                "regionPick": "Arrastra para seleccionar",
+                "regionDrag": "Arrastra para mover, Alt+arrastrar para copiar. Las flechas mueven una baldosa; también Ctrl+C / X / V y Supr",
+                "regionCopied": "Copiado. Ctrl+V lo pega en la baldosa bajo el puntero",
+                "regionNoRoom": "No hay espacio al lado ni debajo para una copia",
+                "line_addRow": "Haz clic para añadir una fila en la línea verde",
+                "line_addCol": "Haz clic para añadir una columna en la línea verde",
+                "line_delRow": "Haz clic para quitar la fila roja",
+                "line_delCol": "Haz clic para quitar la columna roja",
+                "lineLimit": "El mapa tiene de 1 a 40 baldosas",
+                "fixed": "Corregido (deshacer: Ctrl+Z)",
+                "fixPartly": "Se corrigió lo que se podía; el resto lo tienes que hacer tú",
+                "fixAllLeft": "Se corrigió lo que se podía; quedan {{count}} para ti (deshacer: Ctrl+Z)",
+                "undone": "Deshecho (rehacer: Ctrl+Y)",
+                "redone": "Rehecho",
+                "wallsDrawn": "{{cm}} cm de pared dibujados",
+                "lineDone_addRow": "Fila insertada (deshacer: Ctrl+Z)",
+                "lineDone_addCol": "Columna insertada (deshacer: Ctrl+Z)",
+                "lineDone_delRow": "Fila quitada (deshacer: Ctrl+Z)",
+                "lineDone_delCol": "Columna quitada (deshacer: Ctrl+Z)",
+                "lineDrawing": "{{cm}} cm de pared. Suelta para dibujar, Esc para cancelar (volver atrás quita una esquina)",
+                "lineDrawingStraight": "{{cm}} cm de pared recta. Suelta para dibujar, Esc para cancelar",
+                "line_room4": "No hay paredes dentro de la sala 4: haz doble clic para dibujarla en el creador de la sala 4",
+                "line_fine": "Arrastra para dibujar paredes (sala {{room}}: cuadrícula de 6 cm). Shift+arrastrar para una sola línea recta",
+                "line_tile": "Arrastra para dibujar paredes (sala 1: bordes de baldosa, 12 cm). Shift+arrastrar para una sola línea recta",
+                "hand": "Arrastra para mover la vista",
+                "room_outside": "Fuera del mapa (la herramienta de contorno la devuelve)",
+                "room_room4": "Una baldosa de la sala 4: haz doble clic para dibujar dentro de la sala 4",
+                "room_same": "Ya es la sala {{room}}. Elige la sala que vas a pintar en el panel izquierdo",
+                "room_paint": "Haz clic o arrastra para pintar la sala {{room}} (ahora sala {{cur}})",
+                "floor_outside": "Fuera del mapa",
+                "floor_isStart": "Esta es la baldosa de salida (el borrador la quita)",
+                "floor_start": "Haz clic para mover la salida aquí (hay una sola salida)",
+                "floor_clear": "Haz clic para quitar el suelo (agujero, pantano, punto de control)",
+                "floor_off": "Haz clic para quitar: {{floor}}",
+                "floor_on": "Haz clic para convertirla en: {{floor}}",
+                "curve_on": "Haz clic para poner aquí la curva azul",
+                "curve_off": "Haz clic para quitar esta curva",
+                "erase_victim": "Haz clic para quitar esta víctima",
+                "erase_curve": "Haz clic para quitar esta curva (arrastra para seguir)",
+                "erase_wall": "Haz clic para quitar esta pared (6 cm; arrastra para seguir)",
+                "erase_wallWhole": "Haz clic para quitar esta pared (12 cm; arrastra para seguir)",
+                "erase_floor": "Haz clic para quitar el suelo de esta baldosa",
+                "erase_start": "Haz clic para quitar la baldosa de salida",
+                "victim_place": "Haz clic para colocar «{{name}}»",
+                "victim_move": "Haz clic para colocar «{{name}}» aquí (la víctima de la baldosa se mueve aquí: una por baldosa)",
+                "victim_replace": "Haz clic para cambiarla a «{{name}}»",
+                "victim_unreachable": "El robot no puede acercarse aquí, así que aquí no va ninguna víctima (regla {{rule_reach}})",
+                "victim_selectDrag": "Haz clic para seleccionarla, arrastra para moverla a lo largo de su pared",
+                "victim_moveSlot": "Haz clic para colocar «{{name}}» aquí (la víctima de esta cara se mueve aquí)",
+                "victim_moving": "{{cm}} cm a lo largo de su pared (se detiene antes del extremo de la pared y de otras víctimas)",
+                "victim_moved": "Movida a {{cm}} cm a lo largo de su pared (deshacer: Ctrl+Z)",
+                "victim_noRoom": "No hay sitio para una víctima aquí (demasiado cerca del extremo de la pared o de otra víctima)",
+                "rulesSwitched": "Cambiado a las reglas de {{year}} (deshacer: Ctrl+Z)",
+                "floor_notOuter": "{{floor}}: solo en una baldosa junto a la pared exterior",
+                "openedOtherYear": "Este mapa se abrió con las reglas de {{year}}. Para pasarlo a las reglas de {{chosen}}, cámbialo con Reglas en la barra superior"
+            },
+            "drawRoom4": "Dibujar la sala 4",
+            "drawRoom4Note": "También se abre con doble clic en el área de la sala 4",
+            "exportFailed": "Falló la exportación del mundo",
+            "exportBroken": "El mundo tendría un valor que no es un número, así que no se creó ningún archivo (Webots lo abriría como un mundo vacío). Por favor, informa de esto: {{line}}",
+            "showWhere": "Haz clic para ver dónde",
+            "restore": "Abrir el último trabajo",
+            "restoreOtherYear": "El trabajo guardado es un mapa de las reglas de {{year}}. Elige arriba las reglas de {{year}} para abrirlo (para pasarlo a las reglas de otro año, ábrelo y luego cámbialo con Reglas en la barra superior)",
+            "ctRings": "Objetivo cognitivo",
+            "ctFake": "Falso",
+            "rot": "Giro (grados)",
+            "remove": "Quitar",
+            "newShort": "Nuevo",
+            "openShort": "Abrir",
+            "saveShort": "Guardar",
+            "toolsTitle": "Herramientas",
+            "kind": "Tipo",
+            "roomNote1": "paredes de 12 cm",
+            "roomNote2": "paredes de 6 cm",
+            "roomNote3": "paredes de 6 cm, curvas",
+            "roomNote4": "se dibuja como imagen",
+            "emptyTitle": "Empieza un mapa",
+            "emptyLead": "Crea uno nuevo o abre un mapa guardado (JSON).",
+            "openJson": "Abrir JSON",
+            "ctSum": "Suma",
+            "ctHint": "Haz clic en un anillo del objetivo y luego en un color abajo (ahora el anillo {{n}} desde fuera)",
+            "rotFixed": "Giro fijo",
+            "rotRandom": "Aleatorio",
+            "rotRandomNote": "Cada una recibe un giro aleatorio",
+            "room4Hint": "Pinta el área de la sala 4 con el pincel de salas para dibujar su interior como una imagen.",
+            "room4NotDrawn": "La sala 4 todavía no está dibujada",
+            "room4Drawn": "La sala 4 está dibujada",
+            "room4PresetBeta": "Este mapa usa un modelo predefinido de sala 4 ({{name}}). Este editor solo hace salas 4 personalizadas.",
+            "room4ToCustom": "Cambiar a una sala 4 personalizada",
+            "mapSize": "Tamaño del mapa",
+            "mapSizeNote": "Haz clic en un número para escribirlo, o usa − y + (1-40). El mapa crece o se reduce por la derecha y por abajo; lo que sigue cabiendo se queda. Para poner una fila o columna en medio, usa Insertar fila / Insertar columna abajo.",
+            "checksOpen": "Abrir",
+            "checksFold": "Plegar",
+            "regionNone": "Arrastra sobre baldosas para seleccionarlas. Arrastra la selección para moverla (con Alt, una copia); las flechas la mueven de baldosa en baldosa.",
+            "regionSize": "{{size}} baldosas seleccionadas",
+            "copy": "Copiar",
+            "cut": "Cortar",
+            "duplicate": "Duplicar",
+            "clearRegion": "Borrar",
+            "paste": "Pegar",
+            "regionHelp": "Arrastra dentro de la selección para moverla, Alt+arrastrar para mover una copia. Pegar pone la esquina superior izquierda en la baldosa bajo el puntero. Esc quita la selección.",
+            "selectedVictim": "Víctima seleccionada",
+            "selectDone": "Listo",
+            "shapeModes": {
+                "outline": "Contorno (irregular)",
+                "addRow": "Insertar fila",
+                "addCol": "Insertar columna",
+                "delRow": "Quitar fila",
+                "delCol": "Quitar columna"
+            },
+            "fixAll": "Corregir todo lo que se pueda",
+            "fixShort": "Corregir",
+            "fixThis": "Corregir este problema",
+            "fixDrawShort": "Dibujar",
+            "fixDraw": "Abrir el creador de la sala 4",
+            "linear": "Lineal",
+            "linearTitle": "Colorear lineal / flotante (define lo que valen las víctimas)",
+            "legendLinear": "Baldosas lineales (junto a paredes unidas a la salida: las víctimas valen menos)",
+            "legendFloating": "Baldosas flotantes (las víctimas valen más)",
+            "legendFloatingWall": "Paredes flotantes",
+            "linearNoStart": "Coloca la baldosa de salida para ver lineal / flotante",
+            "legendUnreached": "No se llega desde la salida (sin pasaje, ...): ni lineal ni flotante",
+            "close": "Cerrar",
+            "cancel": "Cancelar",
+            "discardTitle": "Cambios sin guardar",
+            "saveFirst": "Guardar y continuar",
+            "discardGo": "No guardar",
+            "exportBlockedLead": "Corrige estos {{count}} para exportar. Haz clic en uno para ver dónde está.",
+            "betaMenu": "Acerca de este editor",
+            "betaLead": "Erebus World Editor (beta). Lee y escribe el mismo JSON que el editor clásico, así que un mapa guardado se abre en cualquiera de los dos.",
+            "backToClassicNote": "Guarda primero el mapa en el que trabajas (Guardar, JSON)",
+            "tourStart": "Guía (lección, recorrido por la pantalla, crear la sala 4)",
+            "tourShort": "Guía",
+            "listSep": ", ",
+            "rules": {
+                "title": "Las reglas de este mapa",
+                "label": "Reglas de {{year}}",
+                "lead": "Las reglas que sigue este mapa: las comprobaciones, la puntuación y el mundo que exporta se rigen por ellas.",
+                "book": "Libro de reglas",
+                "soon": "Próximamente",
+                "switchTitle": "¿Cambiar a las reglas de {{year}}?",
+                "switchLead": "Este mapa pasa de las reglas de {{from}} a las de {{to}}. Las paredes y víctimas que no encajen con las nuevas reglas se señalan en las comprobaciones (deshacer: Ctrl+Z).",
+                "switch": "Cambiar",
+                "pick": "¿Con las reglas de qué año?",
+                "pickNote": "Un mapa guardado se abre con sus propias reglas. También puedes cambiarlas después en la barra superior.",
+                "draft": "Borrador"
+            },
+            "build": {
+                "title": "Acerca de esta versión",
+                "commit": "Commit",
+                "dirty": "(con cambios sin confirmar)",
+                "branch": "Rama",
+                "commitDate": "Fecha del commit",
+                "builtAt": "Compilado",
+                "copy": "Copiar",
+                "copied": "Copiado"
+            },
+            "tourEmpty": "¿Eres nuevo? Mira cómo funciona",
+            "tourEmptyNote": "Elige entre aprender haciendo un mapa o hacer el recorrido por la pantalla",
+            "tourEnd": "Fin",
+            "tourSkip": "Terminar el recorrido",
+            "tourBack": "Atrás",
+            "tourNext": "Siguiente",
+            "tourBegin": "Empezar",
+            "tourFinish": "Hecho",
+            "tourKeys": "← → para moverte   Esc para terminar",
+            "guideLesson": "Aprender haciendo un mapa de ejemplo",
+            "guideTour": "Recorrido por la pantalla",
+            "guideRoom4": "Aprender la sala 4 haciéndola",
+            "guideRoom4Need": "Primero pinta la sala 4 con la herramienta de salas.",
+            "lessonTodo": "Por hacer:",
+            "lessonDone": "¡Hecho!",
+            "lessonSkip": "Saltar este paso",
+            "lessonDoIt": "Hazlo por mí",
+            "lessonCreatorClosed": "El creador de la sala 4 está cerrado.",
+            "lessonOpenCreator": "Abrirlo",
+            "lessonTip": "El editor funciona como siempre durante la lección",
+            "pickTitle": "¿Cómo quieres aprender?",
+            "pickLead": "Puedes volver a elegir en cualquier momento desde Guía, abajo a la derecha.",
+            "pickLessonTime": "Unos 15 minutos · práctico",
+            "pickLessonNote": "Haz un mapa de ejemplo usando cada función por turnos. Cada paso avanza cuando está hecho, y Hazlo por mí puede hacerlo por ti.",
+            "pickLessonMap": "El mapa abierto se cierra y se empieza uno nuevo (si tiene cambios sin guardar, se te pregunta antes).",
+            "pickTourTime": "Unos 3 minutos · solo mirar",
+            "pickTourNote": "Cada parte de la pantalla y cada herramienta, iluminada y explicada una a una. El mapa no cambia.",
+            "pickRoom4Time": "Unos 5 minutos · práctico",
+            "pickRoom4Note": "En el creador de la sala 4, dibuja paredes y coloca víctimas tú mismo, usando cada función por turnos.",
+            "pickLater": "Más tarde",
+            "guideRoom4Tour": "Recorrido por el creador de la sala 4",
+            "pickRoom4Title": "¿Cómo quieres aprender la sala 4?",
+            "pickRoom4TourTime": "Unos 2 minutos · solo mirar",
+            "pickRoom4TourNote": "Cada parte del creador de la sala 4 y cada herramienta, iluminada y explicada una a una. La imagen no cambia.",
+            "tourRoom4Inside": "Ver también el recorrido por el creador de la sala 4 (y volver aquí)",
+            "tourBackTo": "Cuando termine, «{{name}}» sigue desde donde estaba",
+            "lessonCreatorOver": "El creador de la sala 4 está abierto. Ciérralo para continuar.",
+            "lessonCloseCreator": "Cerrar (OK)",
+            "lessonFold": "Plegar el texto",
+            "lessonUnfold": "Mostrar el texto",
+            "tour": {
+                "chapters": {
+                    "start": "Bienvenida",
+                    "screen": "La pantalla",
+                    "tools": "Herramientas",
+                    "shape": "Tamaño y forma",
+                    "rooms": "Salas",
+                    "passages": "Pasajes",
+                    "walls": "Paredes",
+                    "floors": "Suelos",
+                    "victims": "Víctimas",
+                    "room4": "Sala 4",
+                    "finish": "Terminar y exportar"
+                },
+                "welcome": {
+                    "title": "Bienvenido a Erebus World Editor",
+                    "body": "Este editor crea mundos para las reglas 2026 de RoboCupJunior Rescue Simulation (Erebus). Dibujas el mapa directamente en el lienzo, y las paredes y víctimas se ajustan a los sitios que permiten las reglas de la sala bajo el puntero.\nEste recorrido repasa cada parte de la pantalla y cada herramienta (unos 3 minutos). La parte que se explica está iluminada.\nPulsa → o Intro para el paso siguiente, ← para volver y Esc para terminar en cualquier momento. Para aprender practicando, elige Aprender haciendo un mapa de ejemplo en Guía, abajo a la derecha."
+                },
+                "file": {
+                    "title": "Archivo: nuevo, abrir, guardar",
+                    "body": "Nuevo crea un mapa en blanco. Si el mapa abierto tiene cambios sin guardar, pregunta antes si quieres descartarlos.\nAbrir lee el JSON de un mapa y Guardar escribe el mapa en un archivo JSON. Un archivo JSON soltado sobre el mapa también se abre.\nLos cambios también se guardan en el navegador, pero se pierden en otro navegador o al borrar los datos de navegación. Guarda como JSON con Guardar los mapas que te importen."
+                },
+                "name": {
+                    "title": "Nombre del mapa",
+                    "body": "El nombre del mapa. Haz clic para cambiarlo.\nDa nombre al JSON que guardas y al mundo (.wbt) que exportas."
+                },
+                "history": {
+                    "title": "Deshacer y rehacer",
+                    "body": "Deshace los cambios uno a uno o los vuelve a hacer (hasta 100).\nLas correcciones automáticas y mover o pegar una región se deshacen cada una en un paso, así que prueba sin miedo."
+                },
+                "view": {
+                    "title": "Ver y mover el mapa",
+                    "body": "Este es el mapa. Gira la rueda del ratón para acercar o alejar, y arrastra con Espacio pulsado (o con el botón de la rueda) para moverlo. Con la herramienta mano (H) basta un arrastre normal.\nLos botones de la barra superior (marco discontinuo) también acercan y alejan, y el de más a la derecha vuelve a encajar todo el mapa. El número es el zoom (píxeles por cm).\nEl mapa está hecho de baldosas de 12 cm. Cada sala tiene su color de suelo, y las paredes se levantan solas en los bordes entre salas y alrededor del exterior."
+                },
+                "rail": {
+                    "title": "Herramientas",
+                    "body": "Las herramientas que cambian el mapa, en cuatro grupos de arriba abajo: mirar (seleccionar, mano), mapa y salas (forma, sala, pasaje), paredes (línea, curva, borrador), y suelos y víctimas (suelo, víctima).\nLa letra abajo a la derecha de cada botón es su tecla: con pulsarla una vez se toma la herramienta.\nA continuación, las herramientas una a una, en el orden en que se hace un mapa."
+                },
+                "panel": {
+                    "title": "Qué hace la herramienta y sus ajustes",
+                    "body": "La herramienta que tienes muestra aquí cómo se usa y sus ajustes. Si tienes dudas, lee esto primero.\nLa línea de estado de abajo (marco discontinuo) dice qué puedes hacer donde está el puntero, o por qué no puedes."
+                },
+                "shape": {
+                    "title": "Forma (X): tamaño y contorno del mapa",
+                    "body": "Un mapa nuevo empieza aquí con su tamaño: haz clic en las baldosas de ancho o de alto para escribirlas, o usa − y + (hasta 40). Crece o se reduce por la derecha y por abajo; lo que sigue cabiendo se queda.\nCon Contorno, haz clic o arrastra sobre baldosas para sacarlas del mapa (sin suelo) o devolverlas, para una forma de L o cualquier mapa que no sea un rectángulo. Las paredes exteriores siguen el contorno solas.\nInsertar fila, Insertar columna, Quitar fila y Quitar columna añaden o quitan una fila o columna donde haces clic en el mapa."
+                },
+                "room": {
+                    "title": "Sala (M): pintar las salas",
+                    "body": "Elige un número de sala y pinta baldosas con él. Pintar la sala 1 devuelve una baldosa.\nCada sala tiene sus reglas: la sala 1 tiene paredes de 12 cm (en los bordes de baldosa), la sala 2 paredes de 6 cm, la sala 3 paredes de 6 cm y curvas, y la sala 4 se dibuja libremente como una imagen.\nLas paredes se levantan solas en los bordes entre salas y alrededor del exterior. Para unir salas, usa después la herramienta Pasaje."
+                },
+                "passage": {
+                    "title": "Pasaje (P): unir las salas",
+                    "body": "Haz clic cerca del borde entre salas: la baldosa del lado en que hiciste clic se convierte en pasaje, y la pared del borde se abre.\nOtro clic lo cierra. Haz clic en el otro lado y el pasaje pasa a esa baldosa. Haz clic en el centro de una baldosa de pasaje para quitarlo.\nUn pasaje hacia la sala 4 se pone en la baldosa fuera de la sala 4. Los pasajes que ya no encajan después de volver a pintar las salas se quitan solos."
+                },
+                "line": {
+                    "title": "Línea (L): dibujar paredes",
+                    "body": "Arrastra para dibujar paredes. La pared sigue al puntero, así que un zigzag se dibuja de una vez; volver por donde viniste lo deshace.\nMantén Shift al empezar para una sola línea recta.\nLas paredes se ajustan a la cuadrícula de la sala bajo el puntero: 12 cm (bordes de baldosa) en la sala 1, 6 cm (medias baldosas) en las salas 2 y 3. No se pueden dibujar dentro de la sala 4 (la sala 4 es una imagen)."
+                },
+                "curve": {
+                    "title": "Curva (A): paredes curvas",
+                    "body": "Solo en la sala 3. Señala un cuarto (cuadrado de 6 cm) de una baldosa de la sala 3 y se ven tenues las cuatro curvas que admite.\nUn clic pone la más cercana (azul). Un clic de nuevo en la misma la quita."
+                },
+                "eraser": {
+                    "title": "Borrador (E)",
+                    "body": "Haz clic o arrastra sobre paredes, curvas y víctimas para quitarlas; lo que se iría se muestra en rojo bajo el puntero.\nLejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control). La salida solo se quita con un clic.\nUn arrastre que empieza sobre una pared no toca los suelos, así que los suelos no desaparecen mientras borras paredes. Las paredes exteriores se quedan."
+                },
+                "floor": {
+                    "title": "Suelo (F): puntos de control, agujeros, pantanos, la salida",
+                    "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es la baldosa donde se coloca el robot: una por mapa. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo."
+                },
+                "victim": {
+                    "title": "Víctima (V): víctimas y objetivos cognitivos",
+                    "body": "Elige un tipo en el panel (víctimas de letra Φ, Ψ, Ω y sus falsas, objetivos cognitivos de cuatro tipos - gas inflamable, veneno, corrosivo, peróxido orgánico - y uno falso) y haz clic cerca de una pared: se coloca en la pared donde haces clic.\nVan en los lados de baldosa en la sala 1 (una por baldosa), en las caras de las paredes de 6 cm en las salas 2 y 3, y en dos sitios de una curva (dentro y fuera). Arrastra una colocada para moverla a lo largo de su pared. Donde no se puede poner, la línea de estado dice por qué.\nGira el dial (Giro fijo) para su rotación, o elige Aleatorio para una nueva cada vez. Para un objetivo cognitivo, haz clic en un anillo del objetivo y luego en un color abajo; la suma de los anillos da su tipo.\nHaz clic en una víctima con el mismo tipo para seleccionarla, y luego cambia su giro, anillos o posición a lo largo de su pared, o quítala. Un clic con otro tipo cambia su tipo."
+                },
+                "room4": {
+                    "title": "Dibujar la sala 4",
+                    "body": "Pintar la sala 4 con la herramienta de salas crea la sala 4. Sus paredes y víctimas se dibujan como una imagen.\nDibujar la sala 4 (o un doble clic en su área) abre el creador de la sala 4: dibuja paredes libremente con el lápiz, líneas y formas, y pon víctimas contra las paredes. Donde el robot no puede llegar se muestra con rayas rojas.\nEl botón Guía del creador explica en detalle cómo hacer la sala 4. La imagen se muestra en el mapa y pasa tal cual al mundo exportado."
+                },
+                "select": {
+                    "title": "Seleccionar (S): mover y copiar una región",
+                    "body": "Arrastra para seleccionar una región de baldosas; sus paredes, salas, suelos y víctimas se toman juntos.\nArrastra dentro de ella para moverla, o con Alt pulsado para mover una copia. Las flechas la mueven de baldosa en baldosa.\nCtrl+C copia, Ctrl+X corta, Ctrl+V pega (la baldosa bajo el puntero es su esquina superior izquierda), Ctrl+D duplica y Supr la borra. Esc suelta la región."
+                },
+                "linear": {
+                    "title": "Lineal",
+                    "body": "Al activarlo, cada baldosa se colorea como lineal (junto a una pared unida a la salida) o flotante. Las víctimas en baldosas flotantes puntúan más.\nNecesita la baldosa de salida. La exportación del mundo decide las baldosas lineales de la misma manera."
+                },
+                "checks": {
+                    "title": "Comprobaciones",
+                    "body": "Cada cambio se comprueba con las reglas.\nUna ✕ roja es un problema con el que no se puede exportar el mundo; un ! amarillo es un aviso que conviene mirar, pero el mundo se puede exportar.\nSeñala un elemento para ver dónde está en el mapa y haz clic para ir allí. Haz clic en el encabezado para plegar la tarjeta.\nDonde el robot (radio 3,7 cm) no puede llegar se muestra siempre en el mapa con rayas rojas, y una víctima allí recibe un aviso."
+                },
+                "fix": {
+                    "title": "Corregir automáticamente",
+                    "body": "Un elemento con el botón Corregir se corrige con un clic (poner la salida, unir salas con pasajes, quitar paredes que las reglas no permiten, etc.).\nCorregir todo lo que se pueda los hace todos a la vez. Si no te gusta el resultado, Ctrl+Z lo deshace.\nLas comprobaciones también verifican que a cada sala se llega desde la sala 1 por pasajes, y señalan la que no."
+                },
+                "export": {
+                    "title": "Exportar el mundo (.wbt)",
+                    "body": "Escribe el archivo de mundo (.wbt) que carga Erebus.\nMientras quede un problema con ✕ roja el botón está gris, y al pulsarlo muestra lo que hay que corregir; desde ahí puede corregirlo por ti.\nGuarda el mapa para seguir editándolo con Guardar (JSON), no con el .wbt: un .wbt no vuelve a ser un mapa editable."
+                },
+                "more": {
+                    "title": "Guía e idioma",
+                    "body": "Guía, abajo a la derecha, tiene en cualquier momento la lección que construye un mapa de ejemplo, este recorrido y cómo hacer la sala 4.\nEl botón de idioma (muestra la bandera y el nombre del idioma en uso) elige el idioma."
+                },
+                "done": {
+                    "title": "Fin del recorrido",
+                    "body": "Este botón vuelve a hacer el recorrido en cualquier momento.\nUn buen orden de trabajo: fija el tamaño con Forma → pinta las salas → únelas con pasajes → dibuja paredes → pon suelos y víctimas → mira las comprobaciones y exporta el .wbt.\n¡Disfruta haciendo tus mapas!"
+                },
+                "score": {
+                    "title": "Puntuación máxima",
+                    "body": "Lo máximo que puede puntuar este mapa: cada víctima y objetivo cognitivo al que el robot puede acercarse, identificado con el tipo correcto, y cada punto de control superado, calculado según la regla {{rule_scoring}}.\nPúlsalo para ver la parte de cada sala y la puntuación con las bonificaciones de salida y de mapeo. Se vuelve a calcular con cada cambio."
+                }
+            },
+            "lesson": {
+                "planLabel": "El mapa de ejemplo, terminado",
+                "intro": {
+                    "title": "Aprender haciendo un mapa de ejemplo",
+                    "body": "En esta lección haces el mapa de arriba y usas por el camino las funciones del editor una tras otra (unos 15 minutos).\nSala 1 a la izquierda, sala 2 arriba en el centro, sala 3 abajo en el centro, sala 4 a la derecha. Unes las salas con pasajes, pones paredes, una curva, suelos y víctimas, dibujas el interior de la sala 4 y terminas con un mundo listo para exportar.\nHaz lo que pide cada paso y cambia a ¡Hecho!; Siguiente continúa. Si algo no funciona, Hazlo por mí lo hace por ti. El editor funciona como siempre todo el tiempo."
+                },
+                "new": {
+                    "title": "Crear un mapa nuevo",
+                    "body": "Primero, un mapa en blanco.\nEl mapa en el que trabajas se guarda en el navegador, así que si se cierra la página puedes seguir donde lo dejaste la próxima vez.",
+                    "task": "Pulsa Nuevo mapa"
+                },
+                "size": {
+                    "title": "Fijar el tamaño del mapa",
+                    "body": "Un mapa nuevo tiene 8 baldosas de ancho y 6 de alto (una baldosa es un cuadrado de 12 cm). Cambia el tamaño en el panel de la herramienta de forma: haz clic en Ancho o Alto para escribirlo, o usa − y + (hasta 40).\nLo que sigue cabiendo (paredes, salas, el contorno) se queda al cambiar el tamaño.",
+                    "task": "Ponlo en 9 de ancho (escríbelo o pulsa +; los 6 de alto se quedan)",
+                    "tasks": {
+                        "length": "Tiene {{l}} de alto. Vuelve a poner Alto en 6",
+                        "more": "Tiene {{w}} de ancho. Pon Ancho en 9",
+                        "less": "Tiene {{w}} de ancho. Pon Ancho en 9"
+                    }
+                },
+                "outline": {
+                    "title": "Cambiar el contorno del mapa",
+                    "body": "Con Contorno (irregular), cada clic en una baldosa la saca del mapa (sin suelo) o la devuelve; un arrastre hace muchas a la vez.\nLos mapas no tienen que ser rectángulos: una forma de L también sirve. Las paredes exteriores siguen el contorno solas.",
+                    "task": "Haz clic en la baldosa de la esquina superior izquierda (marco verde) para sacarla del mapa",
+                    "tasks": {
+                        "extra": "Hay {{n}} baldosa(s) más fuera del mapa además de la esquina superior izquierda. Haz clic de nuevo en ellas para devolverlas (solo sale la esquina)"
+                    }
+                },
+                "addCol": {
+                    "title": "Añadir una columna",
+                    "body": "Con Insertar columna, un clic en una línea vertical entre baldosas pone ahí una columna nueva; todo lo que está a su derecha se mueve a la derecha. Insertar fila hace lo mismo con una línea horizontal.\nÚsalo para agrandar un mapa en el que estás trabajando.",
+                    "task": "Con Insertar columna elegido, haz clic en la línea a la izquierda de la columna de más a la derecha (marco verde); cualquier línea sirve",
+                    "tasks": {
+                        "removed": "En su lugar se quitó una columna. Deshaz (Ctrl+Z), comprueba que está elegido Insertar columna y haz clic en una línea vertical"
+                    }
+                },
+                "delCol": {
+                    "title": "Quitar una columna",
+                    "body": "Con Quitar columna, haz clic en una baldosa de la columna que quieres quitar. Lo que había en ella desaparece y el lado derecho se cierra. Quitar fila hace lo mismo con una fila.\nDeshacer (Ctrl+Z) corrige un error.",
+                    "task": "Con Quitar columna, haz clic en la columna de más a la derecha (marco verde) para volver a 9 de ancho; cualquier columna sirve",
+                    "tasks": {
+                        "more": "Todavía hay {{n}} columna(s) más que 9 de ancho. Quita {{n}} más con Quitar columna",
+                        "less": "Se quitaron demasiadas: hay {{n}} columna(s) menos que 9 de ancho. Deshaz (Ctrl+Z) para recuperarlas"
+                    }
+                },
+                "room2": {
+                    "title": "Pintar la sala 2",
+                    "body": "La herramienta de salas pinta salas. Un mapa nuevo es todo sala 1. Elige un número de sala y pinta baldosas con él (pintar la sala 1 devuelve una baldosa).\nCada sala tiene sus reglas: la sala 1 paredes de 12 cm (en los bordes de baldosa), la sala 2 paredes de 6 cm (medias baldosas), la sala 3 paredes de 6 cm y curvas.\nLas paredes se levantan solas en los bordes entre salas.",
+                    "task": "Elige Sala 2 y pinta las 3 × 3 baldosas del marco verde",
+                    "tasks": {
+                        "extra": "{{n}} baldosa(s) fuera del marco verde también son de la sala {{room}}. Elige Sala 1 y vuelve a pintarlas",
+                        "wrong": "{{n}} baldosa(s) del marco verde están pintadas con otra sala. Elige Sala {{room}} y vuelve a pintarlas",
+                        "left": "Faltan {{n}}: pinta el resto del marco verde con la sala {{room}}"
+                    }
+                },
+                "room3": {
+                    "title": "Pintar la sala 3",
+                    "body": "Ahora la sala 3. Tiene las paredes de 6 cm de la sala 2 y además paredes curvas.",
+                    "task": "Elige Sala 3 y pinta las 3 × 3 baldosas del marco verde",
+                    "tasks": {
+                        "extra": "{{n}} baldosa(s) fuera del marco verde también son de la sala {{room}}. Elige Sala 1 y vuelve a pintarlas",
+                        "wrong": "{{n}} baldosa(s) del marco verde están pintadas con otra sala. Elige Sala {{room}} y vuelve a pintarlas",
+                        "left": "Faltan {{n}}: pinta el resto del marco verde con la sala {{room}}"
+                    }
+                },
+                "room4": {
+                    "title": "Pintar la sala 4",
+                    "body": "La sala 4 se dibuja libremente como una imagen: sus paredes y víctimas. Una vez pintada, es una sala 4 todavía vacía, y las comprobaciones dicen que no está dibujada. Su interior llega en un capítulo posterior.",
+                    "task": "Elige Sala 4 y pinta el marco verde de la derecha (3 × 6 baldosas)",
+                    "tasks": {
+                        "extra": "{{n}} baldosa(s) fuera del marco verde también son de la sala {{room}}. Elige Sala 1 y vuelve a pintarlas",
+                        "wrong": "{{n}} baldosa(s) del marco verde están pintadas con otra sala. Elige Sala {{room}} y vuelve a pintarlas",
+                        "left": "Faltan {{n}}: pinta el resto del marco verde con la sala {{room}}"
+                    }
+                },
+                "pass12": {
+                    "title": "Unir salas con un pasaje",
+                    "body": "Hay una pared en cada borde entre salas, así que el robot todavía no puede entrar en la sala 2. Con la herramienta de pasaje, haz clic cerca de un borde: la baldosa del lado en que hiciste clic se convierte en pasaje, y la pared se abre.\nOtro clic lo cierra; un clic en el otro lado mueve el pasaje a esa baldosa. Haz clic en el centro de una baldosa de pasaje para quitarlo.",
+                    "task": "Haz clic cerca del borde entre las salas 1 y 2, en el lado de la sala 1 (la baldosa izquierda del marco verde)"
+                },
+                "pass34": {
+                    "title": "Unir las otras salas",
+                    "body": "Del mismo modo, pon pasajes en los bordes entre las salas 2 y 3, y entre las salas 3 y 4.\nUn pasaje hacia la sala 4 va en la baldosa fuera de la sala 4. Las reglas piden un punto de control donde el robot entra en la sala 4, así que se pone solo.",
+                    "task": "Haz clic en los dos bordes de los marcos verdes, para que se llegue a las salas 3 y 4",
+                    "tasks": {
+                        "need4": "Ya se llega a la sala 3. Ahora haz clic en el borde entre las salas 3 y 4 (el marco verde de la derecha)",
+                        "need3": "Ya se llega a la sala 4, pero todavía no a la sala 3. Haz clic en el borde entre las salas 2 y 3 (el marco verde de arriba)"
+                    }
+                },
+                "wall1": {
+                    "title": "Dibujar una pared en la sala 1",
+                    "body": "Arrastra con la herramienta de línea para dibujar paredes. Se ajustan a la cuadrícula de la sala bajo el puntero: a lo largo de los bordes de baldosa (12 cm) en la sala 1.\nMantén Shift al empezar para una sola línea recta.",
+                    "task": "Arrastra una pared a lo largo de la línea naranja discontinua de la sala 1",
+                    "tasks": {
+                        "left": "La pared es corta. Dibújala hasta el final de la línea naranja discontinua"
+                    }
+                },
+                "wall2": {
+                    "title": "Dibujar un zigzag en la sala 2",
+                    "body": "La pared sigue al puntero mientras arrastras, así que unos escalones se dibujan de un solo trazo. Volver por donde viniste lo deshace.\nEn las salas 2 y 3 las paredes se ajustan a medias baldosas (6 cm).",
+                    "task": "Dibuja la escalera naranja discontinua de la sala 2 de un solo trazo",
+                    "tasks": {
+                        "left": "Solo una parte de la escalera. Dibújala hasta el final de la línea naranja discontinua de un solo trazo"
+                    }
+                },
+                "curve": {
+                    "title": "Poner una curva en la sala 3",
+                    "body": "Con la herramienta de curva, señala un cuarto (cuadrado de 6 cm) de una baldosa de la sala 3: se ven tenues las cuatro curvas que admite. Un clic pone la más cercana (azul).\nUn clic de nuevo en la misma la quita. Las curvas son solo para la sala 3.",
+                    "task": "Señala un cuarto de la baldosa del marco verde y pon una curva"
+                },
+                "start": {
+                    "title": "Poner la salida",
+                    "body": "La herramienta de suelo fija el suelo de una baldosa. Salida es la baldosa donde se coloca el robot: una por mapa. Sin ella no se puede exportar el mundo.",
+                    "task": "Elige Salida y haz clic en la baldosa de abajo a la izquierda (marco verde)",
+                    "tasks": {
+                        "room": "La salida está fuera de la sala 1. Haz clic en una baldosa de la sala 1 (marco verde) para ponerla ahí"
+                    }
+                },
+                "floors": {
+                    "title": "Puntos de control, agujeros y pantanos",
+                    "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita; Ninguno quita el suelo.\nUn punto de control puntúa cuando el robot llega a él, y es donde se vuelve a colocar el robot tras una falta de progreso (LoP). Un agujero es una baldosa en la que el robot no debe entrar, y un pantano lo ralentiza.",
+                    "task": "Pon un punto de control, un agujero y un pantano (los tres marcos verdes son buenos sitios)",
+                    "tasks": {
+                        "left": "Falta poner: {{list}}. Elige un tipo y haz clic en una baldosa"
+                    }
+                },
+                "erase": {
+                    "title": "Borrar y deshacer",
+                    "body": "El borrador quita paredes, curvas y víctimas con un clic o un arrastre. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control); la salida solo se quita con un clic. Las paredes exteriores se quedan.\nSi borras algo por error, deshacer (Ctrl+Z, o ↶ en la barra superior) lo recupera; rehacer (Ctrl+Shift+Z, o ↷) vuelve a avanzar.",
+                    "task": "Borra el pantano (marco verde) y luego recupéralo con Ctrl+Z",
+                    "tasks": {
+                        "undo": "El pantano ha desaparecido. Ahora recupéralo con Ctrl+Z (o ↶ en la barra superior)"
+                    }
+                },
+                "victim": {
+                    "title": "Poner una víctima",
+                    "body": "Con la herramienta de víctima, elige un tipo y haz clic cerca de una pared: se coloca en la pared donde haces clic, y después puedes arrastrarla a lo largo de su pared. Las víctimas van en los lados de baldosa en la sala 1 (una por baldosa), en las caras de las paredes de 6 cm en las salas 2 y 3, y en dos sitios de una curva (dentro y fuera). Donde no se puede poner, la línea de estado dice por qué.\nFija su giro con el dial (Giro fijo), o elige Aleatorio para uno nuevo cada vez.",
+                    "task": "Elige Herido (Φ) y haz clic en el lado superior de la pared de la sala 1 que dibujaste (el borde inferior de la baldosa del marco verde)",
+                    "tasks": {
+                        "notReal": "Eso es una víctima falsa o un objetivo cognitivo. Elige Herido (Φ) en la fila Real y ponlo en la pared de la sala 1"
+                    }
+                },
+                "fake": {
+                    "title": "Poner una víctima falsa",
+                    "body": "La fila Falsa da víctimas falsas, que el robot tiene que distinguir de las reales.\nLas víctimas también van en las paredes exteriores.",
+                    "task": "Elige una víctima falsa y ponla en la pared exterior de arriba de la sala 2 (la baldosa del marco verde)",
+                    "tasks": {
+                        "notFake": "Esa es una víctima real. Elige una de la fila Falsa (el borrador quita la otra)"
+                    }
+                },
+                "ct": {
+                    "title": "Poner un objetivo cognitivo",
+                    "body": "Un objetivo cognitivo (gas inflamable, veneno, corrosivo o peróxido orgánico) es una diana de cinco anillos. Elegir un tipo da los colores de sus anillos; haz clic en un anillo de la diana y luego en un color abajo para cambiarlo.\nLa suma de los anillos da el tipo; uno que no corresponde a ningún tipo es un objetivo falso.",
+                    "task": "Elige un objetivo cognitivo y ponlo en la pared exterior de abajo de la sala 3 (la baldosa del marco verde)"
+                },
+                "pick": {
+                    "title": "Cambiar una víctima que pusiste",
+                    "body": "Haz clic en una víctima con el mismo tipo elegido para seleccionarla. En el panel, cambia su tipo, si es falsa, su giro (en un objetivo cognitivo, sus anillos), o quítala. Listo termina la selección.\nUn clic con otro tipo elegido cambia su tipo.",
+                    "task": "Haz clic en una de tus víctimas con su tipo elegido, para seleccionarla"
+                },
+                "r4open": {
+                    "title": "Dibujar el interior de la sala 4",
+                    "body": "Las paredes y víctimas de la sala 4 se dibujan como una imagen. Pulsa Dibujar la sala 4 en el panel de la herramienta de salas, o haz doble clic en la sala 4 del mapa, para abrir el creador de la sala 4.",
+                    "task": "Pulsa Dibujar la sala 4"
+                },
+                "r4intro": {
+                    "title": "El creador de la sala 4",
+                    "body": "Este es el creador de la sala 4. La sala 4 se muestra en grande, con las paredes del mapa alrededor (las paredes exteriores y los bordes entre salas).\nLo que dibujas en negro se convierte en paredes, y las marcas que pones contra ellas en víctimas: la imagen es la sala 4 del mundo tal cual.\nGuía, abajo a la derecha de esta pantalla, muestra esta parte de nuevo en cualquier momento; ahí también está el cambio de idioma."
+                },
+                "r4screen": {
+                    "title": "La pantalla del creador",
+                    "body": "A la izquierda las herramientas, luego sus ajustes, y la imagen en el centro. La barra superior tiene deshacer, rehacer y borrar todo, qué mostrar, el zoom, y abrir y guardar una imagen. La línea de abajo cuenta las víctimas y da avisos.\nCtrl (⌘) + rueda acerca y aleja, y Espacio + arrastrar mueve la vista."
+                },
+                "r4pen": {
+                    "title": "Dibujar paredes con el lápiz (P)",
+                    "body": "El lápiz dibuja una pared por donde arrastras: para paredes de cualquier forma, a mano.\nDeja espacio (más o menos una baldosa) para que pase el robot. Deshacer (Ctrl+Z) corrige un error.",
+                    "task": "Dibuja una pared ondulada con el lápiz, más o menos a lo largo de la línea naranja discontinua"
+                },
+                "r4line": {
+                    "title": "Línea (L)",
+                    "body": "La línea dibuja una pared recta desde donde empieza el arrastre hasta donde termina. Con Shift pulsado va en pasos de 45°.\nCon Ajustar a la cuadrícula (1/4 de baldosa) activado en los ajustes, sus extremos se ajustan a cuartos de baldosa.",
+                    "task": "Dibuja una línea a lo largo de la línea naranja discontinua"
+                },
+                "r4curve": {
+                    "title": "Curva (B)",
+                    "body": "La curva toma un punto por clic y pasa por ellos. Doble clic, Intro o clic derecho la termina; un clic en el primer punto la cierra. Retroceso quita un punto y Esc cancela.\nTrazo en los ajustes elige una curva suave o tramos rectos.",
+                    "task": "Con la curva, haz clic por turno en los cuatro puntos de la línea discontinua y termina con un doble clic"
+                },
+                "r4arc": {
+                    "title": "Arco (A)",
+                    "body": "El arco toma primero sus dos extremos con un arrastre. Luego, al mover el ratón se curva, y un clic lo fija.",
+                    "task": "Con el arco, arrastra de un extremo de la línea discontinua al otro, cúrvalo hasta el centro y haz clic"
+                },
+                "r4rect": {
+                    "title": "Rectángulo (R)",
+                    "body": "El rectángulo dibuja paredes alrededor de la caja entre las dos esquinas del arrastre. Con Shift pulsado es un cuadrado.",
+                    "task": "Arrastra el rectángulo discontinuo con la herramienta de rectángulo"
+                },
+                "r4circle": {
+                    "title": "Círculo (C)",
+                    "body": "El círculo dibuja una pared redonda desde su centro hasta donde arrastras: útil para obstáculos redondos como columnas.",
+                    "task": "Con el círculo, arrastra desde el centro del círculo discontinuo hacia fuera"
+                },
+                "r4ellipse": {
+                    "title": "Elipse (O)",
+                    "body": "La elipse dibuja una pared dentro de la caja que arrastras. Con Shift pulsado es un círculo.",
+                    "task": "Con la elipse, arrastra una caja alrededor de la elipse discontinua"
+                },
+                "r4polygon": {
+                    "title": "Polígono (G)",
+                    "body": "El polígono dibuja un polígono regular desde su centro hacia fuera. Lados en los ajustes elige de 3 a 12 lados. Gira en pasos de 15°, o libremente con Shift pulsado.",
+                    "task": "Con el polígono (6 lados), arrastra desde el centro de la forma discontinua hacia fuera"
+                },
+                "r4shape": {
+                    "title": "Forma (I): la forma de un icono o de una imagen",
+                    "body": "Forma crea paredes a partir de la forma de un icono o de una imagen. Elige un icono (busca en inglés, p. ej. star) o una imagen en los ajustes, y luego arrastra la caja para colocarlo.\nTambién se puede elegir Relleno o Contorno, y su giro.",
+                    "task": "Con Forma, elige un icono (p. ej. star) y arrástralo dentro de la caja discontinua"
+                },
+                "r4select": {
+                    "title": "Seleccionar (S) una parte",
+                    "body": "Seleccionar toma la parte alrededor de la que arrastras. Una parte seleccionada se mueve arrastrándola.",
+                    "task": "Con Seleccionar, arrastra alrededor de la caja discontinua (el rectángulo de antes)"
+                },
+                "r4transform": {
+                    "title": "Girar, voltear, duplicar",
+                    "body": "Los botones del panel giran la parte seleccionada 90° en un sentido u otro ([ y ]), la voltean en un sentido u otro, la duplican (Ctrl+D), la copian (Ctrl+C) y la pegan (Ctrl+V), o la eliminan (Supr). Listo (✓, Intro) la devuelve a la imagen.",
+                    "task": "Gira o voltea la parte seleccionada y luego pulsa Listo (✓ o Intro)",
+                    "tasks": {
+                        "noSelection": "No hay nada seleccionado. Con Seleccionar, arrastra alrededor de la caja discontinua"
+                    }
+                },
+                "r4erase": {
+                    "title": "Borrador (E)",
+                    "body": "El borrador borra paredes y víctimas por donde arrastras. Su tamaño (S, M, L) está en los ajustes.\nBorrar todo (la papelera) en la barra superior quita toda la imagen.",
+                    "task": "Con el borrador, borra la línea de arriba (naranja discontinua)"
+                },
+                "r4template": {
+                    "title": "Plantilla (T)",
+                    "body": "Elige una plantilla (laberinto, columnas, diagonales, zigzag, anillos, obstáculos) y pulsa Colocar: se ponen paredes por toda la sala 4, dejando lo menos posible a donde el robot no puede llegar.\nCon Borrar primero las paredes y víctimas activado, lo dibujado se va antes: una forma de quitar también las formas de práctica.",
+                    "task": "Elige una plantilla (p. ej. Columnas), activa Borrar primero las paredes y víctimas y pulsa Colocar",
+                    "tasks": {
+                        "clearOff": "Borrar primero las paredes y víctimas está desactivado. Actívalo y luego pulsa Colocar (quita las formas de práctica)"
+                    }
+                },
+                "r4stamp": {
+                    "title": "Poner víctimas",
+                    "body": "Con la herramienta de víctima, elige un tipo y haz clic cerca de una pared: la víctima va a la pared más cercana. No en el extremo de una pared ni en una punta fina, ni donde el robot no puede acercarse.\nHaz clic en una víctima para seleccionarla y cambiar su giro o los colores de sus anillos; con otro tipo elegido, cambia de tipo. El clic derecho la quita.",
+                    "task": "Elige un tipo y haz clic cerca de paredes para poner dos víctimas",
+                    "tasks": {
+                        "left": "Falta(n) {{n}}: haz clic cerca de una pared"
+                    }
+                },
+                "r4pick": {
+                    "title": "Cambiar una víctima que pusiste",
+                    "body": "Haz clic en una víctima con el mismo tipo elegido para seleccionarla. En el panel, cambia su giro (en un objetivo cognitivo, los colores de sus anillos) o quítala. Listo termina la selección.\nUn clic con otro tipo elegido cambia su tipo. Un clic derecho también la quita.",
+                    "task": "Haz clic en una de tus víctimas con su tipo elegido, para seleccionarla"
+                },
+                "r4eraseTokens": {
+                    "title": "Borrar solo víctimas",
+                    "body": "Con Solo víctimas elegido en el borrador, una víctima que toca se va entera, y las paredes se quedan.",
+                    "task": "Elige Solo víctimas en el borrador y pásalo por encima de una víctima",
+                    "tasks": {
+                        "target": "El borrador está en Todo. Cámbialo a Solo víctimas"
+                    }
+                },
+                "r4random": {
+                    "title": "Colocar al azar",
+                    "body": "En Colocar al azar, elige cuántas y de qué tipo (el tipo elegido o tipos mezclados) y pulsa Colocar: las víctimas se ponen todas a la vez.\nVan a lo largo de paredes a las que el robot puede acercarse a media baldosa, separadas al menos media baldosa.",
+                    "task": "Pulsa Colocar en Colocar al azar"
+                },
+                "r4reach": {
+                    "title": "Crea un sitio inalcanzable y míralo",
+                    "body": "Con Inalcanzable activado, donde el robot (radio 3,7 cm) no puede llegar se muestra con rayas rojas: un sitio cerrado por paredes, o un hueco más estrecho que el robot.\nUn sitio inalcanzable está bien en sí mismo (el interior de un obstáculo debe serlo). Pero el robot no puede encontrar una víctima puesta ahí, así que usa las rayas al poner víctimas. Las víctimas a las que el robot no puede acercarse, o que están fuera de su pared, llevan un anillo rojo discontinuo, y la línea de abajo las cuenta.\nEntradas / CP muestra las entradas y los puntos de control. Prueba a crear un sitio inalcanzable.",
+                    "task": "Con la herramienta de rectángulo, dibuja un cuadrado pequeño lejos de las paredes y mira cómo su interior se vuelve de rayas rojas (Hazlo por mí dibuja un cuadrado pequeño con el lápiz)",
+                    "tasks": {
+                        "off": "No hay salida, así que no se puede calcular a dónde no puede llegar el robot. Pon primero la salida en el mapa (este paso se puede saltar)",
+                        "allBlocked": "El robot no puede entrar en casi nada de la sala 4: algo cierra su entrada. Borra la pared que está delante, o vuelve a poner una plantilla con Borrar primero activado"
+                    }
+                },
+                "r4file": {
+                    "title": "Guardar y abrir como imagen",
+                    "body": "Los botones a la derecha de la barra superior guardan la imagen como PNG, y abren un PNG o JPEG.\nLos tipos de las víctimas se guardan en la imagen, así que una imagen guardada se abre tal como estaba: útil para la misma sala 4 en otro mapa."
+                },
+                "r4ok": {
+                    "title": "Volver al mapa",
+                    "body": "Cuando esté dibujada, pulsa OK: la imagen se muestra como sala 4 en el mapa y pasa al mundo exportado.\nPara volver a dibujarla más tarde, pulsa de nuevo Dibujar la sala 4 o haz doble clic en la sala 4.",
+                    "task": "Pulsa OK para volver al mapa"
+                },
+                "select": {
+                    "title": "Seleccionar, mover y copiar una región",
+                    "body": "Arrastra con la herramienta de selección para seleccionar una región de baldosas; sus paredes, salas, suelos y víctimas se toman juntos.\nArrastra dentro de ella para moverla, o con Alt pulsado para mover una copia. Las flechas la mueven de baldosa en baldosa. Ctrl+C / Ctrl+X copian / cortan, Ctrl+V pega (la baldosa bajo el puntero es su esquina superior izquierda), Ctrl+D duplica y Supr la borra. Esc la suelta.\nAquí solo selecciónala; si se mueve, Ctrl+Z la devuelve.",
+                    "task": "Arrastra para seleccionar la sala 1 (marco verde)"
+                },
+                "view": {
+                    "title": "Mover la vista",
+                    "body": "La rueda del ratón acerca y aleja, y un arrastre con Espacio pulsado (o con el botón de la rueda) mueve la vista. Con la herramienta mano (H) basta un arrastre normal.\nLos botones de lupa de la barra superior también acercan y alejan, y el de más a la derecha vuelve a encajar todo el mapa."
+                },
+                "linear": {
+                    "title": "Lineal",
+                    "body": "Lineal colorea cada baldosa como lineal (junto a una pared unida a la salida) o flotante. Las víctimas en baldosas flotantes puntúan más.\nPúlsalo de nuevo para la vista normal.",
+                    "task": "Pulsa Lineal"
+                },
+                "checks": {
+                    "title": "Mirar las comprobaciones",
+                    "body": "Cada cambio se comprueba con las reglas, en la tarjeta de arriba a la derecha. Una ✕ roja es un problema con el que no se puede exportar el mundo; un ! amarillo es un aviso que conviene mirar.\nSeñala un elemento para ver dónde está y haz clic para ir allí. Corregir arregla uno; Corregir todo lo que se pueda los arregla todos.\nDonde el robot no puede llegar se muestra en el mapa con rayas rojas.",
+                    "task": "Que no quede ningún problema con ✕ roja (si seguiste todos los pasos, no hay ninguno)",
+                    "tasks": {
+                        "left": "Quedan {{n}} problema(s) con ✕ roja. Pulsa Corregir todo lo que se pueda, o haz clic en un elemento para ver dónde está"
+                    }
+                },
+                "name": {
+                    "title": "Ponerle nombre al mapa",
+                    "body": "El nombre del mapa da nombre al JSON que guardas y al .wbt que exportas.",
+                    "task": "Haz clic en el nombre del mapa en la barra superior y cámbialo"
+                },
+                "save": {
+                    "title": "Guardar",
+                    "body": "Guardar escribe el mapa en un archivo JSON. Para seguir editándolo, Abrir lee el JSON (soltarlo sobre el mapa también funciona).\nEl mapa en el que trabajas también se guarda en el navegador, y la próxima vez Abrir el último trabajo sigue desde ahí. Se pierde en otro navegador o al borrar los datos de navegación, así que guarda como JSON los mapas que te importen."
+                },
+                "export": {
+                    "title": "Exportar el mundo",
+                    "body": "El botón .wbt escribe el archivo de mundo que carga Erebus. Si queda un problema con ✕ roja no puede, y muestra lo que hay que corregir.\nUn .wbt no vuelve a ser un mapa editable, así que guarda también el mapa como JSON."
+                },
+                "more": {
+                    "title": "Guía e idioma",
+                    "body": "Guía, abajo a la derecha, tiene en cualquier momento esta lección, el recorrido por la pantalla y cómo hacer la sala 4. El botón Guía del creador de la sala 4 muestra solo la parte de la sala 4.\nEl botón de idioma (muestra la bandera y el nombre del idioma en uso) elige el idioma."
+                },
+                "done": {
+                    "title": "¡Terminado!",
+                    "body": "Bien hecho: el mapa de ejemplo está listo.\nGuárdalo, o exporta el .wbt y ejecútalo en Erebus. Para un mapa nuevo, empieza desde Nuevo.\nUn buen orden de trabajo: tamaño y contorno → pinta las salas → únelas con pasajes → dibuja paredes → suelos y víctimas → dibuja la sala 4 → mira las comprobaciones y exporta."
+                },
+                "score": {
+                    "title": "Puntuación máxima",
+                    "body": "El trofeo de la barra superior es lo máximo que puede puntuar este mapa: cada víctima y objetivo cognitivo identificado con el tipo correcto, y cada punto de control superado, calculado según la regla {{rule_scoring}}.\nPúlsalo para ver la parte de cada sala y la puntuación con las bonificaciones de salida y de mapeo. Las víctimas en baldosas flotantes y en salas con mayor multiplicador valen más."
+                }
+            },
+            "toolHints": {
+                "select": "Arrastra para seleccionar baldosas (paredes, salas, suelos y víctimas se mueven o copian juntos)",
+                "select_region": "{{size}} baldosas seleccionadas: arrastra dentro para mover, Ctrl+C / X / V, Supr, Esc para soltarla",
+                "hand": "Arrastra para mover la vista",
+                "shape_outline": "Haz clic o arrastra sobre baldosas para sacarlas del mapa o devolverlas. El tamaño está en el panel izquierdo",
+                "shape_addRow": "Señala el borde donde va la fila y haz clic",
+                "shape_addCol": "Señala el borde donde va la columna y haz clic",
+                "shape_delRow": "Señala la fila que quieres quitar y haz clic",
+                "shape_delCol": "Señala la columna que quieres quitar y haz clic",
+                "room": "Arrastra sobre baldosas para pintar la sala {{room}}. Las paredes de los bordes y del exterior aparecen solas",
+                "passage": "Haz clic cerca del borde entre salas (punteado) para poner un pasaje",
+                "line": "Arrastra para dibujar paredes, girando en las esquinas sobre la marcha; Shift para una sola línea recta",
+                "curve": "Señala un cuarto de baldosa en la sala 3 y haz clic en la curva azul",
+                "eraser": "Señala una pared, curva, víctima o suelo y haz clic (arrastra para seguir)",
+                "floor": "Haz clic en una baldosa para convertirla en: {{floor}} (otra vez para quitarlo)",
+                "victim": "Haz clic cerca de una pared para colocar «{{name}}» donde haces clic (después arrástrala a lo largo de su pared). Elige el tipo en el panel izquierdo",
+                "victim_selected": "Arrastra la víctima seleccionada para moverla a lo largo de su pared. Cambia su giro, anillos o posición, o quítala, en el panel izquierdo"
+            },
+            "lessonState": {
+                "tool": "Elige la herramienta {{name}} (en la columna de herramientas de la izquierda)"
+            },
+            "score": {
+                "title": "Lo máximo que puede puntuar este mapa",
+                "button": "Puntuación máxima (calculada según la regla {{rule_scoring}})",
+                "short": "Máx.",
+                "unit": " pts",
+                "lead": "Lo que puntúa un robot cuando identifica cada víctima y objetivo cognitivo a los que puede llegar, con el tipo correcto, y pasa por cada punto de control (regla {{rule_scoring}}).",
+                "area": "Sala {{n}}",
+                "multiplier": "×{{m}}",
+                "victims": "Víctimas {{n}}",
+                "targets": "Objetivos {{n}}",
+                "checkpoints": "CP {{n}}",
+                "field": "Identificación, tipo y puntos de control",
+                "withExit": "Con la bonificación de salida (+10%)",
+                "withMap": "Con además una bonificación de mapeo completa (×2,2)",
+                "noStart": "Coloca la baldosa de salida para calcularla.",
+                "unreachableTokens": "Se omiten {{n}} víctimas u objetivos a los que el robot no puede acercarse (corrígelos en las comprobaciones).",
+                "unreachableCheckpoints": "Se omiten {{n}} puntos de control a los que el robot no puede llegar.",
+                "presetNote": "Un modelo predefinido de sala 4 no se cuenta (este editor solo usa una sala 4 personalizada).",
+                "fakeNote": "Las víctimas falsas y los objetivos cognitivos falsos (anillos que suman algo distinto de 0-3) no puntúan.",
+                "untypedNote": "Se omiten {{n}} víctimas de la sala 4 sin tipo."
+            },
+            "tiles": "baldosas",
+            "shapeEdit": "Editar en el mapa",
+            "keySheet": {
+                "title": "Controles",
+                "open": "Controles",
+                "back": "Volver a las guías",
+                "view": "Vista",
+                "edit": "Edición",
+                "select": "Herramienta de selección",
+                "guide": "Ayuda",
+                "rows": {
+                    "zoom": "Acercar y alejar",
+                    "pan": "Mover la vista",
+                    "hand": "Herramienta mano (mover con arrastre izquierdo)",
+                    "undo": "Deshacer",
+                    "redo": "Rehacer",
+                    "cancel": "Detener lo que se está dibujando",
+                    "tools": "Cambiar de herramienta (letras de la barra izquierda)",
+                    "copy": "Copiar, cortar, pegar",
+                    "duplicate": "Duplicar",
+                    "clear": "Borrar la selección",
+                    "nudge": "Mover la selección una baldosa",
+                    "sheet": "Abrir esta lista"
+                },
+                "keys": {
+                    "wheel": "Rueda",
+                    "spaceDrag": "Espacio + arrastrar",
+                    "middleDrag": "Arrastrar con el botón central"
+                }
+            },
+            "along": "Posición a lo largo de su pared",
+            "alongNote": "También puedes arrastrarla en el mapa (pasos de 0,1 cm)",
+            "alongMiddle": "Al centro"
+        },
+        "simMapEditor": {
+            "name": "Nombre del diseño: ",
+            "rotDialHint": "Arrastra para girar (mantén Shift para pasos de 1°). Las flechas también funcionan.",
+            "rotRandom": "Ángulo aleatorio",
+            "rotHelp": "Gira en sentido horario visto desde el robot. 0° es derecho. Arrastra el dial o usa los botones.",
+            "connCheck": {
+                "passageNoRoom": "Hay un pasaje {{name}} (sala {{from}} ⇄ sala {{to}}), pero no hay sala {{room}}.",
+                "passageMisplaced": "El pasaje {{name}} (sala {{from}} ⇄ sala {{to}}) no se puede atravesar hacia la sala {{from}} y la sala {{to}} a la vez. Pon la baldosa de pasaje en una de las salas y déjala abierta hacia ambas.",
+                "unmarkedGap": "Hay {{count}} hueco(s) entre la sala {{from}} y la sala {{to}} sin baldosa de pasaje {{name}}. Todo hueco por el que pueda pasar un robot debe ser una baldosa de pasaje {{name}} o cerrarse con una pared.",
+                "notConnected": "La sala {{room}} no está conectada a la sala 1 por pasajes."
+            },
+            "room4Creator": {
+                "zoomIn": "Acercar",
+                "zoomOut": "Alejar",
+                "zoomFit": "Ajustar",
+                "viewReach": "Inalcanzable",
+                "viewGuides": "Entradas / CP",
+                "unreachableShort": "Inalcanzables {{count}}",
+                "farShort": "Lejos de la pared {{count}}",
+                "missingShort": "Falta CP {{count}}",
+                "noEntranceShort": "Sin entrada",
+                "reachOff": "Alcance no calculado",
+                "legendMapWallShort": "Paredes del mapa",
+                "legendCheckpointShort": "Punto de control",
+                "sel": {
+                    "ccw": "Girar 90° a la izquierda",
+                    "cw": "Girar 90° a la derecha",
+                    "h": "Voltear izquierda / derecha",
+                    "v": "Voltear arriba / abajo",
+                    "duplicate": "Duplicar",
+                    "copy": "Copiar",
+                    "paste": "Pegar",
+                    "delete": "Eliminar",
+                    "drop": "Listo"
+                },
+                "randomPlace": "Colocar al azar",
+                "randomModes": {
+                    "current": "Tipo elegido",
+                    "mixed": "Tipos mezclados"
+                },
+                "randomGo": "Colocar {{n}}",
+                "randomNote2": "A lo largo de paredes a las que el robot puede acercarse a media baldosa, separadas al menos media baldosa.",
+                "templates": {
+                    "maze": "Laberinto",
+                    "pillars": "Columnas",
+                    "diagonal": "Diagonales",
+                    "zigzag": "Zigzag",
+                    "rings": "Anillos",
+                    "obstacles": "Obstáculos"
+                },
+                "templateHints": {
+                    "maze": "Un laberinto de pasillos de una baldosa (con algunos atajos).",
+                    "pillars": "Columnas redondas en las esquinas de las baldosas.",
+                    "diagonal": "Paredes diagonales cortas dentro de las baldosas.",
+                    "zigzag": "Un solo camino que gira en los extremos.",
+                    "rings": "Anillos alrededor del centro, cada uno con un hueco.",
+                    "obstacles": "Círculos, cajas y triángulos dispersos."
+                },
+                "templateClear": "Borrar primero las paredes y víctimas",
+                "templateApply": "Colocar",
+                "showGuides": "Mostrar entradas y puntos de control",
+                "missingCheckpoints": "{{count}} baldosa(s) justo dentro de un pasaje no son puntos de control (regla {{rule_room4Checkpoint}}). Ponlos en el editor principal (\"CP?\" discontinuo).",
+                "noEntrance": "La sala 4 no tiene entrada. Abre una pared hacia un pasaje exterior en el editor principal.",
+                "rows": {
+                    "real": "Real",
+                    "fake": "Falsa (3D)"
+                },
+                "curveSmooth": "Suave",
+                "curveStraight": "Recto",
+                "sides": "Lados",
+                "shapeIcon": "Icono",
+                "shapePicture": "Imagen",
+                "iconSearch": "Buscar (p. ej. star, car, tree)",
+                "iconAll": "Sugeridos (elige una categoría para filtrar)",
+                "iconLoading": "Cargando iconos…",
+                "iconUnavailable": "No se pudo cargar la lista de iconos.",
+                "iconNone": "No se encontró nada.",
+                "pictureChoose": "Elegir una imagen",
+                "pictureNote": "Un PNG o SVG con transparencia usa su parte opaca; otras imágenes usan su parte oscura.",
+                "shapeStyles": {
+                    "fill": "Relleno",
+                    "outline": "Contorno"
+                },
+                "mirror": "Simetría",
+                "mirrors": {
+                    "none": "No",
+                    "x": "Izquierda / derecha",
+                    "y": "Arriba / abajo",
+                    "xy": "Ambas"
+                },
+                "tipCurve": "Clic: añadir un punto   Doble clic / Intro: terminar",
+                "tipArc": "Mueve para curvar   Clic: listo",
+                "unreachable": "{{count}} a las que el robot no puede acercarse a media baldosa (no se pueden identificar)",
+                "showReach": "Mostrar dónde no puede ir el robot",
+                "legendReach": "Donde el robot no puede ir",
+                "reach": {
+                    "noSeed": "El robot no puede moverse desde la baldosa de salida, así que no se calcula a dónde no puede ir (revisa la baldosa de salida y las paredes de alrededor).",
+                    "noStart": "No hay baldosa de salida, así que no se calcula a dónde no puede ir el robot.",
+                    "unavailable": "No se pudo calcular dónde no puede ir el robot."
+                },
+                "eraseTargets": {
+                    "all": "Todo",
+                    "tokens": "Solo víctimas"
+                },
+                "tipStamp": "Clic: seleccionar (giro, anillos) o cambiar el tipo   Clic derecho: quitar",
+                "tipOther": "Clic derecho: quitar",
+                "title": "Sala 4 personalizada",
+                "tools": {
+                    "pen": "Lápiz",
+                    "line": "Línea",
+                    "rect": "Rectángulo",
+                    "circle": "Círculo",
+                    "stamp": "Víctima",
+                    "floor": "Suelo",
+                    "erase": "Borrador",
+                    "curve": "Curva",
+                    "arc": "Arco",
+                    "ellipse": "Elipse",
+                    "polygon": "Polígono",
+                    "shape": "Forma",
+                    "select": "Seleccionar",
+                    "template": "Plantilla"
+                },
+                "undo": "Deshacer",
+                "redo": "Rehacer",
+                "clear": "Borrar todo",
+                "groups": {
+                    "victim": "Víctimas con letra",
+                    "ct": "Objetivos cognitivos",
+                    "hazmat": "Señales de materiales peligrosos",
+                    "fake": "Víctimas falsas"
+                },
+                "types": {
+                    "harmed": "Herido",
+                    "stable": "Estable",
+                    "unharmed": "Ileso",
+                    "fakeHarmed": "Herido",
+                    "fakeStable": "Estable",
+                    "fakeUnharmed": "Ileso"
+                },
+                "eraserSize": "Tamaño",
+                "size": {
+                    "s": "S",
+                    "m": "M",
+                    "l": "L"
+                },
+                "snap": "Ajustar a la cuadrícula (1/4 de baldosa)",
+                "hints": {
+                    "pen": "Arrastra para dibujar paredes libremente.",
+                    "line": "Arrastra para dibujar una pared recta. Mantén Shift para pasos de 45°.",
+                    "rect": "Arrastra para dibujar un rectángulo de paredes. Mantén Shift para un cuadrado.",
+                    "circle": "Arrastra desde el centro para dibujar una pared circular.",
+                    "stamp": "Haz clic cerca de una pared para pegar una víctima a la pared más cercana. Haz clic en una víctima colocada para cambiar su giro o anillos (con otro tipo elegido, toma ese tipo). El clic derecho la quita.",
+                    "floor": "Haz clic en una baldosa de la sala 4 para darle el suelo elegido (agujero, pantano, punto de control); otro clic lo quita, o arrastra para hacer varias. Un suelo ocupa una baldosa entera (12 cm); un agujero también es la baldosa entera.",
+                    "erase": "Arrastra para borrar paredes y víctimas. Una víctima también se puede quitar con un clic derecho, sea cual sea la herramienta.",
+                    "eraseTokens": "Quita cada víctima que toca el borrador. Las paredes se quedan.",
+                    "curve": "Haz clic en puntos y la curva pasa por ellos. Doble clic, Intro o clic derecho para terminar; un clic en el primer punto la cierra. Retroceso quita un punto, Esc cancela.",
+                    "arc": "Arrastra para fijar los dos extremos, mueve el ratón para curvarlo y haz clic.",
+                    "ellipse": "Dibuja la elipse que cabe en la caja arrastrada. Mantén Shift para un círculo.",
+                    "polygon": "Arrastra desde el centro para dibujar un polígono regular. Gira en pasos de 15° (libre con Shift).",
+                    "shape": "Elige un icono o una imagen, y luego arrastra en el lienzo para darle tamaño (mantiene sus proporciones; libre con Shift).",
+                    "select": "Arrastra para seleccionar una caja, y luego arrastra dentro de ella para moverla (mantén Alt para copiar). Las flechas la empujan, [ ] la giran, Intro la suelta, Supr la elimina.",
+                    "template": "Elige una plantilla y pulsa Colocar. Las disposiciones que dejan fuera al robot se vuelven a generar automáticamente."
+                },
+                "messages": {
+                    "outside": "No puede ir fuera de la sala 4.",
+                    "needWall": "Las víctimas solo van en paredes. Haz clic cerca de una pared.",
+                    "pickShape": "Elige primero un icono o una imagen.",
+                    "iconFailed": "No se pudo cargar el icono.",
+                    "imageFailed": "No se pudo cargar la imagen.",
+                    "randomDone": "Se colocaron {{placed}}.",
+                    "randomShort": "Solo se colocaron {{placed}} de {{asked}} (no hay suficientes paredes donde ponerlas).",
+                    "templateBlocked": "Todas las disposiciones probadas dejan parte de la sala inalcanzable. Revisa las partes en rojo claro.",
+                    "wallEnd": "No en el extremo de una pared. Haz clic en una cara de pared al menos tan ancha como una víctima (2 cm).",
+                    "unreachable": "El robot no puede acercarse aquí: no hay víctimas donde el robot no puede ir (regla {{rule_reach}}).",
+                    "floorNotOuter": "Una baldosa de contacto solo va en una baldosa junto a la pared exterior."
+                },
+                "tokens": "Marcas de pared: {{count}}",
+                "farFromWall": "{{count}} lejos de cualquier pared (círculo rojo discontinuo)",
+                "import": "Importar imagen",
+                "download": "Guardar como imagen",
+                "hint": "Importa una imagen PNG / JPEG o dibuja aquí. Los tipos de víctima se guardan en la imagen, así que una imagen guardada los recupera.",
+                "selectedStamp": "Víctima seleccionada",
+                "selectDone": "Listo",
+                "randomCount": "Cantidad",
+                "randomKind": "Tipos"
+            },
+            "passageBlue": "Azul",
+            "passageYellow": "Amarillo",
+            "passageGreen": "Verde",
+            "passagePurple": "Morado",
+            "passageOrange": "Naranja",
+            "passageRed": "Rojo",
+            "ctF": "Gas inflamable",
+            "ctP": "Veneno",
+            "ctC": "Corrosivo",
+            "ctO": "Peróxido orgánico",
+            "ctFake": "Objetivo falso",
+            "exportW": "Exportar este mapa como archivo de mundo para Erebus"
+        }
+    },
+    "years": {
+        "2027": {
+            "admin": {
+                "simBeta": {
+                    "hints": {
+                        "floor_notOuter": "{{floor}}: solo en una baldosa junto a la pared exterior (regla {{rule_contactTile}})",
+                        "floor_clear": "Haz clic para quitar el suelo (agujero, pantano, punto de control, baldosa de contacto)"
+                    },
+                    "problems": {
+                        "contactInside": "Baldosas de contacto que no están junto a la pared exterior ({{count}}). Una baldosa de contacto solo va en una baldosa junto al exterior (regla {{rule_contactTile}})",
+                        "presetNotSupported": "Los modelos predefinidos de la sala 4 no están disponibles en este editor (cambia a personalizada)"
+                    },
+                    "help": {
+                        "eraser": "Haz clic o arrastra sobre paredes, curvas y víctimas para quitarlas. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control, baldosa de contacto); un clic quita la salida. Las paredes exteriores se quedan."
+                    },
+                    "tour": {
+                        "floor": {
+                            "title": "Suelo (F): puntos de control, agujeros, pantanos, baldosas de contacto, la salida",
+                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es la baldosa donde se coloca el robot: una por mapa. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos. Solo va en una baldosa junto a la pared exterior."
+                        },
+                        "victim": {
+                            "body": "Elige un tipo en el panel (víctimas sonrientes - herido una cara triste, estable una cara neutra, ileso una cara feliz - y sus falsas, objetivos cognitivos de cuatro tipos - gas inflamable, veneno, corrosivo, peróxido orgánico - y uno falso) y haz clic cerca de una pared: se coloca en la pared donde haces clic.\nVan en los lados de baldosa en la sala 1 (una por baldosa), en las caras de las paredes de 6 cm en las salas 2 y 3, y en dos sitios de una curva (dentro y fuera). Arrastra una colocada para moverla a lo largo de su pared. Donde no se puede poner, la línea de estado dice por qué.\nGira el dial (Giro fijo) para su rotación, o elige Aleatorio para una nueva cada vez. Para un objetivo cognitivo, haz clic en un anillo del objetivo y luego en un color abajo; la suma de los anillos da su tipo.\nHaz clic en una víctima con el mismo tipo para seleccionarla, y luego cambia su giro, anillos o posición a lo largo de su pared, o quítala. Un clic con otro tipo cambia su tipo."
+                        },
+                        "eraser": {
+                            "body": "Haz clic o arrastra sobre paredes, curvas y víctimas para quitarlas; lo que se iría se muestra en rojo bajo el puntero.\nLejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control, baldosa de contacto). La salida solo se quita con un clic.\nUn arrastre que empieza sobre una pared no toca los suelos, así que los suelos no desaparecen mientras borras paredes. Las paredes exteriores se quedan."
+                        }
+                    },
+                    "lesson": {
+                        "floors": {
+                            "title": "Puntos de control, agujeros, pantanos y baldosas de contacto",
+                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita; Ninguno quita el suelo.\nUn punto de control puntúa cuando el robot llega a él, y es donde se vuelve a colocar el robot tras una falta de progreso (LoP). Un agujero es una baldosa en la que el robot no debe entrar, y un pantano gasta su batería más rápido.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos. Solo va en una baldosa junto a la pared exterior.",
+                            "task": "Pon un punto de control, un agujero, un pantano y una baldosa de contacto (los cuatro marcos verdes son buenos sitios)"
+                        },
+                        "victim": {
+                            "task": "Elige Herido (la cara triste) y haz clic en el lado superior de la pared de la sala 1 que dibujaste (el borde inferior de la baldosa del marco verde)",
+                            "tasks": {
+                                "notReal": "Eso es una víctima falsa o un objetivo cognitivo. Elige Herido (la cara triste) en la fila Real y ponlo en la pared de la sala 1"
+                            }
+                        },
+                        "erase": {
+                            "body": "El borrador quita paredes, curvas y víctimas con un clic o un arrastre. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control, baldosa de contacto); la salida solo se quita con un clic. Las paredes exteriores se quedan.\nSi borras algo por error, deshacer (Ctrl+Z, o ↶ en la barra superior) lo recupera; rehacer (Ctrl+Shift+Z, o ↷) vuelve a avanzar."
+                        }
+                    },
+                    "betaLead": "Erebus World Editor (beta). Los mapas de las reglas 2027 se hacen solo en este editor (no hay editor clásico para ellos)."
+                },
+                "simMapEditor": {
+                    "room4Creator": {
+                        "messages": {
+                            "floorNotOuter": "Una baldosa de contacto solo va en una baldosa junto a la pared exterior (regla {{rule_contactTile}})."
+                        },
+                        "groups": {
+                            "victim": "Víctimas sonrientes"
+                        },
+                        "hints": {
+                            "floor": "Haz clic en una baldosa de la sala 4 para darle el suelo elegido (agujero, pantano, punto de control, baldosa de contacto); otro clic lo quita, o arrastra para hacer varias. Un suelo ocupa una baldosa entera (12 cm); un agujero también es la baldosa entera. Una baldosa de contacto solo va en una baldosa junto a la pared exterior."
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -9,16 +9,50 @@
 // language file, which is used in place of the key's.
 //
 // To add a language: its file in src/lang (a copy of en.json, translated; test/simLang.test.ts checks
-// it has every key with the same parameters), and a line in LANGUAGES.
+// it has every key with the same parameters), and a line in LANGUAGES with the flag of the country
+// most taken for it (flag-icons). The language menu shows each language by its own name and flag.
 import { createI18n, type MessageCompiler, type MessageContext } from 'vue-i18n';
 import en from './lang/en.json';
 import ja from './lang/ja.json';
+import es from './lang/es.json';
+import ptBR from './lang/pt-BR.json';
+import de from './lang/de.json';
+import zhCN from './lang/zh-CN.json';
+import ko from './lang/ko.json';
+import fr from './lang/fr.json';
+import tr from './lang/tr.json';
+import id from './lang/id.json';
+import th from './lang/th.json';
+import zhHant from './lang/zh-Hant.json';
+import flagJp from 'flag-icons/flags/4x3/jp.svg?url';
+import flagGb from 'flag-icons/flags/4x3/gb.svg?url';
+import flagEs from 'flag-icons/flags/4x3/es.svg?url';
+import flagBr from 'flag-icons/flags/4x3/br.svg?url';
+import flagDe from 'flag-icons/flags/4x3/de.svg?url';
+import flagCn from 'flag-icons/flags/4x3/cn.svg?url';
+import flagKr from 'flag-icons/flags/4x3/kr.svg?url';
+import flagFr from 'flag-icons/flags/4x3/fr.svg?url';
+import flagTr from 'flag-icons/flags/4x3/tr.svg?url';
+import flagId from 'flag-icons/flags/4x3/id.svg?url';
+import flagTh from 'flag-icons/flags/4x3/th.svg?url';
+import flagHk from 'flag-icons/flags/4x3/hk.svg?url';
 
-// The languages, in the order the language menu lists them: code (BCP 47, also the page's lang
-// attribute), name (in that language), texts
+// The languages, in the order the language menu lists them - by their own names, as language menus
+// usually are: Latin script alphabetically, then the others by their characters: code (BCP 47, also
+// the page's lang attribute), name (in that language), flag (a picture's URL), texts
 export const LANGUAGES = [
-    { code: 'ja', name: '日本語', messages: ja },
-    { code: 'en', name: 'English', messages: en }
+    { code: 'id', name: 'Bahasa Indonesia', flag: flagId, messages: id },
+    { code: 'de', name: 'Deutsch', flag: flagDe, messages: de },
+    { code: 'en', name: 'English', flag: flagGb, messages: en },
+    { code: 'es', name: 'Español', flag: flagEs, messages: es },
+    { code: 'fr', name: 'Français', flag: flagFr, messages: fr },
+    { code: 'pt-BR', name: 'Português (Brasil)', flag: flagBr, messages: ptBR },
+    { code: 'tr', name: 'Türkçe', flag: flagTr, messages: tr },
+    { code: 'th', name: 'ไทย', flag: flagTh, messages: th },
+    { code: 'zh-CN', name: '中文（简体）', flag: flagCn, messages: zhCN },
+    { code: 'zh-Hant', name: '中文（繁體）', flag: flagHk, messages: zhHant },
+    { code: 'ja', name: '日本語', flag: flagJp, messages: ja },
+    { code: 'ko', name: '한국어', flag: flagKr, messages: ko }
 ] as const;
 export type Lang = typeof LANGUAGES[number]['code'];
 // for a text not in the chosen language yet
@@ -27,10 +61,13 @@ const LANG_KEY = 'NG_TRANSLATE_LANG_KEY';
 
 function known(code: string | null | undefined): Lang | null {
     if (!code) return null;
-    const c = code.toLowerCase();
-    // the exact code (pt-br), else its language (pt)
+    let c = code.toLowerCase();
+    // Chinese written in traditional characters: by its script (zh-Hant-TW), else by where (zh-TW)
+    if (/^zh-(hant|tw|hk|mo)\b/.test(c)) c = 'zh-hant';
+    // the exact code (pt-br), else one of its language (pt, pt-pt: pt-BR; zh, zh-sg: zh-CN)
+    const base = function (code: string) { return code.toLowerCase().split('-')[0]; };
     const hit = LANGUAGES.find(function (l) { return l.code.toLowerCase() === c; })
-        || LANGUAGES.find(function (l) { return l.code.toLowerCase() === c.split('-')[0]; });
+        || LANGUAGES.find(function (l) { return base(l.code) === base(c); });
     return hit ? hit.code : null;
 }
 

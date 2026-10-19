@@ -1,0 +1,1080 @@
+{
+    "admin": {
+        "simBeta": {
+            "fake": "Sahte kazazede",
+            "width": "Genişlik",
+            "length": "Uzunluk",
+            "title": "Erebus World Editor",
+            "new": "Yeni harita",
+            "open": "Harita aç (JSON)",
+            "save": "JSON olarak kaydet",
+            "backToClassic": "Klasik düzenleyiciyi aç",
+            "noMap": "Açık harita yok",
+            "dropHere": "Bir JSON dosyasını buraya da bırakabilirsiniz",
+            "badFile": "Bu, Simulation 2026 düzenleyicisinin haritası (JSON) olarak okunamadı",
+            "unknownRules": "Bu harita {{year}} kurallarına göre; bu düzenleyici {{years}} kurallarını destekler (daha yeni bir düzenleyicide açın)",
+            "zoomIn": "Yakınlaştır",
+            "zoomOut": "Uzaklaştır",
+            "fit": "Haritanın tamamını göster",
+            "room": "Oda {{n}}",
+            "discard": "Devam ederseniz bu haritadaki değişiklikler atılır (bu tarayıcıda tutulan kopya kalır).",
+            "exportBlocked": "Dünya henüz dışa aktarılamaz",
+            "room4": "Oda 4",
+            "problemsTitle": "Kontroller",
+            "noProblems": "Sorun yok",
+            "undo": "Geri al",
+            "redo": "Yinele",
+            "tools": {
+                "hand": "Taşı",
+                "room": "Odalar",
+                "passage": "Geçitler",
+                "line": "Çizgi",
+                "eraser": "Silgi",
+                "floor": "Zemin",
+                "victim": "Kazazedeler",
+                "curve": "Eğri",
+                "select": "Seç",
+                "shape": "Dış hat"
+            },
+            "help": {
+                "hand": "Haritayı taşımak için sürükleyin.",
+                "room": "Kareleri bir odaya boyayın (oda 1 onları geri alır). Odaların birleştiği yerlerde ve haritanın çevresinde duvarlar kendiliğinden oluşur. Oda 4, aşağıdaki düğmeyle resim olarak çizilir.",
+                "passage": "Bir oda sınırının yakınına tıklayın: tıkladığınız taraftaki kare geçit olur (kapatmak için tekrar, oraya taşımak için diğer tarafa tıklayın). Kaldırmak için bir geçit karesinin ortasına tıklayın. Odalarına artık uymayan bir geçit kendiliğinden kaybolur.",
+                "line": "Duvar çizmek için sürükleyin. Çizgi işaretçiyle birlikte döner, bu yüzden tek bir sürükleme zikzak çizebilir (bir dönüşü geri almak için geldiğiniz yoldan dönün). Tek bir düz çizgi için Shift basılıyken başlayın. Oda 1 12 cm'ye (kare kenarları), oda 2 ve 3 6 cm'ye hizalanır. Oda 4'ün içinde olmaz.",
+                "eraser": "Duvarları, eğrileri ve kazazedeleri kaldırmak için üzerlerine tıklayın veya sürükleyin. Duvarlardan uzakta bir karenin zeminini (çukur, bataklık, kontrol noktası) kaldırır; bir tıklama başlangıcı kaldırır. Dış duvarlar kalır.",
+                "floor": "Zeminini belirlemek için bir kareye tıklayın.",
+                "victim": "Bir duvarın yakınına tıklayın: kazazede, tıkladığınız yerdeki duvara konur. Oda 1: bir kare kenarına (kare başına bir); oda 2 ve 3: 6 cm duvarların bir yüzüne (4 çeyrek × 4 yüz); bir eğrinin iki yeri vardır (iç ve dış). Konmuş bir kazazedeyi duvarı boyunca taşımak için sürükleyin (duvarın ucundan ve diğer kazazedelerden önce durur). Türü seçiliyken üzerine tıklayarak seçin ve dönüşünü, halkalarını veya yerini değiştirin ya da kaldırın; başka bir tür seçiliyse o türe dönüşür.",
+                "curve": "Dört eğrisini görmek için oda 3'te bir çeyrek kareyi işaret edin; en yakın olan (mavi) bir tıklamayla konur. Kaldırmak için aynısına tekrar tıklayın.",
+                "select": "Duvarları, odaları, zeminleri ve kazazedeleri birlikte seçip taşıyın, kopyalayın, yapıştırın veya temizleyin.",
+                "shape": "Haritanın boyutunu ve şeklini değiştirin; dış duvarlar kendiliğinden izler. Dış hat: kareleri haritadan çıkarmak ya da geri koymak için tıklayın veya sürükleyin. Ekle / kaldır: tıkladığınız yere bir satır ya da sütun ekler veya çıkarır."
+            },
+            "floors": {
+                "checkpoint": "Kontrol noktası",
+                "black": "Çukur",
+                "swamp": "Bataklık",
+                "start": "Başlangıç",
+                "clear": "Yok",
+                "contact": "Temas karesi"
+            },
+            "problems": {
+                "noStart": "Başlangıç karesi yok",
+                "victimNoWall": "Bazı kazazedeler duvarını kaybetti ({{count}})",
+                "victimInPassage": "Bazı kazazedeler alanlar arasındaki bir geçitte ({{count}}): geçitlerde kazazede olmaz (kural {{rule_passageTokens}})",
+                "victimUnreachable": "Bazı kazazedeler robotun ulaşamadığı yerde ({{count}}): robotun gidemediği yerde kazazede olmaz (kural {{rule_reach}})",
+                "wallRule": "Bazı duvarlar odalarının kurallarına uymuyor ({{count}})",
+                "room4Checkpoint": "Bir geçidin hemen arkasındaki oda 4 karesi kontrol noktası değil ({{count}}, kural {{rule_room4Checkpoint}}). Geçit koymak bunu kendiliğinden ayarlar",
+                "customRoom4NoPicture": "Oda 4 henüz çizilmedi",
+                "presetNotSupported": "Oda 4 hazır şablonları bu düzenleyicide kullanılamaz (özele geçin veya klasik düzenleyiciyi kullanın)",
+                "room4Untyped": "Oda 4'teki bazı kazazedelerin türü yok ({{count}}): “Oda 4'ü çiz” bölümünde onlara bir tür verin",
+                "room4Unreachable": "Oda 4'teki bazı kazazedeler robotun ulaşamadığı yerde ({{count}}): robotun gidemediği yerde kazazede olmaz (kural {{rule_reach}})",
+                "victimMisplaced": "Duvarı boyunca taşınan kazazedeler bir duvarın ucuyla veya başka bir kazazedeyle çakışıyor ({{count}})",
+                "contactInside": "Dış duvara bitişik olmayan temas kareleri ({{count}}). Temas karesi yalnızca dışarıyla komşu bir kareye konur"
+            },
+            "hints": {
+                "newMapSize": "Yeni harita: önce soldaki panelden boyutunu (kare olarak) ayarlayın",
+                "someRefused": "{{count}} parça dışarıda bırakıldı: oda kuralları bunlara izin vermiyor",
+                "refusedHere": "Kırmızı kısım bu odanın kurallarına uymuyor",
+                "noBorder": "Burası bir oda sınırı değil",
+                "passageHere": "Bir oda sınırına (noktalı) tıklayın",
+                "victim_noWall": "Bu tarafta duvar yok",
+                "victim_passage": "Alanlar arasındaki geçitlere kazazede konmaz (kural {{rule_passageTokens}})",
+                "victim_quarterTile": "Oda 2 ve 3'teki kazazedeler sonra gelecek",
+                "victim_room4": "Oda 4 kazazedeleri oda 4 oluşturucusunda konur",
+                "victim_outside": "Haritanın dışında",
+                "curve_curveRoom3": "Eğri duvarlar yalnızca oda 3'e konur",
+                "curve_room4": "Oda 4'ün içinde olmaz",
+                "victim_notQuarterTile": "Burada olmaz",
+                "room4NoTiles": "Önce oda fırçasıyla oda 4 alanını boyayın",
+                "passage_open": "Geçit kondu",
+                "passage_moved": "Geçit bu tarafa taşındı",
+                "passage_closed": "Geçit kaldırıldı",
+                "passageOpen": "Geçidi renkli tarafa koymak için tıklayın",
+                "passageClose": "Geçidi kaldırmak için tıklayın",
+                "passageRemove": "Bu geçidi kaldırmak için tıklayın",
+                "shapeOut": "Kareleri haritadan çıkarmak için tıklayın veya sürükleyin",
+                "shapeIn": "Kareleri haritaya geri koymak için tıklayın veya sürükleyin",
+                "passageRoom4": "Oda 4'e giden geçit, oda 4'ün dışındaki kareye konur (oda 4 oluşturucusunun ve kontrol noktası kuralı {{rule_room4Checkpoint}}'ün beklediği gibi)",
+                "regionPick": "Seçmek için sürükleyin",
+                "regionDrag": "Taşımak için sürükleyin, kopyalamak için Alt+sürükleyin. Ok tuşları bir kare taşır; Ctrl+C / X / V ve Delete de çalışır",
+                "regionCopied": "Kopyalandı. Ctrl+V işaretçinin altındaki kareye yapıştırır",
+                "regionNoRoom": "Yanda veya altta kopya için yer yok",
+                "line_addRow": "Yeşil çizgiye satır eklemek için tıklayın",
+                "line_addCol": "Yeşil çizgiye sütun eklemek için tıklayın",
+                "line_delRow": "Kırmızı satırı kaldırmak için tıklayın",
+                "line_delCol": "Kırmızı sütunu kaldırmak için tıklayın",
+                "lineLimit": "Harita 1 ile 40 kare arasında kalır",
+                "fixed": "Düzeltildi (geri al: Ctrl+Z)",
+                "fixPartly": "Düzeltilebilenler düzeltildi; gerisini sizin düzeltmeniz gerekiyor",
+                "fixAllLeft": "Düzeltilebilenler düzeltildi; {{count}} tanesi size kaldı (geri al: Ctrl+Z)",
+                "undone": "Geri alındı (yinele: Ctrl+Y)",
+                "redone": "Yinelendi",
+                "wallsDrawn": "{{cm}} cm duvar çizildi",
+                "lineDone_addRow": "Satır eklendi (geri al: Ctrl+Z)",
+                "lineDone_addCol": "Sütun eklendi (geri al: Ctrl+Z)",
+                "lineDone_delRow": "Satır kaldırıldı (geri al: Ctrl+Z)",
+                "lineDone_delCol": "Sütun kaldırıldı (geri al: Ctrl+Z)",
+                "lineDrawing": "{{cm}} cm duvar. Çizmek için bırakın, iptal için Esc (geri gitmek bir köşeyi kaldırır)",
+                "lineDrawingStraight": "{{cm}} cm düz duvar. Çizmek için bırakın, iptal için Esc",
+                "line_room4": "Oda 4'ün içinde duvar yok: oda 4 oluşturucusunda çizmek için çift tıklayın",
+                "line_fine": "Duvar çizmek için sürükleyin (oda {{room}}: 6 cm ızgara). Tek düz çizgi için Shift+sürükleyin",
+                "line_tile": "Duvar çizmek için sürükleyin (oda 1: kare kenarları, 12 cm). Tek düz çizgi için Shift+sürükleyin",
+                "hand": "Görünümü taşımak için sürükleyin",
+                "room_outside": "Haritanın dışında (dış hat aracı geri koyar)",
+                "room_room4": "Bir oda 4 karesi: oda 4'ün içini çizmek için çift tıklayın",
+                "room_same": "Zaten oda {{room}}. Boyanacak odayı sol panelden seçin",
+                "room_paint": "Boyamak için tıklayın veya sürükleyin: oda {{room}} (şu an oda {{cur}})",
+                "floor_outside": "Haritanın dışında",
+                "floor_isStart": "Bu başlangıç karesi (silgi kaldırır)",
+                "floor_start": "Başlangıcı buraya taşımak için tıklayın (tek bir başlangıç vardır)",
+                "floor_clear": "Zemini kaldırmak için tıklayın (çukur, bataklık, kontrol noktası)",
+                "floor_off": "Kaldırmak için tıklayın: {{floor}}",
+                "floor_on": "Yapmak için tıklayın: {{floor}}",
+                "curve_on": "Mavi eğriyi buraya koymak için tıklayın",
+                "curve_off": "Bu eğriyi kaldırmak için tıklayın",
+                "erase_victim": "Bu kazazedeyi kaldırmak için tıklayın",
+                "erase_curve": "Bu eğriyi kaldırmak için tıklayın (devam etmek için sürükleyin)",
+                "erase_wall": "Bu duvarı kaldırmak için tıklayın (6 cm; devam etmek için sürükleyin)",
+                "erase_wallWhole": "Bu duvarı kaldırmak için tıklayın (12 cm; devam etmek için sürükleyin)",
+                "erase_floor": "Bu karenin zeminini kaldırmak için tıklayın",
+                "erase_start": "Başlangıç karesini kaldırmak için tıklayın",
+                "victim_place": "“{{name}}” koymak için tıklayın",
+                "victim_move": "“{{name}}” buraya koymak için tıklayın (karenin kazazedesi buraya gelir: kare başına bir)",
+                "victim_replace": "“{{name}}” olarak değiştirmek için tıklayın",
+                "victim_unreachable": "Robot buraya yaklaşamaz, bu yüzden buraya kazazede konmaz (kural {{rule_reach}})",
+                "victim_selectDrag": "Seçmek için tıklayın, duvarı boyunca taşımak için sürükleyin",
+                "victim_moveSlot": "“{{name}}” buraya koymak için tıklayın (bu yüzdeki kazazede buraya gelir)",
+                "victim_moving": "Duvarı boyunca {{cm}} cm (duvarın ucundan ve diğer kazazedelerden önce durur)",
+                "victim_moved": "Duvarı boyunca {{cm}} cm'ye taşındı (geri al: Ctrl+Z)",
+                "victim_noRoom": "Burada kazazede için yer yok (duvarın ucuna veya başka bir kazazedeye çok yakın)",
+                "rulesSwitched": "{{year}} kurallarına geçildi (geri al: Ctrl+Z)",
+                "floor_notOuter": "{{floor}} yalnızca dış duvara bitişik bir kareye konur",
+                "openedOtherYear": "Bu harita {{year}} kurallarıyla açıldı. {{chosen}} kurallarına almak için üst çubuktaki Kurallar'dan değiştirin"
+            },
+            "drawRoom4": "Oda 4'ü çiz",
+            "drawRoom4Note": "Oda 4 alanına çift tıklamak da açar",
+            "exportFailed": "Dünya dışa aktarılamadı",
+            "exportBroken": "Dünyada sayı olmayan bir değer olacaktı, bu yüzden dosya oluşturulmadı (Webots onu boş bir dünya olarak açardı). Lütfen bildirin: {{line}}",
+            "showWhere": "Nerede olduğunu görmek için tıklayın",
+            "restore": "Son çalışmayı aç",
+            "restoreOtherYear": "Tutulan çalışma {{year}} kurallarına ait bir harita. Açmak için yukarıdan {{year}} kurallarını seçin (başka bir yılın kurallarına almak için açın, sonra üst çubuktaki Kurallar'dan değiştirin)",
+            "ctRings": "Bilişsel hedef",
+            "ctFake": "Sahte",
+            "rot": "Dönüş (derece)",
+            "remove": "Kaldır",
+            "newShort": "Yeni",
+            "openShort": "Aç",
+            "saveShort": "Kaydet",
+            "toolsTitle": "Araçlar",
+            "kind": "Tür",
+            "roomNote1": "12 cm duvarlar",
+            "roomNote2": "6 cm duvarlar",
+            "roomNote3": "6 cm duvarlar, eğriler",
+            "roomNote4": "resim olarak çizilir",
+            "emptyTitle": "Bir harita başlatın",
+            "emptyLead": "Yeni bir tane oluşturun veya kaydedilmiş bir haritayı (JSON) açın.",
+            "openJson": "JSON aç",
+            "ctSum": "Toplam",
+            "ctHint": "Hedefin bir halkasına, sonra aşağıdaki bir renge tıklayın (şu an dıştan {{n}}. halka)",
+            "rotFixed": "Sabit dönüş",
+            "rotRandom": "Rastgele",
+            "rotRandomNote": "Her biri rastgele bir dönüş alır",
+            "room4Hint": "İçini resim olarak çizmek için oda 4 alanını oda fırçasıyla boyayın.",
+            "room4NotDrawn": "Oda 4 henüz çizilmedi",
+            "room4Drawn": "Oda 4 çizildi",
+            "room4PresetBeta": "Bu harita bir oda 4 hazır şablonu ({{name}}) kullanıyor. Bu düzenleyici yalnızca özel oda 4 yapar.",
+            "room4ToCustom": "Özel bir oda 4'e geç",
+            "mapSize": "Harita boyutu",
+            "mapSizeNote": "Yazmak için bir sayıya tıklayın veya − ve + kullanın (1-40). Harita sağdan ve alttan büyür ya da küçülür; hâlâ sığanlar kalır. Ortaya satır veya sütun eklemek için aşağıdaki “Satır ekle” / “Sütun ekle” seçeneklerini kullanın.",
+            "checksOpen": "Aç",
+            "checksFold": "Katla",
+            "regionNone": "Seçmek için karelerin üzerinde sürükleyin. Taşımak için seçimi sürükleyin (Alt ile bir kopya); ok tuşları onu birer kare taşır.",
+            "regionSize": "{{size}} kare seçildi",
+            "copy": "Kopyala",
+            "cut": "Kes",
+            "duplicate": "Çoğalt",
+            "clearRegion": "Temizle",
+            "paste": "Yapıştır",
+            "regionHelp": "Taşımak için seçimin içinde sürükleyin, bir kopyayı taşımak için Alt+sürükleyin. Yapıştır, sol üst köşeyi işaretçinin altındaki kareye koyar. Esc seçimi kaldırır.",
+            "selectedVictim": "Seçili kazazede",
+            "selectDone": "Bitti",
+            "shapeModes": {
+                "outline": "Dış hat (düzensiz)",
+                "addRow": "Satır ekle",
+                "addCol": "Sütun ekle",
+                "delRow": "Satırı kaldır",
+                "delCol": "Sütunu kaldır"
+            },
+            "fixAll": "Düzeltilebilen her şeyi düzelt",
+            "fixShort": "Düzelt",
+            "fixThis": "Bu sorunu düzelt",
+            "fixDrawShort": "Çiz",
+            "fixDraw": "Oda 4 oluşturucusunu aç",
+            "linear": "Doğrusal",
+            "linearTitle": "Doğrusal / yüzen olarak renklendir (kazazedelerin puanını belirler)",
+            "legendLinear": "Doğrusal kareler (başlangıca bağlı duvarların yanında: kazazedeler daha az puan)",
+            "legendFloating": "Yüzen kareler (kazazedeler daha çok puan)",
+            "legendFloatingWall": "Yüzen duvarlar",
+            "linearNoStart": "doğrusal / yüzen kareleri görmek için başlangıç karesini koyun",
+            "legendUnreached": "Başlangıçtan ulaşılamıyor (geçit yok, ...): ne doğrusal ne yüzen",
+            "close": "Kapat",
+            "cancel": "İptal",
+            "discardTitle": "Kaydedilmemiş değişiklikler",
+            "saveFirst": "Kaydet ve devam et",
+            "discardGo": "Kaydetme",
+            "exportBlockedLead": "Dışa aktarmak için bu {{count}} tanesini düzeltin. Nerede olduğunu görmek için birine tıklayın.",
+            "betaMenu": "Bu düzenleyici hakkında",
+            "betaLead": "Erebus World Editor (beta). Klasik düzenleyiciyle aynı JSON'u okur ve yazar, bu yüzden kaydedilmiş bir harita ikisinde de açılır.",
+            "backToClassicNote": "Önce üzerinde çalıştığınız haritayı kaydedin (Kaydet, JSON)",
+            "tourStart": "Rehber (ders, ekran turu, oda 4 yapımı)",
+            "tourShort": "Rehber",
+            "listSep": ", ",
+            "rules": {
+                "title": "Bu haritanın kuralları",
+                "label": "{{year}} kuralları",
+                "lead": "Bu haritanın izlediği kurallar: kontroller, puan ve dışa aktarılan dünya bunlara göre olur.",
+                "book": "Kural kitabı",
+                "soon": "Yakında",
+                "switchTitle": "{{year}} kurallarına geçilsin mi?",
+                "switchLead": "Bu harita {{from}} kurallarından {{to}} kurallarına geçer. Yeni kurallara uymayan duvarlar ve kazazedeler kontrollerde gösterilir (geri al: Ctrl+Z).",
+                "switch": "Geç",
+                "pick": "Hangi yılın kuralları?",
+                "pickNote": "Kaydedilmiş bir harita kendi kurallarıyla açılır. Daha sonra üst çubuktan da değiştirebilirsiniz.",
+                "draft": "Taslak"
+            },
+            "build": {
+                "title": "Bu sürüm hakkında",
+                "commit": "Commit",
+                "dirty": "(commit edilmemiş değişikliklerle)",
+                "branch": "Dal",
+                "commitDate": "Commit tarihi",
+                "builtAt": "Derlenme",
+                "copy": "Kopyala",
+                "copied": "Kopyalandı"
+            },
+            "tourEmpty": "Yeni misiniz? Nasıl çalıştığını görün",
+            "tourEmptyNote": "Bir harita yaparak öğrenmeyi veya ekran turunu seçin",
+            "tourEnd": "Bitir",
+            "tourSkip": "Turu bitir",
+            "tourBack": "Geri",
+            "tourNext": "İleri",
+            "tourBegin": "Başla",
+            "tourFinish": "Tamam",
+            "tourKeys": "İlerlemek için ← →   Bitirmek için Esc",
+            "guideLesson": "Örnek bir harita yaparak öğrenin",
+            "guideTour": "Ekran turu",
+            "guideRoom4": "Oda 4'ü yaparak öğrenin",
+            "guideRoom4Need": "Önce oda aracıyla oda 4'ü boyayın.",
+            "lessonTodo": "Yapılacak:",
+            "lessonDone": "Tamam!",
+            "lessonSkip": "Bu adımı atla",
+            "lessonDoIt": "Benim için yap",
+            "lessonCreatorClosed": "Oda 4 oluşturucusu kapalı.",
+            "lessonOpenCreator": "Aç",
+            "lessonTip": "Ders sırasında düzenleyici her zamanki gibi çalışır",
+            "pickTitle": "Nasıl öğrenmek istersiniz?",
+            "pickLead": "Sağ alttaki “Rehber” menüsünden istediğiniz zaman yeniden seçebilirsiniz.",
+            "pickLessonTime": "Yaklaşık 15 dakika · uygulamalı",
+            "pickLessonNote": "Her özelliği sırayla kullanarak bir örnek harita yapın. Her adım bittiğinde ilerler ve Benim için yap sizin yerinize yapabilir.",
+            "pickLessonMap": "Açık harita kapatılır ve yenisi başlatılır (kaydedilmemiş değişiklikler varsa önce sorulur).",
+            "pickTourTime": "Yaklaşık 3 dakika · yalnızca izleme",
+            "pickTourNote": "Ekranın her bölümü ve her araç tek tek vurgulanıp açıklanır. Harita değişmez.",
+            "pickRoom4Time": "Yaklaşık 5 dakika · uygulamalı",
+            "pickRoom4Note": "Oda 4 oluşturucusunda her özelliği sırayla kullanarak duvarları ve kazazedeleri kendiniz koyun.",
+            "pickLater": "Sonra",
+            "guideRoom4Tour": "Oda 4 oluşturucusu turu",
+            "pickRoom4Title": "Oda 4'ü nasıl öğrenmek istersiniz?",
+            "pickRoom4TourTime": "Yaklaşık 2 dakika · yalnızca izleme",
+            "pickRoom4TourNote": "Oda 4 oluşturucusunun her bölümü ve her araç tek tek vurgulanıp açıklanır. Resim değişmez.",
+            "tourRoom4Inside": "Oda 4 oluşturucusu turunu da gör (sonra buraya dön)",
+            "tourBackTo": "Bittiğinde, “{{name}}” kaldığı yerden devam eder",
+            "lessonCreatorOver": "Oda 4 oluşturucusu açık. Devam etmek için kapatın.",
+            "lessonCloseCreator": "Kapat (Tamam)",
+            "lessonFold": "Metni katla",
+            "lessonUnfold": "Metni göster",
+            "tour": {
+                "chapters": {
+                    "start": "Hoş geldiniz",
+                    "screen": "Ekran",
+                    "tools": "Araçlar",
+                    "shape": "Boyut ve şekil",
+                    "rooms": "Odalar",
+                    "passages": "Geçitler",
+                    "walls": "Duvarlar",
+                    "floors": "Zeminler",
+                    "victims": "Kazazedeler",
+                    "room4": "Oda 4",
+                    "finish": "Bitir ve dışa aktar"
+                },
+                "welcome": {
+                    "title": "Erebus World Editor'e hoş geldiniz",
+                    "body": "Bu düzenleyici, RoboCupJunior Rescue Simulation (Erebus) 2026 kuralları için dünyalar oluşturur. Haritayı doğrudan tuval üzerine çizersiniz; duvarlar ve kazazedeler işaretçinin altındaki odanın kurallarının izin verdiği yerlere hizalanır.\nBu tur ekranın her bölümünü ve her aracı gezer (yaklaşık 3 dakika). Anlatılan bölüm vurgulanır.\nSonraki adım için → veya Enter'a, geri için ←'ya, istediğiniz zaman bitirmek için Esc'ye basın. Uygulayarak öğrenmek için sağ alttaki “Rehber” menüsünden “Örnek bir harita yaparak öğrenin” seçeneğini seçin."
+                },
+                "file": {
+                    "title": "Dosya: yeni, aç, kaydet",
+                    "body": "Yeni boş bir harita oluşturur. Açık haritada kaydedilmemiş değişiklikler varsa, önce bunların atılıp atılmayacağını sorar.\nAç bir haritanın JSON'unu okur, Kaydet haritayı bir JSON dosyasına yazar. Haritanın üzerine bırakılan bir JSON dosyası da açılır.\nDeğişiklikler tarayıcıda da tutulur, ama başka bir tarayıcıda veya tarama verileri silinince kaybolur. Önemli haritaları Kaydet ile JSON olarak saklayın."
+                },
+                "name": {
+                    "title": "Harita adı",
+                    "body": "Haritanın adı. Değiştirmek için üzerine tıklayın.\nKaydettiğiniz JSON'a ve dışa aktardığınız dünyaya (.wbt) ad verir."
+                },
+                "history": {
+                    "title": "Geri al ve yinele",
+                    "body": "Değişiklikleri tek tek geri alın veya yeniden yapın (100'e kadar).\nOtomatik düzeltmeler ile bir bölgeyi taşımak veya yapıştırmak her biri tek adımda geri alınır, bu yüzden rahatça deneyin."
+                },
+                "view": {
+                    "title": "Haritayı görmek ve taşımak",
+                    "body": "Bu harita. Yakınlaştırmak için fare tekerleğini çevirin, taşımak için Boşluk basılıyken (veya tekerlek düğmesiyle) sürükleyin. El aracıyla (H) basit bir sürükleme taşır.\nÜst çubuktaki düğmeler (kesikli çerçeve) de yakınlaştırır; en sağdaki tüm haritayı yeniden sığdırır. Sayı yakınlaştırmadır (cm başına piksel).\nHarita 12 cm'lik karelerden oluşur. Her odanın kendi zemin rengi vardır ve duvarlar oda sınırlarında ve dışarıda kendiliğinden yükselir."
+                },
+                "rail": {
+                    "title": "Araçlar",
+                    "body": "Haritayı değiştiren araçlar, yukarıdan dört grupta: bakma (seç, el), harita ve odalar (şekil, oda, geçit), duvarlar (çizgi, eğri, silgi), zeminler ve kazazedeler (zemin, kazazede).\nHer düğmenin sağ altındaki harf onun tuşudur: bir tuşa basmak aracı alır.\nSırada, bir haritanın yapıldığı sırayla araçlar tek tek."
+                },
+                "panel": {
+                    "title": "Aracın ne yaptığı ve ayarları",
+                    "body": "Seçtiğiniz araç, nasıl kullanıldığını ve ayarlarını burada gösterir. Emin değilseniz önce burayı okuyun.\nAlttaki durum satırı (kesikli çerçeve), işaretçinin olduğu yerde ne yapabileceğinizi veya neden yapamadığınızı söyler."
+                },
+                "shape": {
+                    "title": "Şekil (X): haritanın boyutu ve dış hattı",
+                    "body": "Yeni bir harita burada boyutuyla başlar: yazmak için genişlik veya uzunluktaki kare sayısına tıklayın ya da − ve + kullanın (40'a kadar). Sağdan ve alttan büyür ya da küçülür; hâlâ sığanlar kalır.\nDış hat ile, kareleri haritadan çıkarmak (zemin yok) veya geri koymak için tıklayın ya da sürükleyin; L şekli veya dikdörtgen olmayan her harita için. Dış duvarlar dış hattı kendiliğinden izler.\nSatır ekle, Sütun ekle, Satırı kaldır ve Sütunu kaldır, haritada tıkladığınız yere bir satır ya da sütun ekler veya çıkarır."
+                },
+                "room": {
+                    "title": "Oda (M): odaları boyamak",
+                    "body": "Bir oda numarası seçin ve kareleri onunla boyayın. Oda 1'i boyamak bir kareyi geri alır.\nHer odanın kuralları vardır: oda 1'de 12 cm duvarlar (kare kenarlarında), oda 2'de 6 cm duvarlar, oda 3'te 6 cm duvarlar ve eğriler bulunur, oda 4 ise resim olarak serbestçe çizilir.\nDuvarlar oda sınırlarında ve dışarıda kendiliğinden yükselir. Odaları birleştirmek için ardından Geçit aracını kullanın."
+                },
+                "passage": {
+                    "title": "Geçit (P): odaları birleştirmek",
+                    "body": "Bir oda sınırının yakınına tıklayın: tıkladığınız taraftaki kare geçit olur ve sınırdaki duvar açılır.\nKapatmak için tekrar tıklayın. Diğer tarafa tıklayın, geçit o kareye geçer. Kaldırmak için bir geçit karesinin ortasına tıklayın.\nOda 4'e giden geçit, oda 4'ün dışındaki kareye konur. Odalar yeniden boyandıktan sonra artık uymayan geçitler kendiliğinden kaldırılır."
+                },
+                "line": {
+                    "title": "Çizgi (L): duvar çizmek",
+                    "body": "Duvar çizmek için sürükleyin. Duvar işaretçiyi izler, bu yüzden bir zikzak tek seferde çizilir; geldiğiniz yoldan dönmek onu geri alır.\nYalnızca tek bir düz çizgi için başlarken Shift'i basılı tutun.\nDuvarlar işaretçinin altındaki odanın ızgarasına hizalanır: oda 1'de 12 cm (kare kenarları), oda 2 ve 3'te 6 cm (yarım kare). Oda 4'ün içine çizilemez (oda 4 bir resimdir)."
+                },
+                "curve": {
+                    "title": "Eğri (A): eğri duvarlar",
+                    "body": "Yalnızca oda 3. Bir oda 3 karesinin çeyreğini (6 cm kare) işaret edin; alabileceği dört eğri soluk görünür.\nBir tıklama en yakınını (mavi) koyar. Aynısına tekrar tıklamak onu kaldırır."
+                },
+                "eraser": {
+                    "title": "Silgi (E)",
+                    "body": "Duvarları, eğrileri ve kazazedeleri kaldırmak için üzerlerine tıklayın veya sürükleyin; gidecek olan işaretçinin altında kırmızı gösterilir.\nDuvarlardan uzakta bir karenin zeminini (çukur, bataklık, kontrol noktası) kaldırır. Başlangıç yalnızca tıklamayla gider.\nBir duvarda başlayan sürükleme zeminlere dokunmaz, böylece duvarları silerken zeminler gitmez. Dış duvarlar kalır."
+                },
+                "floor": {
+                    "title": "Zemin (F): kontrol noktaları, çukurlar, bataklıklar, başlangıç",
+                    "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, robotun konduğu karedir: haritada bir tane. Yok zemini kaldırır.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur."
+                },
+                "victim": {
+                    "title": "Kazazede (V): kazazedeler ve bilişsel hedefler",
+                    "body": "Panelden bir tür seçin (harf kazazedeler Φ, Ψ, Ω ve sahteleri, dört türde bilişsel hedef - yanıcı gaz, zehir, aşındırıcı, organik peroksit - ve bir sahte) ve bir duvarın yakınına tıklayın: tıkladığınız yerdeki duvara konur.\nOda 1'de kare kenarlarına (kare başına bir), oda 2 ve 3'te 6 cm duvarların yüzlerine, bir eğride iki yere (iç ve dış) konur. Konmuş birini duvarı boyunca taşımak için sürükleyin. Konamayacağı yerde durum satırı nedenini söyler.\nDönüşü için kadranı çevirin (Sabit dönüş) veya her seferinde yenisi için “Rastgele” seçeneğini seçin. Bilişsel hedef için hedefin bir halkasına, sonra aşağıdaki bir renge tıklayın; halkaların toplamı türünü verir.\nSeçmek için aynı türle bir kazazedeye tıklayın, sonra dönüşünü, halkalarını veya duvar boyunca yerini değiştirin ya da kaldırın. Başka bir türle tıklamak türünü değiştirir."
+                },
+                "room4": {
+                    "title": "Oda 4'ü çizmek",
+                    "body": "Oda aracıyla oda 4'ü boyamak oda 4'ü oluşturur. Duvarları ve kazazedeleri resim olarak çizilir.\nOda 4'ü çiz (veya alanına çift tıklama) oda 4 oluşturucusunu açar: kalem, çizgiler ve şekillerle duvarları serbestçe çizin ve kazazedeleri duvarlara koyun. Robotun ulaşamadığı yerler kırmızı çizgilerle gösterilir.\nOluşturucunun Rehber düğmesi oda 4'ün nasıl yapılacağını ayrıntılı gösterir. Resim haritada gösterilir ve olduğu gibi dışa aktarılan dünyaya girer."
+                },
+                "select": {
+                    "title": "Seç (S): bir bölgeyi taşımak ve kopyalamak",
+                    "body": "Bir kare bölgesi seçmek için sürükleyin; duvarları, odaları, zeminleri ve kazazedeleri birlikte alınır.\nTaşımak için içinde sürükleyin veya bir kopyayı taşımak için Alt basılıyken sürükleyin. Ok tuşları onu birer kare taşır.\nCtrl+C kopyalar, Ctrl+X keser, Ctrl+V yapıştırır (işaretçinin altındaki kare sol üst köşesidir), Ctrl+D çoğaltır ve Delete temizler. Esc bölgeyi bırakır."
+                },
+                "linear": {
+                    "title": "Doğrusal",
+                    "body": "Açıkken her kare doğrusal (başlangıca bağlı bir duvarın yanında) veya yüzen olarak renklenir. Yüzen karelerdeki kazazedeler daha çok puan getirir.\nBaşlangıç karesi gerekir. Dünya dışa aktarımı doğrusal kareleri aynı şekilde belirler."
+                },
+                "checks": {
+                    "title": "Kontroller",
+                    "body": "Her değişiklik kurallara göre kontrol edilir.\nKırmızı ✕, dünyanın dışa aktarılamayacağı bir sorundur; sarı ! bakmaya değer bir uyarıdır, ama dünya dışa aktarılabilir.\nHaritada nerede olduğunu görmek için bir öğeyi işaret edin, oraya gitmek için tıklayın. Kartı katlamak için başlığa tıklayın.\nRobotun (yarıçap 3,7 cm) ulaşamadığı yerler haritada her zaman kırmızı çizgilerle gösterilir ve oradaki bir kazazede uyarı alır."
+                },
+                "fix": {
+                    "title": "Otomatik düzeltme",
+                    "body": "Düzelt düğmesi olan bir öğe tek tıklamayla düzeltilir (başlangıç koymak, odaları geçitlerle birleştirmek, kuralların izin vermediği duvarları kaldırmak vb.).\nDüzeltilebilen her şeyi düzelt hepsini bir kerede yapar. Sonucu beğenmezseniz Ctrl+Z geri alır.\nKontroller ayrıca her odaya oda 1'den geçitlerle ulaşılabildiğini denetler ve ulaşılamayan odayı gösterir."
+                },
+                "export": {
+                    "title": "Dünyayı dışa aktarmak (.wbt)",
+                    "body": "Erebus'un yüklediği dünya dosyasını (.wbt) yazar.\nKırmızı ✕ sorunu kaldıkça düğme gridir ve basınca neyin düzeltileceğini listeler; oradan sizin için düzeltebilir.\nDüzenlemeye devam etmek için haritayı .wbt ile değil, Kaydet (JSON) ile saklayın: .wbt düzenlenebilir bir haritaya geri dönmez."
+                },
+                "more": {
+                    "title": "Rehber ve dil",
+                    "body": "Sağ alttaki “Rehber” menüsünde örnek harita kuran ders, bu tur ve oda 4'ün nasıl yapılacağı her zaman vardır.\nDil düğmesi (kullanılan dilin bayrağını ve adını gösterir) dili seçer."
+                },
+                "done": {
+                    "title": "Tur bu kadar",
+                    "body": "Bu düğme turu istediğiniz zaman yeniden başlatır.\nİyi bir çalışma sırası: Şekil ile boyutu ayarla → odaları boya → geçitlerle birleştir → duvarları çiz → zeminleri ve kazazedeleri koy → kontrollere bak ve .wbt'yi dışa aktar.\nHarita yaparken iyi eğlenceler!"
+                },
+                "score": {
+                    "title": "En yüksek puan",
+                    "body": "Bu haritanın getirebileceği en yüksek puan: robotun yaklaşabildiği her kazazede ve bilişsel hedef doğru türle tanınır ve her kontrol noktasından geçilir; kural {{rule_scoring}} uyarınca hesaplanır.\nHer odanın payı ve çıkış ile haritalama bonuslarıyla puan için basın. Her değişiklikte yeniden hesaplanır."
+                }
+            },
+            "lesson": {
+                "planLabel": "Örnek harita, bitmiş hâli",
+                "intro": {
+                    "title": "Örnek bir harita yaparak öğrenin",
+                    "body": "Bu derste yukarıdaki haritayı yapar ve yol boyunca düzenleyicinin özelliklerini birbiri ardına kullanırsınız (yaklaşık 15 dakika).\nSolda oda 1, üst ortada oda 2, alt ortada oda 3, sağda oda 4. Odaları geçitlerle birleştirir, duvarlar, bir eğri, zeminler ve kazazedeler koyar, oda 4'ün içini çizer ve dışa aktarılmaya hazır bir dünyayla bitirirsiniz.\nHer adımın istediğini yapın, “Tamam!” olur ve İleri devam eder. Bir şey çalışmazsa Benim için yap sizin yerinize yapar. Düzenleyici baştan sona her zamanki gibi çalışır."
+                },
+                "new": {
+                    "title": "Yeni bir harita yapın",
+                    "body": "Önce boş bir harita.\nÜzerinde çalıştığınız harita tarayıcıda tutulur, bu yüzden sayfa kapansa bile bir dahaki sefere kaldığınız yerden devam edebilirsiniz.",
+                    "task": "“Yeni harita” düğmesine basın"
+                },
+                "size": {
+                    "title": "Haritanın boyutunu ayarlayın",
+                    "body": "Yeni bir harita 8 kare genişliğinde ve 6 kare uzunluğundadır (bir kare 12 cm'lik bir karedir). Boyutu şekil aracının panelinden değiştirin: yazmak için “Genişlik” veya “Uzunluk” alanına tıklayın ya da − ve + kullanın (40'a kadar).\nBoyut değişince hâlâ sığanlar (duvarlar, odalar, dış hat) kalır.",
+                    "task": "Genişliği 9 yapın (yazın veya +'ya basın; 6 uzunluk kalır)",
+                    "tasks": {
+                        "length": "Uzunluk {{l}}. Uzunluğu yeniden 6 yapın",
+                        "more": "Genişlik {{w}}. Genişliği 9 yapın",
+                        "less": "Genişlik {{w}}. Genişliği 9 yapın"
+                    }
+                },
+                "outline": {
+                    "title": "Haritanın dış hattını değiştirin",
+                    "body": "Dış hat (düzensiz) ile bir kareye her tıklama onu haritadan çıkarır (zemin yok) veya geri koyar; bir sürükleme birçoğunu birden yapar.\nHaritaların dikdörtgen olması gerekmez: L şekli de olur. Dış duvarlar dış hattı kendiliğinden izler.",
+                    "task": "Haritadan çıkarmak için sol üst köşe karesine (yeşil çerçeve) tıklayın",
+                    "tasks": {
+                        "extra": "Sol üst köşenin yanı sıra {{n}} kare daha haritanın dışında. Geri koymak için onlara tekrar tıklayın (yalnızca köşe çıkar)"
+                    }
+                },
+                "addCol": {
+                    "title": "Bir sütun ekleyin",
+                    "body": "Sütun ekle ile kareler arasındaki dikey bir çizgiye tıklamak oraya yeni bir sütun koyar; sağındaki her şey sağa kayar. Satır ekle aynısını yatay bir çizgiyle yapar.\nÜzerinde çalıştığınız haritayı büyütmek için kullanın.",
+                    "task": "Sütun ekle seçiliyken en sağdaki sütunun solundaki çizgiye (yeşil çerçeve) tıklayın; herhangi bir çizgi bir tane ekler",
+                    "tasks": {
+                        "removed": "Onun yerine bir sütun gitti. Geri alın (Ctrl+Z), “Sütun ekle” seçeneğinin seçili olduğunu kontrol edin, sonra dikey bir çizgiye tıklayın"
+                    }
+                },
+                "delCol": {
+                    "title": "Bir sütun çıkarın",
+                    "body": "Sütunu kaldır ile çıkarılacak sütunun bir karesine tıklayın. İçindekiler gider ve sağ taraf kapanır. Satırı kaldır aynısını bir satırla yapar.\nGeri al (Ctrl+Z) bir hatayı geri alır.",
+                    "task": "Sütunu kaldır ile en sağdaki sütuna (yeşil çerçeve) tıklayarak 9 genişliğe dönün; herhangi bir sütun gidebilir",
+                    "tasks": {
+                        "more": "Hâlâ 9 genişlikten {{n}} sütun fazla. Sütunu kaldır ile {{n}} tane daha kaldırın",
+                        "less": "Çok fazla gitti: 9 genişlikten {{n}} sütun eksik. Geri getirmek için geri alın (Ctrl+Z)"
+                    }
+                },
+                "room2": {
+                    "title": "Oda 2'yi boyayın",
+                    "body": "Oda aracı odaları boyar. Yeni bir haritanın tamamı oda 1'dir. Bir oda numarası seçin ve kareleri onunla boyayın (oda 1'i boyamak bir kareyi geri alır).\nHer odanın kuralları vardır: oda 1'de 12 cm duvarlar (kare kenarlarında), oda 2'de 6 cm duvarlar (yarım kareler), oda 3'te 6 cm duvarlar ve eğriler.\nDuvarlar oda sınırlarında kendiliğinden yükselir.",
+                    "task": "Oda 2'yi seçin ve yeşil çerçevedeki 3 × 3 kareyi boyayın",
+                    "tasks": {
+                        "extra": "Yeşil çerçevenin dışındaki {{n}} kare de oda {{room}}. Oda 1'i seçin ve onları geri boyayın",
+                        "wrong": "Yeşil çerçevedeki {{n}} kare başka bir odayla boyanmış. “Oda {{room}}” seçeneğini seçin ve onları yeniden boyayın",
+                        "left": "{{n}} tane kaldı: yeşil çerçevenin kalanını oda {{room}} ile boyayın"
+                    }
+                },
+                "room3": {
+                    "title": "Oda 3'ü boyayın",
+                    "body": "Şimdi oda 3. Oda 2'nin 6 cm duvarlarına ek olarak eğri duvarları da vardır.",
+                    "task": "Oda 3'ü seçin ve yeşil çerçevedeki 3 × 3 kareyi boyayın",
+                    "tasks": {
+                        "extra": "Yeşil çerçevenin dışındaki {{n}} kare de oda {{room}}. Oda 1'i seçin ve onları geri boyayın",
+                        "wrong": "Yeşil çerçevedeki {{n}} kare başka bir odayla boyanmış. “Oda {{room}}” seçeneğini seçin ve onları yeniden boyayın",
+                        "left": "{{n}} tane kaldı: yeşil çerçevenin kalanını oda {{room}} ile boyayın"
+                    }
+                },
+                "room4": {
+                    "title": "Oda 4'ü boyayın",
+                    "body": "Oda 4 resim olarak serbestçe çizilir: duvarları ve kazazedeleri. Boyandığında henüz içi boş bir oda 4'tür ve kontroller çizilmediğini söyler. İçi sonraki bir bölümde gelir.",
+                    "task": "Oda 4'ü seçin ve sağdaki yeşil çerçeveyi (3 × 6 kare) boyayın",
+                    "tasks": {
+                        "extra": "Yeşil çerçevenin dışındaki {{n}} kare de oda {{room}}. Oda 1'i seçin ve onları geri boyayın",
+                        "wrong": "Yeşil çerçevedeki {{n}} kare başka bir odayla boyanmış. “Oda {{room}}” seçeneğini seçin ve onları yeniden boyayın",
+                        "left": "{{n}} tane kaldı: yeşil çerçevenin kalanını oda {{room}} ile boyayın"
+                    }
+                },
+                "pass12": {
+                    "title": "Odaları bir geçitle birleştirin",
+                    "body": "Her oda sınırında bir duvar vardır, bu yüzden robot henüz oda 2'ye giremez. Geçit aracıyla bir sınırın yakınına tıklayın: tıkladığınız taraftaki kare geçit olur ve duvar açılır.\nKapatmak için tekrar tıklayın; diğer tarafa tıklayın, geçit o kareye geçer. Kaldırmak için bir geçit karesinin ortasına tıklayın.",
+                    "task": "Oda 1 ve 2'nin sınırının yakınına, oda 1 tarafına (yeşil çerçevedeki soldaki kare) tıklayın"
+                },
+                "pass34": {
+                    "title": "Diğer odaları birleştirin",
+                    "body": "Aynı şekilde oda 2 ve 3'ün, oda 3 ve 4'ün sınırlarına geçitler koyun.\nOda 4'e giden geçit, oda 4'ün dışındaki kareye konur. Kurallar robotun oda 4'e girdiği yerde bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur.",
+                    "task": "Oda 3 ve 4'e ulaşılsın diye yeşil çerçevelerdeki iki sınıra tıklayın",
+                    "tasks": {
+                        "need4": "Oda 3'e ulaşıldı. Şimdi oda 3 ve 4'ün sınırına (sağdaki yeşil çerçeve) tıklayın",
+                        "need3": "Oda 4'e ulaşıldı ama oda 3'e henüz değil. Oda 2 ve 3'ün sınırına (üstteki yeşil çerçeve) tıklayın"
+                    }
+                },
+                "wall1": {
+                    "title": "Oda 1'e bir duvar çizin",
+                    "body": "Duvar çizmek için çizgi aracıyla sürükleyin. İşaretçinin altındaki odanın ızgarasına hizalanırlar: oda 1'de kare kenarları boyunca (12 cm).\nYalnızca tek bir düz çizgi için başlarken Shift'i basılı tutun.",
+                    "task": "Oda 1'deki kesikli turuncu çizgi boyunca bir duvar sürükleyin",
+                    "tasks": {
+                        "left": "Duvar kısa. Kesikli turuncu çizginin sonuna kadar çizin"
+                    }
+                },
+                "wall2": {
+                    "title": "Oda 2'de zikzak çizin",
+                    "body": "Siz sürükledikçe duvar işaretçiyi izler, bu yüzden merdiven gibi basamaklar tek çizgide olur. Geldiğiniz yoldan dönmek onu geri alır.\nOda 2 ve 3'te duvarlar yarım karelere (6 cm) hizalanır.",
+                    "task": "Oda 2'deki kesikli turuncu merdiveni tek çizgide çizin",
+                    "tasks": {
+                        "left": "Merdivenin yalnızca bir kısmı. Kesikli turuncu çizginin sonuna kadar tek çizgide çizin"
+                    }
+                },
+                "curve": {
+                    "title": "Oda 3'e bir eğri koyun",
+                    "body": "Eğri aracıyla bir oda 3 karesinin çeyreğini (6 cm kare) işaret edin: alabileceği dört eğri soluk görünür. Bir tıklama en yakınını (mavi) koyar.\nAynısına tekrar tıklamak onu kaldırır. Eğriler yalnızca oda 3 içindir.",
+                    "task": "Yeşil çerçevedeki karenin bir çeyreğini işaret edip bir eğri koyun"
+                },
+                "start": {
+                    "title": "Başlangıcı koyun",
+                    "body": "Zemin aracı bir karenin zeminini belirler. Başlangıç, robotun konduğu karedir: haritada bir tane. O olmadan dünya dışa aktarılamaz.",
+                    "task": "“Başlangıç” seçeneğini seçin ve sol alttaki kareye (yeşil çerçeve) tıklayın",
+                    "tasks": {
+                        "room": "Başlangıç oda 1'in dışında. Oraya koymak için bir oda 1 karesine (yeşil çerçeve) tıklayın"
+                    }
+                },
+                "floors": {
+                    "title": "Kontrol noktaları, çukurlar ve bataklıklar",
+                    "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır; Yok zemini kaldırır.\nKontrol noktası, robot ona ulaştığında puan getirir ve ilerleme olmadığında (LoP) robotun geri konduğu yerdir. Çukur robotun girmemesi gereken bir karedir, bataklık ise onu yavaşlatır.",
+                    "task": "Bir kontrol noktası, bir çukur ve bir bataklık koyun (üç yeşil çerçeve iyi yerlerdir)",
+                    "tasks": {
+                        "left": "Konacak olan: {{list}}. Bir tür seçin ve bir kareye tıklayın"
+                    }
+                },
+                "erase": {
+                    "title": "Silmek ve geri almak",
+                    "body": "Silgi, duvarları, eğrileri ve kazazedeleri bir tıklama veya sürüklemeyle kaldırır. Duvarlardan uzakta bir karenin zeminini (çukur, bataklık, kontrol noktası) kaldırır; başlangıç yalnızca tıklamayla gider. Dış duvarlar kalır.\nYanlış şeyi silerseniz geri al (Ctrl+Z veya üst çubuktaki ↶) geri getirir; yinele (Ctrl+Shift+Z veya ↷) yeniden ileri gider.",
+                    "task": "Bataklığı (yeşil çerçeve) silin, sonra Ctrl+Z ile geri getirin",
+                    "tasks": {
+                        "undo": "Bataklık gitti. Şimdi Ctrl+Z ile (veya üst çubuktaki ↶ ile) geri getirin"
+                    }
+                },
+                "victim": {
+                    "title": "Bir kazazede koyun",
+                    "body": "Kazazede aracıyla bir tür seçin ve bir duvarın yakınına tıklayın: tıkladığınız yerdeki duvara konur, sonra duvarı boyunca sürükleyebilirsiniz. Kazazedeler oda 1'de kare kenarlarına (kare başına bir), oda 2 ve 3'te 6 cm duvarların yüzlerine, bir eğride iki yere (iç ve dış) konur. Konamayacağı yerde durum satırı nedenini söyler.\nDönüşünü kadranla ayarlayın (Sabit dönüş) veya her seferinde yenisi için “Rastgele” seçeneğini seçin.",
+                    "task": "“Yaralı (Φ)” seçeneğini seçin ve çizdiğiniz oda 1 duvarının üst tarafına (yeşil çerçevedeki karenin alt kenarı) tıklayın",
+                    "tasks": {
+                        "notReal": "Bu sahte bir kazazede veya bilişsel hedef. Gerçek satırından “Yaralı (Φ)” seçeneğini seçin ve oda 1 duvarına koyun"
+                    }
+                },
+                "fake": {
+                    "title": "Sahte bir kazazede koyun",
+                    "body": "Sahte satırı, robotun gerçeklerden ayırt etmesi gereken sahte kazazedeler verir.\nKazazedeler dış duvarlara da konur.",
+                    "task": "Bir sahte kazazede seçin ve oda 2'nin üstündeki dış duvara (yeşil çerçevedeki kare) koyun",
+                    "tasks": {
+                        "notFake": "Bu gerçek bir kazazede. Sahte satırından birini seçin (silgi diğerini kaldırır)"
+                    }
+                },
+                "ct": {
+                    "title": "Bir bilişsel hedef koyun",
+                    "body": "Bilişsel hedef (yanıcı gaz, zehir, aşındırıcı veya organik peroksit) beş halkalı bir hedeftir. Bir tür seçmek halka renklerini verir; değiştirmek için hedefin bir halkasına, sonra aşağıdaki bir renge tıklayın.\nHalkaların toplamı türü verir; hiçbir türe uymayan sahte bir hedeftir.",
+                    "task": "Bir bilişsel hedef seçin ve oda 3'ün altındaki dış duvara (yeşil çerçevedeki kare) koyun"
+                },
+                "pick": {
+                    "title": "Koyduğunuz bir kazazedeyi değiştirin",
+                    "body": "Seçmek için aynı tür seçiliyken bir kazazedeye tıklayın. Panelde türünü, sahte olup olmadığını, dönüşünü (bilişsel hedefte halkalarını) değiştirin ya da kaldırın. Bitti seçimi sonlandırır.\nBaşka bir tür seçiliyken tıklamak türünü değiştirir.",
+                    "task": "Seçmek için türü seçiliyken kazazedelerinizden birine tıklayın"
+                },
+                "r4open": {
+                    "title": "Oda 4'ün içini çizin",
+                    "body": "Oda 4'ün duvarları ve kazazedeleri resim olarak çizilir. Oda 4 oluşturucusunu açmak için oda aracının panelinde “Oda 4'ü çiz” düğmesine basın veya haritada oda 4'e çift tıklayın.",
+                    "task": "“Oda 4'ü çiz” düğmesine basın"
+                },
+                "r4intro": {
+                    "title": "Oda 4 oluşturucusu",
+                    "body": "Bu oda 4 oluşturucusu. Oda 4 büyük gösterilir, çevresinde haritanın duvarları (dış duvarlar ve oda sınırları) vardır.\nSiyahla çizdiğiniz duvar olur, duvarlara koyduğunuz işaretler kazazede olur: resim, dünyadaki oda 4'ün ta kendisidir.\nBu ekranın sağ altındaki Rehber bu bölümü istediğiniz zaman yeniden gösterir; dil seçimi de oradadır."
+                },
+                "r4screen": {
+                    "title": "Oluşturucunun ekranı",
+                    "body": "Solda araçlar, yanında ayarları, ortada resim. Üst çubukta geri al, yinele ve tümünü temizle, ne gösterileceği, yakınlaştırma ve resim açma ile kaydetme vardır. Alt satır kazazedeleri sayar ve uyarı verir.\nCtrl (⌘) + tekerlek yakınlaştırır, Boşluk + sürükleme görünümü taşır."
+                },
+                "r4pen": {
+                    "title": "Kalemle (P) duvar çizin",
+                    "body": "Kalem, sürüklediğiniz her yere duvar çizer: her şekilde duvar için, elle.\nRobotun geçebilmesi için yer (yaklaşık bir kare) bırakın. Geri al (Ctrl+Z) bir hatayı geri alır.",
+                    "task": "Kalemle, kesikli turuncu çizgi boyunca yaklaşık dalgalı bir duvar çizin"
+                },
+                "r4line": {
+                    "title": "Çizgi (L)",
+                    "body": "Çizgi, sürüklemenin başladığı yerden bittiği yere düz bir duvar çizer. Shift basılıyken 45°'lik adımlarla gider.\nAyarlarda Izgaraya hizala (1/4 kare) açıkken uçları çeyrek karelere hizalanır.",
+                    "task": "Kesikli turuncu çizgi boyunca bir çizgi çizin"
+                },
+                "r4curve": {
+                    "title": "Eğri (B)",
+                    "body": "Eğri her tıklamada bir nokta alır ve bunlardan geçer. Çift tıklama, Enter veya sağ tıklama bitirir; ilk noktaya tıklamak onu kapatır. Backspace bir noktayı geri alır, Esc iptal eder.\nAyarlardaki Çizgi, yumuşak bir eğri ile düz parçalar arasında seçim yapar.",
+                    "task": "Eğriyle kesikli çizginin dört noktasına sırayla tıklayın ve çift tıklamayla bitirin"
+                },
+                "r4arc": {
+                    "title": "Yay (A)",
+                    "body": "Yay önce iki ucunu bir sürüklemeyle alır. Sonra fareyi oynatmak onu büker, bir tıklama yerleştirir.",
+                    "task": "Yayla kesikli çizginin bir ucundan diğerine sürükleyin, ortaya kadar bükün ve tıklayın"
+                },
+                "r4rect": {
+                    "title": "Dikdörtgen (R)",
+                    "body": "Dikdörtgen, sürüklemenin iki köşesi arasındaki kutunun çevresine duvar çizer. Shift basılıyken kare olur.",
+                    "task": "Dikdörtgen aracıyla kesikli dikdörtgeni sürükleyin"
+                },
+                "r4circle": {
+                    "title": "Daire (C)",
+                    "body": "Daire, merkezinden sürüklediğiniz yere kadar yuvarlak bir duvar çizer: sütun gibi yuvarlak engeller için kullanışlıdır.",
+                    "task": "Daireyle kesikli dairenin merkezinden dışarı doğru sürükleyin"
+                },
+                "r4ellipse": {
+                    "title": "Elips (O)",
+                    "body": "Elips, sürüklediğiniz kutunun içine bir duvar çizer. Shift basılıyken daire olur.",
+                    "task": "Elipsle kesikli elipsin çevresine bir kutu sürükleyin"
+                },
+                "r4polygon": {
+                    "title": "Çokgen (G)",
+                    "body": "Çokgen, merkezinden dışarıya düzgün bir çokgen çizer. Ayarlardaki Kenar sayısı 3 ile 12 arasında seçer. 15°'lik adımlarla döner, Shift basılıyken serbestçe.",
+                    "task": "Çokgenle (6 kenar) kesikli şeklin merkezinden dışarı doğru sürükleyin"
+                },
+                "r4shape": {
+                    "title": "Şekil (I): bir simgenin veya resmin şekli",
+                    "body": "Şekil, bir simgenin veya resmin şeklinden duvar yapar. Ayarlardan bir simge (İngilizce arayın, örn. star) veya resim seçin, sonra koymak için kutuyu sürükleyin.\nDolu veya Dış hat ile dönüşü de seçilebilir.",
+                    "task": "Şekil ile bir simge (örn. star) seçin ve kesikli kutunun içine sürükleyin"
+                },
+                "r4select": {
+                    "title": "Bir parçayı seç (S)",
+                    "body": "Seç, etrafında sürüklediğiniz parçayı alır. Seçili bir parça sürüklemeyle taşınır.",
+                    "task": "Seç ile kesikli kutunun (az önceki dikdörtgenin) çevresinde sürükleyin"
+                },
+                "r4transform": {
+                    "title": "Döndür, çevir, çoğalt",
+                    "body": "Paneldeki düğmeler seçili parçayı iki yöne de 90° döndürür ([ ve ]), iki yöne de çevirir, çoğaltır (Ctrl+D), kopyalar (Ctrl+C) ve yapıştırır (Ctrl+V) veya siler (Delete). Bitti (✓, Enter) onu resme geri koyar.",
+                    "task": "Seçili parçayı döndürün veya çevirin, sonra “Bitti” düğmesine (✓ veya Enter) basın",
+                    "tasks": {
+                        "noSelection": "Hiçbir şey seçili değil. Seç ile kesikli kutunun çevresinde sürükleyin"
+                    }
+                },
+                "r4erase": {
+                    "title": "Silgi (E)",
+                    "body": "Silgi, sürüklediğiniz yerdeki duvarları ve kazazedeleri siler. Boyutu (S, M, L) ayarlardadır.\nÜst çubuktaki Tümünü temizle (çöp kutusu) tüm resmi kaldırır.",
+                    "task": "Silgiyle üstteki çizgiyi (kesikli turuncu) silin"
+                },
+                "r4template": {
+                    "title": "Şablon (T)",
+                    "body": "Bir şablon seçin (labirent, sütunlar, çaprazlar, zikzak, halkalar, engeller) ve “Yerleştir” düğmesine basın: duvarlar tüm oda 4'e serilir ve robotun ulaşamadığı yerleri olabildiğince az bırakır.\nÖnce duvarları ve kazazedeleri temizle açıkken çizilenler önce gider: alıştırma şekillerini temizlemenin de bir yolu.",
+                    "task": "Bir şablon seçin (örn. Sütunlar), “Önce duvarları ve kazazedeleri temizle” seçeneğini açın ve “Yerleştir” düğmesine basın",
+                    "tasks": {
+                        "clearOff": "“Önce duvarları ve kazazedeleri temizle” kapalı. Açın, sonra “Yerleştir” düğmesine basın (alıştırma şekillerini temizler)"
+                    }
+                },
+                "r4stamp": {
+                    "title": "Kazazede koyun",
+                    "body": "Kazazede aracıyla bir tür seçin ve bir duvarın yakınına tıklayın: kazazede en yakın duvara gider. Bir duvarın ucuna, ince bir uca veya robotun yaklaşamadığı yere olmaz.\nSeçip dönüşünü veya halka renklerini değiştirmek için bir kazazedeye tıklayın; başka bir tür seçiliyse türü değişir. Sağ tıklama onu kaldırır.",
+                    "task": "Bir tür seçin ve iki kazazede koymak için duvarların yakınına tıklayın",
+                    "tasks": {
+                        "left": "{{n}} tane daha: bir duvarın yakınına tıklayın"
+                    }
+                },
+                "r4pick": {
+                    "title": "Koyduğunuz bir kazazedeyi değiştirin",
+                    "body": "Seçmek için aynı tür seçiliyken bir kazazedeye tıklayın. Panelde dönüşünü (bilişsel hedefte halka renklerini) değiştirin veya kaldırın. Bitti seçimi sonlandırır.\nBaşka bir tür seçiliyken tıklamak türünü değiştirir. Sağ tıklama da onu kaldırır.",
+                    "task": "Seçmek için türü seçiliyken kazazedelerinizden birine tıklayın"
+                },
+                "r4eraseTokens": {
+                    "title": "Yalnızca kazazedeleri silin",
+                    "body": "Silgi için Yalnızca kazazedeler seçiliyken, dokunduğu bir kazazede bütünüyle gider ve duvarlar kalır.",
+                    "task": "Silgi için “Yalnızca kazazedeler” seçeneğini seçin ve bir kazazedenin üzerinden geçin",
+                    "tasks": {
+                        "target": "Silgi “Her şey” ayarında. “Yalnızca kazazedeler” ayarına alın"
+                    }
+                },
+                "r4random": {
+                    "title": "Rastgele yerleştir",
+                    "body": "“Rastgele yerleştir” bölümünde kaç tane ve hangi türden (seçili tür veya karışık türler) olacağını seçin ve “Yerleştir” düğmesine basın: kazazedeler bir kerede konur.\nRobotun yarım kare yaklaşabildiği duvarlar boyunca, birbirinden en az yarım kare uzakta konurlar.",
+                    "task": "“Rastgele yerleştir” bölümünde “Yerleştir” düğmesine basın"
+                },
+                "r4reach": {
+                    "title": "Ulaşılamayan bir yer yapın ve görün",
+                    "body": "Ulaşılamaz açıkken robotun (yarıçap 3,7 cm) ulaşamadığı yerler kırmızı çizgilerle gösterilir: duvarlarla kapatılmış bir yer veya robottan dar bir aralık.\nUlaşılamayan bir yer kendi başına sorun değildir (bir engelin içi öyle olmalıdır). Ama robot oraya konmuş bir kazazedeyi bulamaz, bu yüzden kazazede koyarken çizgileri kullanın. Robotun yaklaşamadığı veya duvarından ayrı kazazedeler kesikli kırmızı bir halka alır ve alt satır onları sayar.\nGirişler / CP, girişleri ve kontrol noktalarını gösterir. Ulaşılamayan bir yer yapmayı deneyin.",
+                    "task": "Dikdörtgen aracıyla duvarlardan uzakta küçük bir kare çizin ve içinin kırmızı çizgilere döndüğünü görün (Benim için yap kalemle küçük bir kare çizer)",
+                    "tasks": {
+                        "off": "Başlangıç yok, bu yüzden robotun ulaşamadığı yerler hesaplanamaz. Önce haritaya başlangıcı koyun (bu adım atlanabilir)",
+                        "allBlocked": "Robot oda 4'ün neredeyse hiçbir yerine giremiyor: bir şey girişini kapatıyor. Önündeki duvarı silin veya Önce temizle açıkken yeniden bir şablon yerleştirin"
+                    }
+                },
+                "r4file": {
+                    "title": "Resim olarak kaydet ve aç",
+                    "body": "Üst çubuğun sağındaki düğmeler resmi PNG olarak kaydeder ve bir PNG veya JPEG açar.\nKazazedelerin türleri resimde saklanır, bu yüzden kaydedilmiş bir resim olduğu gibi açılır: aynı oda 4'ü başka bir haritada kullanmak için kullanışlıdır."
+                },
+                "r4ok": {
+                    "title": "Haritaya geri dönün",
+                    "body": "Çizildiğinde “Tamam” düğmesine basın: resim haritada oda 4 olarak gösterilir ve dışa aktarılan dünyaya girer.\nDaha sonra yeniden çizmek için “Oda 4'ü çiz” düğmesine tekrar basın veya oda 4'e çift tıklayın.",
+                    "task": "Haritaya dönmek için “Tamam” düğmesine basın"
+                },
+                "select": {
+                    "title": "Bir bölgeyi seçin, taşıyın ve kopyalayın",
+                    "body": "Bir kare bölgesi seçmek için seç aracıyla sürükleyin; duvarları, odaları, zeminleri ve kazazedeleri birlikte alınır.\nTaşımak için içinde sürükleyin veya bir kopyayı taşımak için Alt basılıyken sürükleyin. Ok tuşları onu birer kare taşır. Ctrl+C / Ctrl+X kopyalar / keser, Ctrl+V yapıştırır (işaretçinin altındaki kare sol üst köşesidir), Ctrl+D çoğaltır ve Delete temizler. Esc onu bırakır.\nBurada yalnızca seçin; taşınırsa Ctrl+Z geri alır.",
+                    "task": "Oda 1'i (yeşil çerçeve) seçmek için sürükleyin"
+                },
+                "view": {
+                    "title": "Görünümü taşıyın",
+                    "body": "Fare tekerleği yakınlaştırır, Boşluk basılıyken (veya tekerlek düğmesiyle) sürüklemek görünümü taşır. El aracıyla (H) basit bir sürükleme taşır.\nÜst çubuktaki büyüteç düğmeleri de yakınlaştırır; en sağdaki tüm haritayı yeniden sığdırır."
+                },
+                "linear": {
+                    "title": "Doğrusal",
+                    "body": "Doğrusal her kareyi doğrusal (başlangıca bağlı bir duvarın yanında) veya yüzen olarak renklendirir. Yüzen karelerdeki kazazedeler daha çok puan getirir.\nOlağan görünüm için tekrar basın.",
+                    "task": "“Doğrusal” düğmesine basın"
+                },
+                "checks": {
+                    "title": "Kontrollere bakın",
+                    "body": "Her değişiklik, sağ üstteki kartta kurallara göre kontrol edilir. Kırmızı ✕, dünyanın dışa aktarılamayacağı bir sorundur; sarı ! bakmaya değer bir uyarıdır.\nNerede olduğunu görmek için bir öğeyi işaret edin, oraya gitmek için tıklayın. Düzelt birini düzeltir; Düzeltilebilen her şeyi düzelt hepsini düzeltir.\nRobotun ulaşamadığı yerler haritada kırmızı çizgilerle gösterilir.",
+                    "task": "Hiç kırmızı ✕ sorunu bırakmayın (her adımı izlediyseniz hiç yoktur)",
+                    "tasks": {
+                        "left": "{{n}} kırmızı ✕ sorunu kaldı. “Düzeltilebilen her şeyi düzelt” düğmesine basın veya nerede olduğunu görmek için bir öğeye tıklayın"
+                    }
+                },
+                "name": {
+                    "title": "Haritaya ad verin",
+                    "body": "Haritanın adı, kaydettiğiniz JSON'a ve dışa aktardığınız .wbt'ye ad verir.",
+                    "task": "Üst çubuktaki harita adına tıklayıp değiştirin"
+                },
+                "save": {
+                    "title": "Kaydet",
+                    "body": "Kaydet haritayı bir JSON dosyasına yazar. Düzenlemeye devam etmek için Aç JSON'u okur (haritanın üzerine bırakmak da olur).\nÜzerinde çalıştığınız harita tarayıcıda da tutulur ve bir dahaki sefere Son çalışmayı aç oradan devam eder. Başka bir tarayıcıda veya tarama verileri silinince kaybolur, bu yüzden önemli haritaları JSON olarak saklayın."
+                },
+                "export": {
+                    "title": "Dünyayı dışa aktarın",
+                    "body": ".wbt düğmesi Erebus'un yüklediği dünya dosyasını yazar. Kırmızı ✕ sorunu kaldıysa yazamaz ve neyin düzeltileceğini listeler.\n.wbt düzenlenebilir bir haritaya geri dönmez, bu yüzden haritayı JSON olarak da saklayın."
+                },
+                "more": {
+                    "title": "Rehber ve dil",
+                    "body": "Sağ alttaki “Rehber” menüsünde bu ders, ekran turu ve oda 4'ün nasıl yapılacağı her zaman vardır. Oda 4 oluşturucusunun Rehber düğmesi yalnızca oda 4 bölümünü gösterir.\nDil düğmesi (kullanılan dilin bayrağını ve adını gösterir) dili seçer."
+                },
+                "done": {
+                    "title": "Bitti!",
+                    "body": "Tebrikler: örnek harita hazır.\nKaydedin veya .wbt'yi dışa aktarıp Erebus'ta çalıştırın. Yeni bir harita için Yeni'den başlayın.\nİyi bir çalışma sırası: boyut ve dış hat → odaları boya → geçitlerle birleştir → duvarları çiz → zeminler ve kazazedeler → oda 4'ü çiz → kontrollere bak ve dışa aktar."
+                },
+                "score": {
+                    "title": "En yüksek puan",
+                    "body": "Üst çubuktaki kupa, bu haritanın getirebileceği en yüksek puandır: her kazazede ve bilişsel hedef doğru türle tanınır ve her kontrol noktasından geçilir; kural {{rule_scoring}} uyarınca hesaplanır.\nHer odanın payı ve çıkış ile haritalama bonuslarıyla puan için basın. Yüzen karelerdeki ve çarpanı yüksek odalardaki kazazedeler daha değerlidir."
+                }
+            },
+            "toolHints": {
+                "select": "Kareleri seçmek için sürükleyin (duvarlar, odalar, zeminler ve kazazedeler birlikte taşınır veya kopyalanır)",
+                "select_region": "{{size}} kare seçildi: taşımak için içinde sürükleyin, Ctrl+C / X / V, Delete, bırakmak için Esc",
+                "hand": "Görünümü taşımak için sürükleyin",
+                "shape_outline": "Kareleri haritadan çıkarmak veya geri koymak için tıklayın ya da sürükleyin. Boyut sol paneldedir",
+                "shape_addRow": "Satırın gideceği sınırı işaret edip tıklayın",
+                "shape_addCol": "Sütunun gideceği sınırı işaret edip tıklayın",
+                "shape_delRow": "Kaldırılacak satırı işaret edip tıklayın",
+                "shape_delCol": "Kaldırılacak sütunu işaret edip tıklayın",
+                "room": "Oda {{room}} boyamak için kareler üzerinde sürükleyin. Sınırlardaki ve dışarıdaki duvarlar kendiliğinden gelir",
+                "passage": "Geçit koymak için bir oda sınırının (noktalı) yakınına tıklayın",
+                "line": "Duvar çizmek için sürükleyin, yol boyunca köşe dönün; tek düz çizgi için Shift",
+                "curve": "Oda 3'te bir çeyrek kareyi işaret edip mavi eğriye tıklayın",
+                "eraser": "Bir duvarı, eğriyi, kazazedeyi veya zemini işaret edip tıklayın (devam etmek için sürükleyin)",
+                "floor": "Yapmak için bir kareye tıklayın: {{floor}} (kaldırmak için tekrar)",
+                "victim": "“{{name}}” öğesini tıkladığınız yere koymak için bir duvarın yakınına tıklayın (sonra duvarı boyunca sürükleyin). Türü sol panelden seçin",
+                "victim_selected": "Seçili kazazedeyi duvarı boyunca taşımak için sürükleyin. Dönüşünü, halkalarını veya yerini sol panelden değiştirin ya da kaldırın"
+            },
+            "lessonState": {
+                "tool": "{{name}} aracını seçin (soldaki araç sütununda)"
+            },
+            "score": {
+                "title": "Bu haritanın getirebileceği en yüksek puan",
+                "button": "En yüksek puan (kural {{rule_scoring}} uyarınca hesaplanır)",
+                "short": "Maks.",
+                "unit": " puan",
+                "lead": "Bir robotun ulaşabildiği her kazazedeyi ve bilişsel hedefi doğru türle tanıyıp her kontrol noktasından geçtiğinde aldığı puan (kural {{rule_scoring}}).",
+                "area": "Oda {{n}}",
+                "multiplier": "×{{m}}",
+                "victims": "Kazazedeler {{n}}",
+                "targets": "Hedefler {{n}}",
+                "checkpoints": "CP {{n}}",
+                "field": "Tanıma, tür ve kontrol noktaları",
+                "withExit": "Çıkış bonusuyla (+%10)",
+                "withMap": "Ayrıca tam haritalama bonusuyla (×2,2)",
+                "noStart": "Hesaplamak için başlangıç karesini koyun.",
+                "unreachableTokens": "Robotun yaklaşamadığı {{n}} kazazede veya hedef hesaba katılmadı (kontrollerde düzeltin).",
+                "unreachableCheckpoints": "Robotun ulaşamadığı {{n}} kontrol noktası hesaba katılmadı.",
+                "presetNote": "Oda 4 hazır şablonu sayılmaz (bu düzenleyici yalnızca özel oda 4 kullanır).",
+                "fakeNote": "Sahte kazazedeler ve sahte bilişsel hedefler (halka toplamı 0-3 dışında) puan getirmez.",
+                "untypedNote": "Türü olmayan {{n}} oda 4 kazazedesi hesaba katılmadı."
+            },
+            "tiles": "kare",
+            "shapeEdit": "Haritada düzenle",
+            "keySheet": {
+                "title": "Kontroller",
+                "open": "Kontroller",
+                "back": "Rehberlere dön",
+                "view": "Görünüm",
+                "edit": "Düzenleme",
+                "select": "Seç aracı",
+                "guide": "Yardım",
+                "rows": {
+                    "zoom": "Yakınlaştır ve uzaklaştır",
+                    "pan": "Görünümü taşı",
+                    "hand": "El aracı (sol sürüklemeyle taşı)",
+                    "undo": "Geri al",
+                    "redo": "Yinele",
+                    "cancel": "Çizilmekte olanı durdur",
+                    "tools": "Araç değiştir (sol çubuktaki harfler)",
+                    "copy": "Kopyala, kes, yapıştır",
+                    "duplicate": "Çoğalt",
+                    "clear": "Seçimi temizle",
+                    "nudge": "Seçimi bir kare taşı",
+                    "sheet": "Bu listeyi aç"
+                },
+                "keys": {
+                    "wheel": "Tekerlek",
+                    "spaceDrag": "Boşluk + sürükle",
+                    "middleDrag": "Orta düğmeyle sürükle"
+                }
+            },
+            "along": "Duvar boyunca yeri",
+            "alongNote": "Haritada da sürükleyebilirsiniz (0,1 cm adımlarla)",
+            "alongMiddle": "Ortaya"
+        },
+        "simMapEditor": {
+            "name": "Tasarım adı: ",
+            "rotDialHint": "Döndürmek için sürükleyin (1° adımlar için Shift'i basılı tutun). Ok tuşları da çalışır.",
+            "rotRandom": "Rastgele açı",
+            "rotHelp": "Robottan bakıldığında saat yönünde döner. 0° diktir. Kadranı sürükleyin veya düğmeleri kullanın.",
+            "connCheck": {
+                "passageNoRoom": "Bir {{name}} geçidi var (oda {{from}} ⇄ oda {{to}}), ama oda {{room}} yok.",
+                "passageMisplaced": "{{name}} geçidinden (oda {{from}} ⇄ oda {{to}}) hem oda {{from}} hem oda {{to}} tarafına geçilemiyor. Geçit karesini odalardan birine koyun ve ikisine de açık bırakın.",
+                "unmarkedGap": "Oda {{from}} ile oda {{to}} arasında {{name}} geçit karesi olmayan {{count}} açıklık var. Robotun geçebileceği her açıklık bir {{name}} geçit karesi olmalı veya bir duvarla kapatılmalıdır.",
+                "notConnected": "Oda {{room}}, oda 1'e geçitlerle bağlı değil."
+            },
+            "room4Creator": {
+                "zoomIn": "Yakınlaştır",
+                "zoomOut": "Uzaklaştır",
+                "zoomFit": "Sığdır",
+                "viewReach": "Ulaşılamaz",
+                "viewGuides": "Girişler / CP",
+                "unreachableShort": "Ulaşılamaz {{count}}",
+                "farShort": "Duvardan uzak {{count}}",
+                "missingShort": "Eksik CP {{count}}",
+                "noEntranceShort": "Giriş yok",
+                "reachOff": "Erişim hesaplanmadı",
+                "legendMapWallShort": "Harita duvarları",
+                "legendCheckpointShort": "Kontrol noktası",
+                "sel": {
+                    "ccw": "Sola 90° döndür",
+                    "cw": "Sağa 90° döndür",
+                    "h": "Sol / sağ çevir",
+                    "v": "Üst / alt çevir",
+                    "duplicate": "Çoğalt",
+                    "copy": "Kopyala",
+                    "paste": "Yapıştır",
+                    "delete": "Sil",
+                    "drop": "Bitti"
+                },
+                "randomPlace": "Rastgele yerleştir",
+                "randomModes": {
+                    "current": "Seçili tür",
+                    "mixed": "Karışık türler"
+                },
+                "randomGo": "{{n}} yerleştir",
+                "randomNote2": "Robotun yarım kare yaklaşabildiği duvarlar boyunca, birbirinden en az yarım kare uzakta.",
+                "templates": {
+                    "maze": "Labirent",
+                    "pillars": "Sütunlar",
+                    "diagonal": "Çaprazlar",
+                    "zigzag": "Zikzak",
+                    "rings": "Halkalar",
+                    "obstacles": "Engeller"
+                },
+                "templateHints": {
+                    "maze": "Bir kare genişliğinde koridorlardan bir labirent (birkaç kısayolla).",
+                    "pillars": "Kare köşelerinde yuvarlak sütunlar.",
+                    "diagonal": "Karelerin içinde kısa çapraz duvarlar.",
+                    "zigzag": "Uçlarda dönen tek bir yol.",
+                    "rings": "Merkezin çevresinde, her birinde bir açıklık olan halkalar.",
+                    "obstacles": "Dağınık daireler, kutular ve üçgenler."
+                },
+                "templateClear": "Önce duvarları ve kazazedeleri temizle",
+                "templateApply": "Yerleştir",
+                "showGuides": "Girişleri ve kontrol noktalarını göster",
+                "missingCheckpoints": "Bir geçidin hemen içindeki {{count}} kare kontrol noktası değil (kural {{rule_room4Checkpoint}}). Bunları ana düzenleyicide ayarlayın (kesikli \"CP?\").",
+                "noEntrance": "Oda 4'ün girişi yok. Ana düzenleyicide dışarıdaki bir geçide doğru bir duvarı açın.",
+                "rows": {
+                    "real": "Gerçek",
+                    "fake": "Sahte (3B)"
+                },
+                "curveSmooth": "Yumuşak",
+                "curveStraight": "Düz",
+                "sides": "Kenar sayısı",
+                "shapeIcon": "Simge",
+                "shapePicture": "Resim",
+                "iconSearch": "Ara (örn. star, car, tree)",
+                "iconAll": "Önerilenler (daraltmak için bir kategori seçin)",
+                "iconLoading": "Simgeler yükleniyor…",
+                "iconUnavailable": "Simge listesi yüklenemedi.",
+                "iconNone": "Hiçbir şey bulunamadı.",
+                "pictureChoose": "Bir resim seçin",
+                "pictureNote": "Saydamlığı olan bir PNG veya SVG opak kısmını kullanır; diğer resimler koyu kısımlarını kullanır.",
+                "shapeStyles": {
+                    "fill": "Dolu",
+                    "outline": "Dış hat"
+                },
+                "mirror": "Simetri",
+                "mirrors": {
+                    "none": "Kapalı",
+                    "x": "Sol / sağ",
+                    "y": "Üst / alt",
+                    "xy": "İkisi"
+                },
+                "tipCurve": "Tıklama: nokta ekle   Çift tıklama / Enter: bitir",
+                "tipArc": "Bükmek için oynatın   Tıklama: tamam",
+                "unreachable": "Robotun yarım kare yaklaşamadığı {{count}} tane (tanınamaz)",
+                "showReach": "Robotun gidemediği yerleri göster",
+                "legendReach": "Robotun gidemediği yerler",
+                "reach": {
+                    "noSeed": "Robot başlangıç karesinden hareket edemiyor, bu yüzden gidemediği yerler hesaplanmadı (başlangıç karesini ve çevresindeki duvarları kontrol edin).",
+                    "noStart": "Başlangıç karesi yok, bu yüzden robotun gidemediği yerler hesaplanmadı.",
+                    "unavailable": "Robotun gidemediği yerler hesaplanamadı."
+                },
+                "eraseTargets": {
+                    "all": "Her şey",
+                    "tokens": "Yalnızca kazazedeler"
+                },
+                "tipStamp": "Tıklama: seç (dönüş, halkalar) veya türü değiştir   Sağ tıklama: kaldır",
+                "tipOther": "Sağ tıklama: kaldır",
+                "title": "Özel oda 4",
+                "tools": {
+                    "pen": "Kalem",
+                    "line": "Çizgi",
+                    "rect": "Dikdörtgen",
+                    "circle": "Daire",
+                    "stamp": "Kazazede",
+                    "floor": "Zemin",
+                    "erase": "Silgi",
+                    "curve": "Eğri",
+                    "arc": "Yay",
+                    "ellipse": "Elips",
+                    "polygon": "Çokgen",
+                    "shape": "Şekil",
+                    "select": "Seç",
+                    "template": "Şablon"
+                },
+                "undo": "Geri al",
+                "redo": "Yinele",
+                "clear": "Tümünü temizle",
+                "groups": {
+                    "victim": "Harfli kazazedeler",
+                    "ct": "Bilişsel hedefler",
+                    "hazmat": "Tehlikeli madde işaretleri",
+                    "fake": "Sahte kazazedeler"
+                },
+                "types": {
+                    "harmed": "Yaralı",
+                    "stable": "Stabil",
+                    "unharmed": "Yaralanmamış",
+                    "fakeHarmed": "Yaralı",
+                    "fakeStable": "Stabil",
+                    "fakeUnharmed": "Yaralanmamış"
+                },
+                "eraserSize": "Boyut",
+                "size": {
+                    "s": "S",
+                    "m": "M",
+                    "l": "L"
+                },
+                "snap": "Izgaraya hizala (1/4 kare)",
+                "hints": {
+                    "pen": "Serbestçe duvar çizmek için sürükleyin.",
+                    "line": "Düz bir duvar çizmek için sürükleyin. 45° adımlar için Shift'i basılı tutun.",
+                    "rect": "Duvarlardan bir dikdörtgen çizmek için sürükleyin. Kare için Shift'i basılı tutun.",
+                    "circle": "Yuvarlak bir duvar çizmek için merkezden sürükleyin.",
+                    "stamp": "Bir kazazedeyi en yakın duvara takmak için duvarın yakınına tıklayın. Dönüşünü veya halkalarını değiştirmek için konmuş bir kazazedeye tıklayın (başka bir tür seçiliyse o türe dönüşür). Sağ tıklama onu kaldırır.",
+                    "floor": "Seçili zemini (çukur, bataklık, kontrol noktası) vermek için bir oda 4 karesine tıklayın; kaldırmak için tekrar tıklayın veya birkaçı için sürükleyin. Bir zemin tam bir karedir (12 cm); çukur da karenin tamamıdır.",
+                    "erase": "Duvarları ve kazazedeleri silmek için sürükleyin. Bir kazazede, hangi araç olursa olsun sağ tıklamayla da kaldırılabilir.",
+                    "eraseTokens": "Silginin dokunduğu her kazazedeyi kaldırır. Duvarlar kalır.",
+                    "curve": "Noktalara tıklayın, eğri onlardan geçer. Bitirmek için çift tıklama, Enter veya sağ tıklama; kapatmak için ilk noktaya tıklayın. Backspace bir noktayı kaldırır, Esc iptal eder.",
+                    "arc": "İki ucu belirlemek için sürükleyin, bükmek için fareyi oynatın, sonra tıklayın.",
+                    "ellipse": "Sürüklenen kutuya sığan elipsi çizer. Daire için Shift'i basılı tutun.",
+                    "polygon": "Düzgün bir çokgen çizmek için merkezden sürükleyin. 15° adımlarla döner (Shift ile serbest).",
+                    "shape": "Bir simge veya resim seçin, sonra boyutlandırmak için tuvalde sürükleyin (oranları korur; Shift ile serbest).",
+                    "select": "Bir kutu seçmek için sürükleyin, sonra taşımak için içinde sürükleyin (kopyalamak için Alt'ı basılı tutun). Ok tuşları iter, [ ] döndürür, Enter bırakır, Delete siler.",
+                    "template": "Bir şablon seçin ve “Yerleştir” düğmesine basın. Robotu dışarıda bırakan yerleşimler otomatik olarak yeniden yapılır."
+                },
+                "messages": {
+                    "outside": "Oda 4'ün dışına çıkamaz.",
+                    "needWall": "Kazazedeler yalnızca duvarlara konur. Bir duvarın yakınına tıklayın.",
+                    "pickShape": "Önce bir simge veya resim seçin.",
+                    "iconFailed": "Simge yüklenemedi.",
+                    "imageFailed": "Resim yüklenemedi.",
+                    "randomDone": "{{placed}} tane yerleştirildi.",
+                    "randomShort": "{{asked}} taneden yalnızca {{placed}} tanesi yerleştirildi (koyacak yeterli duvar yok).",
+                    "templateBlocked": "Denenen her yerleşim odanın bir kısmını ulaşılamaz bırakıyor. Açık kırmızı kısımları kontrol edin.",
+                    "wallEnd": "Bir duvarın ucuna olmaz. En az bir kazazede (2 cm) genişliğinde bir duvar yüzüne tıklayın.",
+                    "unreachable": "Robot buraya yaklaşamaz: robotun gidemediği yerde kazazede olmaz (kural {{rule_reach}}).",
+                    "floorNotOuter": "Temas karesi yalnızca dış duvara bitişik bir kareye konur."
+                },
+                "tokens": "Duvar işaretleri: {{count}}",
+                "farFromWall": "{{count}} tanesi her duvardan uzakta (kesikli kırmızı daire)",
+                "import": "Resim içe aktar",
+                "download": "Resim olarak kaydet",
+                "hint": "Bir PNG / JPEG resmi içe aktarın veya burada çizin. Kazazede türleri resimde saklanır, bu yüzden kaydedilmiş bir resim onları geri getirir.",
+                "selectedStamp": "Seçili kazazede",
+                "selectDone": "Bitti",
+                "randomCount": "Adet",
+                "randomKind": "Türler"
+            },
+            "passageBlue": "Mavi",
+            "passageYellow": "Sarı",
+            "passageGreen": "Yeşil",
+            "passagePurple": "Mor",
+            "passageOrange": "Turuncu",
+            "passageRed": "Kırmızı",
+            "ctF": "Yanıcı gaz",
+            "ctP": "Zehir",
+            "ctC": "Aşındırıcı",
+            "ctO": "Organik peroksit",
+            "ctFake": "Sahte hedef",
+            "exportW": "Bu haritayı Erebus için bir dünya dosyası olarak dışa aktar"
+        }
+    },
+    "years": {
+        "2027": {
+            "admin": {
+                "simBeta": {
+                    "hints": {
+                        "floor_notOuter": "{{floor}} yalnızca dış duvara bitişik bir kareye konur (kural {{rule_contactTile}})",
+                        "floor_clear": "Zemini kaldırmak için tıklayın (çukur, bataklık, kontrol noktası, temas karesi)"
+                    },
+                    "problems": {
+                        "contactInside": "Dış duvara bitişik olmayan temas kareleri ({{count}}). Temas karesi yalnızca dışarıyla komşu bir kareye konur (kural {{rule_contactTile}})",
+                        "presetNotSupported": "Oda 4 hazır şablonları bu düzenleyicide kullanılamaz (özele geçin)"
+                    },
+                    "help": {
+                        "eraser": "Duvarları, eğrileri ve kazazedeleri kaldırmak için üzerlerine tıklayın veya sürükleyin. Duvarlardan uzakta bir karenin zeminini (çukur, bataklık, kontrol noktası, temas karesi) kaldırır; bir tıklama başlangıcı kaldırır. Dış duvarlar kalır."
+                    },
+                    "tour": {
+                        "floor": {
+                            "title": "Zemin (F): kontrol noktaları, çukurlar, bataklıklar, temas kareleri, başlangıç",
+                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, robotun konduğu karedir: haritada bir tane. Yok zemini kaldırır.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir. Yalnızca dış duvara bitişik bir kareye konur."
+                        },
+                        "victim": {
+                            "body": "Panelden bir tür seçin (gülen yüz kazazedeler - yaralı üzgün yüz, stabil nötr yüz, yaralanmamış mutlu yüz - ve sahteleri, dört türde bilişsel hedef - yanıcı gaz, zehir, aşındırıcı, organik peroksit - ve bir sahte) ve bir duvarın yakınına tıklayın: tıkladığınız yerdeki duvara konur.\nOda 1'de kare kenarlarına (kare başına bir), oda 2 ve 3'te 6 cm duvarların yüzlerine, bir eğride iki yere (iç ve dış) konur. Konmuş birini duvarı boyunca taşımak için sürükleyin. Konamayacağı yerde durum satırı nedenini söyler.\nDönüşü için kadranı çevirin (Sabit dönüş) veya her seferinde yenisi için “Rastgele” seçeneğini seçin. Bilişsel hedef için hedefin bir halkasına, sonra aşağıdaki bir renge tıklayın; halkaların toplamı türünü verir.\nSeçmek için aynı türle bir kazazedeye tıklayın, sonra dönüşünü, halkalarını veya duvar boyunca yerini değiştirin ya da kaldırın. Başka bir türle tıklamak türünü değiştirir."
+                        },
+                        "eraser": {
+                            "body": "Duvarları, eğrileri ve kazazedeleri kaldırmak için üzerlerine tıklayın veya sürükleyin; gidecek olan işaretçinin altında kırmızı gösterilir.\nDuvarlardan uzakta bir karenin zeminini (çukur, bataklık, kontrol noktası, temas karesi) kaldırır. Başlangıç yalnızca tıklamayla gider.\nBir duvarda başlayan sürükleme zeminlere dokunmaz, böylece duvarları silerken zeminler gitmez. Dış duvarlar kalır."
+                        }
+                    },
+                    "lesson": {
+                        "floors": {
+                            "title": "Kontrol noktaları, çukurlar, bataklıklar ve temas kareleri",
+                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır; Yok zemini kaldırır.\nKontrol noktası, robot ona ulaştığında puan getirir ve ilerleme olmadığında (LoP) robotun geri konduğu yerdir. Çukur robotun girmemesi gereken bir karedir, bataklık ise pilini daha hızlı tüketir.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir. Yalnızca dış duvara bitişik bir kareye konur.",
+                            "task": "Bir kontrol noktası, bir çukur, bir bataklık ve bir temas karesi koyun (dört yeşil çerçeve iyi yerlerdir)"
+                        },
+                        "victim": {
+                            "task": "“Yaralı” (üzgün yüz) seçeneğini seçin ve çizdiğiniz oda 1 duvarının üst tarafına (yeşil çerçevedeki karenin alt kenarı) tıklayın",
+                            "tasks": {
+                                "notReal": "Bu sahte bir kazazede veya bilişsel hedef. Gerçek satırından “Yaralı” (üzgün yüz) seçeneğini seçin ve oda 1 duvarına koyun"
+                            }
+                        },
+                        "erase": {
+                            "body": "Silgi, duvarları, eğrileri ve kazazedeleri bir tıklama veya sürüklemeyle kaldırır. Duvarlardan uzakta bir karenin zeminini (çukur, bataklık, kontrol noktası, temas karesi) kaldırır; başlangıç yalnızca tıklamayla gider. Dış duvarlar kalır.\nYanlış şeyi silerseniz geri al (Ctrl+Z veya üst çubuktaki ↶) geri getirir; yinele (Ctrl+Shift+Z veya ↷) yeniden ileri gider."
+                        }
+                    },
+                    "betaLead": "Erebus World Editor (beta). 2027 kurallarının haritaları yalnızca bu düzenleyicide yapılır (onlar için klasik düzenleyici yok)."
+                },
+                "simMapEditor": {
+                    "room4Creator": {
+                        "messages": {
+                            "floorNotOuter": "Temas karesi yalnızca dış duvara bitişik bir kareye konur (kural {{rule_contactTile}})."
+                        },
+                        "groups": {
+                            "victim": "Gülen yüz kazazedeler"
+                        },
+                        "hints": {
+                            "floor": "Seçili zemini (çukur, bataklık, kontrol noktası, temas karesi) vermek için bir oda 4 karesine tıklayın; kaldırmak için tekrar tıklayın veya birkaçı için sürükleyin. Bir zemin tam bir karedir (12 cm); çukur da karenin tamamıdır. Temas karesi yalnızca dış duvara bitişik bir kareye konur."
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

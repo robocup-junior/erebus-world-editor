@@ -1,0 +1,1080 @@
+{
+    "admin": {
+        "simBeta": {
+            "fake": "Vítima falsa",
+            "width": "Largura",
+            "length": "Altura",
+            "title": "Erebus World Editor",
+            "new": "Novo mapa",
+            "open": "Abrir um mapa (JSON)",
+            "save": "Salvar como JSON",
+            "backToClassic": "Abrir o editor clássico",
+            "noMap": "Nenhum mapa aberto",
+            "dropHere": "Você também pode soltar um arquivo JSON aqui",
+            "badFile": "Não foi possível ler como um mapa do editor do Simulation 2026 (JSON)",
+            "unknownRules": "Este mapa é das regras de {{year}}; este editor aceita as regras de {{years}} (abra-o em um editor mais novo)",
+            "zoomIn": "Aproximar",
+            "zoomOut": "Afastar",
+            "fit": "Mostrar o mapa inteiro",
+            "room": "Sala {{n}}",
+            "discard": "Continuar descarta as alterações deste mapa (a cópia guardada neste navegador permanece).",
+            "exportBlocked": "O mundo ainda não pode ser exportado",
+            "room4": "Sala 4",
+            "problemsTitle": "Verificações",
+            "noProblems": "Nenhum problema",
+            "undo": "Desfazer",
+            "redo": "Refazer",
+            "tools": {
+                "hand": "Mover",
+                "room": "Salas",
+                "passage": "Passagens",
+                "line": "Linha",
+                "eraser": "Borracha",
+                "floor": "Piso",
+                "victim": "Vítimas",
+                "curve": "Curva",
+                "select": "Selecionar",
+                "shape": "Contorno"
+            },
+            "help": {
+                "hand": "Arraste para mover o mapa.",
+                "room": "Pinte ladrilhos com uma sala (a sala 1 os devolve). As paredes surgem sozinhas onde as salas se encontram e ao redor do mapa. A sala 4 é desenhada como uma imagem com o botão abaixo.",
+                "passage": "Clique perto da divisa entre salas: o ladrilho do lado em que você clica vira a passagem (clique de novo para fechá-la; no outro lado, para movê-la para lá). Clique no meio de um ladrilho de passagem para removê-la. Uma passagem que já não combina com suas salas some sozinha.",
+                "line": "Arraste para desenhar paredes. A linha vira com o ponteiro, então um único arraste pode desenhar um zigue-zague (volte pelo mesmo caminho para desfazer uma curva). Comece com Shift pressionado para uma única linha reta. A sala 1 se ajusta a 12 cm (bordas dos ladrilhos) e as salas 2 e 3 a 6 cm. Não dentro da sala 4.",
+                "eraser": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint); um clique remove a partida. As paredes externas ficam.",
+                "floor": "Clique em um ladrilho para definir seu piso.",
+                "victim": "Clique perto de uma parede: a vítima vai para a parede onde você clica. Sala 1: em um lado do ladrilho (uma por ladrilho); salas 2 e 3: em uma face das paredes de 6 cm (4 quartos × 4 faces); uma curva tem dois lugares (dentro e fora). Arraste uma vítima colocada para movê-la ao longo da parede (ela para antes do fim da parede e de outras vítimas). Clique nela com o tipo escolhido para selecioná-la e mudar seu giro, anéis ou posição, ou removê-la; com outro tipo escolhido, ela assume esse tipo.",
+                "curve": "Aponte para um quarto de ladrilho na sala 3 para ver suas quatro curvas; a mais próxima (azul) entra com um clique. Clique de novo na mesma para removê-la.",
+                "select": "Selecione paredes, salas, pisos e vítimas juntos para movê-los, copiá-los, colá-los ou apagá-los.",
+                "shape": "Mude o tamanho e a forma do mapa; as paredes externas acompanham sozinhas. Contorno: clique ou arraste sobre ladrilhos para tirá-los do mapa ou devolvê-los. Inserir / remover: coloca ou tira uma linha ou coluna onde você clica."
+            },
+            "floors": {
+                "checkpoint": "Checkpoint",
+                "black": "Buraco",
+                "swamp": "Pântano",
+                "start": "Partida",
+                "clear": "Nenhum",
+                "contact": "Ladrilho de contato"
+            },
+            "problems": {
+                "noStart": "Não há ladrilho de partida",
+                "victimNoWall": "Algumas vítimas perderam a parede ({{count}})",
+                "victimInPassage": "Algumas vítimas estão em uma passagem entre áreas ({{count}}): não há vítimas nas passagens (regra {{rule_passageTokens}})",
+                "victimUnreachable": "Algumas vítimas estão onde o robô não consegue chegar ({{count}}): não há vítimas onde o robô não pode ir (regra {{rule_reach}})",
+                "wallRule": "Algumas paredes não seguem as regras da sala ({{count}})",
+                "room4Checkpoint": "O ladrilho da sala 4 logo depois de uma passagem não é um checkpoint ({{count}}, regra {{rule_room4Checkpoint}}). Colocar uma passagem o define sozinho",
+                "customRoom4NoPicture": "A sala 4 ainda não foi desenhada",
+                "presetNotSupported": "Modelos prontos da sala 4 não estão disponíveis neste editor (mude para personalizada ou use o editor clássico)",
+                "room4Untyped": "Algumas vítimas da sala 4 não têm tipo ({{count}}): dê um tipo a elas em Desenhar a sala 4",
+                "room4Unreachable": "Algumas vítimas da sala 4 estão onde o robô não consegue chegar ({{count}}): não há vítimas onde o robô não pode ir (regra {{rule_reach}})",
+                "victimMisplaced": "Vítimas movidas ao longo da parede se sobrepõem ao fim de uma parede ou a outra vítima ({{count}})",
+                "contactInside": "Ladrilhos de contato que não estão junto à parede externa ({{count}}). Um ladrilho de contato só vai em um ladrilho junto ao exterior"
+            },
+            "hints": {
+                "newMapSize": "Mapa novo: primeiro defina o tamanho (em ladrilhos) no painel à esquerda",
+                "someRefused": "{{count}} partes foram deixadas de fora: as regras da sala não as permitem",
+                "refusedHere": "A parte vermelha não é permitida pelas regras desta sala",
+                "noBorder": "Isto não é uma divisa entre salas",
+                "passageHere": "Clique em uma divisa entre salas (pontilhada)",
+                "victim_noWall": "Não há parede deste lado",
+                "victim_passage": "Não há vítimas em uma passagem entre áreas (regra {{rule_passageTokens}})",
+                "victim_quarterTile": "As vítimas das salas 2 e 3 vêm a seguir",
+                "victim_room4": "As vítimas da sala 4 são colocadas no criador da sala 4",
+                "victim_outside": "Fora do mapa",
+                "curve_curveRoom3": "Paredes curvas só vão na sala 3",
+                "curve_room4": "Não pode ficar dentro da sala 4",
+                "victim_notQuarterTile": "Aqui não",
+                "room4NoTiles": "Primeiro pinte a área da sala 4 com o pincel de salas",
+                "passage_open": "Passagem colocada",
+                "passage_moved": "Passagem movida para este lado",
+                "passage_closed": "Passagem removida",
+                "passageOpen": "Clique para pôr a passagem no lado colorido",
+                "passageClose": "Clique para remover a passagem",
+                "passageRemove": "Clique para remover esta passagem",
+                "shapeOut": "Clique ou arraste para tirar ladrilhos do mapa",
+                "shapeIn": "Clique ou arraste para devolver ladrilhos ao mapa",
+                "passageRoom4": "Uma passagem para a sala 4 vai no ladrilho fora da sala 4 (como esperam o criador da sala 4 e a regra de checkpoints {{rule_room4Checkpoint}})",
+                "regionPick": "Arraste para selecionar",
+                "regionDrag": "Arraste para mover, Alt+arrastar para copiar. As setas movem um ladrilho; Ctrl+C / X / V e Delete também funcionam",
+                "regionCopied": "Copiado. Ctrl+V cola no ladrilho sob o ponteiro",
+                "regionNoRoom": "Não há espaço ao lado nem abaixo para uma cópia",
+                "line_addRow": "Clique para adicionar uma linha na linha verde",
+                "line_addCol": "Clique para adicionar uma coluna na linha verde",
+                "line_delRow": "Clique para remover a linha vermelha",
+                "line_delCol": "Clique para remover a coluna vermelha",
+                "lineLimit": "O mapa tem de 1 a 40 ladrilhos",
+                "fixed": "Corrigido (desfazer: Ctrl+Z)",
+                "fixPartly": "Foi corrigido o que era possível; o resto é com você",
+                "fixAllLeft": "Corrigido o que dava; {{count}} ficaram para você (desfazer: Ctrl+Z)",
+                "undone": "Desfeito (refazer: Ctrl+Y)",
+                "redone": "Refeito",
+                "wallsDrawn": "{{cm}} cm de parede desenhados",
+                "lineDone_addRow": "Linha inserida (desfazer: Ctrl+Z)",
+                "lineDone_addCol": "Coluna inserida (desfazer: Ctrl+Z)",
+                "lineDone_delRow": "Linha removida (desfazer: Ctrl+Z)",
+                "lineDone_delCol": "Coluna removida (desfazer: Ctrl+Z)",
+                "lineDrawing": "{{cm}} cm de parede. Solte para desenhar, Esc para cancelar (voltar tira um canto)",
+                "lineDrawingStraight": "{{cm}} cm de parede reta. Solte para desenhar, Esc para cancelar",
+                "line_room4": "Não há paredes dentro da sala 4: clique duas vezes para desenhá-la no criador da sala 4",
+                "line_fine": "Arraste para desenhar paredes (sala {{room}}: grade de 6 cm). Shift+arrastar para uma única linha reta",
+                "line_tile": "Arraste para desenhar paredes (sala 1: bordas dos ladrilhos, 12 cm). Shift+arrastar para uma única linha reta",
+                "hand": "Arraste para mover a vista",
+                "room_outside": "Fora do mapa (a ferramenta de contorno o devolve)",
+                "room_room4": "Um ladrilho da sala 4: clique duas vezes para desenhar dentro da sala 4",
+                "room_same": "Já é a sala {{room}}. Escolha a sala a pintar no painel esquerdo",
+                "room_paint": "Clique ou arraste para pintar a sala {{room}} (agora sala {{cur}})",
+                "floor_outside": "Fora do mapa",
+                "floor_isStart": "Este é o ladrilho de partida (a borracha o remove)",
+                "floor_start": "Clique para mover a partida para cá (há uma só partida)",
+                "floor_clear": "Clique para remover o piso (buraco, pântano, checkpoint)",
+                "floor_off": "Clique para remover: {{floor}}",
+                "floor_on": "Clique para torná-lo: {{floor}}",
+                "curve_on": "Clique para pôr a curva azul aqui",
+                "curve_off": "Clique para remover esta curva",
+                "erase_victim": "Clique para remover esta vítima",
+                "erase_curve": "Clique para remover esta curva (arraste para continuar)",
+                "erase_wall": "Clique para remover esta parede (6 cm; arraste para continuar)",
+                "erase_wallWhole": "Clique para remover esta parede (12 cm; arraste para continuar)",
+                "erase_floor": "Clique para remover o piso deste ladrilho",
+                "erase_start": "Clique para remover o ladrilho de partida",
+                "victim_place": "Clique para colocar “{{name}}”",
+                "victim_move": "Clique para colocar “{{name}}” aqui (a vítima do ladrilho vem para cá: uma por ladrilho)",
+                "victim_replace": "Clique para mudá-la para “{{name}}”",
+                "victim_unreachable": "O robô não consegue chegar perto daqui, então nenhuma vítima vai aqui (regra {{rule_reach}})",
+                "victim_selectDrag": "Clique para selecioná-la, arraste para movê-la ao longo da parede",
+                "victim_moveSlot": "Clique para colocar “{{name}}” aqui (a vítima desta face vem para cá)",
+                "victim_moving": "{{cm}} cm ao longo da parede (para antes do fim da parede e de outras vítimas)",
+                "victim_moved": "Movida para {{cm}} cm ao longo da parede (desfazer: Ctrl+Z)",
+                "victim_noRoom": "Não há espaço para uma vítima aqui (perto demais do fim da parede ou de outra vítima)",
+                "rulesSwitched": "Mudado para as regras de {{year}} (desfazer: Ctrl+Z)",
+                "floor_notOuter": "{{floor}}: só em um ladrilho junto à parede externa",
+                "openedOtherYear": "Este mapa abriu com as regras de {{year}}. Para levá-lo às regras de {{chosen}}, troque em Regras na barra superior"
+            },
+            "drawRoom4": "Desenhar a sala 4",
+            "drawRoom4Note": "Um clique duplo na área da sala 4 também abre",
+            "exportFailed": "A exportação do mundo falhou",
+            "exportBroken": "O mundo teria um valor que não é um número, então nenhum arquivo foi gerado (o Webots o abriria como um mundo vazio). Por favor, informe isto: {{line}}",
+            "showWhere": "Clique para ver onde",
+            "restore": "Abrir o último trabalho",
+            "restoreOtherYear": "O trabalho guardado é um mapa das regras de {{year}}. Escolha as regras de {{year}} acima para abri-lo (para levá-lo às regras de outro ano, abra-o e depois troque em Regras na barra superior)",
+            "ctRings": "Alvo cognitivo",
+            "ctFake": "Falso",
+            "rot": "Giro (graus)",
+            "remove": "Remover",
+            "newShort": "Novo",
+            "openShort": "Abrir",
+            "saveShort": "Salvar",
+            "toolsTitle": "Ferramentas",
+            "kind": "Tipo",
+            "roomNote1": "paredes de 12 cm",
+            "roomNote2": "paredes de 6 cm",
+            "roomNote3": "paredes de 6 cm, curvas",
+            "roomNote4": "desenhada como imagem",
+            "emptyTitle": "Comece um mapa",
+            "emptyLead": "Crie um novo ou abra um mapa salvo (JSON).",
+            "openJson": "Abrir JSON",
+            "ctSum": "Soma",
+            "ctHint": "Clique em um anel do alvo e depois em uma cor abaixo (agora o anel {{n}} de fora para dentro)",
+            "rotFixed": "Giro fixo",
+            "rotRandom": "Aleatório",
+            "rotRandomNote": "Cada uma recebe um giro aleatório",
+            "room4Hint": "Pinte a área da sala 4 com o pincel de salas para desenhar o interior como uma imagem.",
+            "room4NotDrawn": "A sala 4 ainda não foi desenhada",
+            "room4Drawn": "A sala 4 está desenhada",
+            "room4PresetBeta": "Este mapa usa um modelo pronto de sala 4 ({{name}}). Este editor só faz salas 4 personalizadas.",
+            "room4ToCustom": "Mudar para uma sala 4 personalizada",
+            "mapSize": "Tamanho do mapa",
+            "mapSizeNote": "Clique em um número para digitá-lo, ou use − e + (1-40). O mapa cresce ou diminui pela direita e por baixo; o que ainda cabe permanece. Para pôr uma linha ou coluna no meio, use Inserir linha / Inserir coluna abaixo.",
+            "checksOpen": "Abrir",
+            "checksFold": "Recolher",
+            "regionNone": "Arraste sobre ladrilhos para selecioná-los. Arraste a seleção para movê-la (com Alt, uma cópia); as setas a movem um ladrilho por vez.",
+            "regionSize": "{{size}} ladrilhos selecionados",
+            "copy": "Copiar",
+            "cut": "Recortar",
+            "duplicate": "Duplicar",
+            "clearRegion": "Apagar",
+            "paste": "Colar",
+            "regionHelp": "Arraste dentro da seleção para movê-la, Alt+arrastar para mover uma cópia. Colar põe o canto superior esquerdo no ladrilho sob o ponteiro. Esc desfaz a seleção.",
+            "selectedVictim": "Vítima selecionada",
+            "selectDone": "Pronto",
+            "shapeModes": {
+                "outline": "Contorno (irregular)",
+                "addRow": "Inserir linha",
+                "addCol": "Inserir coluna",
+                "delRow": "Remover linha",
+                "delCol": "Remover coluna"
+            },
+            "fixAll": "Corrigir tudo o que for possível",
+            "fixShort": "Corrigir",
+            "fixThis": "Corrigir este problema",
+            "fixDrawShort": "Desenhar",
+            "fixDraw": "Abrir o criador da sala 4",
+            "linear": "Linear",
+            "linearTitle": "Colorir linear / flutuante (define quanto valem as vítimas)",
+            "legendLinear": "Ladrilhos lineares (junto a paredes ligadas à partida: vítimas valem menos)",
+            "legendFloating": "Ladrilhos flutuantes (vítimas valem mais)",
+            "legendFloatingWall": "Paredes flutuantes",
+            "linearNoStart": "Coloque o ladrilho de partida para ver linear / flutuante",
+            "legendUnreached": "Não alcançado a partir da partida (sem passagem, ...): nem linear nem flutuante",
+            "close": "Fechar",
+            "cancel": "Cancelar",
+            "discardTitle": "Alterações não salvas",
+            "saveFirst": "Salvar e continuar",
+            "discardGo": "Não salvar",
+            "exportBlockedLead": "Corrija estes {{count}} para exportar. Clique em um para ver onde está.",
+            "betaMenu": "Sobre este editor",
+            "betaLead": "Erebus World Editor (beta). Ele lê e grava o mesmo JSON que o editor clássico, então um mapa salvo abre em qualquer um dos dois.",
+            "backToClassicNote": "Salve primeiro o mapa em que está trabalhando (Salvar, JSON)",
+            "tourStart": "Guia (lição, tour pela tela, fazer a sala 4)",
+            "tourShort": "Guia",
+            "listSep": ", ",
+            "rules": {
+                "title": "As regras deste mapa",
+                "label": "Regras de {{year}}",
+                "lead": "As regras que este mapa segue: as verificações, a pontuação e o mundo exportado seguem essas regras.",
+                "book": "Livro de regras",
+                "soon": "Em breve",
+                "switchTitle": "Mudar para as regras de {{year}}?",
+                "switchLead": "Este mapa passa das regras de {{from}} para as de {{to}}. Paredes e vítimas que não cabem nas novas regras são apontadas nas verificações (desfazer: Ctrl+Z).",
+                "switch": "Mudar",
+                "pick": "Regras de qual ano?",
+                "pickNote": "Um mapa salvo abre com suas próprias regras. Você também pode trocar depois na barra superior.",
+                "draft": "Rascunho"
+            },
+            "build": {
+                "title": "Sobre esta versão",
+                "commit": "Commit",
+                "dirty": "(com alterações não commitadas)",
+                "branch": "Branch",
+                "commitDate": "Data do commit",
+                "builtAt": "Compilado",
+                "copy": "Copiar",
+                "copied": "Copiado"
+            },
+            "tourEmpty": "É novo aqui? Veja como funciona",
+            "tourEmptyNote": "Escolha aprender fazendo um mapa ou fazer o tour pela tela",
+            "tourEnd": "Fim",
+            "tourSkip": "Encerrar o tour",
+            "tourBack": "Voltar",
+            "tourNext": "Próximo",
+            "tourBegin": "Começar",
+            "tourFinish": "Concluído",
+            "tourKeys": "← → para navegar   Esc para encerrar",
+            "guideLesson": "Aprender fazendo um mapa de exemplo",
+            "guideTour": "Tour pela tela",
+            "guideRoom4": "Aprender a sala 4 fazendo",
+            "guideRoom4Need": "Primeiro pinte a sala 4 com a ferramenta de salas.",
+            "lessonTodo": "A fazer:",
+            "lessonDone": "Feito!",
+            "lessonSkip": "Pular este passo",
+            "lessonDoIt": "Faça por mim",
+            "lessonCreatorClosed": "O criador da sala 4 está fechado.",
+            "lessonOpenCreator": "Abrir",
+            "lessonTip": "O editor funciona normalmente durante a lição",
+            "pickTitle": "Como você quer aprender?",
+            "pickLead": "Você pode escolher de novo a qualquer momento em Guia, no canto inferior direito.",
+            "pickLessonTime": "Cerca de 15 minutos · na prática",
+            "pickLessonNote": "Faça um mapa de exemplo, usando cada recurso por vez. Cada passo avança quando é feito, e Faça por mim pode fazer por você.",
+            "pickLessonMap": "O mapa aberto é fechado e um novo é iniciado (você é consultado antes se houver alterações não salvas).",
+            "pickTourTime": "Cerca de 3 minutos · só assistir",
+            "pickTourNote": "Cada parte da tela e cada ferramenta, destacada e explicada uma a uma. O mapa não é alterado.",
+            "pickRoom4Time": "Cerca de 5 minutos · na prática",
+            "pickRoom4Note": "No criador da sala 4, desenhe paredes e coloque vítimas você mesmo, usando cada recurso por vez.",
+            "pickLater": "Depois",
+            "guideRoom4Tour": "Tour pelo criador da sala 4",
+            "pickRoom4Title": "Como você quer aprender a sala 4?",
+            "pickRoom4TourTime": "Cerca de 2 minutos · só assistir",
+            "pickRoom4TourNote": "Cada parte do criador da sala 4 e cada ferramenta, destacada e explicada uma a uma. A imagem não é alterada.",
+            "tourRoom4Inside": "Ver também o tour pelo criador da sala 4 (e voltar aqui)",
+            "tourBackTo": "Quando terminar, “{{name}}” continua de onde estava",
+            "lessonCreatorOver": "O criador da sala 4 está aberto. Feche-o para continuar.",
+            "lessonCloseCreator": "Fechar (OK)",
+            "lessonFold": "Recolher o texto",
+            "lessonUnfold": "Mostrar o texto",
+            "tour": {
+                "chapters": {
+                    "start": "Boas-vindas",
+                    "screen": "A tela",
+                    "tools": "Ferramentas",
+                    "shape": "Tamanho e forma",
+                    "rooms": "Salas",
+                    "passages": "Passagens",
+                    "walls": "Paredes",
+                    "floors": "Pisos",
+                    "victims": "Vítimas",
+                    "room4": "Sala 4",
+                    "finish": "Finalizar e exportar"
+                },
+                "welcome": {
+                    "title": "Bem-vindo ao Erebus World Editor",
+                    "body": "Este editor cria mundos para as regras 2026 da RoboCupJunior Rescue Simulation (Erebus). Você desenha o mapa direto na tela, e paredes e vítimas se encaixam nos lugares permitidos pelas regras da sala sob o ponteiro.\nEste tour passa por cada parte da tela e cada ferramenta (cerca de 3 minutos). A parte explicada fica destacada.\nPressione → ou Enter para o próximo passo, ← para voltar e Esc para encerrar a qualquer momento. Para aprender na prática, escolha Aprender fazendo um mapa de exemplo em Guia, no canto inferior direito."
+                },
+                "file": {
+                    "title": "Arquivo: novo, abrir, salvar",
+                    "body": "Novo cria um mapa em branco. Se o mapa aberto tiver alterações não salvas, ele pergunta antes se pode descartá-las.\nAbrir lê o JSON de um mapa e Salvar grava o mapa em um arquivo JSON. Um arquivo JSON solto sobre o mapa também abre.\nAs alterações também ficam guardadas no navegador, mas se perdem em outro navegador ou quando os dados de navegação são apagados. Guarde os mapas importantes como JSON com Salvar."
+                },
+                "name": {
+                    "title": "Nome do mapa",
+                    "body": "O nome do mapa. Clique nele para mudá-lo.\nEle dá nome ao JSON que você salva e ao mundo (.wbt) que exporta."
+                },
+                "history": {
+                    "title": "Desfazer e refazer",
+                    "body": "Desfaça as alterações uma a uma, ou refaça-as (até 100).\nCorreções automáticas e mover ou colar uma região se desfazem em um passo cada, então experimente à vontade."
+                },
+                "view": {
+                    "title": "Ver e mover o mapa",
+                    "body": "Este é o mapa. Gire a roda do mouse para aproximar ou afastar, e arraste com Espaço pressionado (ou com o botão da roda) para movê-lo. Com a ferramenta mão (H), um arraste simples o move.\nOs botões da barra superior (moldura tracejada) também aproximam e afastam, e o da direita enquadra o mapa inteiro de novo. O número é o zoom (pixels por cm).\nO mapa é feito de ladrilhos de 12 cm. Cada sala tem sua cor de piso, e as paredes se levantam sozinhas nas divisas entre salas e ao redor do exterior."
+                },
+                "rail": {
+                    "title": "Ferramentas",
+                    "body": "As ferramentas que mudam o mapa, em quatro grupos de cima para baixo: ver (selecionar, mão), mapa e salas (forma, sala, passagem), paredes (linha, curva, borracha), e pisos e vítimas (piso, vítima).\nA letra no canto inferior direito de cada botão é a sua tecla: um toque pega a ferramenta.\nA seguir, as ferramentas uma a uma, na ordem em que se faz um mapa."
+                },
+                "panel": {
+                    "title": "O que a ferramenta faz e seus ajustes",
+                    "body": "A ferramenta escolhida mostra aqui como é usada e seus ajustes. Na dúvida, leia isto primeiro.\nA linha de status embaixo (moldura tracejada) diz o que você pode fazer onde está o ponteiro, ou por que não pode."
+                },
+                "shape": {
+                    "title": "Forma (X): tamanho e contorno do mapa",
+                    "body": "Um mapa novo começa aqui com o tamanho: clique na largura ou altura em ladrilhos para digitar, ou use − e + (até 40). Ele cresce ou diminui pela direita e por baixo; o que ainda cabe permanece.\nCom Contorno, clique ou arraste sobre ladrilhos para tirá-los do mapa (sem piso) ou devolvê-los, para um formato em L ou qualquer mapa que não seja um retângulo. As paredes externas seguem o contorno sozinhas.\nInserir linha, Inserir coluna, Remover linha e Remover coluna colocam ou tiram uma linha ou coluna onde você clica no mapa."
+                },
+                "room": {
+                    "title": "Sala (M): pintar as salas",
+                    "body": "Escolha o número de uma sala e pinte ladrilhos com ele. Pintar a sala 1 devolve um ladrilho.\nCada sala tem suas regras: a sala 1 tem paredes de 12 cm (nas bordas dos ladrilhos), a sala 2 paredes de 6 cm, a sala 3 paredes de 6 cm e curvas, e a sala 4 é desenhada livremente como uma imagem.\nAs paredes se levantam sozinhas nas divisas entre salas e ao redor do exterior. Para ligar salas, use em seguida a ferramenta Passagem."
+                },
+                "passage": {
+                    "title": "Passagem (P): ligar as salas",
+                    "body": "Clique perto da divisa entre salas: o ladrilho do lado em que você clicou vira uma passagem, e a parede da divisa se abre.\nClique de novo para fechá-la. Clique no outro lado e a passagem vai para aquele ladrilho. Clique no meio de um ladrilho de passagem para removê-la.\nUma passagem para a sala 4 vai no ladrilho fora da sala 4. Passagens que deixam de caber depois de pintar as salas de novo são removidas sozinhas."
+                },
+                "line": {
+                    "title": "Linha (L): desenhar paredes",
+                    "body": "Arraste para desenhar paredes. A parede segue o ponteiro, então um zigue-zague sai de uma vez; voltar pelo mesmo caminho desfaz.\nSegure Shift ao começar para uma única linha reta.\nAs paredes se encaixam na grade da sala sob o ponteiro: 12 cm (bordas dos ladrilhos) na sala 1, 6 cm (meio ladrilho) nas salas 2 e 3. Não podem ser desenhadas dentro da sala 4 (a sala 4 é uma imagem)."
+                },
+                "curve": {
+                    "title": "Curva (A): paredes curvas",
+                    "body": "Só na sala 3. Aponte para um quarto (quadrado de 6 cm) de um ladrilho da sala 3 e as quatro curvas possíveis aparecem fracas.\nUm clique põe a mais próxima (azul). Clicar de novo na mesma a remove."
+                },
+                "eraser": {
+                    "title": "Borracha (E)",
+                    "body": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las; o que sairia aparece em vermelho sob o ponteiro.\nLonge das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint). A partida só sai com um clique.\nUm arraste que começa em uma parede não mexe nos pisos, então os pisos não somem enquanto você apaga paredes. As paredes externas ficam."
+                },
+                "floor": {
+                    "title": "Piso (F): checkpoints, buracos, pântanos, a partida",
+                    "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é o ladrilho onde o robô é colocado: um por mapa. Nenhum remove o piso.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho."
+                },
+                "victim": {
+                    "title": "Vítima (V): vítimas e alvos cognitivos",
+                    "body": "Escolha um tipo no painel (vítimas de letra Φ, Ψ, Ω e suas falsas, alvos cognitivos de quatro tipos - gás inflamável, veneno, corrosivo, peróxido orgânico - e um falso) e clique perto de uma parede: ela vai para a parede onde você clica.\nElas vão nos lados dos ladrilhos na sala 1 (uma por ladrilho), nas faces das paredes de 6 cm nas salas 2 e 3, e em dois lugares de uma curva (dentro e fora). Arraste uma colocada para movê-la ao longo da parede. Onde não dá para colocar, a linha de status diz por quê.\nGire o dial (Giro fixo) para a rotação, ou escolha Aleatório para uma nova a cada vez. Para um alvo cognitivo, clique em um anel do alvo e depois em uma cor abaixo; a soma dos anéis dá o tipo.\nClique em uma vítima com o mesmo tipo para selecioná-la e depois mude o giro, os anéis ou a posição ao longo da parede, ou remova-a. Clicar com outro tipo muda o tipo dela."
+                },
+                "room4": {
+                    "title": "Desenhar a sala 4",
+                    "body": "Pintar a sala 4 com a ferramenta de salas cria a sala 4. Suas paredes e vítimas são desenhadas como uma imagem.\nDesenhar a sala 4 (ou um clique duplo na área) abre o criador da sala 4: desenhe paredes livremente com caneta, linhas e formas, e coloque vítimas encostadas nas paredes. Onde o robô não consegue chegar aparece com listras vermelhas.\nO botão Guia do criador mostra em detalhes como fazer a sala 4. A imagem aparece no mapa e vai do jeito que está para o mundo exportado."
+                },
+                "select": {
+                    "title": "Selecionar (S): mover e copiar uma região",
+                    "body": "Arraste para selecionar uma região de ladrilhos; suas paredes, salas, pisos e vítimas vão juntos.\nArraste dentro dela para movê-la, ou com Alt pressionado para mover uma cópia. As setas a movem um ladrilho por vez.\nCtrl+C copia, Ctrl+X recorta, Ctrl+V cola (o ladrilho sob o ponteiro é o canto superior esquerdo), Ctrl+D duplica e Delete apaga. Esc solta a região."
+                },
+                "linear": {
+                    "title": "Linear",
+                    "body": "Ligado, cada ladrilho é colorido como linear (junto a uma parede ligada à partida) ou flutuante. Vítimas em ladrilhos flutuantes pontuam mais.\nPrecisa do ladrilho de partida. A exportação do mundo decide os ladrilhos lineares do mesmo jeito."
+                },
+                "checks": {
+                    "title": "Verificações",
+                    "body": "Cada alteração é verificada com as regras.\nUm ✕ vermelho é um problema que impede exportar o mundo; um ! amarelo é um aviso que vale a pena olhar, mas o mundo pode ser exportado.\nAponte para um item para ver onde ele está no mapa, e clique para ir até lá. Clique no título para recolher o cartão.\nOnde o robô (raio de 3,7 cm) não consegue chegar sempre aparece no mapa com listras vermelhas, e uma vítima ali recebe um aviso."
+                },
+                "fix": {
+                    "title": "Corrigir automaticamente",
+                    "body": "Um item com o botão Corrigir é corrigido com um clique (pôr a partida, ligar salas com passagens, remover paredes que as regras não permitem e assim por diante).\nCorrigir tudo o que for possível faz tudo de uma vez. Se não gostar do resultado, Ctrl+Z desfaz.\nAs verificações também confirmam que cada sala é alcançada a partir da sala 1 por passagens, e apontam a que não é."
+                },
+                "export": {
+                    "title": "Exportar o mundo (.wbt)",
+                    "body": "Grava o arquivo de mundo (.wbt) que o Erebus carrega.\nEnquanto restar um problema com ✕ vermelho, o botão fica cinza, e pressioná-lo mostra o que corrigir; dali ele pode corrigir por você.\nGuarde o mapa para continuar editando com Salvar (JSON), não o .wbt: um .wbt não volta a ser um mapa editável."
+                },
+                "more": {
+                    "title": "Guia e idioma",
+                    "body": "Guia, no canto inferior direito, tem a qualquer momento a lição que monta um mapa de exemplo, este tour e como fazer a sala 4.\nO botão de idioma (mostra a bandeira e o nome do idioma em uso) escolhe o idioma."
+                },
+                "done": {
+                    "title": "Fim do tour",
+                    "body": "Este botão refaz o tour a qualquer momento.\nUma boa ordem de trabalho: defina o tamanho com Forma → pinte as salas → ligue-as com passagens → desenhe paredes → coloque pisos e vítimas → veja as verificações e exporte o .wbt.\nDivirta-se fazendo seus mapas!"
+                },
+                "score": {
+                    "title": "Pontuação máxima",
+                    "body": "O máximo que este mapa pode pontuar: cada vítima e alvo cognitivo de que o robô pode se aproximar identificado com o tipo certo, e cada checkpoint passado, calculado pela regra {{rule_scoring}}.\nPressione para ver a parte de cada sala e a pontuação com os bônus de saída e de mapeamento. É recalculado a cada alteração."
+                }
+            },
+            "lesson": {
+                "planLabel": "O mapa de exemplo, pronto",
+                "intro": {
+                    "title": "Aprender fazendo um mapa de exemplo",
+                    "body": "Nesta lição você faz o mapa acima e usa os recursos do editor um após o outro pelo caminho (cerca de 15 minutos).\nSala 1 à esquerda, sala 2 em cima no meio, sala 3 embaixo no meio, sala 4 à direita. Você liga as salas com passagens, coloca paredes, uma curva, pisos e vítimas, desenha o interior da sala 4 e termina com um mundo pronto para exportar.\nFaça o que cada passo pede e ele muda para Feito!; Próximo continua. Se algo não funcionar, Faça por mim faz por você. O editor funciona normalmente o tempo todo."
+                },
+                "new": {
+                    "title": "Criar um mapa novo",
+                    "body": "Primeiro, um mapa em branco.\nO mapa em que você trabalha fica guardado no navegador, então se a página for fechada você continua de onde parou na próxima vez.",
+                    "task": "Pressione Novo mapa"
+                },
+                "size": {
+                    "title": "Definir o tamanho do mapa",
+                    "body": "Um mapa novo tem 8 ladrilhos de largura e 6 de altura (um ladrilho é um quadrado de 12 cm). Mude o tamanho no painel da ferramenta de forma: clique em Largura ou Altura para digitar, ou use − e + (até 40).\nO que ainda cabe (paredes, salas, o contorno) permanece quando o tamanho muda.",
+                    "task": "Deixe com 9 de largura (digite ou pressione +; os 6 de altura ficam)",
+                    "tasks": {
+                        "length": "Está com {{l}} de altura. Volte a Altura para 6",
+                        "more": "Está com {{w}} de largura. Defina Largura como 9",
+                        "less": "Está com {{w}} de largura. Defina Largura como 9"
+                    }
+                },
+                "outline": {
+                    "title": "Mudar o contorno do mapa",
+                    "body": "Com Contorno (irregular), cada clique em um ladrilho o tira do mapa (sem piso) ou o devolve; um arraste faz vários de uma vez.\nOs mapas não precisam ser retângulos: um formato em L também serve. As paredes externas seguem o contorno sozinhas.",
+                    "task": "Clique no ladrilho do canto superior esquerdo (moldura verde) para tirá-lo do mapa",
+                    "tasks": {
+                        "extra": "Há mais {{n}} ladrilho(s) fora do mapa além do canto superior esquerdo. Clique neles de novo para devolvê-los (só o canto sai)"
+                    }
+                },
+                "addCol": {
+                    "title": "Colocar uma coluna",
+                    "body": "Com Inserir coluna, um clique em uma linha vertical entre ladrilhos põe ali uma coluna nova; tudo à direita dela se move para a direita. Inserir linha faz o mesmo com uma linha horizontal.\nUse para aumentar um mapa em que está trabalhando.",
+                    "task": "Com Inserir coluna escolhido, clique na linha à esquerda da coluna mais à direita (moldura verde); qualquer linha serve",
+                    "tasks": {
+                        "removed": "Em vez disso, uma coluna saiu. Desfaça (Ctrl+Z), confira se Inserir coluna está escolhido e clique em uma linha vertical"
+                    }
+                },
+                "delCol": {
+                    "title": "Tirar uma coluna",
+                    "body": "Com Remover coluna, clique em um ladrilho da coluna a tirar. O que havia nela some, e o lado direito se fecha. Remover linha faz o mesmo com uma linha.\nDesfazer (Ctrl+Z) corrige um erro.",
+                    "task": "Com Remover coluna, clique na coluna mais à direita (moldura verde) para voltar a 9 de largura; qualquer coluna serve",
+                    "tasks": {
+                        "more": "Ainda há {{n}} coluna(s) além de 9 de largura. Remova mais {{n}} com Remover coluna",
+                        "less": "Saíram demais: há {{n}} coluna(s) a menos que 9 de largura. Desfaça (Ctrl+Z) para trazê-las de volta"
+                    }
+                },
+                "room2": {
+                    "title": "Pintar a sala 2",
+                    "body": "A ferramenta de salas pinta salas. Um mapa novo é todo sala 1. Escolha o número de uma sala e pinte ladrilhos com ele (pintar a sala 1 devolve um ladrilho).\nCada sala tem suas regras: a sala 1 paredes de 12 cm (nas bordas dos ladrilhos), a sala 2 paredes de 6 cm (meio ladrilho), a sala 3 paredes de 6 cm e curvas.\nAs paredes se levantam sozinhas nas divisas entre salas.",
+                    "task": "Escolha Sala 2 e pinte os 3 × 3 ladrilhos da moldura verde",
+                    "tasks": {
+                        "extra": "{{n}} ladrilho(s) fora da moldura verde também são da sala {{room}}. Escolha Sala 1 e pinte-os de volta",
+                        "wrong": "{{n}} ladrilho(s) da moldura verde estão pintados com outra sala. Escolha Sala {{room}} e pinte-os de novo",
+                        "left": "Faltam {{n}}: pinte o resto da moldura verde com a sala {{room}}"
+                    }
+                },
+                "room3": {
+                    "title": "Pintar a sala 3",
+                    "body": "Agora a sala 3. Ela tem as paredes de 6 cm da sala 2 e também paredes curvas.",
+                    "task": "Escolha Sala 3 e pinte os 3 × 3 ladrilhos da moldura verde",
+                    "tasks": {
+                        "extra": "{{n}} ladrilho(s) fora da moldura verde também são da sala {{room}}. Escolha Sala 1 e pinte-os de volta",
+                        "wrong": "{{n}} ladrilho(s) da moldura verde estão pintados com outra sala. Escolha Sala {{room}} e pinte-os de novo",
+                        "left": "Faltam {{n}}: pinte o resto da moldura verde com a sala {{room}}"
+                    }
+                },
+                "room4": {
+                    "title": "Pintar a sala 4",
+                    "body": "A sala 4 é desenhada livremente como uma imagem: suas paredes e vítimas. Pintada, é uma sala 4 ainda vazia, e as verificações dizem que não está desenhada. O interior vem em um capítulo mais adiante.",
+                    "task": "Escolha Sala 4 e pinte a moldura verde da direita (3 × 6 ladrilhos)",
+                    "tasks": {
+                        "extra": "{{n}} ladrilho(s) fora da moldura verde também são da sala {{room}}. Escolha Sala 1 e pinte-os de volta",
+                        "wrong": "{{n}} ladrilho(s) da moldura verde estão pintados com outra sala. Escolha Sala {{room}} e pinte-os de novo",
+                        "left": "Faltam {{n}}: pinte o resto da moldura verde com a sala {{room}}"
+                    }
+                },
+                "pass12": {
+                    "title": "Ligar salas com uma passagem",
+                    "body": "Há uma parede em cada divisa entre salas, então o robô ainda não consegue entrar na sala 2. Com a ferramenta de passagem, clique perto de uma divisa: o ladrilho do lado em que você clicou vira passagem, e a parede se abre.\nClique de novo para fechá-la; clique no outro lado e a passagem vai para aquele ladrilho. Clique no meio de um ladrilho de passagem para removê-la.",
+                    "task": "Clique perto da divisa entre as salas 1 e 2, do lado da sala 1 (o ladrilho da esquerda na moldura verde)"
+                },
+                "pass34": {
+                    "title": "Ligar as outras salas",
+                    "body": "Do mesmo jeito, coloque passagens nas divisas entre as salas 2 e 3, e entre as salas 3 e 4.\nUma passagem para a sala 4 vai no ladrilho fora da sala 4. As regras pedem um checkpoint onde o robô entra na sala 4, então ele é colocado sozinho.",
+                    "task": "Clique nas duas divisas das molduras verdes, para que as salas 3 e 4 sejam alcançadas",
+                    "tasks": {
+                        "need4": "A sala 3 já é alcançada. Agora clique na divisa entre as salas 3 e 4 (a moldura verde da direita)",
+                        "need3": "A sala 4 já é alcançada, mas a sala 3 ainda não. Clique na divisa entre as salas 2 e 3 (a moldura verde de cima)"
+                    }
+                },
+                "wall1": {
+                    "title": "Desenhar uma parede na sala 1",
+                    "body": "Arraste com a ferramenta de linha para desenhar paredes. Elas se encaixam na grade da sala sob o ponteiro: ao longo das bordas dos ladrilhos (12 cm) na sala 1.\nSegure Shift ao começar para uma única linha reta.",
+                    "task": "Arraste uma parede ao longo da linha laranja tracejada na sala 1",
+                    "tasks": {
+                        "left": "A parede está curta. Desenhe até o fim da linha laranja tracejada"
+                    }
+                },
+                "wall2": {
+                    "title": "Desenhar um zigue-zague na sala 2",
+                    "body": "A parede segue o ponteiro enquanto você arrasta, então degraus como uma escada saem em um traço só. Voltar pelo mesmo caminho desfaz.\nNas salas 2 e 3 as paredes se encaixam em meio ladrilho (6 cm).",
+                    "task": "Desenhe a escada laranja tracejada da sala 2 em um traço só",
+                    "tasks": {
+                        "left": "Só parte da escada. Desenhe até o fim da linha laranja tracejada em um traço só"
+                    }
+                },
+                "curve": {
+                    "title": "Colocar uma curva na sala 3",
+                    "body": "Com a ferramenta de curva, aponte para um quarto (quadrado de 6 cm) de um ladrilho da sala 3: as quatro curvas possíveis aparecem fracas. Um clique põe a mais próxima (azul).\nClicar de novo na mesma a remove. Curvas são só para a sala 3.",
+                    "task": "Aponte para um quarto do ladrilho da moldura verde e coloque uma curva"
+                },
+                "start": {
+                    "title": "Colocar a partida",
+                    "body": "A ferramenta de piso define o piso de um ladrilho. Partida é o ladrilho onde o robô é colocado: um por mapa. Sem ela o mundo não pode ser exportado.",
+                    "task": "Escolha Partida e clique no ladrilho de baixo à esquerda (moldura verde)",
+                    "tasks": {
+                        "room": "A partida está fora da sala 1. Clique em um ladrilho da sala 1 (moldura verde) para colocá-la ali"
+                    }
+                },
+                "floors": {
+                    "title": "Checkpoints, buracos e pântanos",
+                    "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove; Nenhum remove o piso.\nUm checkpoint pontua quando o robô chega nele, e é onde o robô é recolocado depois de uma falta de progresso (LoP). Um buraco é um ladrilho em que o robô não deve entrar, e um pântano o deixa mais lento.",
+                    "task": "Coloque um checkpoint, um buraco e um pântano (as três molduras verdes são bons lugares)",
+                    "tasks": {
+                        "left": "Ainda falta colocar: {{list}}. Escolha um tipo e clique em um ladrilho"
+                    }
+                },
+                "erase": {
+                    "title": "Apagar e desfazer",
+                    "body": "A borracha remove paredes, curvas e vítimas com um clique ou um arraste. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint); a partida só sai com um clique. As paredes externas ficam.\nSe apagar a coisa errada, desfazer (Ctrl+Z, ou ↶ na barra superior) traz de volta; refazer (Ctrl+Shift+Z, ou ↷) avança de novo.",
+                    "task": "Apague o pântano (moldura verde) e depois traga-o de volta com Ctrl+Z",
+                    "tasks": {
+                        "undo": "O pântano sumiu. Agora traga-o de volta com Ctrl+Z (ou ↶ na barra superior)"
+                    }
+                },
+                "victim": {
+                    "title": "Colocar uma vítima",
+                    "body": "Com a ferramenta de vítima, escolha um tipo e clique perto de uma parede: ela vai para a parede onde você clica, e depois você pode arrastá-la ao longo da parede. As vítimas vão nos lados dos ladrilhos na sala 1 (uma por ladrilho), nas faces das paredes de 6 cm nas salas 2 e 3, e em dois lugares de uma curva (dentro e fora). Onde não dá para colocar, a linha de status diz por quê.\nDefina o giro com o dial (Giro fixo), ou escolha Aleatório para um novo a cada vez.",
+                    "task": "Escolha Ferida (Φ) e clique no lado de cima da parede da sala 1 que você desenhou (a borda de baixo do ladrilho da moldura verde)",
+                    "tasks": {
+                        "notReal": "Isso é uma vítima falsa ou um alvo cognitivo. Escolha Ferida (Φ) na fileira Real e coloque-a na parede da sala 1"
+                    }
+                },
+                "fake": {
+                    "title": "Colocar uma vítima falsa",
+                    "body": "A fileira Falsa dá vítimas falsas, que o robô tem de distinguir das reais.\nAs vítimas também vão nas paredes externas.",
+                    "task": "Escolha uma vítima falsa e coloque-a na parede externa no alto da sala 2 (o ladrilho da moldura verde)",
+                    "tasks": {
+                        "notFake": "Essa é uma vítima real. Escolha uma da fileira Falsa (a borracha remove a outra)"
+                    }
+                },
+                "ct": {
+                    "title": "Colocar um alvo cognitivo",
+                    "body": "Um alvo cognitivo (gás inflamável, veneno, corrosivo ou peróxido orgânico) é um alvo de cinco anéis. Escolher um tipo dá as cores dos anéis; clique em um anel do alvo e depois em uma cor abaixo para mudá-la.\nA soma dos anéis dá o tipo; um que não corresponde a nenhum tipo é um alvo falso.",
+                    "task": "Escolha um alvo cognitivo e coloque-o na parede externa embaixo da sala 3 (o ladrilho da moldura verde)"
+                },
+                "pick": {
+                    "title": "Mudar uma vítima que você colocou",
+                    "body": "Clique em uma vítima com o mesmo tipo escolhido para selecioná-la. No painel, mude o tipo, se é falsa, o giro (em um alvo cognitivo, os anéis), ou remova-a. Pronto encerra a seleção.\nClicar com outro tipo escolhido muda o tipo dela.",
+                    "task": "Clique em uma das suas vítimas com o tipo dela escolhido, para selecioná-la"
+                },
+                "r4open": {
+                    "title": "Desenhar o interior da sala 4",
+                    "body": "As paredes e vítimas da sala 4 são desenhadas como uma imagem. Pressione Desenhar a sala 4 no painel da ferramenta de salas, ou clique duas vezes na sala 4 do mapa, para abrir o criador da sala 4.",
+                    "task": "Pressione Desenhar a sala 4"
+                },
+                "r4intro": {
+                    "title": "O criador da sala 4",
+                    "body": "Este é o criador da sala 4. A sala 4 aparece grande, com as paredes do mapa em volta (as paredes externas e as divisas entre salas).\nO que você desenha em preto vira parede, e as marcas que você encosta nelas viram vítimas: a imagem é a sala 4 do mundo do jeito que está.\nGuia, no canto inferior direito desta tela, mostra esta parte de novo a qualquer momento; a troca de idioma também fica ali."
+                },
+                "r4screen": {
+                    "title": "A tela do criador",
+                    "body": "À esquerda as ferramentas, depois seus ajustes, e a imagem no meio. A barra superior tem desfazer, refazer e apagar tudo, o que mostrar, zoom, e abrir e salvar uma imagem. A linha de baixo conta as vítimas e dá avisos.\nCtrl (⌘) + roda aproxima e afasta, e Espaço + arrastar move a vista."
+                },
+                "r4pen": {
+                    "title": "Desenhar paredes com a caneta (P)",
+                    "body": "A caneta desenha uma parede por onde você arrasta: para paredes de qualquer forma, à mão.\nDeixe espaço (cerca de um ladrilho) para o robô passar. Desfazer (Ctrl+Z) corrige um erro.",
+                    "task": "Desenhe uma parede ondulada com a caneta, mais ou menos ao longo da linha laranja tracejada"
+                },
+                "r4line": {
+                    "title": "Linha (L)",
+                    "body": "A linha desenha uma parede reta de onde o arraste começa até onde termina. Com Shift pressionado, segue passos de 45°.\nCom Encaixar na grade (1/4 de ladrilho) ligado nos ajustes, as pontas se encaixam em quartos de ladrilho.",
+                    "task": "Desenhe uma linha ao longo da linha laranja tracejada"
+                },
+                "r4curve": {
+                    "title": "Curva (B)",
+                    "body": "A curva recebe um ponto por clique e passa por eles. Clique duplo, Enter ou clique direito termina; clicar no primeiro ponto a fecha. Backspace tira um ponto e Esc cancela.\nTraço nos ajustes escolhe uma curva suave ou trechos retos.",
+                    "task": "Com a curva, clique nos quatro pontos da linha tracejada em ordem e termine com um clique duplo"
+                },
+                "r4arc": {
+                    "title": "Arco (A)",
+                    "body": "O arco primeiro recebe as duas pontas com um arraste. Depois, mover o mouse o curva, e um clique o fixa.",
+                    "task": "Com o arco, arraste de uma ponta da linha tracejada à outra, curve-o até o meio e clique"
+                },
+                "r4rect": {
+                    "title": "Retângulo (R)",
+                    "body": "O retângulo desenha paredes ao redor da caixa entre os dois cantos do arraste. Com Shift pressionado, é um quadrado.",
+                    "task": "Arraste o retângulo tracejado com a ferramenta de retângulo"
+                },
+                "r4circle": {
+                    "title": "Círculo (C)",
+                    "body": "O círculo desenha uma parede redonda do centro até onde você arrasta: útil para obstáculos redondos como pilares.",
+                    "task": "Com o círculo, arraste do centro do círculo tracejado para fora"
+                },
+                "r4ellipse": {
+                    "title": "Elipse (O)",
+                    "body": "A elipse desenha uma parede dentro da caixa que você arrasta. Com Shift pressionado, é um círculo.",
+                    "task": "Com a elipse, arraste uma caixa em volta da elipse tracejada"
+                },
+                "r4polygon": {
+                    "title": "Polígono (G)",
+                    "body": "O polígono desenha um polígono regular do centro para fora. Lados nos ajustes escolhe de 3 a 12 lados. Ele gira em passos de 15°, ou livremente com Shift pressionado.",
+                    "task": "Com o polígono (6 lados), arraste do centro da forma tracejada para fora"
+                },
+                "r4shape": {
+                    "title": "Forma (I): a forma de um ícone ou de uma imagem",
+                    "body": "Forma cria paredes a partir da forma de um ícone ou de uma imagem. Escolha um ícone (busque em inglês, p. ex. star) ou uma imagem nos ajustes, e depois arraste a caixa para colocá-lo.\nPreenchido ou Contorno, e o giro, também podem ser escolhidos.",
+                    "task": "Com Forma, escolha um ícone (p. ex. star) e arraste-o para dentro da caixa tracejada"
+                },
+                "r4select": {
+                    "title": "Selecionar (S) uma parte",
+                    "body": "Selecionar pega a parte em volta da qual você arrasta. Uma parte selecionada se move com um arraste.",
+                    "task": "Com Selecionar, arraste em volta da caixa tracejada (o retângulo de antes)"
+                },
+                "r4transform": {
+                    "title": "Girar, espelhar, duplicar",
+                    "body": "Os botões do painel giram a parte selecionada 90° para um lado ou outro ([ e ]), espelham-na em um sentido ou outro, duplicam-na (Ctrl+D), copiam (Ctrl+C) e colam (Ctrl+V), ou a apagam (Delete). Pronto (✓, Enter) a devolve à imagem.",
+                    "task": "Gire ou espelhe a parte selecionada e depois pressione Pronto (✓ ou Enter)",
+                    "tasks": {
+                        "noSelection": "Nada está selecionado. Com Selecionar, arraste em volta da caixa tracejada"
+                    }
+                },
+                "r4erase": {
+                    "title": "Borracha (E)",
+                    "body": "A borracha apaga paredes e vítimas por onde você arrasta. O tamanho (P, M, G) está nos ajustes.\nApagar tudo (a lixeira) na barra superior tira a imagem inteira.",
+                    "task": "Com a borracha, apague a linha de cima (laranja tracejada)"
+                },
+                "r4template": {
+                    "title": "Modelo (T)",
+                    "body": "Escolha um modelo (labirinto, pilares, diagonais, zigue-zague, anéis, obstáculos) e pressione Colocar: paredes são postas por toda a sala 4, deixando o mínimo possível fora do alcance do robô.\nCom Apagar primeiro as paredes e vítimas ligado, o que está desenhado sai antes: um jeito de tirar também as formas de treino.",
+                    "task": "Escolha um modelo (p. ex. Pilares), ligue Apagar primeiro as paredes e vítimas e pressione Colocar",
+                    "tasks": {
+                        "clearOff": "Apagar primeiro as paredes e vítimas está desligado. Ligue-o e depois pressione Colocar (ele tira as formas de treino)"
+                    }
+                },
+                "r4stamp": {
+                    "title": "Colocar vítimas",
+                    "body": "Com a ferramenta de vítima, escolha um tipo e clique perto de uma parede: a vítima vai para a parede mais próxima. Não na ponta de uma parede nem em uma ponta fina, nem onde o robô não consegue chegar perto.\nClique em uma vítima para selecioná-la e mudar o giro ou as cores dos anéis; com outro tipo escolhido, ela muda de tipo. O clique direito a remove.",
+                    "task": "Escolha um tipo e clique perto de paredes para colocar duas vítimas",
+                    "tasks": {
+                        "left": "Falta(m) {{n}}: clique perto de uma parede"
+                    }
+                },
+                "r4pick": {
+                    "title": "Mudar uma vítima que você colocou",
+                    "body": "Clique em uma vítima com o mesmo tipo escolhido para selecioná-la. No painel, mude o giro (em um alvo cognitivo, as cores dos anéis) ou remova-a. Pronto encerra a seleção.\nClicar com outro tipo escolhido muda o tipo dela. Um clique direito também a remove.",
+                    "task": "Clique em uma das suas vítimas com o tipo dela escolhido, para selecioná-la"
+                },
+                "r4eraseTokens": {
+                    "title": "Apagar só vítimas",
+                    "body": "Com Só vítimas escolhido na borracha, uma vítima que ela toca sai inteira, e as paredes ficam.",
+                    "task": "Escolha Só vítimas na borracha e passe-a sobre uma vítima",
+                    "tasks": {
+                        "target": "A borracha está em Tudo. Mude para Só vítimas"
+                    }
+                },
+                "r4random": {
+                    "title": "Colocar aleatoriamente",
+                    "body": "Em Colocar aleatoriamente, escolha quantas e de que tipo (o tipo escolhido ou tipos misturados) e pressione Colocar: as vítimas entram todas de uma vez.\nElas vão ao longo de paredes das quais o robô consegue chegar a meio ladrilho, a pelo menos meio ladrilho umas das outras.",
+                    "task": "Pressione Colocar em Colocar aleatoriamente"
+                },
+                "r4reach": {
+                    "title": "Criar um lugar fora de alcance e vê-lo",
+                    "body": "Com Fora de alcance ligado, onde o robô (raio de 3,7 cm) não consegue chegar aparece com listras vermelhas: um lugar fechado por paredes, ou uma passagem mais estreita que o robô.\nUm lugar fora de alcance não é um problema em si (o interior de um obstáculo deve ser assim). Mas o robô não consegue achar uma vítima posta ali, então use as listras ao colocar vítimas. Vítimas das quais o robô não consegue chegar perto, ou que estão fora da parede, ganham um anel vermelho tracejado, e a linha de baixo as conta.\nEntradas / CP mostra as entradas e os checkpoints. Experimente criar um lugar fora de alcance.",
+                    "task": "Com a ferramenta de retângulo, desenhe um quadrado pequeno longe das paredes e veja o interior virar listras vermelhas (Faça por mim desenha um quadrado pequeno com a caneta)",
+                    "tasks": {
+                        "off": "Não há partida, então não dá para calcular onde o robô não consegue chegar. Coloque primeiro a partida no mapa (este passo pode ser pulado)",
+                        "allBlocked": "O robô não consegue entrar em quase nada da sala 4: algo fecha a entrada. Apague a parede na frente dela, ou coloque um modelo de novo com Apagar primeiro ligado"
+                    }
+                },
+                "r4file": {
+                    "title": "Salvar e abrir como imagem",
+                    "body": "Os botões à direita da barra superior salvam a imagem como PNG e abrem um PNG ou JPEG.\nOs tipos das vítimas ficam guardados na imagem, então uma imagem salva abre do jeito que estava: útil para a mesma sala 4 em outro mapa."
+                },
+                "r4ok": {
+                    "title": "De volta ao mapa",
+                    "body": "Quando estiver desenhada, pressione OK: a imagem aparece como sala 4 no mapa e vai para o mundo exportado.\nPara desenhá-la de novo depois, pressione Desenhar a sala 4 outra vez ou clique duas vezes na sala 4.",
+                    "task": "Pressione OK para voltar ao mapa"
+                },
+                "select": {
+                    "title": "Selecionar, mover e copiar uma região",
+                    "body": "Arraste com a ferramenta de seleção para selecionar uma região de ladrilhos; suas paredes, salas, pisos e vítimas vão juntos.\nArraste dentro dela para movê-la, ou com Alt pressionado para mover uma cópia. As setas a movem um ladrilho por vez. Ctrl+C / Ctrl+X copiam / recortam, Ctrl+V cola (o ladrilho sob o ponteiro é o canto superior esquerdo), Ctrl+D duplica e Delete apaga. Esc a solta.\nAqui é só selecionar; se ela se mover, Ctrl+Z a traz de volta.",
+                    "task": "Arraste para selecionar a sala 1 (moldura verde)"
+                },
+                "view": {
+                    "title": "Mover a vista",
+                    "body": "A roda do mouse aproxima e afasta, e um arraste com Espaço pressionado (ou com o botão da roda) move a vista. Com a ferramenta mão (H), um arraste simples a move.\nOs botões de lupa da barra superior também aproximam e afastam, e o da direita enquadra o mapa inteiro de novo."
+                },
+                "linear": {
+                    "title": "Linear",
+                    "body": "Linear colore cada ladrilho como linear (junto a uma parede ligada à partida) ou flutuante. Vítimas em ladrilhos flutuantes pontuam mais.\nPressione de novo para a vista normal.",
+                    "task": "Pressione Linear"
+                },
+                "checks": {
+                    "title": "Ver as verificações",
+                    "body": "Cada alteração é verificada com as regras, no cartão do canto superior direito. Um ✕ vermelho é um problema que impede exportar o mundo; um ! amarelo é um aviso que vale a pena olhar.\nAponte para um item para ver onde ele está, e clique para ir até lá. Corrigir conserta um; Corrigir tudo o que for possível conserta todos.\nOnde o robô não consegue chegar aparece no mapa com listras vermelhas.",
+                    "task": "Não deixar nenhum problema com ✕ vermelho (se você seguiu todos os passos, não há nenhum)",
+                    "tasks": {
+                        "left": "Restam {{n}} problema(s) com ✕ vermelho. Pressione Corrigir tudo o que for possível, ou clique em um item para ver onde está"
+                    }
+                },
+                "name": {
+                    "title": "Dar nome ao mapa",
+                    "body": "O nome do mapa dá nome ao JSON que você salva e ao .wbt que exporta.",
+                    "task": "Clique no nome do mapa na barra superior e mude-o"
+                },
+                "save": {
+                    "title": "Salvar",
+                    "body": "Salvar grava o mapa em um arquivo JSON. Para continuar editando, Abrir lê o JSON (soltá-lo sobre o mapa também funciona).\nO mapa em que você trabalha também fica guardado no navegador, e da próxima vez Abrir o último trabalho continua dali. Ele se perde em outro navegador ou quando os dados de navegação são apagados, então guarde como JSON os mapas importantes."
+                },
+                "export": {
+                    "title": "Exportar o mundo",
+                    "body": "O botão .wbt grava o arquivo de mundo que o Erebus carrega. Se restar um problema com ✕ vermelho, não dá, e ele mostra o que corrigir.\nUm .wbt não volta a ser um mapa editável, então guarde o mapa também como JSON."
+                },
+                "more": {
+                    "title": "Guia e idioma",
+                    "body": "Guia, no canto inferior direito, tem a qualquer momento esta lição, o tour pela tela e como fazer a sala 4. O botão Guia do criador da sala 4 mostra só a parte da sala 4.\nO botão de idioma (mostra a bandeira e o nome do idioma em uso) escolhe o idioma."
+                },
+                "done": {
+                    "title": "Pronto!",
+                    "body": "Muito bem: o mapa de exemplo está feito.\nSalve-o, ou exporte o .wbt e rode-o no Erebus. Para um mapa novo, comece em Novo.\nUma boa ordem de trabalho: tamanho e contorno → pinte as salas → ligue-as com passagens → desenhe paredes → pisos e vítimas → desenhe a sala 4 → veja as verificações e exporte."
+                },
+                "score": {
+                    "title": "Pontuação máxima",
+                    "body": "O troféu na barra superior é o máximo que este mapa pode pontuar: cada vítima e alvo cognitivo identificado com o tipo certo, e cada checkpoint passado, calculado pela regra {{rule_scoring}}.\nPressione para ver a parte de cada sala e a pontuação com os bônus de saída e de mapeamento. Vítimas em ladrilhos flutuantes e em salas com multiplicador maior valem mais."
+                }
+            },
+            "toolHints": {
+                "select": "Arraste para selecionar ladrilhos (paredes, salas, pisos e vítimas se movem ou copiam juntos)",
+                "select_region": "{{size}} ladrilhos selecionados: arraste dentro para mover, Ctrl+C / X / V, Delete, Esc para soltar",
+                "hand": "Arraste para mover a vista",
+                "shape_outline": "Clique ou arraste sobre ladrilhos para tirá-los do mapa ou devolvê-los. O tamanho está no painel esquerdo",
+                "shape_addRow": "Aponte para a divisa onde vai a linha e clique",
+                "shape_addCol": "Aponte para a divisa onde vai a coluna e clique",
+                "shape_delRow": "Aponte para a linha a remover e clique",
+                "shape_delCol": "Aponte para a coluna a remover e clique",
+                "room": "Arraste sobre ladrilhos para pintar a sala {{room}}. As paredes nas divisas e no exterior surgem sozinhas",
+                "passage": "Clique perto de uma divisa entre salas (pontilhada) para colocar uma passagem",
+                "line": "Arraste para desenhar paredes, virando nos cantos pelo caminho; Shift para uma única linha reta",
+                "curve": "Aponte para um quarto de ladrilho na sala 3 e clique na curva azul",
+                "eraser": "Aponte para uma parede, curva, vítima ou piso e clique (arraste para continuar)",
+                "floor": "Clique em um ladrilho para torná-lo: {{floor}} (de novo para remover)",
+                "victim": "Clique perto de uma parede para colocar “{{name}}” onde você clica (depois arraste-a ao longo da parede). Escolha o tipo no painel esquerdo",
+                "victim_selected": "Arraste a vítima selecionada para movê-la ao longo da parede. Mude o giro, os anéis ou a posição, ou remova-a, no painel esquerdo"
+            },
+            "lessonState": {
+                "tool": "Escolha a ferramenta {{name}} (na coluna de ferramentas à esquerda)"
+            },
+            "score": {
+                "title": "O máximo que este mapa pode pontuar",
+                "button": "Pontuação máxima (calculada pela regra {{rule_scoring}})",
+                "short": "Máx.",
+                "unit": " pts",
+                "lead": "O que um robô pontua quando identifica cada vítima e alvo cognitivo que consegue alcançar, com o tipo certo, e passa por cada checkpoint (regra {{rule_scoring}}).",
+                "area": "Sala {{n}}",
+                "multiplier": "×{{m}}",
+                "victims": "Vítimas {{n}}",
+                "targets": "Alvos {{n}}",
+                "checkpoints": "CP {{n}}",
+                "field": "Identificação, tipo e checkpoints",
+                "withExit": "Com o bônus de saída (+10%)",
+                "withMap": "Com também um bônus de mapeamento completo (×2,2)",
+                "noStart": "Coloque o ladrilho de partida para calcular.",
+                "unreachableTokens": "{{n}} vítimas ou alvos de que o robô não consegue se aproximar ficam de fora (corrija nas verificações).",
+                "unreachableCheckpoints": "{{n}} checkpoints que o robô não consegue alcançar ficam de fora.",
+                "presetNote": "Um modelo pronto de sala 4 não é contado (este editor usa só uma sala 4 personalizada).",
+                "fakeNote": "Vítimas falsas e alvos cognitivos falsos (anéis que somam algo diferente de 0-3) não pontuam.",
+                "untypedNote": "{{n}} vítimas da sala 4 sem tipo ficam de fora."
+            },
+            "tiles": "ladrilhos",
+            "shapeEdit": "Editar no mapa",
+            "keySheet": {
+                "title": "Controles",
+                "open": "Controles",
+                "back": "Voltar aos guias",
+                "view": "Visualização",
+                "edit": "Edição",
+                "select": "Ferramenta de seleção",
+                "guide": "Ajuda",
+                "rows": {
+                    "zoom": "Aproximar e afastar",
+                    "pan": "Mover a vista",
+                    "hand": "Ferramenta mão (mover com arraste esquerdo)",
+                    "undo": "Desfazer",
+                    "redo": "Refazer",
+                    "cancel": "Parar o que está sendo desenhado",
+                    "tools": "Trocar de ferramenta (letras na barra esquerda)",
+                    "copy": "Copiar, recortar, colar",
+                    "duplicate": "Duplicar",
+                    "clear": "Apagar a seleção",
+                    "nudge": "Mover a seleção um ladrilho",
+                    "sheet": "Abrir esta lista"
+                },
+                "keys": {
+                    "wheel": "Roda",
+                    "spaceDrag": "Espaço + arrastar",
+                    "middleDrag": "Arrastar com o botão do meio"
+                }
+            },
+            "along": "Posição ao longo da parede",
+            "alongNote": "Você também pode arrastá-la no mapa (passos de 0,1 cm)",
+            "alongMiddle": "Para o meio"
+        },
+        "simMapEditor": {
+            "name": "Nome do projeto: ",
+            "rotDialHint": "Arraste para girar (segure Shift para passos de 1°). As setas também funcionam.",
+            "rotRandom": "Ângulo aleatório",
+            "rotHelp": "Gira no sentido horário visto do robô. 0° é em pé. Arraste o dial ou use os botões.",
+            "connCheck": {
+                "passageNoRoom": "Há uma passagem {{name}} (sala {{from}} ⇄ sala {{to}}), mas não há sala {{room}}.",
+                "passageMisplaced": "A passagem {{name}} (sala {{from}} ⇄ sala {{to}}) não pode ser atravessada para a sala {{from}} e a sala {{to}} ao mesmo tempo. Coloque o ladrilho de passagem em uma das salas e deixe-o aberto para as duas.",
+                "unmarkedGap": "Há {{count}} vão(s) entre a sala {{from}} e a sala {{to}} sem ladrilho de passagem {{name}}. Todo vão pelo qual um robô possa passar deve ser um ladrilho de passagem {{name}} ou ser fechado com uma parede.",
+                "notConnected": "A sala {{room}} não está ligada à sala 1 por passagens."
+            },
+            "room4Creator": {
+                "zoomIn": "Aproximar",
+                "zoomOut": "Afastar",
+                "zoomFit": "Enquadrar",
+                "viewReach": "Fora de alcance",
+                "viewGuides": "Entradas / CP",
+                "unreachableShort": "Fora de alcance {{count}}",
+                "farShort": "Longe da parede {{count}}",
+                "missingShort": "CP faltando {{count}}",
+                "noEntranceShort": "Sem entrada",
+                "reachOff": "Alcance não calculado",
+                "legendMapWallShort": "Paredes do mapa",
+                "legendCheckpointShort": "Checkpoint",
+                "sel": {
+                    "ccw": "Girar 90° para a esquerda",
+                    "cw": "Girar 90° para a direita",
+                    "h": "Espelhar esquerda / direita",
+                    "v": "Espelhar cima / baixo",
+                    "duplicate": "Duplicar",
+                    "copy": "Copiar",
+                    "paste": "Colar",
+                    "delete": "Apagar",
+                    "drop": "Pronto"
+                },
+                "randomPlace": "Colocar aleatoriamente",
+                "randomModes": {
+                    "current": "Tipo escolhido",
+                    "mixed": "Tipos misturados"
+                },
+                "randomGo": "Colocar {{n}}",
+                "randomNote2": "Ao longo de paredes das quais o robô consegue chegar a meio ladrilho, a pelo menos meio ladrilho umas das outras.",
+                "templates": {
+                    "maze": "Labirinto",
+                    "pillars": "Pilares",
+                    "diagonal": "Diagonais",
+                    "zigzag": "Zigue-zague",
+                    "rings": "Anéis",
+                    "obstacles": "Obstáculos"
+                },
+                "templateHints": {
+                    "maze": "Um labirinto de corredores de um ladrilho (com alguns atalhos).",
+                    "pillars": "Pilares redondos nos cantos dos ladrilhos.",
+                    "diagonal": "Paredes diagonais curtas dentro dos ladrilhos.",
+                    "zigzag": "Um único caminho que vira nas pontas.",
+                    "rings": "Anéis em volta do meio, cada um com uma abertura.",
+                    "obstacles": "Círculos, caixas e triângulos espalhados."
+                },
+                "templateClear": "Apagar primeiro as paredes e vítimas",
+                "templateApply": "Colocar",
+                "showGuides": "Mostrar entradas e checkpoints",
+                "missingCheckpoints": "{{count}} ladrilho(s) logo depois de uma passagem não são checkpoints (regra {{rule_room4Checkpoint}}). Defina-os no editor principal (\"CP?\" tracejado).",
+                "noEntrance": "A sala 4 não tem entrada. Abra uma parede para uma passagem do lado de fora no editor principal.",
+                "rows": {
+                    "real": "Real",
+                    "fake": "Falsa (3D)"
+                },
+                "curveSmooth": "Suave",
+                "curveStraight": "Reto",
+                "sides": "Lados",
+                "shapeIcon": "Ícone",
+                "shapePicture": "Imagem",
+                "iconSearch": "Buscar (p. ex. star, car, tree)",
+                "iconAll": "Sugeridos (escolha uma categoria para filtrar)",
+                "iconLoading": "Carregando ícones…",
+                "iconUnavailable": "Não foi possível carregar a lista de ícones.",
+                "iconNone": "Nada encontrado.",
+                "pictureChoose": "Escolher uma imagem",
+                "pictureNote": "Um PNG ou SVG com transparência usa sua parte opaca; outras imagens usam sua parte escura.",
+                "shapeStyles": {
+                    "fill": "Preenchido",
+                    "outline": "Contorno"
+                },
+                "mirror": "Espelhar",
+                "mirrors": {
+                    "none": "Desligado",
+                    "x": "Esquerda / direita",
+                    "y": "Cima / baixo",
+                    "xy": "Ambos"
+                },
+                "tipCurve": "Clique: adicionar um ponto   Clique duplo / Enter: terminar",
+                "tipArc": "Mova para curvar   Clique: pronto",
+                "unreachable": "{{count}} das quais o robô não consegue chegar a meio ladrilho (não podem ser identificadas)",
+                "showReach": "Mostrar onde o robô não pode ir",
+                "legendReach": "Onde o robô não pode ir",
+                "reach": {
+                    "noSeed": "O robô não consegue sair do ladrilho de partida, então onde ele não pode ir não é calculado (confira o ladrilho de partida e as paredes em volta).",
+                    "noStart": "Não há ladrilho de partida, então onde o robô não pode ir não é calculado.",
+                    "unavailable": "Não foi possível calcular onde o robô não pode ir."
+                },
+                "eraseTargets": {
+                    "all": "Tudo",
+                    "tokens": "Só vítimas"
+                },
+                "tipStamp": "Clique: selecionar (giro, anéis) ou mudar o tipo   Clique direito: remover",
+                "tipOther": "Clique direito: remover",
+                "title": "Sala 4 personalizada",
+                "tools": {
+                    "pen": "Caneta",
+                    "line": "Linha",
+                    "rect": "Retângulo",
+                    "circle": "Círculo",
+                    "stamp": "Vítima",
+                    "floor": "Piso",
+                    "erase": "Borracha",
+                    "curve": "Curva",
+                    "arc": "Arco",
+                    "ellipse": "Elipse",
+                    "polygon": "Polígono",
+                    "shape": "Forma",
+                    "select": "Selecionar",
+                    "template": "Modelo"
+                },
+                "undo": "Desfazer",
+                "redo": "Refazer",
+                "clear": "Apagar tudo",
+                "groups": {
+                    "victim": "Vítimas com letra",
+                    "ct": "Alvos cognitivos",
+                    "hazmat": "Placas de materiais perigosos",
+                    "fake": "Vítimas falsas"
+                },
+                "types": {
+                    "harmed": "Ferida",
+                    "stable": "Estável",
+                    "unharmed": "Ilesa",
+                    "fakeHarmed": "Ferida",
+                    "fakeStable": "Estável",
+                    "fakeUnharmed": "Ilesa"
+                },
+                "eraserSize": "Tamanho",
+                "size": {
+                    "s": "P",
+                    "m": "M",
+                    "l": "G"
+                },
+                "snap": "Encaixar na grade (1/4 de ladrilho)",
+                "hints": {
+                    "pen": "Arraste para desenhar paredes livremente.",
+                    "line": "Arraste para desenhar uma parede reta. Segure Shift para passos de 45°.",
+                    "rect": "Arraste para desenhar um retângulo de paredes. Segure Shift para um quadrado.",
+                    "circle": "Arraste a partir do centro para desenhar uma parede circular.",
+                    "stamp": "Clique perto de uma parede para prender uma vítima na parede mais próxima. Clique em uma vítima colocada para mudar o giro ou os anéis (com outro tipo escolhido, ela assume esse tipo). O clique direito a remove.",
+                    "floor": "Clique em um ladrilho da sala 4 para dar a ele o piso escolhido (buraco, pântano, checkpoint); clique de novo para tirar, ou arraste para fazer vários. Um piso ocupa um ladrilho inteiro (12 cm); um buraco também é o ladrilho inteiro.",
+                    "erase": "Arraste para apagar paredes e vítimas. Uma vítima também pode ser removida com um clique direito, com qualquer ferramenta.",
+                    "eraseTokens": "Remove cada vítima que a borracha toca. As paredes ficam.",
+                    "curve": "Clique em pontos e a curva passa por eles. Clique duplo, Enter ou clique direito para terminar; clique no primeiro ponto para fechá-la. Backspace tira um ponto, Esc cancela.",
+                    "arc": "Arraste para definir as duas pontas, mova o mouse para curvar e clique.",
+                    "ellipse": "Desenha a elipse que cabe na caixa arrastada. Segure Shift para um círculo.",
+                    "polygon": "Arraste a partir do centro para desenhar um polígono regular. Gira em passos de 15° (livre com Shift).",
+                    "shape": "Escolha um ícone ou uma imagem e depois arraste na tela para definir o tamanho (mantém as proporções; livre com Shift).",
+                    "select": "Arraste para selecionar uma caixa e depois arraste dentro dela para movê-la (segure Alt para copiar). As setas a empurram, [ ] a giram, Enter a solta, Delete a apaga.",
+                    "template": "Escolha um modelo e pressione Colocar. Disposições que deixam o robô de fora são refeitas automaticamente."
+                },
+                "messages": {
+                    "outside": "Não pode ir para fora da sala 4.",
+                    "needWall": "Vítimas só vão em paredes. Clique perto de uma parede.",
+                    "pickShape": "Escolha primeiro um ícone ou uma imagem.",
+                    "iconFailed": "Não foi possível carregar o ícone.",
+                    "imageFailed": "Não foi possível carregar a imagem.",
+                    "randomDone": "{{placed}} colocadas.",
+                    "randomShort": "Só {{placed}} de {{asked}} colocadas (não há paredes suficientes para elas).",
+                    "templateBlocked": "Todas as disposições testadas deixam parte da sala fora de alcance. Confira as partes em vermelho claro.",
+                    "wallEnd": "Não na ponta de uma parede. Clique em uma face de parede pelo menos tão larga quanto uma vítima (2 cm).",
+                    "unreachable": "O robô não consegue chegar perto daqui: não há vítimas onde o robô não pode ir (regra {{rule_reach}}).",
+                    "floorNotOuter": "Um ladrilho de contato só vai em um ladrilho junto à parede externa."
+                },
+                "tokens": "Marcadores de parede: {{count}}",
+                "farFromWall": "{{count}} longe de qualquer parede (círculo vermelho tracejado)",
+                "import": "Importar imagem",
+                "download": "Salvar como imagem",
+                "hint": "Importe uma imagem PNG / JPEG ou desenhe aqui. Os tipos das vítimas ficam guardados na imagem, então uma imagem salva os traz de volta.",
+                "selectedStamp": "Vítima selecionada",
+                "selectDone": "Pronto",
+                "randomCount": "Quantidade",
+                "randomKind": "Tipos"
+            },
+            "passageBlue": "Azul",
+            "passageYellow": "Amarelo",
+            "passageGreen": "Verde",
+            "passagePurple": "Roxo",
+            "passageOrange": "Laranja",
+            "passageRed": "Vermelho",
+            "ctF": "Gás inflamável",
+            "ctP": "Veneno",
+            "ctC": "Corrosivo",
+            "ctO": "Peróxido orgânico",
+            "ctFake": "Alvo falso",
+            "exportW": "Exportar este mapa como arquivo de mundo para o Erebus"
+        }
+    },
+    "years": {
+        "2027": {
+            "admin": {
+                "simBeta": {
+                    "hints": {
+                        "floor_notOuter": "{{floor}}: só em um ladrilho junto à parede externa (regra {{rule_contactTile}})",
+                        "floor_clear": "Clique para remover o piso (buraco, pântano, checkpoint, ladrilho de contato)"
+                    },
+                    "problems": {
+                        "contactInside": "Ladrilhos de contato que não estão junto à parede externa ({{count}}). Um ladrilho de contato só vai em um ladrilho junto ao exterior (regra {{rule_contactTile}})",
+                        "presetNotSupported": "Modelos prontos da sala 4 não estão disponíveis neste editor (mude para personalizada)"
+                    },
+                    "help": {
+                        "eraser": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint, ladrilho de contato); um clique remove a partida. As paredes externas ficam."
+                    },
+                    "tour": {
+                        "floor": {
+                            "title": "Piso (F): checkpoints, buracos, pântanos, ladrilhos de contato, a partida",
+                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é o ladrilho onde o robô é colocado: um por mapa. Nenhum remove o piso.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos. Só vai em um ladrilho junto à parede externa."
+                        },
+                        "victim": {
+                            "body": "Escolha um tipo no painel (vítimas sorridentes - ferida um rosto triste, estável um rosto neutro, ilesa um rosto feliz - e suas falsas, alvos cognitivos de quatro tipos - gás inflamável, veneno, corrosivo, peróxido orgânico - e um falso) e clique perto de uma parede: ela vai para a parede onde você clica.\nElas vão nos lados dos ladrilhos na sala 1 (uma por ladrilho), nas faces das paredes de 6 cm nas salas 2 e 3, e em dois lugares de uma curva (dentro e fora). Arraste uma colocada para movê-la ao longo da parede. Onde não dá para colocar, a linha de status diz por quê.\nGire o dial (Giro fixo) para a rotação, ou escolha Aleatório para uma nova a cada vez. Para um alvo cognitivo, clique em um anel do alvo e depois em uma cor abaixo; a soma dos anéis dá o tipo.\nClique em uma vítima com o mesmo tipo para selecioná-la e depois mude o giro, os anéis ou a posição ao longo da parede, ou remova-a. Clicar com outro tipo muda o tipo dela."
+                        },
+                        "eraser": {
+                            "body": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las; o que sairia aparece em vermelho sob o ponteiro.\nLonge das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint, ladrilho de contato). A partida só sai com um clique.\nUm arraste que começa em uma parede não mexe nos pisos, então os pisos não somem enquanto você apaga paredes. As paredes externas ficam."
+                        }
+                    },
+                    "lesson": {
+                        "floors": {
+                            "title": "Checkpoints, buracos, pântanos e ladrilhos de contato",
+                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove; Nenhum remove o piso.\nUm checkpoint pontua quando o robô chega nele, e é onde o robô é recolocado depois de uma falta de progresso (LoP). Um buraco é um ladrilho em que o robô não deve entrar, e um pântano gasta a bateria dele mais rápido.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos. Só vai em um ladrilho junto à parede externa.",
+                            "task": "Coloque um checkpoint, um buraco, um pântano e um ladrilho de contato (as quatro molduras verdes são bons lugares)"
+                        },
+                        "victim": {
+                            "task": "Escolha Ferida (o rosto triste) e clique no lado de cima da parede da sala 1 que você desenhou (a borda de baixo do ladrilho da moldura verde)",
+                            "tasks": {
+                                "notReal": "Isso é uma vítima falsa ou um alvo cognitivo. Escolha Ferida (o rosto triste) na fileira Real e coloque-a na parede da sala 1"
+                            }
+                        },
+                        "erase": {
+                            "body": "A borracha remove paredes, curvas e vítimas com um clique ou um arraste. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint, ladrilho de contato); a partida só sai com um clique. As paredes externas ficam.\nSe apagar a coisa errada, desfazer (Ctrl+Z, ou ↶ na barra superior) traz de volta; refazer (Ctrl+Shift+Z, ou ↷) avança de novo."
+                        }
+                    },
+                    "betaLead": "Erebus World Editor (beta). Os mapas das regras de 2027 são feitos só neste editor (não há editor clássico para eles)."
+                },
+                "simMapEditor": {
+                    "room4Creator": {
+                        "messages": {
+                            "floorNotOuter": "Um ladrilho de contato só vai em um ladrilho junto à parede externa (regra {{rule_contactTile}})."
+                        },
+                        "groups": {
+                            "victim": "Vítimas sorridentes"
+                        },
+                        "hints": {
+                            "floor": "Clique em um ladrilho da sala 4 para dar a ele o piso escolhido (buraco, pântano, checkpoint, ladrilho de contato); clique de novo para tirar, ou arraste para fazer vários. Um piso ocupa um ladrilho inteiro (12 cm); um buraco também é o ladrilho inteiro. Um ladrilho de contato só vai em um ladrilho junto à parede externa."
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

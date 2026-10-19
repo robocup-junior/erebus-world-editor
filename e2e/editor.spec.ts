@@ -23,6 +23,26 @@ test('empty screen (en), then the language switched', async ({ page }) => {
     expect(await page.evaluate(() => document.documentElement.lang)).toBe('ja');
 });
 
+// every language: its flag and name in the menu, and the page in it (the lang attribute, its texts)
+test('the languages: each with its flag, each switching the page', async ({ page }) => {
+    await boot(page, { lang: 'en' });
+    await page.locator('.sbx-status .sbx-lang').click();
+    const items = page.locator('.sbx-lang-item');
+    await expect(items).toHaveCount(12);
+    await expect(items.locator('img.sbx-lang-flag')).toHaveCount(12);
+    await page.keyboard.press('Escape');
+    const titles: Record<string, string> = { ja: 'マップを始めましょう', en: 'Start a map', es: 'Empieza un mapa', 'pt-BR': 'Comece um mapa',
+        de: 'Eine Karte beginnen', 'zh-CN': '开始一张地图', ko: '맵 시작하기', fr: 'Commencer une carte', tr: 'Bir harita başlatın',
+        id: 'Mulai sebuah peta', th: 'เริ่มแผนที่', 'zh-Hant': '開始一張地圖' };
+    for (const [code, title] of Object.entries(titles)) {
+        await page.locator('.sbx-status .sbx-lang').click();
+        await page.locator(`.sbx-lang-item[lang="${code}"]`).click();
+        await settle(page, 100);
+        expect(await page.evaluate(() => document.documentElement.lang)).toBe(code);
+        await expect(page.locator('.sbx-empty h2')).toHaveText(title);
+    }
+});
+
 test('the start screen asks the year of the rules: 2027 (a draft) chosen, 2026 to choose; a new map is of the year chosen', async ({ page }) => {
     await boot(page);
     const choices = page.locator('.sbx-empty-rules-choices button');
