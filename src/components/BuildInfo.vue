@@ -39,23 +39,23 @@ onBeforeUnmount(stop);
 
 <template>
   <span class="sbx-copyright" ref="root">
-    <button class="sbx-copyright-btn" type="button" @click="toggle" :aria-expanded="open" :title="t('admin.simBeta.build.title')">©︎ 2021-2026 Erebus Development Team</button>
-    <div class="sbx-build" v-if="open" role="dialog" :aria-label="t('admin.simBeta.build.title')">
+    <button class="sbx-copyright-btn" type="button" @click="toggle" :aria-expanded="open" :title="t('app.build.title')">©︎ 2021-2026 Erebus Development Team</button>
+    <div class="sbx-build" v-if="open" role="dialog" :aria-label="t('app.build.title')">
       <div class="sbx-build-head">Erebus World Editor</div>
       <dl>
-        <dt>{{ t('admin.simBeta.build.commit') }}</dt>
+        <dt>{{ t('app.build.commit') }}</dt>
         <dd>
           <a v-if="B.commit" :href="B.repo + '/commit/' + B.commit" target="_blank" rel="noopener"><code>{{ short(B.commit) }}</code></a>
           <span v-else>—</span>
-          <span class="sbx-build-dirty" v-if="B.dirty">{{ t('admin.simBeta.build.dirty') }}</span>
+          <span class="sbx-build-dirty" v-if="B.dirty">{{ t('app.build.dirty') }}</span>
         </dd>
-        <template v-if="B.branch"><dt>{{ t('admin.simBeta.build.branch') }}</dt><dd>{{ B.branch }}</dd></template>
-        <template v-if="B.commitDate"><dt>{{ t('admin.simBeta.build.commitDate') }}</dt><dd>{{ when(B.commitDate) }}</dd></template>
-        <dt>{{ t('admin.simBeta.build.builtAt') }}</dt><dd>{{ when(B.builtAt) }}</dd>
+        <template v-if="B.branch"><dt>{{ t('app.build.branch') }}</dt><dd>{{ B.branch }}</dd></template>
+        <template v-if="B.commitDate"><dt>{{ t('app.build.commitDate') }}</dt><dd>{{ when(B.commitDate) }}</dd></template>
+        <dt>{{ t('app.build.builtAt') }}</dt><dd>{{ when(B.builtAt) }}</dd>
       </dl>
       <div class="sbx-build-foot">
         <a :href="B.repo" target="_blank" rel="noopener"><i class="fas fa-code-branch"></i> GitHub</a>
-        <button class="btn btn-sm btn-link p-0" type="button" @click="copy"><i :class="copied ? 'fas fa-check' : 'far fa-copy'"></i> {{ t(copied ? 'admin.simBeta.build.copied' : 'admin.simBeta.build.copy') }}</button>
+        <button class="btn btn-sm btn-link p-0" type="button" @click="copy"><i :class="copied ? 'fas fa-check' : 'far fa-copy'"></i> {{ t(copied ? 'app.build.copied' : 'app.build.copy') }}</button>
       </div>
     </div>
   </span>

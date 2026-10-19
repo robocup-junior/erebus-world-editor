@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import * as T from '../src/lib/tour';
 
-const lang = (l: string) => JSON.parse(fs.readFileSync(path.join(__dirname, `../src/lang/${l}.json`), 'utf8')).admin.simBeta;
+const lang = (l: string) => JSON.parse(fs.readFileSync(path.join(__dirname, `../src/lang/${l}.json`), 'utf8')).guide;
 // the page's markup, and the room 4 creator's
 const page = fs.readFileSync(path.join(__dirname, '../src/App.vue'), 'utf8');
 const creator = fs.readFileSync(path.join(__dirname, '../src/room4/Room4Creator.vue'), 'utf8');
@@ -14,9 +14,9 @@ const creator = fs.readFileSync(path.join(__dirname, '../src/room4/Room4Creator.
 test('every step has a title and a text in Japanese and English, a lesson step with a goal says what to do', () => {
   for (const l of ['ja', 'en']) {
     const d = lang(l);
-    for (const s of T.STEPS) assert.ok(d.tour[s.id] && d.tour[s.id].title && d.tour[s.id].body, `${l}: tour ${s.id}`);
+    for (const s of T.STEPS) assert.ok(d.tour.steps[s.id] && d.tour.steps[s.id].title && d.tour.steps[s.id].body, `${l}: tour ${s.id}`);
     for (const s of T.LESSON) {
-      const x = d.lesson[s.id];
+      const x = d.lesson.steps[s.id];
       assert.ok(x && x.title && x.body, `${l}: lesson ${s.id}`);
       assert.strictEqual(!!x.task, !!s.goal, `${l}: lesson ${s.id} has a task when it has a goal`);
       if (s.goal) assert.ok(s.auto, `${s.id} can be done for you`);
@@ -27,7 +27,7 @@ test('every step has a title and a text in Japanese and English, a lesson step w
 
 test('the guide talks about this editor only', () => {
   for (const l of ['ja', 'en']) {
-    const text = JSON.stringify([lang(l).tour, lang(l).lesson]);
+    const text = JSON.stringify([lang(l).tour.steps, lang(l).tour.chapters, lang(l).lesson.steps]);
     for (const word of ['今までのエディタ', 'classic', 'preset', 'プリセット', 'β']) assert.ok(!text.includes(word), `${l}: ${word}`);
   }
 });

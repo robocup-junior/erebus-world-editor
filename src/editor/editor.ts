@@ -609,9 +609,9 @@ export function createEditor() {
         if (p.key.indexOf('conn.') === 0) {
             const params = Object.assign({}, p.params);
             if (params.name) params.name = t(params.name);
-            text = t('admin.simMapEditor.connCheck.' + p.key.slice(5), params);
+            text = t('checks.connection.' + p.key.slice(5), params);
         } else {
-            text = t('admin.simBeta.problems.' + p.key, p.params);
+            text = t('checks.problems.' + p.key, p.params);
         }
         return { text: text, block: !!p.block, at: p.at || null, show: p.show || null, raw: p,
             fix: M.FIXABLE.indexOf(p.key) > -1 ? 'fix' : M.DRAW_FIX.indexOf(p.key) > -1 ? 'draw' : '' };
@@ -623,7 +623,7 @@ export function createEditor() {
     // (null when closed)
     function openDialog(d: Partial<Dialog> & { kind: Dialog['kind']; title: string }): Promise<unknown> {
         return new Promise(function (resolve) {
-            S.dialog = Object.assign({ actions: [{ label: t('admin.simBeta.close'), value: null, style: 'primary' }] }, d, { done: resolve }) as Dialog;
+            S.dialog = Object.assign({ actions: [{ label: t('common.close'), value: null, style: 'primary' }] }, d, { done: resolve }) as Dialog;
         });
     }
     function closeDialog(value?: unknown) {
@@ -640,11 +640,11 @@ export function createEditor() {
     function whenDiscarded(go: () => void) {
         if (!dirty) { go(); return; }
         openDialog({
-            kind: 'warn', title: t('admin.simBeta.discardTitle'), message: t('admin.simBeta.discard'),
+            kind: 'warn', title: t('file.discard.title'), message: t('file.discard.lead'),
             actions: [
-                { label: t('admin.simBeta.cancel'), value: false, style: '' },
-                { label: t('admin.simBeta.saveFirst'), value: 'save', style: '', icon: 'fa-save' },
-                { label: t('admin.simBeta.discardGo'), value: true, style: 'danger', icon: 'fa-trash-alt' }
+                { label: t('common.cancel'), value: false, style: '' },
+                { label: t('file.discard.save'), value: 'save', style: '', icon: 'fa-save' },
+                { label: t('file.discard.go'), value: true, style: 'danger', icon: 'fa-trash-alt' }
             ]
         }).then(function (v) {
             if (v === 'save') { saveJson(); go(); }
@@ -670,12 +670,12 @@ export function createEditor() {
             data = JSON.parse(text);
             if (!data || typeof data.cells !== 'object' || !(data.width > 0) || !(data.length > 0)) throw new Error('format');
         } catch (e) {
-            S.error = 'admin.simBeta.badFile';
+            S.error = 'file.badFile';
             return;
         }
         // a map of a year this editor does not take (made by a newer one)
         if (data.rules && !rulesFor(Number(data.rules))) {
-            S.error = 'admin.simBeta.unknownRules';
+            S.error = 'file.unknownRules';
             S.errorParams = { year: data.rules, years: years().join(', ') };
             return;
         }
@@ -712,11 +712,11 @@ export function createEditor() {
         const blocking = S.problems.filter(function (p) { return p.block; });
         if (blocking.length) {
             const fixable = blocking.some(function (p) { return p.fix === 'fix'; });
-            const actions: DialogAction[] = [{ label: t('admin.simBeta.close'), value: null, style: '' }];
-            if (fixable) actions.push({ label: t('admin.simBeta.fixAll'), value: 'fix', style: 'primary', icon: 'fa-magic' });
+            const actions: DialogAction[] = [{ label: t('common.close'), value: null, style: '' }];
+            if (fixable) actions.push({ label: t('checks.fix.all'), value: 'fix', style: 'primary', icon: 'fa-magic' });
             openDialog({
-                kind: 'error', title: t('admin.simBeta.exportBlocked'),
-                message: t('admin.simBeta.exportBlockedLead', { count: blocking.length }),
+                kind: 'error', title: t('export.blocked'),
+                message: t('export.blockedLead', { count: blocking.length }),
                 items: blocking, actions: actions
             }).then(function (v) {
                 if (v === 'fix') {
@@ -731,8 +731,8 @@ export function createEditor() {
         const failed = function (err: any) {
             applyAsync(function () {
                 // a value that is not a number: what it is on, and that the file was not made
-                const message = err instanceof M.BrokenWorld ? t('admin.simBeta.exportBroken', { line: err.line }) : String(err && err.message || err);
-                openDialog({ kind: 'error', title: t('admin.simBeta.exportFailed'), message: message });
+                const message = err instanceof M.BrokenWorld ? t('export.broken', { line: err.line }) : String(err && err.message || err);
+                openDialog({ kind: 'error', title: t('export.failed'), message: message });
             });
         };
         if (map.area4Room && map.area4Room.type === 1) {
@@ -1005,7 +1005,7 @@ export function createEditor() {
     }
 
     function hintText(key: string, params?: Record<string, unknown> | null) {
-        return Keys.text(t('admin.simBeta.hints.' + key, params || undefined));
+        return Keys.text(t('status.' + key, params || undefined));
     }
 
     // The status line: what the tool would do where the pointer is (say), over the tool's own
@@ -1046,8 +1046,8 @@ export function createEditor() {
         else if (tool === 'victim' && S.selected) key = 'victim_selected';
         else if (tool === 'victim') params = { name: victimName() };
         else if (tool === 'room') params = { room: ui.room };
-        else if (tool === 'floor') params = { floor: t('admin.simBeta.floors.' + ui.floor) };
-        return Keys.text(t('admin.simBeta.toolHints.' + key, params));
+        else if (tool === 'floor') params = { floor: t('floors.' + ui.floor) };
+        return Keys.text(t('tools.hints.' + key, params));
     }
 
     function toolDown(p: P, e: PointerEvent) {
@@ -1122,7 +1122,7 @@ export function createEditor() {
         } else if (tool === 'floor') {
             const tl = tileAt(p);
             if (tl && !M.setFloor(map, tl.x, tl.y, ui.floor) && !M.floorFits(map, tl.x, tl.y, ui.floor)) {
-                notify('floor_notOuter', { floor: t('admin.simBeta.floors.' + ui.floor) }, 'warn');
+                notify('floor_notOuter', { floor: t('floors.' + ui.floor) }, 'warn');
             }
         } else if (tool === 'victim' && stroke.victim) {
             dropVictim();
@@ -1677,7 +1677,7 @@ export function createEditor() {
             if (!tl) return null;
             const kind = ui.floor, tile = M.tileOf(map, tl.x, tl.y);
             const st = map.startTile;
-            const name = t('admin.simBeta.floors.' + kind);
+            const name = t('floors.' + kind);
             if (M.isOutside(map, tl.x, tl.y)) say('floor_outside');
             else if (kind === 'start') say(st && st.x === tl.x && st.y === tl.y ? 'floor_isStart' : 'floor_start');
             else if (kind === 'clear') say('floor_clear');
@@ -2119,9 +2119,9 @@ export function createEditor() {
         if (!map || !rulesFor(year) || year === rulesOf(map).year) return;
         const from = rulesOf(map).year;
         openDialog({
-            kind: 'warn', title: t('admin.simBeta.rules.switchTitle', { year: year }),
-            message: t('admin.simBeta.rules.switchLead', { from: from, to: year }),
-            actions: [{ label: t('admin.simBeta.cancel'), value: null, style: '' }, { label: t('admin.simBeta.rules.switch'), value: 'switch', style: 'primary', icon: 'fa-book' }]
+            kind: 'warn', title: t('rules.switchTitle', { year: year }),
+            message: t('rules.switchLead', { from: from, to: year }),
+            actions: [{ label: t('common.cancel'), value: null, style: '' }, { label: t('rules.switch'), value: 'switch', style: 'primary', icon: 'fa-book' }]
         }).then(function (v) {
             if (v !== 'switch' || !map) return;
             begin();
@@ -2156,7 +2156,7 @@ export function createEditor() {
     }
 
     function tourStep(): TourStep | null { return S.tour ? S.tour.steps[S.tour.i] : null; }
-    function tourKey(s: TourStep) { return 'admin.simBeta.' + (S.tour!.kind === 'tour' ? 'tour.' : 'lesson.') + s.id; }
+    function tourKey(s: TourStep) { return 'guide.' + (S.tour!.kind === 'tour' ? 'tour' : 'lesson') + '.steps.' + s.id; }
     function tourText(part: string) {
         const s = tourStep();
         if (!s) return '';
@@ -2228,11 +2228,11 @@ export function createEditor() {
         const params: Record<string, any> = Object.assign({}, state.params);
         if (state.nameOf && params.name) params.name = t(state.nameOf + params.name);
         if (params.list) {
-            params.list = params.list.map(function (id: string) { return t(params.listOf + id); }).join(t('admin.simBeta.listSep'));
+            params.list = params.list.map(function (id: string) { return t(params.listOf + id); }).join(t('common.listSep'));
         }
         // the step's own text, else the one the steps share (lessonState)
-        let k = 'admin.simBeta.lesson.' + s.id + '.tasks.' + state.key, v = t(k, params);
-        if (v === k) { k = 'admin.simBeta.lessonState.' + state.key; v = t(k, params); }
+        let k = 'guide.lesson.steps.' + s.id + '.tasks.' + state.key, v = t(k, params);
+        if (v === k) { k = 'guide.lesson.states.' + state.key; v = t(k, params); }
         return v === k ? '' : Keys.text(v);
     }
     // looked at each time the page is drawn again (and when the guide's own state changes)

@@ -145,7 +145,7 @@ for (const year of R.years()) test(`${year}: what to do follows the map: too muc
   // floors: what is left, by name
   M.setFloor(env.map, 3, 7, 'black');
   const left = R.rulesFor(year)!.floors.map((k) => k.id).filter((k) => k !== 'black');
-  assert.deepStrictEqual(look('floors').state, { key: 'left', params: { list: left, listOf: 'admin.simBeta.floors.' } });
+  assert.deepStrictEqual(look('floors').state, { key: 'left', params: { list: left, listOf: 'floors.' } });
 });
 
 test('the eraser step lights up the swamp where it was put, also once it is taken off', () => {

@@ -1,409 +1,419 @@
 {
-    "admin": {
-        "simBeta": {
-            "fake": "Korban palsu",
+    "common": {
+        "listSep": ", ",
+        "close": "Tutup",
+        "cancel": "Batal",
+        "done": "Selesai",
+        "remove": "Hapus",
+        "undo": "Urungkan",
+        "redo": "Ulangi",
+        "zoomIn": "Perbesar",
+        "zoomOut": "Perkecil"
+    },
+    "app": {
+        "title": "Erebus World Editor",
+        "about": {
+            "title": "Tentang editor ini",
+            "lead": "Erebus World Editor (beta). Editor ini membaca dan menulis JSON yang sama dengan editor klasik, jadi peta yang disimpan bisa dibuka di keduanya.",
+            "classic": "Buka editor klasik",
+            "classicNote": "Simpan dulu peta yang sedang Anda kerjakan (Simpan, JSON)"
+        },
+        "build": {
+            "title": "Tentang build ini",
+            "commit": "Commit",
+            "dirty": "(dengan perubahan yang belum di-commit)",
+            "branch": "Branch",
+            "commitDate": "Di-commit",
+            "builtAt": "Dibuat",
+            "copy": "Salin",
+            "copied": "Disalin"
+        }
+    },
+    "rules": {
+        "title": "Aturan peta ini",
+        "label": "Aturan {{year}}",
+        "lead": "Aturan yang diikuti peta ini: pemeriksaan, skor, dan dunia yang diekspor mengikutinya.",
+        "book": "Buku aturan",
+        "soon": "Segera hadir",
+        "switchTitle": "Beralih ke aturan {{year}}?",
+        "switchLead": "Peta ini beralih dari aturan {{from}} ke aturan {{to}}. Dinding dan korban yang tidak sesuai aturan baru ditunjukkan di pemeriksaan (urungkan: Ctrl+Z).",
+        "switch": "Beralih",
+        "pick": "Aturan tahun berapa?",
+        "pickNote": "Peta tersimpan dibuka dengan aturannya sendiri. Anda juga bisa menggantinya nanti di bilah atas.",
+        "draft": "Draf"
+    },
+    "file": {
+        "start": {
+            "title": "Mulai sebuah peta",
+            "lead": "Buat yang baru, atau buka peta tersimpan (JSON)."
+        },
+        "new": "Peta baru",
+        "newShort": "Baru",
+        "open": "Buka peta (JSON)",
+        "openShort": "Buka",
+        "openJson": "Buka JSON",
+        "save": "Simpan sebagai JSON",
+        "saveShort": "Simpan",
+        "noMap": "Tidak ada peta yang terbuka",
+        "dropHere": "Anda juga dapat meletakkan file JSON di sini",
+        "badFile": "Ini tidak dapat dibaca sebagai peta editor Simulation 2026 (JSON)",
+        "unknownRules": "Peta ini untuk aturan {{year}}; editor ini mendukung aturan {{years}} (buka di editor yang lebih baru)",
+        "restore": "Buka pekerjaan terakhir",
+        "restoreOtherYear": "Pekerjaan yang disimpan adalah peta aturan {{year}}. Pilih aturan {{year}} di atas untuk membukanya (untuk membawanya ke aturan tahun lain, buka lalu ganti melalui Aturan di bilah atas)",
+        "discard": {
+            "title": "Perubahan belum disimpan",
+            "lead": "Melanjutkan akan membuang perubahan pada peta ini (salinan yang disimpan di browser ini tetap ada).",
+            "save": "Simpan dan lanjutkan",
+            "go": "Jangan simpan"
+        }
+    },
+    "export": {
+        "button": "Ekspor peta ini sebagai file dunia untuk Erebus",
+        "blocked": "Dunia belum dapat diekspor",
+        "blockedLead": "Perbaiki {{count}} ini untuk mengekspor. Klik salah satunya untuk melihat lokasinya.",
+        "failed": "Ekspor dunia gagal",
+        "broken": "Dunia akan memiliki nilai yang bukan angka, jadi tidak ada file yang dibuat (Webots akan membukanya sebagai dunia kosong). Mohon laporkan ini: {{line}}"
+    },
+    "map": {
+        "name": "Nama desain: ",
+        "fit": "Tampilkan seluruh peta",
+        "size": {
+            "title": "Ukuran peta",
+            "note": "Klik angka untuk mengetiknya, atau gunakan − dan + (1-40). Peta membesar atau mengecil di kanan dan bawah; yang masih muat tetap ada. Untuk menyisipkan baris atau kolom di tengah, gunakan Sisipkan baris / Sisipkan kolom di bawah.",
             "width": "Lebar",
             "length": "Panjang",
-            "title": "Erebus World Editor",
-            "new": "Peta baru",
-            "open": "Buka peta (JSON)",
-            "save": "Simpan sebagai JSON",
-            "backToClassic": "Buka editor klasik",
-            "noMap": "Tidak ada peta yang terbuka",
-            "dropHere": "Anda juga dapat meletakkan file JSON di sini",
-            "badFile": "Ini tidak dapat dibaca sebagai peta editor Simulation 2026 (JSON)",
-            "unknownRules": "Peta ini untuk aturan {{year}}; editor ini mendukung aturan {{years}} (buka di editor yang lebih baru)",
-            "zoomIn": "Perbesar",
-            "zoomOut": "Perkecil",
-            "fit": "Tampilkan seluruh peta",
-            "room": "Ruang {{n}}",
-            "discard": "Melanjutkan akan membuang perubahan pada peta ini (salinan yang disimpan di browser ini tetap ada).",
-            "exportBlocked": "Dunia belum dapat diekspor",
-            "room4": "Ruang 4",
-            "problemsTitle": "Pemeriksaan",
-            "noProblems": "Tidak ada masalah",
-            "undo": "Urungkan",
-            "redo": "Ulangi",
-            "tools": {
-                "hand": "Pindah",
-                "room": "Ruang",
-                "passage": "Lorong",
-                "line": "Garis",
-                "eraser": "Penghapus",
-                "floor": "Lantai",
-                "victim": "Korban",
-                "curve": "Lengkung",
-                "select": "Pilih",
-                "shape": "Bentuk"
-            },
-            "help": {
-                "hand": "Seret untuk memindahkan peta.",
-                "room": "Cat petak menjadi sebuah ruang (ruang 1 mengembalikannya). Dinding muncul sendiri di tempat ruang-ruang bertemu dan di sekeliling peta. Ruang 4 digambar sebagai gambar dengan tombol di bawah.",
-                "passage": "Klik di dekat batas ruang: petak di sisi yang Anda klik menjadi lorong (klik lagi untuk menutupnya, di sisi lain untuk memindahkannya ke sana). Klik bagian tengah petak lorong untuk menghapusnya. Lorong yang tidak lagi cocok dengan ruangnya hilang sendiri.",
-                "line": "Seret untuk menggambar dinding. Garis berbelok mengikuti penunjuk, jadi satu seretan bisa menggambar zigzag (kembali ke jalan semula untuk membatalkan belokan). Mulai dengan menahan Shift untuk satu garis lurus. Ruang 1 menempel ke 12 cm (tepi petak), ruang 2 dan 3 ke 6 cm. Tidak di dalam ruang 4.",
-                "eraser": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya. Jauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint); satu klik menghapus start. Dinding luar tetap ada.",
-                "floor": "Klik petak untuk mengatur lantainya.",
-                "victim": "Klik di dekat dinding: korban ditempatkan di dinding tempat Anda klik. Ruang 1: di sisi petak (satu per petak); ruang 2 dan 3: di muka dinding 6 cm (4 seperempat × 4 muka); lengkung punya dua tempat (dalam dan luar). Seret korban yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya (berhenti sebelum ujung dinding dan korban lain). Klik dengan jenisnya terpilih untuk memilihnya dan mengubah putaran, cincin, atau posisinya, atau menghapusnya; dengan jenis lain terpilih, ia berubah ke jenis itu.",
-                "curve": "Arahkan ke seperempat petak di ruang 3 untuk melihat empat lengkungnya; yang terdekat (biru) dipasang dengan satu klik. Klik yang sama lagi untuk menghapusnya.",
-                "select": "Pilih dinding, ruang, lantai, dan korban bersama untuk dipindahkan, disalin, ditempel, atau dikosongkan.",
-                "shape": "Ubah ukuran dan bentuk peta; dinding luar mengikuti sendiri. Bentuk: klik atau seret petak untuk mengeluarkannya dari peta atau mengembalikannya. Sisipkan / hapus: tambah atau ambil satu baris atau kolom di tempat Anda klik."
-            },
-            "floors": {
-                "checkpoint": "Checkpoint",
-                "black": "Lubang",
-                "swamp": "Rawa",
-                "start": "Start",
-                "clear": "Tidak ada",
-                "contact": "Petak kontak"
-            },
-            "problems": {
-                "noStart": "Tidak ada petak start",
-                "victimNoWall": "Beberapa korban kehilangan dindingnya ({{count}})",
-                "victimInPassage": "Beberapa korban berada di lorong antar-area ({{count}}): di lorong tidak ada korban (aturan {{rule_passageTokens}})",
-                "victimUnreachable": "Beberapa korban berada di tempat yang tidak bisa dicapai robot ({{count}}): tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}})",
-                "wallRule": "Beberapa dinding tidak mengikuti aturan ruangnya ({{count}})",
-                "room4Checkpoint": "Petak ruang 4 tepat di belakang lorong bukan checkpoint ({{count}}, aturan {{rule_room4Checkpoint}}). Menempatkan lorong mengaturnya sendiri",
-                "customRoom4NoPicture": "Ruang 4 belum digambar",
-                "presetNotSupported": "Preset ruang 4 tidak tersedia di editor ini (ganti ke kustom, atau gunakan editor klasik)",
-                "room4Untyped": "Beberapa korban di ruang 4 tidak punya jenis ({{count}}): beri jenis di Gambar ruang 4",
-                "room4Unreachable": "Beberapa korban di ruang 4 berada di tempat yang tidak bisa dicapai robot ({{count}}): tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}})",
-                "victimMisplaced": "Korban yang dipindahkan di sepanjang dindingnya tumpang tindih dengan ujung dinding atau korban lain ({{count}})",
-                "contactInside": "Petak kontak yang tidak berada di samping dinding luar ({{count}}). Petak kontak hanya ditempatkan di petak yang berbatasan dengan luar"
-            },
-            "hints": {
-                "newMapSize": "Peta baru: pertama atur ukurannya (dalam petak) di panel kiri",
-                "someRefused": "{{count}} bagian tidak dipasang: aturan ruang tidak mengizinkannya",
-                "refusedHere": "Bagian merah tidak diizinkan oleh aturan ruang ini",
-                "noBorder": "Ini bukan batas ruang",
-                "passageHere": "Klik batas ruang (bertitik)",
-                "victim_noWall": "Tidak ada dinding di sisi ini",
-                "victim_passage": "Tidak ada korban di lorong antar-area (aturan {{rule_passageTokens}})",
-                "victim_quarterTile": "Korban di ruang 2 dan 3 akan menyusul",
-                "victim_room4": "Korban ruang 4 ditempatkan di pembuat ruang 4",
-                "victim_outside": "Di luar peta",
-                "curve_curveRoom3": "Dinding lengkung hanya untuk ruang 3",
-                "curve_room4": "Tidak di dalam ruang 4",
-                "victim_notQuarterTile": "Tidak di sini",
-                "room4NoTiles": "Cat dulu area ruang 4 dengan kuas ruang",
-                "passage_open": "Lorong dipasang",
-                "passage_moved": "Lorong dipindahkan ke sisi ini",
-                "passage_closed": "Lorong dihapus",
-                "passageOpen": "Klik untuk memasang lorong di sisi berwarna",
-                "passageClose": "Klik untuk menghapus lorong",
-                "passageRemove": "Klik untuk menghapus lorong ini",
-                "shapeOut": "Klik atau seret untuk mengeluarkan petak dari peta",
-                "shapeIn": "Klik atau seret untuk mengembalikan petak ke peta",
-                "passageRoom4": "Lorong menuju ruang 4 dipasang di petak di luar ruang 4 (seperti yang diharapkan pembuat ruang 4 dan aturan checkpoint {{rule_room4Checkpoint}})",
-                "regionPick": "Seret untuk memilih",
-                "regionDrag": "Seret untuk memindahkan, Alt+seret untuk menyalin. Tombol panah memindahkan satu petak; Ctrl+C / X / V dan Delete juga berfungsi",
-                "regionCopied": "Disalin. Ctrl+V menempel di petak di bawah penunjuk",
-                "regionNoRoom": "Tidak ada tempat di samping atau di bawah untuk salinan",
-                "line_addRow": "Klik untuk menambah baris di garis hijau",
-                "line_addCol": "Klik untuk menambah kolom di garis hijau",
-                "line_delRow": "Klik untuk menghapus baris merah",
-                "line_delCol": "Klik untuk menghapus kolom merah",
-                "lineLimit": "Peta tetap 1 sampai 40 petak",
-                "fixed": "Diperbaiki (urungkan: Ctrl+Z)",
-                "fixPartly": "Yang bisa diperbaiki sudah diperbaiki; sisanya perlu Anda kerjakan",
-                "fixAllLeft": "Yang bisa diperbaiki sudah diperbaiki; {{count}} tersisa untuk Anda (urungkan: Ctrl+Z)",
-                "undone": "Diurungkan (ulangi: Ctrl+Y)",
-                "redone": "Diulangi",
-                "wallsDrawn": "{{cm}} cm dinding digambar",
-                "lineDone_addRow": "Baris disisipkan (urungkan: Ctrl+Z)",
-                "lineDone_addCol": "Kolom disisipkan (urungkan: Ctrl+Z)",
-                "lineDone_delRow": "Baris dihapus (urungkan: Ctrl+Z)",
-                "lineDone_delCol": "Kolom dihapus (urungkan: Ctrl+Z)",
-                "lineDrawing": "{{cm}} cm dinding. Lepaskan untuk menggambar, Esc untuk batal (kembali menghapus satu sudut)",
-                "lineDrawingStraight": "{{cm}} cm dinding lurus. Lepaskan untuk menggambar, Esc untuk batal",
-                "line_room4": "Tidak ada dinding di dalam ruang 4: klik dua kali untuk menggambarnya di pembuat ruang 4",
-                "line_fine": "Seret untuk menggambar dinding (ruang {{room}}: grid 6 cm). Shift+seret untuk satu garis lurus",
-                "line_tile": "Seret untuk menggambar dinding (ruang 1: tepi petak, 12 cm). Shift+seret untuk satu garis lurus",
-                "hand": "Seret untuk memindahkan tampilan",
-                "room_outside": "Di luar peta (alat bentuk mengembalikannya)",
-                "room_room4": "Petak ruang 4: klik dua kali untuk menggambar di dalam ruang 4",
-                "room_same": "Sudah ruang {{room}}. Pilih ruang yang akan dicat di panel kiri",
-                "room_paint": "Klik atau seret untuk mengecat ruang {{room}} (sekarang ruang {{cur}})",
-                "floor_outside": "Di luar peta",
-                "floor_isStart": "Ini petak start (penghapus menghapusnya)",
-                "floor_start": "Klik untuk memindahkan start ke sini (hanya ada satu start)",
-                "floor_clear": "Klik untuk menghapus lantai (lubang, rawa, checkpoint)",
-                "floor_off": "Klik untuk menghapus: {{floor}}",
-                "floor_on": "Klik untuk menjadikan: {{floor}}",
-                "curve_on": "Klik untuk memasang lengkung biru di sini",
-                "curve_off": "Klik untuk menghapus lengkung ini",
-                "erase_victim": "Klik untuk menghapus korban ini",
-                "erase_curve": "Klik untuk menghapus lengkung ini (seret untuk lanjut)",
-                "erase_wall": "Klik untuk menghapus dinding ini (6 cm; seret untuk lanjut)",
-                "erase_wallWhole": "Klik untuk menghapus dinding ini (12 cm; seret untuk lanjut)",
-                "erase_floor": "Klik untuk menghapus lantai petak ini",
-                "erase_start": "Klik untuk menghapus petak start",
-                "victim_place": "Klik untuk menempatkan “{{name}}”",
-                "victim_move": "Klik untuk menempatkan “{{name}}” di sini (korban petak pindah ke sini: satu per petak)",
-                "victim_replace": "Klik untuk mengubahnya menjadi “{{name}}”",
-                "victim_unreachable": "Robot tidak bisa mendekat ke sini, jadi tidak ada korban di sini (aturan {{rule_reach}})",
-                "victim_selectDrag": "Klik untuk memilihnya, seret untuk memindahkannya di sepanjang dindingnya",
-                "victim_moveSlot": "Klik untuk menempatkan “{{name}}” di sini (korban di muka ini pindah ke sini)",
-                "victim_moving": "{{cm}} cm di sepanjang dindingnya (berhenti sebelum ujung dinding dan korban lain)",
-                "victim_moved": "Dipindahkan ke {{cm}} cm di sepanjang dindingnya (urungkan: Ctrl+Z)",
-                "victim_noRoom": "Tidak ada tempat untuk korban di sini (terlalu dekat dengan ujung dinding atau korban lain)",
-                "rulesSwitched": "Beralih ke aturan {{year}} (urungkan: Ctrl+Z)",
-                "floor_notOuter": "{{floor}} hanya di petak di samping dinding luar",
-                "openedOtherYear": "Peta ini dibuka dengan aturan {{year}}. Untuk membawanya ke aturan {{chosen}}, ganti melalui Aturan di bilah atas"
-            },
-            "drawRoom4": "Gambar ruang 4",
-            "drawRoom4Note": "Klik dua kali pada area ruang 4 juga membukanya",
-            "exportFailed": "Ekspor dunia gagal",
-            "exportBroken": "Dunia akan memiliki nilai yang bukan angka, jadi tidak ada file yang dibuat (Webots akan membukanya sebagai dunia kosong). Mohon laporkan ini: {{line}}",
-            "showWhere": "Klik untuk melihat lokasinya",
-            "restore": "Buka pekerjaan terakhir",
-            "restoreOtherYear": "Pekerjaan yang disimpan adalah peta aturan {{year}}. Pilih aturan {{year}} di atas untuk membukanya (untuk membawanya ke aturan tahun lain, buka lalu ganti melalui Aturan di bilah atas)",
-            "ctRings": "Target kognitif",
-            "ctFake": "Palsu",
-            "rot": "Putaran (derajat)",
-            "remove": "Hapus",
-            "newShort": "Baru",
-            "openShort": "Buka",
-            "saveShort": "Simpan",
-            "toolsTitle": "Alat",
-            "kind": "Jenis",
-            "roomNote1": "dinding 12 cm",
-            "roomNote2": "dinding 6 cm",
-            "roomNote3": "dinding 6 cm, lengkung",
-            "roomNote4": "dibuat sebagai gambar",
-            "emptyTitle": "Mulai sebuah peta",
-            "emptyLead": "Buat yang baru, atau buka peta tersimpan (JSON).",
-            "openJson": "Buka JSON",
-            "ctSum": "Jumlah",
-            "ctHint": "Klik sebuah cincin pada target, lalu sebuah warna di bawah (sekarang cincin {{n}} dari luar)",
-            "rotFixed": "Putaran tetap",
-            "rotRandom": "Acak",
-            "rotRandomNote": "Masing-masing mendapat putaran acak",
-            "room4Hint": "Cat area ruang 4 dengan kuas ruang untuk menggambar bagian dalamnya sebagai gambar.",
-            "room4NotDrawn": "Ruang 4 belum digambar",
-            "room4Drawn": "Ruang 4 sudah digambar",
-            "room4PresetBeta": "Peta ini memakai preset ruang 4 ({{name}}). Editor ini hanya membuat ruang 4 kustom.",
-            "room4ToCustom": "Ganti ke ruang 4 kustom",
-            "mapSize": "Ukuran peta",
-            "mapSizeNote": "Klik angka untuk mengetiknya, atau gunakan − dan + (1-40). Peta membesar atau mengecil di kanan dan bawah; yang masih muat tetap ada. Untuk menyisipkan baris atau kolom di tengah, gunakan Sisipkan baris / Sisipkan kolom di bawah.",
-            "checksOpen": "Buka",
-            "checksFold": "Lipat",
-            "regionNone": "Seret di atas petak untuk memilihnya. Seret pilihan untuk memindahkannya (dengan Alt, sebuah salinan); tombol panah memindahkannya satu petak setiap kali.",
-            "regionSize": "{{size}} petak dipilih",
-            "copy": "Salin",
-            "cut": "Potong",
-            "duplicate": "Gandakan",
-            "clearRegion": "Kosongkan",
-            "paste": "Tempel",
-            "regionHelp": "Seret di dalam pilihan untuk memindahkannya, Alt+seret untuk memindahkan salinan. Tempel menaruh sudut kiri atas di petak di bawah penunjuk. Esc membatalkan pilihan.",
-            "selectedVictim": "Korban terpilih",
-            "selectDone": "Selesai",
-            "shapeModes": {
+            "tiles": "petak"
+        },
+        "shape": {
+            "title": "Edit di peta",
+            "modes": {
                 "outline": "Bentuk (tidak rata)",
                 "addRow": "Sisipkan baris",
                 "addCol": "Sisipkan kolom",
                 "delRow": "Hapus baris",
                 "delCol": "Hapus kolom"
+            }
+        }
+    },
+    "tools": {
+        "title": "Alat",
+        "names": {
+            "hand": "Pindah",
+            "room": "Ruang",
+            "passage": "Lorong",
+            "line": "Garis",
+            "eraser": "Penghapus",
+            "floor": "Lantai",
+            "victim": "Korban",
+            "curve": "Lengkung",
+            "select": "Pilih",
+            "shape": "Bentuk"
+        },
+        "help": {
+            "hand": "Seret untuk memindahkan peta.",
+            "room": "Cat petak menjadi sebuah ruang (ruang 1 mengembalikannya). Dinding muncul sendiri di tempat ruang-ruang bertemu dan di sekeliling peta. Ruang 4 digambar sebagai gambar dengan tombol di bawah.",
+            "passage": "Klik di dekat batas ruang: petak di sisi yang Anda klik menjadi lorong (klik lagi untuk menutupnya, di sisi lain untuk memindahkannya ke sana). Klik bagian tengah petak lorong untuk menghapusnya. Lorong yang tidak lagi cocok dengan ruangnya hilang sendiri.",
+            "line": "Seret untuk menggambar dinding. Garis berbelok mengikuti penunjuk, jadi satu seretan bisa menggambar zigzag (kembali ke jalan semula untuk membatalkan belokan). Mulai dengan menahan Shift untuk satu garis lurus. Ruang 1 menempel ke 12 cm (tepi petak), ruang 2 dan 3 ke 6 cm. Tidak di dalam ruang 4.",
+            "eraser": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya. Jauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint); satu klik menghapus start. Dinding luar tetap ada.",
+            "floor": "Klik petak untuk mengatur lantainya.",
+            "victim": "Klik di dekat dinding: korban ditempatkan di dinding tempat Anda klik. Ruang 1: di sisi petak (satu per petak); ruang 2 dan 3: di muka dinding 6 cm (4 seperempat × 4 muka); lengkung punya dua tempat (dalam dan luar). Seret korban yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya (berhenti sebelum ujung dinding dan korban lain). Klik dengan jenisnya terpilih untuk memilihnya dan mengubah putaran, cincin, atau posisinya, atau menghapusnya; dengan jenis lain terpilih, ia berubah ke jenis itu.",
+            "curve": "Arahkan ke seperempat petak di ruang 3 untuk melihat empat lengkungnya; yang terdekat (biru) dipasang dengan satu klik. Klik yang sama lagi untuk menghapusnya.",
+            "select": "Pilih dinding, ruang, lantai, dan korban bersama untuk dipindahkan, disalin, ditempel, atau dikosongkan.",
+            "shape": "Ubah ukuran dan bentuk peta; dinding luar mengikuti sendiri. Bentuk: klik atau seret petak untuk mengeluarkannya dari peta atau mengembalikannya. Sisipkan / hapus: tambah atau ambil satu baris atau kolom di tempat Anda klik."
+        },
+        "hints": {
+            "select": "Seret untuk memilih petak (dinding, ruang, lantai, dan korban dipindah atau disalin bersama)",
+            "select_region": "{{size}} petak dipilih: seret di dalam untuk memindahkan, Ctrl+C / X / V, Delete, Esc untuk melepaskan",
+            "hand": "Seret untuk memindahkan tampilan",
+            "shape_outline": "Klik atau seret petak untuk mengeluarkannya dari peta atau mengembalikannya. Ukuran ada di panel kiri",
+            "shape_addRow": "Arahkan ke batas tempat baris disisipkan, lalu klik",
+            "shape_addCol": "Arahkan ke batas tempat kolom disisipkan, lalu klik",
+            "shape_delRow": "Arahkan ke baris yang akan dihapus, lalu klik",
+            "shape_delCol": "Arahkan ke kolom yang akan dihapus, lalu klik",
+            "room": "Seret di atas petak untuk mengecat ruang {{room}}. Dinding di batas dan di luar muncul sendiri",
+            "passage": "Klik di dekat batas ruang (bertitik) untuk memasang lorong",
+            "line": "Seret untuk menggambar dinding, berbelok di sudut sambil jalan; Shift untuk satu garis lurus",
+            "curve": "Arahkan ke seperempat petak di ruang 3 lalu klik lengkung biru",
+            "eraser": "Arahkan ke dinding, lengkung, korban, atau lantai lalu klik (seret untuk lanjut)",
+            "floor": "Klik petak untuk menjadikan: {{floor}} (sekali lagi untuk menghapus)",
+            "victim": "Klik di dekat dinding untuk menempatkan “{{name}}” di tempat Anda klik (seret di sepanjang dindingnya setelah itu). Pilih jenis di panel kiri",
+            "victim_selected": "Seret korban terpilih untuk memindahkannya di sepanjang dindingnya. Ubah putaran, cincin, atau posisinya, atau hapus, di panel kiri"
+        }
+    },
+    "rooms": {
+        "name": "Ruang {{n}}",
+        "notes": {
+            "1": "dinding 12 cm",
+            "2": "dinding 6 cm",
+            "3": "dinding 6 cm, lengkung",
+            "4": "dibuat sebagai gambar"
+        },
+        "room4": {
+            "name": "Ruang 4",
+            "hint": "Cat area ruang 4 dengan kuas ruang untuk menggambar bagian dalamnya sebagai gambar.",
+            "notDrawn": "Ruang 4 belum digambar",
+            "drawn": "Ruang 4 sudah digambar",
+            "draw": "Gambar ruang 4",
+            "drawNote": "Klik dua kali pada area ruang 4 juga membukanya",
+            "preset": "Peta ini memakai preset ruang 4 ({{name}}). Editor ini hanya membuat ruang 4 kustom.",
+            "toCustom": "Ganti ke ruang 4 kustom"
+        }
+    },
+    "passages": {
+        "blue": "Biru",
+        "yellow": "Kuning",
+        "green": "Hijau",
+        "purple": "Ungu",
+        "orange": "Oranye",
+        "red": "Merah"
+    },
+    "floors": {
+        "checkpoint": "Checkpoint",
+        "black": "Lubang",
+        "swamp": "Rawa",
+        "start": "Start",
+        "clear": "Tidak ada",
+        "contact": "Petak kontak"
+    },
+    "victims": {
+        "types": {
+            "harmed": "Terluka",
+            "stable": "Stabil",
+            "unharmed": "Tidak terluka",
+            "fakeHarmed": "Terluka",
+            "fakeStable": "Stabil",
+            "fakeUnharmed": "Tidak terluka"
+        },
+        "kind": "Jenis",
+        "fake": "Korban palsu",
+        "selected": "Korban terpilih",
+        "turn": {
+            "title": "Putaran (derajat)",
+            "fixed": "Putaran tetap",
+            "random": "Acak",
+            "randomNote": "Masing-masing mendapat putaran acak",
+            "help": "Berputar searah jarum jam dilihat dari robot. 0° adalah tegak. Seret dial, atau gunakan tombol.",
+            "dialHint": "Seret untuk memutar (tahan Shift untuk langkah 1°). Tombol panah juga bisa.",
+            "dialRandom": "Sudut acak"
+        },
+        "along": {
+            "title": "Posisi di sepanjang dindingnya",
+            "note": "Anda juga bisa menyeretnya di peta (langkah 0,1 cm)",
+            "middle": "Ke tengah"
+        }
+    },
+    "targets": {
+        "types": {
+            "F": "Gas mudah terbakar",
+            "P": "Racun",
+            "C": "Korosif",
+            "O": "Peroksida organik",
+            "X": "Target palsu"
+        },
+        "rings": "Target kognitif",
+        "fake": "Palsu",
+        "sum": "Jumlah",
+        "hint": "Klik sebuah cincin pada target, lalu sebuah warna di bawah (sekarang cincin {{n}} dari luar)"
+    },
+    "select": {
+        "none": "Seret di atas petak untuk memilihnya. Seret pilihan untuk memindahkannya (dengan Alt, sebuah salinan); tombol panah memindahkannya satu petak setiap kali.",
+        "size": "{{size}} petak dipilih",
+        "help": "Seret di dalam pilihan untuk memindahkannya, Alt+seret untuk memindahkan salinan. Tempel menaruh sudut kiri atas di petak di bawah penunjuk. Esc membatalkan pilihan.",
+        "copy": "Salin",
+        "cut": "Potong",
+        "duplicate": "Gandakan",
+        "paste": "Tempel",
+        "clear": "Kosongkan"
+    },
+    "linear": {
+        "label": "Linear",
+        "title": "Warnai linear / mengambang (menentukan nilai korban)",
+        "noStart": "Pasang petak start untuk melihat linear / mengambang",
+        "legend": {
+            "linear": "Petak linear (di samping dinding yang terhubung ke start: korban bernilai lebih rendah)",
+            "floating": "Petak mengambang (korban bernilai lebih tinggi)",
+            "floatingWall": "Dinding mengambang",
+            "unreached": "Tidak tercapai dari start (tidak ada lorong, ...): bukan linear maupun mengambang"
+        }
+    },
+    "checks": {
+        "title": "Pemeriksaan",
+        "none": "Tidak ada masalah",
+        "open": "Buka",
+        "fold": "Lipat",
+        "showWhere": "Klik untuk melihat lokasinya",
+        "fix": {
+            "all": "Perbaiki semua yang bisa diperbaiki",
+            "short": "Perbaiki",
+            "this": "Perbaiki masalah ini",
+            "drawShort": "Gambar",
+            "draw": "Buka pembuat ruang 4"
+        },
+        "problems": {
+            "noStart": "Tidak ada petak start",
+            "victimNoWall": "Beberapa korban kehilangan dindingnya ({{count}})",
+            "victimInPassage": "Beberapa korban berada di lorong antar-area ({{count}}): di lorong tidak ada korban (aturan {{rule_passageTokens}})",
+            "victimUnreachable": "Beberapa korban berada di tempat yang tidak bisa dicapai robot ({{count}}): tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}})",
+            "wallRule": "Beberapa dinding tidak mengikuti aturan ruangnya ({{count}})",
+            "room4Checkpoint": "Petak ruang 4 tepat di belakang lorong bukan checkpoint ({{count}}, aturan {{rule_room4Checkpoint}}). Menempatkan lorong mengaturnya sendiri",
+            "customRoom4NoPicture": "Ruang 4 belum digambar",
+            "presetNotSupported": "Preset ruang 4 tidak tersedia di editor ini (ganti ke kustom, atau gunakan editor klasik)",
+            "room4Untyped": "Beberapa korban di ruang 4 tidak punya jenis ({{count}}): beri jenis di Gambar ruang 4",
+            "room4Unreachable": "Beberapa korban di ruang 4 berada di tempat yang tidak bisa dicapai robot ({{count}}): tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}})",
+            "victimMisplaced": "Korban yang dipindahkan di sepanjang dindingnya tumpang tindih dengan ujung dinding atau korban lain ({{count}})",
+            "contactInside": "Petak kontak yang tidak berada di samping dinding luar ({{count}}). Petak kontak hanya ditempatkan di petak yang berbatasan dengan luar"
+        },
+        "connection": {
+            "passageNoRoom": "Ada lorong {{name}} (ruang {{from}} ⇄ ruang {{to}}), tetapi tidak ada ruang {{room}}.",
+            "passageMisplaced": "Lorong {{name}} (ruang {{from}} ⇄ ruang {{to}}) tidak bisa dilewati ke ruang {{from}} sekaligus ruang {{to}}. Pasang petak lorong di salah satu ruang dan biarkan terbuka ke keduanya.",
+            "unmarkedGap": "Ada {{count}} celah antara ruang {{from}} dan ruang {{to}} tanpa petak lorong {{name}}. Setiap celah yang bisa dilewati robot harus berupa petak lorong {{name}} atau ditutup dengan dinding.",
+            "notConnected": "Ruang {{room}} tidak terhubung ke ruang 1 lewat lorong."
+        }
+    },
+    "score": {
+        "title": "Skor tertinggi yang bisa diraih peta ini",
+        "button": "Skor maksimum (dihitung menurut aturan {{rule_scoring}})",
+        "short": "Maks",
+        "unit": " poin",
+        "lead": "Skor yang diraih robot saat mengenali setiap korban dan target kognitif yang bisa dicapainya, dengan jenis yang benar, dan melewati setiap checkpoint (aturan {{rule_scoring}}).",
+        "area": "Ruang {{n}}",
+        "multiplier": "×{{m}}",
+        "victims": "Korban {{n}}",
+        "targets": "Target {{n}}",
+        "checkpoints": "CP {{n}}",
+        "field": "Pengenalan, jenis, dan checkpoint",
+        "withExit": "Dengan bonus keluar (+10%)",
+        "withMap": "Ditambah bonus pemetaan penuh (×2,2)",
+        "noStart": "Pasang petak start untuk menghitungnya.",
+        "unreachableTokens": "{{n}} korban atau target yang tidak bisa didekati robot tidak dihitung (perbaiki di pemeriksaan).",
+        "unreachableCheckpoints": "{{n}} checkpoint yang tidak bisa dicapai robot tidak dihitung.",
+        "presetNote": "Preset ruang 4 tidak dihitung (editor ini hanya memakai ruang 4 kustom).",
+        "fakeNote": "Korban palsu dan target kognitif palsu (cincin yang jumlahnya bukan 0-3) tidak memberi skor.",
+        "untypedNote": "{{n}} korban ruang 4 tanpa jenis tidak dihitung."
+    },
+    "status": {
+        "newMapSize": "Peta baru: pertama atur ukurannya (dalam petak) di panel kiri",
+        "someRefused": "{{count}} bagian tidak dipasang: aturan ruang tidak mengizinkannya",
+        "refusedHere": "Bagian merah tidak diizinkan oleh aturan ruang ini",
+        "noBorder": "Ini bukan batas ruang",
+        "passageHere": "Klik batas ruang (bertitik)",
+        "victim_noWall": "Tidak ada dinding di sisi ini",
+        "victim_passage": "Tidak ada korban di lorong antar-area (aturan {{rule_passageTokens}})",
+        "victim_quarterTile": "Korban di ruang 2 dan 3 akan menyusul",
+        "victim_room4": "Korban ruang 4 ditempatkan di pembuat ruang 4",
+        "victim_outside": "Di luar peta",
+        "curve_curveRoom3": "Dinding lengkung hanya untuk ruang 3",
+        "curve_room4": "Tidak di dalam ruang 4",
+        "victim_notQuarterTile": "Tidak di sini",
+        "room4NoTiles": "Cat dulu area ruang 4 dengan kuas ruang",
+        "passage_open": "Lorong dipasang",
+        "passage_moved": "Lorong dipindahkan ke sisi ini",
+        "passage_closed": "Lorong dihapus",
+        "passageOpen": "Klik untuk memasang lorong di sisi berwarna",
+        "passageClose": "Klik untuk menghapus lorong",
+        "passageRemove": "Klik untuk menghapus lorong ini",
+        "shapeOut": "Klik atau seret untuk mengeluarkan petak dari peta",
+        "shapeIn": "Klik atau seret untuk mengembalikan petak ke peta",
+        "passageRoom4": "Lorong menuju ruang 4 dipasang di petak di luar ruang 4 (seperti yang diharapkan pembuat ruang 4 dan aturan checkpoint {{rule_room4Checkpoint}})",
+        "regionPick": "Seret untuk memilih",
+        "regionDrag": "Seret untuk memindahkan, Alt+seret untuk menyalin. Tombol panah memindahkan satu petak; Ctrl+C / X / V dan Delete juga berfungsi",
+        "regionCopied": "Disalin. Ctrl+V menempel di petak di bawah penunjuk",
+        "regionNoRoom": "Tidak ada tempat di samping atau di bawah untuk salinan",
+        "line_addRow": "Klik untuk menambah baris di garis hijau",
+        "line_addCol": "Klik untuk menambah kolom di garis hijau",
+        "line_delRow": "Klik untuk menghapus baris merah",
+        "line_delCol": "Klik untuk menghapus kolom merah",
+        "lineLimit": "Peta tetap 1 sampai 40 petak",
+        "fixed": "Diperbaiki (urungkan: Ctrl+Z)",
+        "fixPartly": "Yang bisa diperbaiki sudah diperbaiki; sisanya perlu Anda kerjakan",
+        "fixAllLeft": "Yang bisa diperbaiki sudah diperbaiki; {{count}} tersisa untuk Anda (urungkan: Ctrl+Z)",
+        "undone": "Diurungkan (ulangi: Ctrl+Y)",
+        "redone": "Diulangi",
+        "wallsDrawn": "{{cm}} cm dinding digambar",
+        "lineDone_addRow": "Baris disisipkan (urungkan: Ctrl+Z)",
+        "lineDone_addCol": "Kolom disisipkan (urungkan: Ctrl+Z)",
+        "lineDone_delRow": "Baris dihapus (urungkan: Ctrl+Z)",
+        "lineDone_delCol": "Kolom dihapus (urungkan: Ctrl+Z)",
+        "lineDrawing": "{{cm}} cm dinding. Lepaskan untuk menggambar, Esc untuk batal (kembali menghapus satu sudut)",
+        "lineDrawingStraight": "{{cm}} cm dinding lurus. Lepaskan untuk menggambar, Esc untuk batal",
+        "line_room4": "Tidak ada dinding di dalam ruang 4: klik dua kali untuk menggambarnya di pembuat ruang 4",
+        "line_fine": "Seret untuk menggambar dinding (ruang {{room}}: grid 6 cm). Shift+seret untuk satu garis lurus",
+        "line_tile": "Seret untuk menggambar dinding (ruang 1: tepi petak, 12 cm). Shift+seret untuk satu garis lurus",
+        "hand": "Seret untuk memindahkan tampilan",
+        "room_outside": "Di luar peta (alat bentuk mengembalikannya)",
+        "room_room4": "Petak ruang 4: klik dua kali untuk menggambar di dalam ruang 4",
+        "room_same": "Sudah ruang {{room}}. Pilih ruang yang akan dicat di panel kiri",
+        "room_paint": "Klik atau seret untuk mengecat ruang {{room}} (sekarang ruang {{cur}})",
+        "floor_outside": "Di luar peta",
+        "floor_isStart": "Ini petak start (penghapus menghapusnya)",
+        "floor_start": "Klik untuk memindahkan start ke sini (hanya ada satu start)",
+        "floor_clear": "Klik untuk menghapus lantai (lubang, rawa, checkpoint)",
+        "floor_off": "Klik untuk menghapus: {{floor}}",
+        "floor_on": "Klik untuk menjadikan: {{floor}}",
+        "curve_on": "Klik untuk memasang lengkung biru di sini",
+        "curve_off": "Klik untuk menghapus lengkung ini",
+        "erase_victim": "Klik untuk menghapus korban ini",
+        "erase_curve": "Klik untuk menghapus lengkung ini (seret untuk lanjut)",
+        "erase_wall": "Klik untuk menghapus dinding ini (6 cm; seret untuk lanjut)",
+        "erase_wallWhole": "Klik untuk menghapus dinding ini (12 cm; seret untuk lanjut)",
+        "erase_floor": "Klik untuk menghapus lantai petak ini",
+        "erase_start": "Klik untuk menghapus petak start",
+        "victim_place": "Klik untuk menempatkan “{{name}}”",
+        "victim_move": "Klik untuk menempatkan “{{name}}” di sini (korban petak pindah ke sini: satu per petak)",
+        "victim_replace": "Klik untuk mengubahnya menjadi “{{name}}”",
+        "victim_unreachable": "Robot tidak bisa mendekat ke sini, jadi tidak ada korban di sini (aturan {{rule_reach}})",
+        "victim_selectDrag": "Klik untuk memilihnya, seret untuk memindahkannya di sepanjang dindingnya",
+        "victim_moveSlot": "Klik untuk menempatkan “{{name}}” di sini (korban di muka ini pindah ke sini)",
+        "victim_moving": "{{cm}} cm di sepanjang dindingnya (berhenti sebelum ujung dinding dan korban lain)",
+        "victim_moved": "Dipindahkan ke {{cm}} cm di sepanjang dindingnya (urungkan: Ctrl+Z)",
+        "victim_noRoom": "Tidak ada tempat untuk korban di sini (terlalu dekat dengan ujung dinding atau korban lain)",
+        "rulesSwitched": "Beralih ke aturan {{year}} (urungkan: Ctrl+Z)",
+        "floor_notOuter": "{{floor}} hanya di petak di samping dinding luar",
+        "openedOtherYear": "Peta ini dibuka dengan aturan {{year}}. Untuk membawanya ke aturan {{chosen}}, ganti melalui Aturan di bilah atas"
+    },
+    "guide": {
+        "button": "Panduan (pelajaran, tur layar, membuat ruang 4)",
+        "short": "Panduan",
+        "empty": {
+            "title": "Baru di sini? Lihat cara kerjanya",
+            "note": "Pilih belajar dengan membuat peta, atau mengikuti tur layar"
+        },
+        "pick": {
+            "title": "Bagaimana Anda ingin belajar?",
+            "room4Title": "Bagaimana Anda ingin belajar ruang 4?",
+            "lead": "Anda bisa memilih lagi kapan saja dari Panduan di kanan bawah.",
+            "later": "Nanti"
+        },
+        "nav": {
+            "end": "Selesai",
+            "skip": "Akhiri tur",
+            "back": "Kembali",
+            "next": "Berikutnya",
+            "begin": "Mulai",
+            "finish": "Selesai",
+            "keys": "← → untuk berpindah   Esc untuk mengakhiri"
+        },
+        "lesson": {
+            "name": "Belajar dengan membuat peta contoh",
+            "time": "Sekitar 15 menit · langsung praktik",
+            "note": "Buat satu peta contoh sambil memakai setiap fitur secara bergantian. Setiap langkah berlanjut setelah selesai, dan Kerjakan untuk saya bisa mengerjakannya untuk Anda.",
+            "map": "Peta yang terbuka ditutup dan peta baru dimulai (Anda ditanya dulu jika ada perubahan yang belum disimpan).",
+            "tip": "Editor tetap berfungsi seperti biasa selama pelajaran",
+            "todo": "Yang harus dilakukan:",
+            "done": "Selesai!",
+            "skip": "Lewati langkah ini",
+            "doIt": "Kerjakan untuk saya",
+            "fold": "Lipat teks",
+            "unfold": "Tampilkan teks",
+            "creatorClosed": "Pembuat ruang 4 tertutup.",
+            "openCreator": "Buka",
+            "creatorOver": "Pembuat ruang 4 terbuka. Tutup untuk melanjutkan.",
+            "closeCreator": "Tutup (OK)",
+            "planLabel": "Peta contoh, selesai",
+            "states": {
+                "tool": "Pilih alat {{name}} (di kolom alat di kiri)"
             },
-            "fixAll": "Perbaiki semua yang bisa diperbaiki",
-            "fixShort": "Perbaiki",
-            "fixThis": "Perbaiki masalah ini",
-            "fixDrawShort": "Gambar",
-            "fixDraw": "Buka pembuat ruang 4",
-            "linear": "Linear",
-            "linearTitle": "Warnai linear / mengambang (menentukan nilai korban)",
-            "legendLinear": "Petak linear (di samping dinding yang terhubung ke start: korban bernilai lebih rendah)",
-            "legendFloating": "Petak mengambang (korban bernilai lebih tinggi)",
-            "legendFloatingWall": "Dinding mengambang",
-            "linearNoStart": "Pasang petak start untuk melihat linear / mengambang",
-            "legendUnreached": "Tidak tercapai dari start (tidak ada lorong, ...): bukan linear maupun mengambang",
-            "close": "Tutup",
-            "cancel": "Batal",
-            "discardTitle": "Perubahan belum disimpan",
-            "saveFirst": "Simpan dan lanjutkan",
-            "discardGo": "Jangan simpan",
-            "exportBlockedLead": "Perbaiki {{count}} ini untuk mengekspor. Klik salah satunya untuk melihat lokasinya.",
-            "betaMenu": "Tentang editor ini",
-            "betaLead": "Erebus World Editor (beta). Editor ini membaca dan menulis JSON yang sama dengan editor klasik, jadi peta yang disimpan bisa dibuka di keduanya.",
-            "backToClassicNote": "Simpan dulu peta yang sedang Anda kerjakan (Simpan, JSON)",
-            "tourStart": "Panduan (pelajaran, tur layar, membuat ruang 4)",
-            "tourShort": "Panduan",
-            "listSep": ", ",
-            "rules": {
-                "title": "Aturan peta ini",
-                "label": "Aturan {{year}}",
-                "lead": "Aturan yang diikuti peta ini: pemeriksaan, skor, dan dunia yang diekspor mengikutinya.",
-                "book": "Buku aturan",
-                "soon": "Segera hadir",
-                "switchTitle": "Beralih ke aturan {{year}}?",
-                "switchLead": "Peta ini beralih dari aturan {{from}} ke aturan {{to}}. Dinding dan korban yang tidak sesuai aturan baru ditunjukkan di pemeriksaan (urungkan: Ctrl+Z).",
-                "switch": "Beralih",
-                "pick": "Aturan tahun berapa?",
-                "pickNote": "Peta tersimpan dibuka dengan aturannya sendiri. Anda juga bisa menggantinya nanti di bilah atas.",
-                "draft": "Draf"
-            },
-            "build": {
-                "title": "Tentang build ini",
-                "commit": "Commit",
-                "dirty": "(dengan perubahan yang belum di-commit)",
-                "branch": "Branch",
-                "commitDate": "Di-commit",
-                "builtAt": "Dibuat",
-                "copy": "Salin",
-                "copied": "Disalin"
-            },
-            "tourEmpty": "Baru di sini? Lihat cara kerjanya",
-            "tourEmptyNote": "Pilih belajar dengan membuat peta, atau mengikuti tur layar",
-            "tourEnd": "Selesai",
-            "tourSkip": "Akhiri tur",
-            "tourBack": "Kembali",
-            "tourNext": "Berikutnya",
-            "tourBegin": "Mulai",
-            "tourFinish": "Selesai",
-            "tourKeys": "← → untuk berpindah   Esc untuk mengakhiri",
-            "guideLesson": "Belajar dengan membuat peta contoh",
-            "guideTour": "Tur layar",
-            "guideRoom4": "Belajar ruang 4 dengan membuatnya",
-            "guideRoom4Need": "Cat dulu ruang 4 dengan alat ruang.",
-            "lessonTodo": "Yang harus dilakukan:",
-            "lessonDone": "Selesai!",
-            "lessonSkip": "Lewati langkah ini",
-            "lessonDoIt": "Kerjakan untuk saya",
-            "lessonCreatorClosed": "Pembuat ruang 4 tertutup.",
-            "lessonOpenCreator": "Buka",
-            "lessonTip": "Editor tetap berfungsi seperti biasa selama pelajaran",
-            "pickTitle": "Bagaimana Anda ingin belajar?",
-            "pickLead": "Anda bisa memilih lagi kapan saja dari Panduan di kanan bawah.",
-            "pickLessonTime": "Sekitar 15 menit · langsung praktik",
-            "pickLessonNote": "Buat satu peta contoh sambil memakai setiap fitur secara bergantian. Setiap langkah berlanjut setelah selesai, dan Kerjakan untuk saya bisa mengerjakannya untuk Anda.",
-            "pickLessonMap": "Peta yang terbuka ditutup dan peta baru dimulai (Anda ditanya dulu jika ada perubahan yang belum disimpan).",
-            "pickTourTime": "Sekitar 3 menit · hanya menonton",
-            "pickTourNote": "Setiap bagian layar dan setiap alat disorot dan dijelaskan satu per satu. Peta tidak diubah.",
-            "pickRoom4Time": "Sekitar 5 menit · langsung praktik",
-            "pickRoom4Note": "Di pembuat ruang 4, gambar dinding dan tempatkan korban sendiri, memakai setiap fitur secara bergantian.",
-            "pickLater": "Nanti",
-            "guideRoom4Tour": "Tur pembuat ruang 4",
-            "pickRoom4Title": "Bagaimana Anda ingin belajar ruang 4?",
-            "pickRoom4TourTime": "Sekitar 2 menit · hanya menonton",
-            "pickRoom4TourNote": "Setiap bagian pembuat ruang 4 dan setiap alat disorot dan dijelaskan satu per satu. Gambar tidak diubah.",
-            "tourRoom4Inside": "Lihat juga tur pembuat ruang 4 (lalu kembali ke sini)",
-            "tourBackTo": "Setelah selesai, “{{name}}” berlanjut dari tempat semula",
-            "lessonCreatorOver": "Pembuat ruang 4 terbuka. Tutup untuk melanjutkan.",
-            "lessonCloseCreator": "Tutup (OK)",
-            "lessonFold": "Lipat teks",
-            "lessonUnfold": "Tampilkan teks",
-            "tour": {
-                "chapters": {
-                    "start": "Selamat datang",
-                    "screen": "Layar",
-                    "tools": "Alat",
-                    "shape": "Ukuran dan bentuk",
-                    "rooms": "Ruang",
-                    "passages": "Lorong",
-                    "walls": "Dinding",
-                    "floors": "Lantai",
-                    "victims": "Korban",
-                    "room4": "Ruang 4",
-                    "finish": "Selesaikan dan ekspor"
-                },
-                "welcome": {
-                    "title": "Selamat datang di Erebus World Editor",
-                    "body": "Editor ini membuat dunia untuk aturan 2026 RoboCupJunior Rescue Simulation (Erebus). Anda menggambar peta langsung di kanvas, dan dinding serta korban menempel ke tempat yang diizinkan aturan ruang di bawah penunjuk.\nTur ini melewati setiap bagian layar dan setiap alat (sekitar 3 menit). Bagian yang dijelaskan disorot.\nTekan → atau Enter untuk langkah berikutnya, ← untuk kembali, dan Esc untuk mengakhiri kapan saja. Untuk belajar langsung, pilih Belajar dengan membuat peta contoh di Panduan, kanan bawah."
-                },
-                "file": {
-                    "title": "File: baru, buka, simpan",
-                    "body": "Baru membuat peta kosong. Jika peta yang terbuka punya perubahan yang belum disimpan, ia bertanya dulu apakah perubahan itu dibuang.\nBuka membaca JSON sebuah peta, dan Simpan menulis peta ke file JSON. File JSON yang diletakkan di atas peta juga terbuka.\nPerubahan juga disimpan di browser, tetapi hilang di browser lain atau saat data penjelajahan dihapus. Simpan peta penting sebagai JSON dengan Simpan."
-                },
-                "name": {
-                    "title": "Nama peta",
-                    "body": "Nama peta. Klik untuk mengubahnya.\nIni menjadi nama JSON yang Anda simpan dan dunia (.wbt) yang Anda ekspor."
-                },
-                "history": {
-                    "title": "Urungkan dan ulangi",
-                    "body": "Batalkan perubahan satu per satu, atau ulangi lagi (hingga 100).\nPerbaikan otomatis, serta memindahkan atau menempel area, masing-masing diurungkan sebagai satu langkah, jadi silakan mencoba."
-                },
-                "view": {
-                    "title": "Melihat dan memindahkan peta",
-                    "body": "Ini peta. Putar roda mouse untuk memperbesar, dan seret sambil menahan Spasi (atau dengan tombol roda) untuk memindahkannya. Dengan alat tangan (H), seretan biasa memindahkannya.\nTombol di bilah atas (bingkai putus-putus) juga memperbesar, dan yang paling kanan menampilkan seluruh peta lagi. Angkanya adalah zoom (piksel per cm).\nPeta terdiri dari petak 12 cm. Setiap ruang punya warna lantai sendiri, dan dinding berdiri sendiri di batas ruang dan di sekeliling luar."
-                },
-                "rail": {
-                    "title": "Alat",
-                    "body": "Alat yang mengubah peta, dalam empat kelompok dari atas: melihat (pilih, tangan), peta dan ruang (bentuk, ruang, lorong), dinding (garis, lengkung, penghapus), serta lantai dan korban (lantai, korban).\nHuruf di kanan bawah setiap tombol adalah tombol pintasnya: sekali tekan mengambil alat itu.\nSelanjutnya, alat satu per satu, sesuai urutan membuat peta."
-                },
-                "panel": {
-                    "title": "Apa yang dilakukan alat, dan pengaturannya",
-                    "body": "Alat yang Anda pilih menunjukkan cara pakainya dan pengaturannya di sini. Jika ragu, baca ini dulu.\nBaris status di bawah (bingkai putus-putus) memberi tahu apa yang bisa Anda lakukan di posisi penunjuk, atau mengapa tidak bisa."
-                },
-                "shape": {
-                    "title": "Bentuk (X): ukuran dan garis luar peta",
-                    "body": "Peta baru dimulai di sini dengan ukurannya: klik jumlah petak lebar atau panjang untuk mengetiknya, atau gunakan − dan + (hingga 40). Peta membesar atau mengecil di kanan dan bawah; yang masih muat tetap ada.\nDengan Bentuk, klik atau seret petak untuk mengeluarkannya dari peta (tanpa lantai) atau mengembalikannya, untuk bentuk L atau peta apa pun yang bukan persegi panjang. Dinding luar mengikuti garis luar sendiri.\nSisipkan baris, Sisipkan kolom, Hapus baris, dan Hapus kolom menambah atau mengambil satu baris atau kolom di tempat Anda klik pada peta."
-                },
-                "room": {
-                    "title": "Ruang (M): mengecat ruang",
-                    "body": "Pilih nomor ruang dan cat petak dengannya. Mengecat ruang 1 mengembalikan petak.\nSetiap ruang punya aturannya: ruang 1 punya dinding 12 cm (di tepi petak), ruang 2 dinding 6 cm, ruang 3 dinding 6 cm dan lengkung, dan ruang 4 digambar bebas sebagai gambar.\nDinding berdiri sendiri di batas ruang dan di sekeliling luar. Untuk menghubungkan ruang, gunakan alat Lorong berikutnya."
-                },
-                "passage": {
-                    "title": "Lorong (P): menghubungkan ruang",
-                    "body": "Klik di dekat batas ruang: petak di sisi yang Anda klik menjadi lorong, dan dinding di batas terbuka.\nKlik lagi untuk menutupnya. Klik sisi lain dan lorong pindah ke petak itu. Klik bagian tengah petak lorong untuk menghapusnya.\nLorong menuju ruang 4 dipasang di petak di luar ruang 4. Lorong yang tidak lagi cocok setelah ruang dicat ulang dihapus sendiri."
-                },
-                "line": {
-                    "title": "Garis (L): menggambar dinding",
-                    "body": "Seret untuk menggambar dinding. Dinding mengikuti penunjuk, jadi zigzag tergambar sekaligus; kembali ke jalan semula membatalkannya.\nTahan Shift saat mulai untuk hanya satu garis lurus.\nDinding menempel ke grid ruang di bawah penunjuk: 12 cm (tepi petak) di ruang 1, 6 cm (setengah petak) di ruang 2 dan 3. Tidak bisa digambar di dalam ruang 4 (ruang 4 adalah gambar)."
-                },
-                "curve": {
-                    "title": "Lengkung (A): dinding lengkung",
-                    "body": "Hanya ruang 3. Arahkan ke seperempat (persegi 6 cm) petak ruang 3, dan empat lengkung yang bisa dipasang tampak samar.\nSatu klik memasang yang terdekat (biru). Klik yang sama lagi untuk menghapusnya."
-                },
-                "eraser": {
-                    "title": "Penghapus (E)",
-                    "body": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya; yang akan terhapus ditampilkan merah di bawah penunjuk.\nJauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint). Start hanya terhapus dengan klik.\nSeretan yang dimulai di dinding tidak menyentuh lantai, jadi lantai tidak hilang saat Anda menghapus dinding. Dinding luar tetap ada."
-                },
-                "floor": {
-                    "title": "Lantai (F): checkpoint, lubang, rawa, start",
-                    "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah petak tempat robot diletakkan: satu per peta. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya."
-                },
-                "victim": {
-                    "title": "Korban (V): korban dan target kognitif",
-                    "body": "Pilih jenis di panel (korban huruf Φ, Ψ, Ω dan yang palsu, target kognitif empat jenis - gas mudah terbakar, racun, korosif, peroksida organik - dan yang palsu) lalu klik di dekat dinding: ia ditempatkan di dinding tempat Anda klik.\nDi ruang 1 di sisi petak (satu per petak), di ruang 2 dan 3 di muka dinding 6 cm, dan di dua tempat pada lengkung (dalam dan luar). Seret yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya. Jika tidak bisa ditempatkan, baris status memberi tahu alasannya.\nPutar dial (Putaran tetap) untuk rotasinya, atau pilih Acak untuk putaran baru setiap kali. Untuk target kognitif, klik cincin target lalu warna di bawah; jumlah cincin menentukan jenisnya.\nKlik korban dengan jenis yang sama untuk memilihnya, lalu ubah putaran, cincin, atau posisinya di sepanjang dinding, atau hapus. Klik dengan jenis lain mengubah jenisnya."
-                },
-                "room4": {
-                    "title": "Menggambar ruang 4",
-                    "body": "Mengecat ruang 4 dengan alat ruang membuat ruang 4. Dinding dan korbannya digambar sebagai gambar.\nGambar ruang 4 (atau klik dua kali pada areanya) membuka pembuat ruang 4: gambar dinding bebas dengan pena, garis, dan bentuk, lalu tempatkan korban di dinding. Tempat yang tidak bisa dicapai robot ditampilkan dengan garis-garis merah.\nTombol Panduan di pembuat menunjukkan cara membuat ruang 4 secara rinci. Gambar ditampilkan di peta dan masuk apa adanya ke dunia yang diekspor."
-                },
-                "select": {
-                    "title": "Pilih (S): memindahkan dan menyalin area",
-                    "body": "Seret untuk memilih area petak; dinding, ruang, lantai, dan korbannya ikut terpilih.\nSeret di dalamnya untuk memindahkannya, atau sambil menahan Alt untuk memindahkan salinan. Tombol panah memindahkannya satu petak setiap kali.\nCtrl+C menyalin, Ctrl+X memotong, Ctrl+V menempel (petak di bawah penunjuk menjadi sudut kiri atasnya), Ctrl+D menggandakan, dan Delete mengosongkannya. Esc melepaskan area."
-                },
-                "linear": {
-                    "title": "Linear",
-                    "body": "Saat aktif, setiap petak diwarnai sebagai linear (di samping dinding yang terhubung ke start) atau mengambang. Korban di petak mengambang bernilai lebih tinggi.\nPerlu petak start. Ekspor dunia menentukan petak linear dengan cara yang sama."
-                },
-                "checks": {
-                    "title": "Pemeriksaan",
-                    "body": "Setiap perubahan diperiksa terhadap aturan.\n✕ merah adalah masalah yang membuat dunia tidak bisa diekspor; ! kuning adalah peringatan yang patut dilihat, tetapi dunia tetap bisa diekspor.\nArahkan ke sebuah item untuk melihat lokasinya di peta, dan klik untuk ke sana. Klik judul untuk melipat kartu.\nTempat yang tidak bisa dicapai robot (jari-jari 3,7 cm) selalu ditampilkan di peta dengan garis-garis merah, dan korban di sana mendapat peringatan."
-                },
-                "fix": {
-                    "title": "Memperbaiki otomatis",
-                    "body": "Item dengan tombol Perbaiki diperbaiki dengan satu klik (memasang start, menghubungkan ruang dengan lorong, menghapus dinding yang tidak diizinkan aturan, dan sebagainya).\nPerbaiki semua yang bisa diperbaiki mengerjakan semuanya sekaligus. Jika tidak suka hasilnya, Ctrl+Z membatalkannya.\nPemeriksaan juga memastikan setiap ruang dapat dicapai dari ruang 1 lewat lorong, dan menunjukkan ruang yang tidak."
-                },
-                "export": {
-                    "title": "Mengekspor dunia (.wbt)",
-                    "body": "Menulis file dunia (.wbt) yang dimuat Erebus.\nSelama masih ada masalah ✕ merah, tombolnya abu-abu, dan menekannya menampilkan apa yang harus diperbaiki; dari sana ia bisa memperbaikinya untuk Anda.\nSimpan peta untuk diedit lagi dengan Simpan (JSON), bukan .wbt: .wbt tidak bisa kembali menjadi peta yang bisa diedit."
-                },
-                "more": {
-                    "title": "Panduan dan bahasa",
-                    "body": "Panduan di kanan bawah menyediakan kapan saja pelajaran yang membangun peta contoh, tur ini, dan cara membuat ruang 4.\nTombol bahasa (menampilkan bendera dan nama bahasa yang dipakai) memilih bahasa."
-                },
-                "done": {
-                    "title": "Tur selesai",
-                    "body": "Tombol ini memulai tur lagi kapan saja.\nUrutan kerja yang baik: atur ukuran dengan Bentuk → cat ruang → hubungkan dengan lorong → gambar dinding → pasang lantai dan korban → lihat pemeriksaan dan ekspor .wbt.\nSelamat membuat peta!"
-                },
-                "score": {
-                    "title": "Skor maksimum",
-                    "body": "Skor tertinggi yang bisa diraih peta ini: setiap korban dan target kognitif yang bisa didekati robot dikenali dengan jenis yang benar, dan setiap checkpoint dilewati, dihitung menurut aturan {{rule_scoring}}.\nTekan untuk melihat bagian setiap ruang dan skor dengan bonus keluar dan bonus pemetaan. Dihitung ulang setiap kali ada perubahan."
-                }
-            },
-            "lesson": {
-                "planLabel": "Peta contoh, selesai",
+            "steps": {
                 "intro": {
                     "title": "Belajar dengan membuat peta contoh",
                     "body": "Dalam pelajaran ini Anda membuat peta di atas dan memakai fitur editor satu per satu sepanjang jalan (sekitar 15 menit).\nRuang 1 di kiri, ruang 2 di tengah atas, ruang 3 di tengah bawah, ruang 4 di kanan. Anda menghubungkan ruang dengan lorong, memasang dinding, sebuah lengkung, lantai, dan korban, menggambar bagian dalam ruang 4, dan berakhir dengan dunia yang siap diekspor.\nLakukan yang diminta setiap langkah, maka ia berubah menjadi Selesai!, dan Berikutnya melanjutkan. Jika ada yang tidak berhasil, Kerjakan untuk saya mengerjakannya untuk Anda. Editor berfungsi seperti biasa sepanjang waktu."
@@ -738,312 +748,359 @@
                     "title": "Skor maksimum",
                     "body": "Trofi di bilah atas adalah skor tertinggi yang bisa diraih peta ini: setiap korban dan target kognitif dikenali dengan jenis yang benar, dan setiap checkpoint dilewati, dihitung menurut aturan {{rule_scoring}}.\nTekan untuk melihat bagian setiap ruang dan skor dengan bonus keluar dan bonus pemetaan. Korban di petak mengambang dan di ruang dengan pengali lebih tinggi bernilai lebih."
                 }
-            },
-            "toolHints": {
-                "select": "Seret untuk memilih petak (dinding, ruang, lantai, dan korban dipindah atau disalin bersama)",
-                "select_region": "{{size}} petak dipilih: seret di dalam untuk memindahkan, Ctrl+C / X / V, Delete, Esc untuk melepaskan",
-                "hand": "Seret untuk memindahkan tampilan",
-                "shape_outline": "Klik atau seret petak untuk mengeluarkannya dari peta atau mengembalikannya. Ukuran ada di panel kiri",
-                "shape_addRow": "Arahkan ke batas tempat baris disisipkan, lalu klik",
-                "shape_addCol": "Arahkan ke batas tempat kolom disisipkan, lalu klik",
-                "shape_delRow": "Arahkan ke baris yang akan dihapus, lalu klik",
-                "shape_delCol": "Arahkan ke kolom yang akan dihapus, lalu klik",
-                "room": "Seret di atas petak untuk mengecat ruang {{room}}. Dinding di batas dan di luar muncul sendiri",
-                "passage": "Klik di dekat batas ruang (bertitik) untuk memasang lorong",
-                "line": "Seret untuk menggambar dinding, berbelok di sudut sambil jalan; Shift untuk satu garis lurus",
-                "curve": "Arahkan ke seperempat petak di ruang 3 lalu klik lengkung biru",
-                "eraser": "Arahkan ke dinding, lengkung, korban, atau lantai lalu klik (seret untuk lanjut)",
-                "floor": "Klik petak untuk menjadikan: {{floor}} (sekali lagi untuk menghapus)",
-                "victim": "Klik di dekat dinding untuk menempatkan “{{name}}” di tempat Anda klik (seret di sepanjang dindingnya setelah itu). Pilih jenis di panel kiri",
-                "victim_selected": "Seret korban terpilih untuk memindahkannya di sepanjang dindingnya. Ubah putaran, cincin, atau posisinya, atau hapus, di panel kiri"
-            },
-            "lessonState": {
-                "tool": "Pilih alat {{name}} (di kolom alat di kiri)"
-            },
-            "score": {
-                "title": "Skor tertinggi yang bisa diraih peta ini",
-                "button": "Skor maksimum (dihitung menurut aturan {{rule_scoring}})",
-                "short": "Maks",
-                "unit": " poin",
-                "lead": "Skor yang diraih robot saat mengenali setiap korban dan target kognitif yang bisa dicapainya, dengan jenis yang benar, dan melewati setiap checkpoint (aturan {{rule_scoring}}).",
-                "area": "Ruang {{n}}",
-                "multiplier": "×{{m}}",
-                "victims": "Korban {{n}}",
-                "targets": "Target {{n}}",
-                "checkpoints": "CP {{n}}",
-                "field": "Pengenalan, jenis, dan checkpoint",
-                "withExit": "Dengan bonus keluar (+10%)",
-                "withMap": "Ditambah bonus pemetaan penuh (×2,2)",
-                "noStart": "Pasang petak start untuk menghitungnya.",
-                "unreachableTokens": "{{n}} korban atau target yang tidak bisa didekati robot tidak dihitung (perbaiki di pemeriksaan).",
-                "unreachableCheckpoints": "{{n}} checkpoint yang tidak bisa dicapai robot tidak dihitung.",
-                "presetNote": "Preset ruang 4 tidak dihitung (editor ini hanya memakai ruang 4 kustom).",
-                "fakeNote": "Korban palsu dan target kognitif palsu (cincin yang jumlahnya bukan 0-3) tidak memberi skor.",
-                "untypedNote": "{{n}} korban ruang 4 tanpa jenis tidak dihitung."
-            },
-            "tiles": "petak",
-            "shapeEdit": "Edit di peta",
-            "keySheet": {
-                "title": "Kontrol",
-                "open": "Kontrol",
-                "back": "Kembali ke panduan",
-                "view": "Tampilan",
-                "edit": "Mengedit",
-                "select": "Alat pilih",
-                "guide": "Bantuan",
-                "rows": {
-                    "zoom": "Perbesar dan perkecil",
-                    "pan": "Pindahkan tampilan",
-                    "hand": "Alat tangan (pindahkan dengan seret kiri)",
-                    "undo": "Urungkan",
-                    "redo": "Ulangi",
-                    "cancel": "Hentikan yang sedang digambar",
-                    "tools": "Ganti alat (huruf di bilah kiri)",
-                    "copy": "Salin, potong, tempel",
-                    "duplicate": "Gandakan",
-                    "clear": "Kosongkan pilihan",
-                    "nudge": "Pindahkan pilihan satu petak",
-                    "sheet": "Buka daftar ini"
-                },
-                "keys": {
-                    "wheel": "Roda",
-                    "spaceDrag": "Spasi + seret",
-                    "middleDrag": "Seret dengan tombol tengah"
-                }
-            },
-            "along": "Posisi di sepanjang dindingnya",
-            "alongNote": "Anda juga bisa menyeretnya di peta (langkah 0,1 cm)",
-            "alongMiddle": "Ke tengah"
+            }
         },
-        "simMapEditor": {
-            "name": "Nama desain: ",
-            "rotDialHint": "Seret untuk memutar (tahan Shift untuk langkah 1°). Tombol panah juga bisa.",
-            "rotRandom": "Sudut acak",
-            "rotHelp": "Berputar searah jarum jam dilihat dari robot. 0° adalah tegak. Seret dial, atau gunakan tombol.",
-            "connCheck": {
-                "passageNoRoom": "Ada lorong {{name}} (ruang {{from}} ⇄ ruang {{to}}), tetapi tidak ada ruang {{room}}.",
-                "passageMisplaced": "Lorong {{name}} (ruang {{from}} ⇄ ruang {{to}}) tidak bisa dilewati ke ruang {{from}} sekaligus ruang {{to}}. Pasang petak lorong di salah satu ruang dan biarkan terbuka ke keduanya.",
-                "unmarkedGap": "Ada {{count}} celah antara ruang {{from}} dan ruang {{to}} tanpa petak lorong {{name}}. Setiap celah yang bisa dilewati robot harus berupa petak lorong {{name}} atau ditutup dengan dinding.",
-                "notConnected": "Ruang {{room}} tidak terhubung ke ruang 1 lewat lorong."
+        "tour": {
+            "name": "Tur layar",
+            "time": "Sekitar 3 menit · hanya menonton",
+            "note": "Setiap bagian layar dan setiap alat disorot dan dijelaskan satu per satu. Peta tidak diubah.",
+            "room4Inside": "Lihat juga tur pembuat ruang 4 (lalu kembali ke sini)",
+            "backTo": "Setelah selesai, “{{name}}” berlanjut dari tempat semula",
+            "chapters": {
+                "start": "Selamat datang",
+                "screen": "Layar",
+                "tools": "Alat",
+                "shape": "Ukuran dan bentuk",
+                "rooms": "Ruang",
+                "passages": "Lorong",
+                "walls": "Dinding",
+                "floors": "Lantai",
+                "victims": "Korban",
+                "room4": "Ruang 4",
+                "finish": "Selesaikan dan ekspor"
             },
-            "room4Creator": {
-                "zoomIn": "Perbesar",
-                "zoomOut": "Perkecil",
-                "zoomFit": "Paskan",
-                "viewReach": "Tidak terjangkau",
-                "viewGuides": "Pintu masuk / CP",
-                "unreachableShort": "Tidak terjangkau {{count}}",
-                "farShort": "Lepas dari dinding {{count}}",
-                "missingShort": "CP kurang {{count}}",
-                "noEntranceShort": "Tidak ada pintu masuk",
-                "reachOff": "Jangkauan belum dihitung",
-                "legendMapWallShort": "Dinding peta",
-                "legendCheckpointShort": "Checkpoint",
-                "sel": {
-                    "ccw": "Putar 90° ke kiri",
-                    "cw": "Putar 90° ke kanan",
-                    "h": "Balik kiri / kanan",
-                    "v": "Balik atas / bawah",
-                    "duplicate": "Gandakan",
-                    "copy": "Salin",
-                    "paste": "Tempel",
-                    "delete": "Hapus",
-                    "drop": "Selesai"
+            "steps": {
+                "welcome": {
+                    "title": "Selamat datang di Erebus World Editor",
+                    "body": "Editor ini membuat dunia untuk aturan 2026 RoboCupJunior Rescue Simulation (Erebus). Anda menggambar peta langsung di kanvas, dan dinding serta korban menempel ke tempat yang diizinkan aturan ruang di bawah penunjuk.\nTur ini melewati setiap bagian layar dan setiap alat (sekitar 3 menit). Bagian yang dijelaskan disorot.\nTekan → atau Enter untuk langkah berikutnya, ← untuk kembali, dan Esc untuk mengakhiri kapan saja. Untuk belajar langsung, pilih Belajar dengan membuat peta contoh di Panduan, kanan bawah."
                 },
-                "randomPlace": "Penempatan acak",
-                "randomModes": {
-                    "current": "Jenis terpilih",
-                    "mixed": "Jenis campuran"
+                "file": {
+                    "title": "File: baru, buka, simpan",
+                    "body": "Baru membuat peta kosong. Jika peta yang terbuka punya perubahan yang belum disimpan, ia bertanya dulu apakah perubahan itu dibuang.\nBuka membaca JSON sebuah peta, dan Simpan menulis peta ke file JSON. File JSON yang diletakkan di atas peta juga terbuka.\nPerubahan juga disimpan di browser, tetapi hilang di browser lain atau saat data penjelajahan dihapus. Simpan peta penting sebagai JSON dengan Simpan."
                 },
-                "randomGo": "Pasang {{n}}",
-                "randomNote2": "Di sepanjang dinding yang bisa didekati robot hingga setengah petak, berjarak setidaknya setengah petak satu sama lain.",
-                "templates": {
-                    "maze": "Labirin",
-                    "pillars": "Tiang",
-                    "diagonal": "Diagonal",
-                    "zigzag": "Zigzag",
-                    "rings": "Cincin",
-                    "obstacles": "Rintangan"
+                "name": {
+                    "title": "Nama peta",
+                    "body": "Nama peta. Klik untuk mengubahnya.\nIni menjadi nama JSON yang Anda simpan dan dunia (.wbt) yang Anda ekspor."
                 },
-                "templateHints": {
-                    "maze": "Labirin dari koridor selebar satu petak (dengan beberapa jalan pintas).",
-                    "pillars": "Tiang bundar di sudut petak.",
-                    "diagonal": "Dinding diagonal pendek di dalam petak.",
-                    "zigzag": "Satu jalur yang berbelok di ujung-ujungnya.",
-                    "rings": "Cincin di sekeliling tengah, masing-masing dengan satu celah.",
-                    "obstacles": "Lingkaran, kotak, dan segitiga yang tersebar."
+                "history": {
+                    "title": "Urungkan dan ulangi",
+                    "body": "Batalkan perubahan satu per satu, atau ulangi lagi (hingga 100).\nPerbaikan otomatis, serta memindahkan atau menempel area, masing-masing diurungkan sebagai satu langkah, jadi silakan mencoba."
                 },
-                "templateClear": "Hapus dulu dinding dan korban",
-                "templateApply": "Pasang",
-                "showGuides": "Tampilkan pintu masuk dan checkpoint",
-                "missingCheckpoints": "{{count}} petak tepat di dalam lorong bukan checkpoint (aturan {{rule_room4Checkpoint}}). Atur di editor utama (\"CP?\" putus-putus).",
-                "noEntrance": "Ruang 4 tidak punya pintu masuk. Buka dinding ke arah lorong di luar di editor utama.",
-                "rows": {
-                    "real": "Asli",
-                    "fake": "Palsu (3D)"
+                "view": {
+                    "title": "Melihat dan memindahkan peta",
+                    "body": "Ini peta. Putar roda mouse untuk memperbesar, dan seret sambil menahan Spasi (atau dengan tombol roda) untuk memindahkannya. Dengan alat tangan (H), seretan biasa memindahkannya.\nTombol di bilah atas (bingkai putus-putus) juga memperbesar, dan yang paling kanan menampilkan seluruh peta lagi. Angkanya adalah zoom (piksel per cm).\nPeta terdiri dari petak 12 cm. Setiap ruang punya warna lantai sendiri, dan dinding berdiri sendiri di batas ruang dan di sekeliling luar."
                 },
-                "curveSmooth": "Halus",
-                "curveStraight": "Lurus",
-                "sides": "Sisi",
-                "shapeIcon": "Ikon",
-                "shapePicture": "Gambar",
-                "iconSearch": "Cari (mis. star, car, tree)",
-                "iconAll": "Disarankan (pilih kategori untuk mempersempit)",
-                "iconLoading": "Memuat ikon…",
-                "iconUnavailable": "Daftar ikon tidak dapat dimuat.",
-                "iconNone": "Tidak ditemukan.",
-                "pictureChoose": "Pilih gambar",
-                "pictureNote": "PNG atau SVG dengan transparansi memakai bagian buramnya; gambar lain memakai bagian gelapnya.",
-                "shapeStyles": {
-                    "fill": "Penuh",
-                    "outline": "Garis tepi"
+                "rail": {
+                    "title": "Alat",
+                    "body": "Alat yang mengubah peta, dalam empat kelompok dari atas: melihat (pilih, tangan), peta dan ruang (bentuk, ruang, lorong), dinding (garis, lengkung, penghapus), serta lantai dan korban (lantai, korban).\nHuruf di kanan bawah setiap tombol adalah tombol pintasnya: sekali tekan mengambil alat itu.\nSelanjutnya, alat satu per satu, sesuai urutan membuat peta."
                 },
-                "mirror": "Cermin",
-                "mirrors": {
-                    "none": "Mati",
-                    "x": "Kiri / kanan",
-                    "y": "Atas / bawah",
-                    "xy": "Keduanya"
+                "panel": {
+                    "title": "Apa yang dilakukan alat, dan pengaturannya",
+                    "body": "Alat yang Anda pilih menunjukkan cara pakainya dan pengaturannya di sini. Jika ragu, baca ini dulu.\nBaris status di bawah (bingkai putus-putus) memberi tahu apa yang bisa Anda lakukan di posisi penunjuk, atau mengapa tidak bisa."
                 },
-                "tipCurve": "Klik: tambah titik   Klik dua kali / Enter: selesai",
-                "tipArc": "Gerakkan untuk membengkokkan   Klik: selesai",
-                "unreachable": "{{count}} yang tidak bisa didekati robot hingga setengah petak (tidak dapat dikenali)",
-                "showReach": "Tampilkan tempat yang tidak bisa didatangi robot",
-                "legendReach": "Tempat yang tidak bisa didatangi robot",
-                "reach": {
-                    "noSeed": "Robot tidak bisa bergerak dari petak start, jadi tempat yang tidak bisa didatanginya tidak dihitung (periksa petak start dan dinding di sekitarnya).",
-                    "noStart": "Tidak ada petak start, jadi tempat yang tidak bisa didatangi robot tidak dihitung.",
-                    "unavailable": "Tempat yang tidak bisa didatangi robot tidak dapat dihitung."
+                "shape": {
+                    "title": "Bentuk (X): ukuran dan garis luar peta",
+                    "body": "Peta baru dimulai di sini dengan ukurannya: klik jumlah petak lebar atau panjang untuk mengetiknya, atau gunakan − dan + (hingga 40). Peta membesar atau mengecil di kanan dan bawah; yang masih muat tetap ada.\nDengan Bentuk, klik atau seret petak untuk mengeluarkannya dari peta (tanpa lantai) atau mengembalikannya, untuk bentuk L atau peta apa pun yang bukan persegi panjang. Dinding luar mengikuti garis luar sendiri.\nSisipkan baris, Sisipkan kolom, Hapus baris, dan Hapus kolom menambah atau mengambil satu baris atau kolom di tempat Anda klik pada peta."
                 },
-                "eraseTargets": {
-                    "all": "Semua",
-                    "tokens": "Korban saja"
+                "room": {
+                    "title": "Ruang (M): mengecat ruang",
+                    "body": "Pilih nomor ruang dan cat petak dengannya. Mengecat ruang 1 mengembalikan petak.\nSetiap ruang punya aturannya: ruang 1 punya dinding 12 cm (di tepi petak), ruang 2 dinding 6 cm, ruang 3 dinding 6 cm dan lengkung, dan ruang 4 digambar bebas sebagai gambar.\nDinding berdiri sendiri di batas ruang dan di sekeliling luar. Untuk menghubungkan ruang, gunakan alat Lorong berikutnya."
                 },
-                "tipStamp": "Klik: pilih (putaran, cincin) atau ubah jenis   Klik kanan: hapus",
-                "tipOther": "Klik kanan: hapus",
-                "title": "Ruang 4 kustom",
-                "tools": {
-                    "pen": "Pena",
-                    "line": "Garis",
-                    "rect": "Persegi panjang",
-                    "circle": "Lingkaran",
-                    "stamp": "Korban",
-                    "floor": "Lantai",
-                    "erase": "Penghapus",
-                    "curve": "Lengkung",
-                    "arc": "Busur",
-                    "ellipse": "Elips",
-                    "polygon": "Poligon",
-                    "shape": "Bentuk",
-                    "select": "Pilih",
-                    "template": "Templat"
+                "passage": {
+                    "title": "Lorong (P): menghubungkan ruang",
+                    "body": "Klik di dekat batas ruang: petak di sisi yang Anda klik menjadi lorong, dan dinding di batas terbuka.\nKlik lagi untuk menutupnya. Klik sisi lain dan lorong pindah ke petak itu. Klik bagian tengah petak lorong untuk menghapusnya.\nLorong menuju ruang 4 dipasang di petak di luar ruang 4. Lorong yang tidak lagi cocok setelah ruang dicat ulang dihapus sendiri."
                 },
+                "line": {
+                    "title": "Garis (L): menggambar dinding",
+                    "body": "Seret untuk menggambar dinding. Dinding mengikuti penunjuk, jadi zigzag tergambar sekaligus; kembali ke jalan semula membatalkannya.\nTahan Shift saat mulai untuk hanya satu garis lurus.\nDinding menempel ke grid ruang di bawah penunjuk: 12 cm (tepi petak) di ruang 1, 6 cm (setengah petak) di ruang 2 dan 3. Tidak bisa digambar di dalam ruang 4 (ruang 4 adalah gambar)."
+                },
+                "curve": {
+                    "title": "Lengkung (A): dinding lengkung",
+                    "body": "Hanya ruang 3. Arahkan ke seperempat (persegi 6 cm) petak ruang 3, dan empat lengkung yang bisa dipasang tampak samar.\nSatu klik memasang yang terdekat (biru). Klik yang sama lagi untuk menghapusnya."
+                },
+                "eraser": {
+                    "title": "Penghapus (E)",
+                    "body": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya; yang akan terhapus ditampilkan merah di bawah penunjuk.\nJauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint). Start hanya terhapus dengan klik.\nSeretan yang dimulai di dinding tidak menyentuh lantai, jadi lantai tidak hilang saat Anda menghapus dinding. Dinding luar tetap ada."
+                },
+                "floor": {
+                    "title": "Lantai (F): checkpoint, lubang, rawa, start",
+                    "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah petak tempat robot diletakkan: satu per peta. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya."
+                },
+                "victim": {
+                    "title": "Korban (V): korban dan target kognitif",
+                    "body": "Pilih jenis di panel (korban huruf Φ, Ψ, Ω dan yang palsu, target kognitif empat jenis - gas mudah terbakar, racun, korosif, peroksida organik - dan yang palsu) lalu klik di dekat dinding: ia ditempatkan di dinding tempat Anda klik.\nDi ruang 1 di sisi petak (satu per petak), di ruang 2 dan 3 di muka dinding 6 cm, dan di dua tempat pada lengkung (dalam dan luar). Seret yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya. Jika tidak bisa ditempatkan, baris status memberi tahu alasannya.\nPutar dial (Putaran tetap) untuk rotasinya, atau pilih Acak untuk putaran baru setiap kali. Untuk target kognitif, klik cincin target lalu warna di bawah; jumlah cincin menentukan jenisnya.\nKlik korban dengan jenis yang sama untuk memilihnya, lalu ubah putaran, cincin, atau posisinya di sepanjang dinding, atau hapus. Klik dengan jenis lain mengubah jenisnya."
+                },
+                "room4": {
+                    "title": "Menggambar ruang 4",
+                    "body": "Mengecat ruang 4 dengan alat ruang membuat ruang 4. Dinding dan korbannya digambar sebagai gambar.\nGambar ruang 4 (atau klik dua kali pada areanya) membuka pembuat ruang 4: gambar dinding bebas dengan pena, garis, dan bentuk, lalu tempatkan korban di dinding. Tempat yang tidak bisa dicapai robot ditampilkan dengan garis-garis merah.\nTombol Panduan di pembuat menunjukkan cara membuat ruang 4 secara rinci. Gambar ditampilkan di peta dan masuk apa adanya ke dunia yang diekspor."
+                },
+                "select": {
+                    "title": "Pilih (S): memindahkan dan menyalin area",
+                    "body": "Seret untuk memilih area petak; dinding, ruang, lantai, dan korbannya ikut terpilih.\nSeret di dalamnya untuk memindahkannya, atau sambil menahan Alt untuk memindahkan salinan. Tombol panah memindahkannya satu petak setiap kali.\nCtrl+C menyalin, Ctrl+X memotong, Ctrl+V menempel (petak di bawah penunjuk menjadi sudut kiri atasnya), Ctrl+D menggandakan, dan Delete mengosongkannya. Esc melepaskan area."
+                },
+                "linear": {
+                    "title": "Linear",
+                    "body": "Saat aktif, setiap petak diwarnai sebagai linear (di samping dinding yang terhubung ke start) atau mengambang. Korban di petak mengambang bernilai lebih tinggi.\nPerlu petak start. Ekspor dunia menentukan petak linear dengan cara yang sama."
+                },
+                "checks": {
+                    "title": "Pemeriksaan",
+                    "body": "Setiap perubahan diperiksa terhadap aturan.\n✕ merah adalah masalah yang membuat dunia tidak bisa diekspor; ! kuning adalah peringatan yang patut dilihat, tetapi dunia tetap bisa diekspor.\nArahkan ke sebuah item untuk melihat lokasinya di peta, dan klik untuk ke sana. Klik judul untuk melipat kartu.\nTempat yang tidak bisa dicapai robot (jari-jari 3,7 cm) selalu ditampilkan di peta dengan garis-garis merah, dan korban di sana mendapat peringatan."
+                },
+                "fix": {
+                    "title": "Memperbaiki otomatis",
+                    "body": "Item dengan tombol Perbaiki diperbaiki dengan satu klik (memasang start, menghubungkan ruang dengan lorong, menghapus dinding yang tidak diizinkan aturan, dan sebagainya).\nPerbaiki semua yang bisa diperbaiki mengerjakan semuanya sekaligus. Jika tidak suka hasilnya, Ctrl+Z membatalkannya.\nPemeriksaan juga memastikan setiap ruang dapat dicapai dari ruang 1 lewat lorong, dan menunjukkan ruang yang tidak."
+                },
+                "export": {
+                    "title": "Mengekspor dunia (.wbt)",
+                    "body": "Menulis file dunia (.wbt) yang dimuat Erebus.\nSelama masih ada masalah ✕ merah, tombolnya abu-abu, dan menekannya menampilkan apa yang harus diperbaiki; dari sana ia bisa memperbaikinya untuk Anda.\nSimpan peta untuk diedit lagi dengan Simpan (JSON), bukan .wbt: .wbt tidak bisa kembali menjadi peta yang bisa diedit."
+                },
+                "more": {
+                    "title": "Panduan dan bahasa",
+                    "body": "Panduan di kanan bawah menyediakan kapan saja pelajaran yang membangun peta contoh, tur ini, dan cara membuat ruang 4.\nTombol bahasa (menampilkan bendera dan nama bahasa yang dipakai) memilih bahasa."
+                },
+                "done": {
+                    "title": "Tur selesai",
+                    "body": "Tombol ini memulai tur lagi kapan saja.\nUrutan kerja yang baik: atur ukuran dengan Bentuk → cat ruang → hubungkan dengan lorong → gambar dinding → pasang lantai dan korban → lihat pemeriksaan dan ekspor .wbt.\nSelamat membuat peta!"
+                },
+                "score": {
+                    "title": "Skor maksimum",
+                    "body": "Skor tertinggi yang bisa diraih peta ini: setiap korban dan target kognitif yang bisa didekati robot dikenali dengan jenis yang benar, dan setiap checkpoint dilewati, dihitung menurut aturan {{rule_scoring}}.\nTekan untuk melihat bagian setiap ruang dan skor dengan bonus keluar dan bonus pemetaan. Dihitung ulang setiap kali ada perubahan."
+                }
+            }
+        },
+        "room4": {
+            "name": "Belajar ruang 4 dengan membuatnya",
+            "time": "Sekitar 5 menit · langsung praktik",
+            "note": "Di pembuat ruang 4, gambar dinding dan tempatkan korban sendiri, memakai setiap fitur secara bergantian.",
+            "need": "Cat dulu ruang 4 dengan alat ruang."
+        },
+        "room4Tour": {
+            "name": "Tur pembuat ruang 4",
+            "time": "Sekitar 2 menit · hanya menonton",
+            "note": "Setiap bagian pembuat ruang 4 dan setiap alat disorot dan dijelaskan satu per satu. Gambar tidak diubah."
+        },
+        "keys": {
+            "title": "Kontrol",
+            "open": "Kontrol",
+            "back": "Kembali ke panduan",
+            "view": "Tampilan",
+            "edit": "Mengedit",
+            "select": "Alat pilih",
+            "guide": "Bantuan",
+            "rows": {
+                "zoom": "Perbesar dan perkecil",
+                "pan": "Pindahkan tampilan",
+                "hand": "Alat tangan (pindahkan dengan seret kiri)",
                 "undo": "Urungkan",
                 "redo": "Ulangi",
-                "clear": "Hapus semua",
-                "groups": {
-                    "victim": "Korban huruf",
-                    "ct": "Target kognitif",
-                    "hazmat": "Tanda bahan berbahaya",
-                    "fake": "Korban palsu"
-                },
-                "types": {
-                    "harmed": "Terluka",
-                    "stable": "Stabil",
-                    "unharmed": "Tidak terluka",
-                    "fakeHarmed": "Terluka",
-                    "fakeStable": "Stabil",
-                    "fakeUnharmed": "Tidak terluka"
-                },
-                "eraserSize": "Ukuran",
-                "size": {
-                    "s": "S",
-                    "m": "M",
-                    "l": "L"
-                },
-                "snap": "Sejajarkan ke grid (1/4 petak)",
-                "hints": {
-                    "pen": "Seret untuk menggambar dinding dengan bebas.",
-                    "line": "Seret untuk menggambar dinding lurus. Tahan Shift untuk langkah 45°.",
-                    "rect": "Seret untuk menggambar persegi panjang dari dinding. Tahan Shift untuk persegi.",
-                    "circle": "Seret dari pusat untuk menggambar dinding melingkar.",
-                    "stamp": "Klik di dekat dinding untuk menempelkan korban ke dinding terdekat. Klik korban yang sudah ditempatkan untuk mengubah putaran atau cincinnya (dengan jenis lain terpilih, ia berubah ke jenis itu). Klik kanan menghapusnya.",
-                    "floor": "Klik petak ruang 4 untuk memberinya lantai terpilih (lubang, rawa, checkpoint); klik lagi untuk menghapusnya, atau seret untuk beberapa sekaligus. Lantai adalah satu petak penuh (12 cm); lubang juga satu petak penuh.",
-                    "erase": "Seret untuk menghapus dinding dan korban. Korban juga bisa dihapus dengan klik kanan, alat apa pun yang dipakai.",
-                    "eraseTokens": "Menghapus setiap korban yang tersentuh penghapus. Dinding tetap ada.",
-                    "curve": "Klik titik-titik dan lengkung melewatinya. Klik dua kali, Enter, atau klik kanan untuk selesai; klik titik pertama untuk menutupnya. Backspace menghapus satu titik, Esc membatalkan.",
-                    "arc": "Seret untuk menetapkan kedua ujung, gerakkan mouse untuk membengkokkannya, lalu klik.",
-                    "ellipse": "Menggambar elips yang pas di kotak yang diseret. Tahan Shift untuk lingkaran.",
-                    "polygon": "Seret dari pusat untuk menggambar poligon beraturan. Berputar dalam langkah 15° (bebas dengan Shift).",
-                    "shape": "Pilih ikon atau gambar, lalu seret di kanvas untuk mengatur ukurannya (proporsi tetap; bebas dengan Shift).",
-                    "select": "Seret untuk memilih kotak, lalu seret di dalamnya untuk memindahkannya (tahan Alt untuk menyalin). Tombol panah menggesernya, [ ] memutarnya, Enter meletakkannya, Delete menghapusnya.",
-                    "template": "Pilih templat dan tekan Pasang. Tata letak yang menghalangi robot dibuat ulang secara otomatis."
-                },
-                "messages": {
-                    "outside": "Tidak bisa di luar ruang 4.",
-                    "needWall": "Korban hanya ditempatkan di dinding. Klik di dekat dinding.",
-                    "pickShape": "Pilih ikon atau gambar dulu.",
-                    "iconFailed": "Ikon tidak dapat dimuat.",
-                    "imageFailed": "Gambar tidak dapat dimuat.",
-                    "randomDone": "{{placed}} ditempatkan.",
-                    "randomShort": "Hanya {{placed}} dari {{asked}} yang ditempatkan (dinding tidak cukup untuk menempatkannya).",
-                    "templateBlocked": "Setiap tata letak yang dicoba membuat sebagian ruang tidak terjangkau. Periksa bagian merah muda.",
-                    "wallEnd": "Tidak di ujung dinding. Klik muka dinding yang setidaknya selebar korban (2 cm).",
-                    "unreachable": "Robot tidak bisa mendekat ke sini: tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}}).",
-                    "floorNotOuter": "Petak kontak hanya ditempatkan di petak di samping dinding luar."
-                },
-                "tokens": "Tanda dinding: {{count}}",
-                "farFromWall": "{{count}} jauh dari dinding mana pun (lingkaran merah putus-putus)",
-                "import": "Impor gambar",
-                "download": "Simpan sebagai gambar",
-                "hint": "Impor gambar PNG / JPEG atau menggambar di sini. Jenis korban disimpan di dalam gambar, jadi gambar yang disimpan mengembalikannya.",
-                "selectedStamp": "Korban terpilih",
-                "selectDone": "Selesai",
-                "randomCount": "Jumlah",
-                "randomKind": "Jenis"
+                "cancel": "Hentikan yang sedang digambar",
+                "tools": "Ganti alat (huruf di bilah kiri)",
+                "copy": "Salin, potong, tempel",
+                "duplicate": "Gandakan",
+                "clear": "Kosongkan pilihan",
+                "nudge": "Pindahkan pilihan satu petak",
+                "sheet": "Buka daftar ini"
             },
-            "passageBlue": "Biru",
-            "passageYellow": "Kuning",
-            "passageGreen": "Hijau",
-            "passagePurple": "Ungu",
-            "passageOrange": "Oranye",
-            "passageRed": "Merah",
-            "ctF": "Gas mudah terbakar",
-            "ctP": "Racun",
-            "ctC": "Korosif",
-            "ctO": "Peroksida organik",
-            "ctFake": "Target palsu",
-            "exportW": "Ekspor peta ini sebagai file dunia untuk Erebus"
+            "keys": {
+                "wheel": "Roda",
+                "spaceDrag": "Spasi + seret",
+                "middleDrag": "Seret dengan tombol tengah"
+            }
         }
+    },
+    "room4": {
+        "zoomIn": "Perbesar",
+        "zoomOut": "Perkecil",
+        "zoomFit": "Paskan",
+        "viewReach": "Tidak terjangkau",
+        "viewGuides": "Pintu masuk / CP",
+        "unreachableShort": "Tidak terjangkau {{count}}",
+        "farShort": "Lepas dari dinding {{count}}",
+        "missingShort": "CP kurang {{count}}",
+        "noEntranceShort": "Tidak ada pintu masuk",
+        "reachOff": "Jangkauan belum dihitung",
+        "legendMapWallShort": "Dinding peta",
+        "legendCheckpointShort": "Checkpoint",
+        "sel": {
+            "ccw": "Putar 90° ke kiri",
+            "cw": "Putar 90° ke kanan",
+            "h": "Balik kiri / kanan",
+            "v": "Balik atas / bawah",
+            "duplicate": "Gandakan",
+            "copy": "Salin",
+            "paste": "Tempel",
+            "delete": "Hapus",
+            "drop": "Selesai"
+        },
+        "randomPlace": "Penempatan acak",
+        "randomModes": {
+            "current": "Jenis terpilih",
+            "mixed": "Jenis campuran"
+        },
+        "randomGo": "Pasang {{n}}",
+        "randomNote2": "Di sepanjang dinding yang bisa didekati robot hingga setengah petak, berjarak setidaknya setengah petak satu sama lain.",
+        "templates": {
+            "maze": "Labirin",
+            "pillars": "Tiang",
+            "diagonal": "Diagonal",
+            "zigzag": "Zigzag",
+            "rings": "Cincin",
+            "obstacles": "Rintangan"
+        },
+        "templateHints": {
+            "maze": "Labirin dari koridor selebar satu petak (dengan beberapa jalan pintas).",
+            "pillars": "Tiang bundar di sudut petak.",
+            "diagonal": "Dinding diagonal pendek di dalam petak.",
+            "zigzag": "Satu jalur yang berbelok di ujung-ujungnya.",
+            "rings": "Cincin di sekeliling tengah, masing-masing dengan satu celah.",
+            "obstacles": "Lingkaran, kotak, dan segitiga yang tersebar."
+        },
+        "templateClear": "Hapus dulu dinding dan korban",
+        "templateApply": "Pasang",
+        "showGuides": "Tampilkan pintu masuk dan checkpoint",
+        "missingCheckpoints": "{{count}} petak tepat di dalam lorong bukan checkpoint (aturan {{rule_room4Checkpoint}}). Atur di editor utama (\"CP?\" putus-putus).",
+        "noEntrance": "Ruang 4 tidak punya pintu masuk. Buka dinding ke arah lorong di luar di editor utama.",
+        "rows": {
+            "real": "Asli",
+            "fake": "Palsu (3D)"
+        },
+        "curveSmooth": "Halus",
+        "curveStraight": "Lurus",
+        "sides": "Sisi",
+        "shapeIcon": "Ikon",
+        "shapePicture": "Gambar",
+        "iconSearch": "Cari (mis. star, car, tree)",
+        "iconAll": "Disarankan (pilih kategori untuk mempersempit)",
+        "iconLoading": "Memuat ikon…",
+        "iconUnavailable": "Daftar ikon tidak dapat dimuat.",
+        "iconNone": "Tidak ditemukan.",
+        "pictureChoose": "Pilih gambar",
+        "pictureNote": "PNG atau SVG dengan transparansi memakai bagian buramnya; gambar lain memakai bagian gelapnya.",
+        "shapeStyles": {
+            "fill": "Penuh",
+            "outline": "Garis tepi"
+        },
+        "mirror": "Cermin",
+        "mirrors": {
+            "none": "Mati",
+            "x": "Kiri / kanan",
+            "y": "Atas / bawah",
+            "xy": "Keduanya"
+        },
+        "tipCurve": "Klik: tambah titik   Klik dua kali / Enter: selesai",
+        "tipArc": "Gerakkan untuk membengkokkan   Klik: selesai",
+        "unreachable": "{{count}} yang tidak bisa didekati robot hingga setengah petak (tidak dapat dikenali)",
+        "showReach": "Tampilkan tempat yang tidak bisa didatangi robot",
+        "legendReach": "Tempat yang tidak bisa didatangi robot",
+        "reach": {
+            "noSeed": "Robot tidak bisa bergerak dari petak start, jadi tempat yang tidak bisa didatanginya tidak dihitung (periksa petak start dan dinding di sekitarnya).",
+            "noStart": "Tidak ada petak start, jadi tempat yang tidak bisa didatangi robot tidak dihitung.",
+            "unavailable": "Tempat yang tidak bisa didatangi robot tidak dapat dihitung."
+        },
+        "eraseTargets": {
+            "all": "Semua",
+            "tokens": "Korban saja"
+        },
+        "tipStamp": "Klik: pilih (putaran, cincin) atau ubah jenis   Klik kanan: hapus",
+        "tipOther": "Klik kanan: hapus",
+        "title": "Ruang 4 kustom",
+        "tools": {
+            "pen": "Pena",
+            "line": "Garis",
+            "rect": "Persegi panjang",
+            "circle": "Lingkaran",
+            "stamp": "Korban",
+            "floor": "Lantai",
+            "erase": "Penghapus",
+            "curve": "Lengkung",
+            "arc": "Busur",
+            "ellipse": "Elips",
+            "polygon": "Poligon",
+            "shape": "Bentuk",
+            "select": "Pilih",
+            "template": "Templat"
+        },
+        "undo": "Urungkan",
+        "redo": "Ulangi",
+        "clear": "Hapus semua",
+        "groups": {
+            "victim": "Korban huruf",
+            "ct": "Target kognitif",
+            "hazmat": "Tanda bahan berbahaya",
+            "fake": "Korban palsu"
+        },
+        "eraserSize": "Ukuran",
+        "size": {
+            "s": "S",
+            "m": "M",
+            "l": "L"
+        },
+        "snap": "Sejajarkan ke grid (1/4 petak)",
+        "hints": {
+            "pen": "Seret untuk menggambar dinding dengan bebas.",
+            "line": "Seret untuk menggambar dinding lurus. Tahan Shift untuk langkah 45°.",
+            "rect": "Seret untuk menggambar persegi panjang dari dinding. Tahan Shift untuk persegi.",
+            "circle": "Seret dari pusat untuk menggambar dinding melingkar.",
+            "stamp": "Klik di dekat dinding untuk menempelkan korban ke dinding terdekat. Klik korban yang sudah ditempatkan untuk mengubah putaran atau cincinnya (dengan jenis lain terpilih, ia berubah ke jenis itu). Klik kanan menghapusnya.",
+            "floor": "Klik petak ruang 4 untuk memberinya lantai terpilih (lubang, rawa, checkpoint); klik lagi untuk menghapusnya, atau seret untuk beberapa sekaligus. Lantai adalah satu petak penuh (12 cm); lubang juga satu petak penuh.",
+            "erase": "Seret untuk menghapus dinding dan korban. Korban juga bisa dihapus dengan klik kanan, alat apa pun yang dipakai.",
+            "eraseTokens": "Menghapus setiap korban yang tersentuh penghapus. Dinding tetap ada.",
+            "curve": "Klik titik-titik dan lengkung melewatinya. Klik dua kali, Enter, atau klik kanan untuk selesai; klik titik pertama untuk menutupnya. Backspace menghapus satu titik, Esc membatalkan.",
+            "arc": "Seret untuk menetapkan kedua ujung, gerakkan mouse untuk membengkokkannya, lalu klik.",
+            "ellipse": "Menggambar elips yang pas di kotak yang diseret. Tahan Shift untuk lingkaran.",
+            "polygon": "Seret dari pusat untuk menggambar poligon beraturan. Berputar dalam langkah 15° (bebas dengan Shift).",
+            "shape": "Pilih ikon atau gambar, lalu seret di kanvas untuk mengatur ukurannya (proporsi tetap; bebas dengan Shift).",
+            "select": "Seret untuk memilih kotak, lalu seret di dalamnya untuk memindahkannya (tahan Alt untuk menyalin). Tombol panah menggesernya, [ ] memutarnya, Enter meletakkannya, Delete menghapusnya.",
+            "template": "Pilih templat dan tekan Pasang. Tata letak yang menghalangi robot dibuat ulang secara otomatis."
+        },
+        "messages": {
+            "outside": "Tidak bisa di luar ruang 4.",
+            "needWall": "Korban hanya ditempatkan di dinding. Klik di dekat dinding.",
+            "pickShape": "Pilih ikon atau gambar dulu.",
+            "iconFailed": "Ikon tidak dapat dimuat.",
+            "imageFailed": "Gambar tidak dapat dimuat.",
+            "randomDone": "{{placed}} ditempatkan.",
+            "randomShort": "Hanya {{placed}} dari {{asked}} yang ditempatkan (dinding tidak cukup untuk menempatkannya).",
+            "templateBlocked": "Setiap tata letak yang dicoba membuat sebagian ruang tidak terjangkau. Periksa bagian merah muda.",
+            "wallEnd": "Tidak di ujung dinding. Klik muka dinding yang setidaknya selebar korban (2 cm).",
+            "unreachable": "Robot tidak bisa mendekat ke sini: tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}}).",
+            "floorNotOuter": "Petak kontak hanya ditempatkan di petak di samping dinding luar."
+        },
+        "tokens": "Tanda dinding: {{count}}",
+        "farFromWall": "{{count}} jauh dari dinding mana pun (lingkaran merah putus-putus)",
+        "import": "Impor gambar",
+        "download": "Simpan sebagai gambar",
+        "hint": "Impor gambar PNG / JPEG atau menggambar di sini. Jenis korban disimpan di dalam gambar, jadi gambar yang disimpan mengembalikannya.",
+        "selectedStamp": "Korban terpilih",
+        "selectDone": "Selesai",
+        "randomCount": "Jumlah",
+        "randomKind": "Jenis"
     },
     "years": {
         "2027": {
-            "admin": {
-                "simBeta": {
-                    "hints": {
-                        "floor_notOuter": "{{floor}} hanya di petak di samping dinding luar (aturan {{rule_contactTile}})",
-                        "floor_clear": "Klik untuk menghapus lantai (lubang, rawa, checkpoint, petak kontak)"
-                    },
-                    "problems": {
-                        "contactInside": "Petak kontak yang tidak berada di samping dinding luar ({{count}}). Petak kontak hanya ditempatkan di petak yang berbatasan dengan luar (aturan {{rule_contactTile}})",
-                        "presetNotSupported": "Preset ruang 4 tidak tersedia di editor ini (ganti ke kustom)"
-                    },
-                    "help": {
-                        "eraser": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya. Jauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint, petak kontak); satu klik menghapus start. Dinding luar tetap ada."
-                    },
-                    "tour": {
-                        "floor": {
-                            "title": "Lantai (F): checkpoint, lubang, rawa, petak kontak, start",
-                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah petak tempat robot diletakkan: satu per peta. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik. Hanya ditempatkan di petak di samping dinding luar."
-                        },
-                        "victim": {
-                            "body": "Pilih jenis di panel (korban smiley - terluka wajah sedih, stabil wajah datar, tidak terluka wajah senang - dan yang palsu, target kognitif empat jenis - gas mudah terbakar, racun, korosif, peroksida organik - dan yang palsu) lalu klik di dekat dinding: ia ditempatkan di dinding tempat Anda klik.\nDi ruang 1 di sisi petak (satu per petak), di ruang 2 dan 3 di muka dinding 6 cm, dan di dua tempat pada lengkung (dalam dan luar). Seret yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya. Jika tidak bisa ditempatkan, baris status memberi tahu alasannya.\nPutar dial (Putaran tetap) untuk rotasinya, atau pilih Acak untuk putaran baru setiap kali. Untuk target kognitif, klik cincin target lalu warna di bawah; jumlah cincin menentukan jenisnya.\nKlik korban dengan jenis yang sama untuk memilihnya, lalu ubah putaran, cincin, atau posisinya di sepanjang dinding, atau hapus. Klik dengan jenis lain mengubah jenisnya."
-                        },
-                        "eraser": {
-                            "body": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya; yang akan terhapus ditampilkan merah di bawah penunjuk.\nJauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint, petak kontak). Start hanya terhapus dengan klik.\nSeretan yang dimulai di dinding tidak menyentuh lantai, jadi lantai tidak hilang saat Anda menghapus dinding. Dinding luar tetap ada."
-                        }
-                    },
-                    "lesson": {
+            "app": {
+                "about": {
+                    "lead": "Erebus World Editor (beta). Peta aturan 2027 hanya dibuat di editor ini (tidak ada editor klasik untuknya)."
+                }
+            },
+            "tools": {
+                "help": {
+                    "eraser": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya. Jauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint, petak kontak); satu klik menghapus start. Dinding luar tetap ada."
+                }
+            },
+            "checks": {
+                "problems": {
+                    "contactInside": "Petak kontak yang tidak berada di samping dinding luar ({{count}}). Petak kontak hanya ditempatkan di petak yang berbatasan dengan luar (aturan {{rule_contactTile}})",
+                    "presetNotSupported": "Preset ruang 4 tidak tersedia di editor ini (ganti ke kustom)"
+                }
+            },
+            "status": {
+                "floor_notOuter": "{{floor}} hanya di petak di samping dinding luar (aturan {{rule_contactTile}})",
+                "floor_clear": "Klik untuk menghapus lantai (lubang, rawa, checkpoint, petak kontak)"
+            },
+            "guide": {
+                "lesson": {
+                    "steps": {
                         "floors": {
                             "title": "Checkpoint, lubang, rawa, dan petak kontak",
                             "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya; Tidak ada menghapus lantai.\nCheckpoint memberi skor saat robot mencapainya, dan merupakan tempat robot dikembalikan setelah tidak ada kemajuan (LoP). Lubang adalah petak yang harus dihindari robot, dan rawa menguras baterainya lebih cepat.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik. Hanya ditempatkan di petak di samping dinding luar.",
@@ -1058,21 +1115,32 @@
                         "erase": {
                             "body": "Penghapus menghapus dinding, lengkung, dan korban dengan klik atau seretan. Jauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint, petak kontak); start hanya terhapus dengan klik. Dinding luar tetap ada.\nJika Anda menghapus yang salah, urungkan (Ctrl+Z, atau ↶ di bilah atas) mengembalikannya; ulangi (Ctrl+Shift+Z, atau ↷) maju lagi."
                         }
-                    },
-                    "betaLead": "Erebus World Editor (beta). Peta aturan 2027 hanya dibuat di editor ini (tidak ada editor klasik untuknya)."
+                    }
                 },
-                "simMapEditor": {
-                    "room4Creator": {
-                        "messages": {
-                            "floorNotOuter": "Petak kontak hanya ditempatkan di petak di samping dinding luar (aturan {{rule_contactTile}})."
+                "tour": {
+                    "steps": {
+                        "floor": {
+                            "title": "Lantai (F): checkpoint, lubang, rawa, petak kontak, start",
+                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah petak tempat robot diletakkan: satu per peta. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik. Hanya ditempatkan di petak di samping dinding luar."
                         },
-                        "groups": {
-                            "victim": "Korban smiley"
+                        "victim": {
+                            "body": "Pilih jenis di panel (korban smiley - terluka wajah sedih, stabil wajah datar, tidak terluka wajah senang - dan yang palsu, target kognitif empat jenis - gas mudah terbakar, racun, korosif, peroksida organik - dan yang palsu) lalu klik di dekat dinding: ia ditempatkan di dinding tempat Anda klik.\nDi ruang 1 di sisi petak (satu per petak), di ruang 2 dan 3 di muka dinding 6 cm, dan di dua tempat pada lengkung (dalam dan luar). Seret yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya. Jika tidak bisa ditempatkan, baris status memberi tahu alasannya.\nPutar dial (Putaran tetap) untuk rotasinya, atau pilih Acak untuk putaran baru setiap kali. Untuk target kognitif, klik cincin target lalu warna di bawah; jumlah cincin menentukan jenisnya.\nKlik korban dengan jenis yang sama untuk memilihnya, lalu ubah putaran, cincin, atau posisinya di sepanjang dinding, atau hapus. Klik dengan jenis lain mengubah jenisnya."
                         },
-                        "hints": {
-                            "floor": "Klik petak ruang 4 untuk memberinya lantai terpilih (lubang, rawa, checkpoint, petak kontak); klik lagi untuk menghapusnya, atau seret untuk beberapa sekaligus. Lantai adalah satu petak penuh (12 cm); lubang juga satu petak penuh. Petak kontak hanya ditempatkan di petak di samping dinding luar."
+                        "eraser": {
+                            "body": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya; yang akan terhapus ditampilkan merah di bawah penunjuk.\nJauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint, petak kontak). Start hanya terhapus dengan klik.\nSeretan yang dimulai di dinding tidak menyentuh lantai, jadi lantai tidak hilang saat Anda menghapus dinding. Dinding luar tetap ada."
                         }
                     }
+                }
+            },
+            "room4": {
+                "messages": {
+                    "floorNotOuter": "Petak kontak hanya ditempatkan di petak di samping dinding luar (aturan {{rule_contactTile}})."
+                },
+                "groups": {
+                    "victim": "Korban smiley"
+                },
+                "hints": {
+                    "floor": "Klik petak ruang 4 untuk memberinya lantai terpilih (lubang, rawa, checkpoint, petak kontak); klik lagi untuk menghapusnya, atau seret untuk beberapa sekaligus. Lantai adalah satu petak penuh (12 cm); lubang juga satu petak penuh. Petak kontak hanya ditempatkan di petak di samping dinding luar."
                 }
             }
         }

@@ -1,409 +1,419 @@
 {
-    "admin": {
-        "simBeta": {
-            "fake": "Falsches Opfer",
+    "common": {
+        "listSep": ", ",
+        "close": "Schließen",
+        "cancel": "Abbrechen",
+        "done": "Fertig",
+        "remove": "Entfernen",
+        "undo": "Rückgängig",
+        "redo": "Wiederholen",
+        "zoomIn": "Vergrößern",
+        "zoomOut": "Verkleinern"
+    },
+    "app": {
+        "title": "Erebus World Editor",
+        "about": {
+            "title": "Über diesen Editor",
+            "lead": "Erebus World Editor (Beta). Er liest und schreibt dasselbe JSON wie der klassische Editor, sodass eine gespeicherte Karte in beiden geöffnet werden kann.",
+            "classic": "Klassischen Editor öffnen",
+            "classicNote": "Speichere zuerst die Karte, an der du arbeitest (Speichern, JSON)"
+        },
+        "build": {
+            "title": "Über diesen Build",
+            "commit": "Commit",
+            "dirty": "(mit nicht committeten Änderungen)",
+            "branch": "Branch",
+            "commitDate": "Committet",
+            "builtAt": "Gebaut",
+            "copy": "Kopieren",
+            "copied": "Kopiert"
+        }
+    },
+    "rules": {
+        "title": "Die Regeln dieser Karte",
+        "label": "Regeln {{year}}",
+        "lead": "Die Regeln, denen diese Karte folgt: Prüfungen, Punktzahl und die exportierte Welt richten sich nach ihnen.",
+        "book": "Regelwerk",
+        "soon": "Demnächst",
+        "switchTitle": "Zu den Regeln {{year}} wechseln?",
+        "switchLead": "Diese Karte wechselt von den Regeln {{from}} zu den Regeln {{to}}. Wände und Opfer, die nicht zu den neuen Regeln passen, werden in den Prüfungen angezeigt (rückgängig: Strg+Z).",
+        "switch": "Wechseln",
+        "pick": "Regeln welchen Jahres?",
+        "pickNote": "Eine gespeicherte Karte öffnet sich mit ihren eigenen Regeln. Du kannst sie später auch in der oberen Leiste wechseln.",
+        "draft": "Entwurf"
+    },
+    "file": {
+        "start": {
+            "title": "Eine Karte beginnen",
+            "lead": "Erstelle eine neue oder öffne eine gespeicherte Karte (JSON)."
+        },
+        "new": "Neue Karte",
+        "newShort": "Neu",
+        "open": "Karte öffnen (JSON)",
+        "openShort": "Öffnen",
+        "openJson": "JSON öffnen",
+        "save": "Als JSON speichern",
+        "saveShort": "Speichern",
+        "noMap": "Keine Karte geöffnet",
+        "dropHere": "Du kannst auch eine JSON-Datei hier ablegen",
+        "badFile": "Dies konnte nicht als Karte des Simulation-2026-Editors (JSON) gelesen werden",
+        "unknownRules": "Diese Karte gehört zu den Regeln {{year}}; dieser Editor kennt die Regeln {{years}} (öffne sie in einem neueren Editor)",
+        "restore": "Letzte Arbeit öffnen",
+        "restoreOtherYear": "Die gespeicherte Arbeit ist eine Karte der Regeln {{year}}. Wähle oben die Regeln {{year}}, um sie zu öffnen (um sie auf die Regeln eines anderen Jahres zu bringen, öffne sie und wechsle dann über Regeln in der oberen Leiste)",
+        "discard": {
+            "title": "Ungespeicherte Änderungen",
+            "lead": "Wenn du fortfährst, gehen die Änderungen an dieser Karte verloren (die in diesem Browser gespeicherte Kopie bleibt).",
+            "save": "Speichern und weiter",
+            "go": "Nicht speichern"
+        }
+    },
+    "export": {
+        "button": "Diese Karte als Weltdatei für Erebus exportieren",
+        "blocked": "Die Welt kann noch nicht exportiert werden",
+        "blockedLead": "Behebe diese {{count}}, um zu exportieren. Klicke eins an, um zu sehen, wo es ist.",
+        "failed": "Der Weltexport ist fehlgeschlagen",
+        "broken": "Die Welt hätte einen Wert, der keine Zahl ist, deshalb wurde keine Datei erstellt (Webots würde sie als leere Welt öffnen). Bitte melde das: {{line}}"
+    },
+    "map": {
+        "name": "Name des Entwurfs: ",
+        "fit": "Ganze Karte zeigen",
+        "size": {
+            "title": "Kartengröße",
+            "note": "Klicke auf eine Zahl, um sie einzutippen, oder nutze − und + (1-40). Die Karte wächst oder schrumpft rechts und unten; was noch passt, bleibt. Um in der Mitte eine Zeile oder Spalte einzufügen, nutze unten Zeile einfügen / Spalte einfügen.",
             "width": "Breite",
             "length": "Höhe",
-            "title": "Erebus World Editor",
-            "new": "Neue Karte",
-            "open": "Karte öffnen (JSON)",
-            "save": "Als JSON speichern",
-            "backToClassic": "Klassischen Editor öffnen",
-            "noMap": "Keine Karte geöffnet",
-            "dropHere": "Du kannst auch eine JSON-Datei hier ablegen",
-            "badFile": "Dies konnte nicht als Karte des Simulation-2026-Editors (JSON) gelesen werden",
-            "unknownRules": "Diese Karte gehört zu den Regeln {{year}}; dieser Editor kennt die Regeln {{years}} (öffne sie in einem neueren Editor)",
-            "zoomIn": "Vergrößern",
-            "zoomOut": "Verkleinern",
-            "fit": "Ganze Karte zeigen",
-            "room": "Raum {{n}}",
-            "discard": "Wenn du fortfährst, gehen die Änderungen an dieser Karte verloren (die in diesem Browser gespeicherte Kopie bleibt).",
-            "exportBlocked": "Die Welt kann noch nicht exportiert werden",
-            "room4": "Raum 4",
-            "problemsTitle": "Prüfungen",
-            "noProblems": "Keine Probleme",
-            "undo": "Rückgängig",
-            "redo": "Wiederholen",
-            "tools": {
-                "hand": "Verschieben",
-                "room": "Räume",
-                "passage": "Durchgänge",
-                "line": "Linie",
-                "eraser": "Radierer",
-                "floor": "Boden",
-                "victim": "Opfer",
-                "curve": "Kurve",
-                "select": "Auswählen",
-                "shape": "Umriss"
-            },
-            "help": {
-                "hand": "Ziehen, um die Karte zu verschieben.",
-                "room": "Male Kacheln in einen Raum (Raum 1 nimmt sie wieder zurück). Wände entstehen von selbst, wo Räume aneinandergrenzen, und rund um die Karte. Raum 4 wird mit der Schaltfläche unten als Bild gezeichnet.",
-                "passage": "Klicke nahe einer Raumgrenze: Die Kachel auf der Seite, auf die du klickst, wird zum Durchgang (erneut klicken schließt ihn, auf der anderen Seite klicken verschiebt ihn dorthin). Klicke in die Mitte einer Durchgangskachel, um ihn zu entfernen. Ein Durchgang, der nicht mehr zu seinen Räumen passt, verschwindet von selbst.",
-                "line": "Ziehen, um Wände zu zeichnen. Die Linie folgt dem Zeiger, sodass ein Zug ein Zickzack zeichnen kann (geh den Weg zurück, um eine Ecke rückgängig zu machen). Beginne mit gedrückter Umschalttaste für eine einzige gerade Linie. Raum 1 rastet auf 12 cm (Kachelkanten) ein, Räume 2 und 3 auf 6 cm. Nicht in Raum 4.",
-                "eraser": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen. Abseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint); ein Klick entfernt den Start. Die Außenwände bleiben.",
-                "floor": "Klicke auf eine Kachel, um ihren Boden festzulegen.",
-                "victim": "Klicke nahe einer Wand: Das Opfer kommt an die Wand, wo du klickst. Raum 1: an eine Kachelseite (eins pro Kachel); Räume 2 und 3: an eine Fläche der 6-cm-Wände (4 Viertel × 4 Flächen); eine Kurve hat zwei Plätze (innen und außen). Ziehe ein gesetztes Opfer, um es entlang seiner Wand zu verschieben (es stoppt vor dem Wandende und vor anderen Opfern). Klicke es mit seiner Art gewählt an, um es auszuwählen und Drehung, Ringe oder Position zu ändern oder es zu entfernen; mit einer anderen Art gewählt nimmt es diese Art an.",
-                "curve": "Zeige auf eine Viertelkachel in Raum 3, um ihre vier Kurven zu sehen; die nächste (blau) wird mit einem Klick gesetzt. Klicke dieselbe erneut, um sie zu entfernen.",
-                "select": "Wähle Wände, Räume, Böden und Opfer zusammen aus, um sie zu verschieben, zu kopieren, einzufügen oder zu leeren.",
-                "shape": "Ändere Größe und Form der Karte; die Außenwände folgen von selbst. Umriss: klicke oder ziehe über Kacheln, um sie aus der Karte zu nehmen oder zurückzuholen. Einfügen / Entfernen: füge eine Zeile oder Spalte dort ein, wo du klickst, oder nimm sie heraus."
-            },
-            "floors": {
-                "checkpoint": "Checkpoint",
-                "black": "Loch",
-                "swamp": "Sumpf",
-                "start": "Start",
-                "clear": "Keiner",
-                "contact": "Kontaktkachel"
-            },
-            "problems": {
-                "noStart": "Es gibt keine Startkachel",
-                "victimNoWall": "Einige Opfer haben ihre Wand verloren ({{count}})",
-                "victimInPassage": "Einige Opfer liegen in einem Durchgang zwischen Bereichen ({{count}}): In Durchgängen gibt es keine (Regel {{rule_passageTokens}})",
-                "victimUnreachable": "Einige Opfer liegen dort, wo der Roboter nicht hinkommt ({{count}}): Wo der Roboter nicht hinkann, gibt es keine (Regel {{rule_reach}})",
-                "wallRule": "Einige Wände folgen nicht den Regeln ihres Raums ({{count}})",
-                "room4Checkpoint": "Die Kachel von Raum 4 direkt hinter einem Durchgang ist kein Checkpoint ({{count}}, Regel {{rule_room4Checkpoint}}). Beim Setzen eines Durchgangs wird sie von selbst gesetzt",
-                "customRoom4NoPicture": "Raum 4 ist noch nicht gezeichnet",
-                "presetNotSupported": "Vorlagen für Raum 4 sind in diesem Editor nicht verfügbar (wechsle zu benutzerdefiniert oder nutze den klassischen Editor)",
-                "room4Untyped": "Einige Opfer in Raum 4 haben keinen Typ ({{count}}): Gib ihnen einen in Raum 4 zeichnen",
-                "room4Unreachable": "Einige Opfer in Raum 4 liegen dort, wo der Roboter nicht hinkommt ({{count}}): Wo der Roboter nicht hinkann, gibt es keine (Regel {{rule_reach}})",
-                "victimMisplaced": "Entlang ihrer Wand verschobene Opfer überlappen das Ende einer Wand oder ein anderes Opfer ({{count}})",
-                "contactInside": "Kontaktkacheln nicht an der Außenwand ({{count}}). Eine Kontaktkachel liegt nur auf einer Kachel am Rand nach außen"
-            },
-            "hints": {
-                "newMapSize": "Eine neue Karte: Lege zuerst ihre Größe (in Kacheln) im Bereich links fest",
-                "someRefused": "{{count}} Stücke wurden weggelassen: Die Raumregeln erlauben sie nicht",
-                "refusedHere": "Den roten Teil erlauben die Regeln dieses Raums nicht",
-                "noBorder": "Das ist keine Raumgrenze",
-                "passageHere": "Klicke auf eine Raumgrenze (gepunktet)",
-                "victim_noWall": "Auf dieser Seite ist keine Wand",
-                "victim_passage": "In einen Durchgang zwischen Bereichen kommen keine Opfer (Regel {{rule_passageTokens}})",
-                "victim_quarterTile": "Opfer in den Räumen 2 und 3 folgen später",
-                "victim_room4": "Opfer in Raum 4 werden im Raum-4-Editor gesetzt",
-                "victim_outside": "Außerhalb der Karte",
-                "curve_curveRoom3": "Gebogene Wände gibt es nur in Raum 3",
-                "curve_room4": "Nicht in Raum 4",
-                "victim_notQuarterTile": "Nicht hier",
-                "room4NoTiles": "Male zuerst den Bereich von Raum 4 mit dem Raumpinsel",
-                "passage_open": "Durchgang gesetzt",
-                "passage_moved": "Durchgang auf diese Seite verschoben",
-                "passage_closed": "Durchgang entfernt",
-                "passageOpen": "Klicke, um den Durchgang auf die farbige Seite zu setzen",
-                "passageClose": "Klicke, um den Durchgang zu entfernen",
-                "passageRemove": "Klicke, um diesen Durchgang zu entfernen",
-                "shapeOut": "Klicke oder ziehe, um Kacheln aus der Karte zu nehmen",
-                "shapeIn": "Klicke oder ziehe, um Kacheln zurück in die Karte zu holen",
-                "passageRoom4": "Ein Durchgang in Raum 4 kommt auf die Kachel außerhalb von Raum 4 (wie es der Raum-4-Editor und die Checkpoint-Regel {{rule_room4Checkpoint}} erwarten)",
-                "regionPick": "Ziehen zum Auswählen",
-                "regionDrag": "Ziehen zum Verschieben, Alt+Ziehen zum Kopieren. Pfeiltasten verschieben um eine Kachel; auch Strg+C / X / V und Entf funktionieren",
-                "regionCopied": "Kopiert. Strg+V fügt an der Kachel unter dem Zeiger ein",
-                "regionNoRoom": "Daneben oder darunter ist kein Platz für eine Kopie",
-                "line_addRow": "Klicke, um an der grünen Linie eine Zeile hinzuzufügen",
-                "line_addCol": "Klicke, um an der grünen Linie eine Spalte hinzuzufügen",
-                "line_delRow": "Klicke, um die rote Zeile zu entfernen",
-                "line_delCol": "Klicke, um die rote Spalte zu entfernen",
-                "lineLimit": "Die Karte bleibt bei 1 bis 40 Kacheln",
-                "fixed": "Behoben (rückgängig: Strg+Z)",
-                "fixPartly": "Behoben, was sich beheben ließ; den Rest musst du selbst erledigen",
-                "fixAllLeft": "Behoben, was sich beheben ließ; {{count}} bleiben für dich (rückgängig: Strg+Z)",
-                "undone": "Rückgängig gemacht (wiederholen: Strg+Y)",
-                "redone": "Wiederholt",
-                "wallsDrawn": "{{cm}} cm Wand gezeichnet",
-                "lineDone_addRow": "Zeile eingefügt (rückgängig: Strg+Z)",
-                "lineDone_addCol": "Spalte eingefügt (rückgängig: Strg+Z)",
-                "lineDone_delRow": "Zeile entfernt (rückgängig: Strg+Z)",
-                "lineDone_delCol": "Spalte entfernt (rückgängig: Strg+Z)",
-                "lineDrawing": "{{cm}} cm Wand. Loslassen zum Zeichnen, Esc zum Abbrechen (zurückgehen nimmt eine Ecke weg)",
-                "lineDrawingStraight": "{{cm}} cm gerade Wand. Loslassen zum Zeichnen, Esc zum Abbrechen",
-                "line_room4": "Keine Wände in Raum 4: Doppelklicke, um ihn im Raum-4-Editor zu zeichnen",
-                "line_fine": "Ziehen, um Wände zu zeichnen (Raum {{room}}: 6-cm-Raster). Umschalt+Ziehen für eine einzige gerade Linie",
-                "line_tile": "Ziehen, um Wände zu zeichnen (Raum 1: Kachelkanten, 12 cm). Umschalt+Ziehen für eine einzige gerade Linie",
-                "hand": "Ziehen, um die Ansicht zu verschieben",
-                "room_outside": "Außerhalb der Karte (das Umriss-Werkzeug holt sie zurück)",
-                "room_room4": "Eine Kachel von Raum 4: Doppelklicke, um in Raum 4 zu zeichnen",
-                "room_same": "Schon Raum {{room}}. Wähle den Raum zum Malen im linken Bereich",
-                "room_paint": "Klicke oder ziehe, um Raum {{room}} zu malen (jetzt Raum {{cur}})",
-                "floor_outside": "Außerhalb der Karte",
-                "floor_isStart": "Das ist die Startkachel (der Radierer entfernt sie)",
-                "floor_start": "Klicke, um den Start hierher zu verschieben (es gibt einen Start)",
-                "floor_clear": "Klicke, um den Boden zu entfernen (Loch, Sumpf, Checkpoint)",
-                "floor_off": "Klicke zum Entfernen: {{floor}}",
-                "floor_on": "Klicke zum Setzen: {{floor}}",
-                "curve_on": "Klicke, um die blaue Kurve hierher zu setzen",
-                "curve_off": "Klicke, um diese Kurve zu entfernen",
-                "erase_victim": "Klicke, um dieses Opfer zu entfernen",
-                "erase_curve": "Klicke, um diese Kurve zu entfernen (ziehen zum Weitermachen)",
-                "erase_wall": "Klicke, um diese Wand zu entfernen (6 cm; ziehen zum Weitermachen)",
-                "erase_wallWhole": "Klicke, um diese Wand zu entfernen (12 cm; ziehen zum Weitermachen)",
-                "erase_floor": "Klicke, um den Boden dieser Kachel zu entfernen",
-                "erase_start": "Klicke, um die Startkachel zu entfernen",
-                "victim_place": "Klicke, um „{{name}}“ zu setzen",
-                "victim_move": "Klicke, um „{{name}}“ hierher zu setzen (das Opfer der Kachel wandert hierher: eins pro Kachel)",
-                "victim_replace": "Klicke, um es in „{{name}}“ zu ändern",
-                "victim_unreachable": "Der Roboter kommt hier nicht nahe heran, also kommt hier kein Opfer hin (Regel {{rule_reach}})",
-                "victim_selectDrag": "Klicke zum Auswählen, ziehe, um es entlang seiner Wand zu verschieben",
-                "victim_moveSlot": "Klicke, um „{{name}}“ hierher zu setzen (das Opfer auf dieser Fläche wandert hierher)",
-                "victim_moving": "{{cm}} cm entlang seiner Wand (stoppt vor dem Wandende und vor anderen Opfern)",
-                "victim_moved": "Auf {{cm}} cm entlang seiner Wand verschoben (rückgängig: Strg+Z)",
-                "victim_noRoom": "Hier ist kein Platz für ein Opfer (zu nah am Wandende oder an einem anderen Opfer)",
-                "rulesSwitched": "Zu den Regeln {{year}} gewechselt (rückgängig: Strg+Z)",
-                "floor_notOuter": "{{floor}}: nur auf einer Kachel an der Außenwand",
-                "openedOtherYear": "Diese Karte wurde mit den Regeln {{year}} geöffnet. Um sie auf die Regeln {{chosen}} zu bringen, wechsle über Regeln in der oberen Leiste"
-            },
-            "drawRoom4": "Raum 4 zeichnen",
-            "drawRoom4Note": "Ein Doppelklick auf den Bereich von Raum 4 öffnet ihn auch",
-            "exportFailed": "Der Weltexport ist fehlgeschlagen",
-            "exportBroken": "Die Welt hätte einen Wert, der keine Zahl ist, deshalb wurde keine Datei erstellt (Webots würde sie als leere Welt öffnen). Bitte melde das: {{line}}",
-            "showWhere": "Klicke, um zu sehen, wo",
-            "restore": "Letzte Arbeit öffnen",
-            "restoreOtherYear": "Die gespeicherte Arbeit ist eine Karte der Regeln {{year}}. Wähle oben die Regeln {{year}}, um sie zu öffnen (um sie auf die Regeln eines anderen Jahres zu bringen, öffne sie und wechsle dann über Regeln in der oberen Leiste)",
-            "ctRings": "Kognitives Ziel",
-            "ctFake": "Falsch",
-            "rot": "Drehung (Grad)",
-            "remove": "Entfernen",
-            "newShort": "Neu",
-            "openShort": "Öffnen",
-            "saveShort": "Speichern",
-            "toolsTitle": "Werkzeuge",
-            "kind": "Art",
-            "roomNote1": "12-cm-Wände",
-            "roomNote2": "6-cm-Wände",
-            "roomNote3": "6-cm-Wände, Kurven",
-            "roomNote4": "als Bild gezeichnet",
-            "emptyTitle": "Eine Karte beginnen",
-            "emptyLead": "Erstelle eine neue oder öffne eine gespeicherte Karte (JSON).",
-            "openJson": "JSON öffnen",
-            "ctSum": "Summe",
-            "ctHint": "Klicke einen Ring des Ziels an, dann unten eine Farbe (jetzt Ring {{n}} von außen)",
-            "rotFixed": "Feste Drehung",
-            "rotRandom": "Zufällig",
-            "rotRandomNote": "Jedes bekommt eine zufällige Drehung",
-            "room4Hint": "Male den Bereich von Raum 4 mit dem Raumpinsel, um sein Inneres als Bild zu zeichnen.",
-            "room4NotDrawn": "Raum 4 ist noch nicht gezeichnet",
-            "room4Drawn": "Raum 4 ist gezeichnet",
-            "room4PresetBeta": "Diese Karte nutzt eine Vorlage für Raum 4 ({{name}}). Dieser Editor erstellt nur benutzerdefinierte Räume 4.",
-            "room4ToCustom": "Zu einem benutzerdefinierten Raum 4 wechseln",
-            "mapSize": "Kartengröße",
-            "mapSizeNote": "Klicke auf eine Zahl, um sie einzutippen, oder nutze − und + (1-40). Die Karte wächst oder schrumpft rechts und unten; was noch passt, bleibt. Um in der Mitte eine Zeile oder Spalte einzufügen, nutze unten Zeile einfügen / Spalte einfügen.",
-            "checksOpen": "Öffnen",
-            "checksFold": "Einklappen",
-            "regionNone": "Ziehe über Kacheln, um sie auszuwählen. Ziehe die Auswahl, um sie zu verschieben (mit Alt eine Kopie); die Pfeiltasten verschieben sie kachelweise.",
-            "regionSize": "{{size}} Kacheln ausgewählt",
-            "copy": "Kopieren",
-            "cut": "Ausschneiden",
-            "duplicate": "Duplizieren",
-            "clearRegion": "Leeren",
-            "paste": "Einfügen",
-            "regionHelp": "Ziehe innerhalb der Auswahl, um sie zu verschieben, Alt+Ziehen verschiebt eine Kopie. Einfügen setzt die obere linke Ecke auf die Kachel unter dem Zeiger. Esc hebt die Auswahl auf.",
-            "selectedVictim": "Ausgewähltes Opfer",
-            "selectDone": "Fertig",
-            "shapeModes": {
+            "tiles": "Kacheln"
+        },
+        "shape": {
+            "title": "Auf der Karte bearbeiten",
+            "modes": {
                 "outline": "Umriss (uneben)",
                 "addRow": "Zeile einfügen",
                 "addCol": "Spalte einfügen",
                 "delRow": "Zeile entfernen",
                 "delCol": "Spalte entfernen"
+            }
+        }
+    },
+    "tools": {
+        "title": "Werkzeuge",
+        "names": {
+            "hand": "Verschieben",
+            "room": "Räume",
+            "passage": "Durchgänge",
+            "line": "Linie",
+            "eraser": "Radierer",
+            "floor": "Boden",
+            "victim": "Opfer",
+            "curve": "Kurve",
+            "select": "Auswählen",
+            "shape": "Umriss"
+        },
+        "help": {
+            "hand": "Ziehen, um die Karte zu verschieben.",
+            "room": "Male Kacheln in einen Raum (Raum 1 nimmt sie wieder zurück). Wände entstehen von selbst, wo Räume aneinandergrenzen, und rund um die Karte. Raum 4 wird mit der Schaltfläche unten als Bild gezeichnet.",
+            "passage": "Klicke nahe einer Raumgrenze: Die Kachel auf der Seite, auf die du klickst, wird zum Durchgang (erneut klicken schließt ihn, auf der anderen Seite klicken verschiebt ihn dorthin). Klicke in die Mitte einer Durchgangskachel, um ihn zu entfernen. Ein Durchgang, der nicht mehr zu seinen Räumen passt, verschwindet von selbst.",
+            "line": "Ziehen, um Wände zu zeichnen. Die Linie folgt dem Zeiger, sodass ein Zug ein Zickzack zeichnen kann (geh den Weg zurück, um eine Ecke rückgängig zu machen). Beginne mit gedrückter Umschalttaste für eine einzige gerade Linie. Raum 1 rastet auf 12 cm (Kachelkanten) ein, Räume 2 und 3 auf 6 cm. Nicht in Raum 4.",
+            "eraser": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen. Abseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint); ein Klick entfernt den Start. Die Außenwände bleiben.",
+            "floor": "Klicke auf eine Kachel, um ihren Boden festzulegen.",
+            "victim": "Klicke nahe einer Wand: Das Opfer kommt an die Wand, wo du klickst. Raum 1: an eine Kachelseite (eins pro Kachel); Räume 2 und 3: an eine Fläche der 6-cm-Wände (4 Viertel × 4 Flächen); eine Kurve hat zwei Plätze (innen und außen). Ziehe ein gesetztes Opfer, um es entlang seiner Wand zu verschieben (es stoppt vor dem Wandende und vor anderen Opfern). Klicke es mit seiner Art gewählt an, um es auszuwählen und Drehung, Ringe oder Position zu ändern oder es zu entfernen; mit einer anderen Art gewählt nimmt es diese Art an.",
+            "curve": "Zeige auf eine Viertelkachel in Raum 3, um ihre vier Kurven zu sehen; die nächste (blau) wird mit einem Klick gesetzt. Klicke dieselbe erneut, um sie zu entfernen.",
+            "select": "Wähle Wände, Räume, Böden und Opfer zusammen aus, um sie zu verschieben, zu kopieren, einzufügen oder zu leeren.",
+            "shape": "Ändere Größe und Form der Karte; die Außenwände folgen von selbst. Umriss: klicke oder ziehe über Kacheln, um sie aus der Karte zu nehmen oder zurückzuholen. Einfügen / Entfernen: füge eine Zeile oder Spalte dort ein, wo du klickst, oder nimm sie heraus."
+        },
+        "hints": {
+            "select": "Ziehe, um Kacheln auszuwählen (Wände, Räume, Böden und Opfer werden zusammen verschoben oder kopiert)",
+            "select_region": "{{size}} Kacheln ausgewählt: darin ziehen zum Verschieben, Strg+C / X / V, Entf, Esc zum Loslassen",
+            "hand": "Ziehen, um die Ansicht zu verschieben",
+            "shape_outline": "Klicke oder ziehe über Kacheln, um sie aus der Karte zu nehmen oder zurückzuholen. Die Größe steht im linken Bereich",
+            "shape_addRow": "Zeige auf die Grenze, wo die Zeile hinkommt, und klicke",
+            "shape_addCol": "Zeige auf die Grenze, wo die Spalte hinkommt, und klicke",
+            "shape_delRow": "Zeige auf die Zeile, die raus soll, und klicke",
+            "shape_delCol": "Zeige auf die Spalte, die raus soll, und klicke",
+            "room": "Ziehe über Kacheln, um Raum {{room}} zu malen. Wände an Grenzen und außen kommen von selbst",
+            "passage": "Klicke nahe einer Raumgrenze (gepunktet), um einen Durchgang zu setzen",
+            "line": "Ziehe, um Wände zu zeichnen und unterwegs um Ecken zu gehen; Umschalttaste für eine gerade Linie",
+            "curve": "Zeige auf eine Viertelkachel in Raum 3 und klicke die blaue Kurve",
+            "eraser": "Zeige auf eine Wand, Kurve, ein Opfer oder einen Boden und klicke (ziehen zum Weitermachen)",
+            "floor": "Klicke auf eine Kachel zum Setzen: {{floor}} (erneut zum Entfernen)",
+            "victim": "Klicke nahe einer Wand, um „{{name}}“ dort zu setzen, wo du klickst (danach entlang der Wand ziehen). Wähle die Art im linken Bereich",
+            "victim_selected": "Ziehe das ausgewählte Opfer, um es entlang seiner Wand zu verschieben. Ändere Drehung, Ringe oder Position im linken Bereich oder entferne es"
+        }
+    },
+    "rooms": {
+        "name": "Raum {{n}}",
+        "notes": {
+            "1": "12-cm-Wände",
+            "2": "6-cm-Wände",
+            "3": "6-cm-Wände, Kurven",
+            "4": "als Bild gezeichnet"
+        },
+        "room4": {
+            "name": "Raum 4",
+            "hint": "Male den Bereich von Raum 4 mit dem Raumpinsel, um sein Inneres als Bild zu zeichnen.",
+            "notDrawn": "Raum 4 ist noch nicht gezeichnet",
+            "drawn": "Raum 4 ist gezeichnet",
+            "draw": "Raum 4 zeichnen",
+            "drawNote": "Ein Doppelklick auf den Bereich von Raum 4 öffnet ihn auch",
+            "preset": "Diese Karte nutzt eine Vorlage für Raum 4 ({{name}}). Dieser Editor erstellt nur benutzerdefinierte Räume 4.",
+            "toCustom": "Zu einem benutzerdefinierten Raum 4 wechseln"
+        }
+    },
+    "passages": {
+        "blue": "Blau",
+        "yellow": "Gelb",
+        "green": "Grün",
+        "purple": "Lila",
+        "orange": "Orange",
+        "red": "Rot"
+    },
+    "floors": {
+        "checkpoint": "Checkpoint",
+        "black": "Loch",
+        "swamp": "Sumpf",
+        "start": "Start",
+        "clear": "Keiner",
+        "contact": "Kontaktkachel"
+    },
+    "victims": {
+        "types": {
+            "harmed": "Verletzt",
+            "stable": "Stabil",
+            "unharmed": "Unverletzt",
+            "fakeHarmed": "Verletzt",
+            "fakeStable": "Stabil",
+            "fakeUnharmed": "Unverletzt"
+        },
+        "kind": "Art",
+        "fake": "Falsches Opfer",
+        "selected": "Ausgewähltes Opfer",
+        "turn": {
+            "title": "Drehung (Grad)",
+            "fixed": "Feste Drehung",
+            "random": "Zufällig",
+            "randomNote": "Jedes bekommt eine zufällige Drehung",
+            "help": "Dreht sich im Uhrzeigersinn, vom Roboter aus gesehen. 0° ist aufrecht. Ziehe am Drehregler oder nutze die Schaltflächen.",
+            "dialHint": "Ziehen zum Drehen (Umschalttaste für 1°-Schritte). Pfeiltasten gehen auch.",
+            "dialRandom": "Zufälliger Winkel"
+        },
+        "along": {
+            "title": "Position entlang der Wand",
+            "note": "Du kannst es auch auf der Karte ziehen (Schritte von 0,1 cm)",
+            "middle": "In die Mitte"
+        }
+    },
+    "targets": {
+        "types": {
+            "F": "Entzündliches Gas",
+            "P": "Gift",
+            "C": "Ätzend",
+            "O": "Organisches Peroxid",
+            "X": "Falsches Ziel"
+        },
+        "rings": "Kognitives Ziel",
+        "fake": "Falsch",
+        "sum": "Summe",
+        "hint": "Klicke einen Ring des Ziels an, dann unten eine Farbe (jetzt Ring {{n}} von außen)"
+    },
+    "select": {
+        "none": "Ziehe über Kacheln, um sie auszuwählen. Ziehe die Auswahl, um sie zu verschieben (mit Alt eine Kopie); die Pfeiltasten verschieben sie kachelweise.",
+        "size": "{{size}} Kacheln ausgewählt",
+        "help": "Ziehe innerhalb der Auswahl, um sie zu verschieben, Alt+Ziehen verschiebt eine Kopie. Einfügen setzt die obere linke Ecke auf die Kachel unter dem Zeiger. Esc hebt die Auswahl auf.",
+        "copy": "Kopieren",
+        "cut": "Ausschneiden",
+        "duplicate": "Duplizieren",
+        "paste": "Einfügen",
+        "clear": "Leeren"
+    },
+    "linear": {
+        "label": "Linear",
+        "title": "Linear / schwebend einfärben (bestimmt, was Opfer wert sind)",
+        "noStart": "Setze die Startkachel, um linear / schwebend zu sehen",
+        "legend": {
+            "linear": "Lineare Kacheln (an Wänden, die mit dem Start verbunden sind: Opfer sind weniger wert)",
+            "floating": "Schwebende Kacheln (Opfer sind mehr wert)",
+            "floatingWall": "Schwebende Wände",
+            "unreached": "Vom Start aus nicht erreicht (kein Durchgang, ...): weder linear noch schwebend"
+        }
+    },
+    "checks": {
+        "title": "Prüfungen",
+        "none": "Keine Probleme",
+        "open": "Öffnen",
+        "fold": "Einklappen",
+        "showWhere": "Klicke, um zu sehen, wo",
+        "fix": {
+            "all": "Alles Behebbare beheben",
+            "short": "Beheben",
+            "this": "Dieses Problem beheben",
+            "drawShort": "Zeichnen",
+            "draw": "Raum-4-Editor öffnen"
+        },
+        "problems": {
+            "noStart": "Es gibt keine Startkachel",
+            "victimNoWall": "Einige Opfer haben ihre Wand verloren ({{count}})",
+            "victimInPassage": "Einige Opfer liegen in einem Durchgang zwischen Bereichen ({{count}}): In Durchgängen gibt es keine (Regel {{rule_passageTokens}})",
+            "victimUnreachable": "Einige Opfer liegen dort, wo der Roboter nicht hinkommt ({{count}}): Wo der Roboter nicht hinkann, gibt es keine (Regel {{rule_reach}})",
+            "wallRule": "Einige Wände folgen nicht den Regeln ihres Raums ({{count}})",
+            "room4Checkpoint": "Die Kachel von Raum 4 direkt hinter einem Durchgang ist kein Checkpoint ({{count}}, Regel {{rule_room4Checkpoint}}). Beim Setzen eines Durchgangs wird sie von selbst gesetzt",
+            "customRoom4NoPicture": "Raum 4 ist noch nicht gezeichnet",
+            "presetNotSupported": "Vorlagen für Raum 4 sind in diesem Editor nicht verfügbar (wechsle zu benutzerdefiniert oder nutze den klassischen Editor)",
+            "room4Untyped": "Einige Opfer in Raum 4 haben keinen Typ ({{count}}): Gib ihnen einen in Raum 4 zeichnen",
+            "room4Unreachable": "Einige Opfer in Raum 4 liegen dort, wo der Roboter nicht hinkommt ({{count}}): Wo der Roboter nicht hinkann, gibt es keine (Regel {{rule_reach}})",
+            "victimMisplaced": "Entlang ihrer Wand verschobene Opfer überlappen das Ende einer Wand oder ein anderes Opfer ({{count}})",
+            "contactInside": "Kontaktkacheln nicht an der Außenwand ({{count}}). Eine Kontaktkachel liegt nur auf einer Kachel am Rand nach außen"
+        },
+        "connection": {
+            "passageNoRoom": "Es gibt einen {{name}}-Durchgang (Raum {{from}} ⇄ Raum {{to}}), aber keinen Raum {{room}}.",
+            "passageMisplaced": "Durch den {{name}}-Durchgang (Raum {{from}} ⇄ Raum {{to}}) kommt man nicht zugleich in Raum {{from}} und Raum {{to}}. Lege die Durchgangskachel in einen der Räume und lass sie zu beiden offen.",
+            "unmarkedGap": "Zwischen Raum {{from}} und Raum {{to}} gibt es {{count}} Lücke(n) ohne {{name}}-Durchgangskachel. Jede Lücke, durch die ein Roboter kommen könnte, muss eine {{name}}-Durchgangskachel sein oder mit einer Wand geschlossen werden.",
+            "notConnected": "Raum {{room}} ist nicht über Durchgänge mit Raum 1 verbunden."
+        }
+    },
+    "score": {
+        "title": "Die höchstmögliche Punktzahl dieser Karte",
+        "button": "Höchstpunktzahl (berechnet nach Regel {{rule_scoring}})",
+        "short": "Max.",
+        "unit": " Pkt.",
+        "lead": "Was ein Roboter erzielt, wenn er jedes erreichbare Opfer und kognitive Ziel mit dem richtigen Typ erkennt und jeden Checkpoint passiert (Regel {{rule_scoring}}).",
+        "area": "Raum {{n}}",
+        "multiplier": "×{{m}}",
+        "victims": "Opfer {{n}}",
+        "targets": "Ziele {{n}}",
+        "checkpoints": "CP {{n}}",
+        "field": "Erkennung, Typ und Checkpoints",
+        "withExit": "Mit Ausgangsbonus (+10 %)",
+        "withMap": "Dazu mit vollem Kartierungsbonus (×2,2)",
+        "noStart": "Setze die Startkachel, um sie zu berechnen.",
+        "unreachableTokens": "{{n}} Opfer oder Ziele, an die der Roboter nicht nahe herankommt, sind nicht mitgezählt (behebe sie in den Prüfungen).",
+        "unreachableCheckpoints": "{{n}} Checkpoints, die der Roboter nicht erreichen kann, sind nicht mitgezählt.",
+        "presetNote": "Eine Vorlage für Raum 4 wird nicht gezählt (dieser Editor nutzt nur einen benutzerdefinierten Raum 4).",
+        "fakeNote": "Falsche Opfer und falsche kognitive Ziele (Ringe, deren Summe nicht 0-3 ergibt) bringen keine Punkte.",
+        "untypedNote": "{{n}} Opfer in Raum 4 ohne Typ sind nicht mitgezählt."
+    },
+    "status": {
+        "newMapSize": "Eine neue Karte: Lege zuerst ihre Größe (in Kacheln) im Bereich links fest",
+        "someRefused": "{{count}} Stücke wurden weggelassen: Die Raumregeln erlauben sie nicht",
+        "refusedHere": "Den roten Teil erlauben die Regeln dieses Raums nicht",
+        "noBorder": "Das ist keine Raumgrenze",
+        "passageHere": "Klicke auf eine Raumgrenze (gepunktet)",
+        "victim_noWall": "Auf dieser Seite ist keine Wand",
+        "victim_passage": "In einen Durchgang zwischen Bereichen kommen keine Opfer (Regel {{rule_passageTokens}})",
+        "victim_quarterTile": "Opfer in den Räumen 2 und 3 folgen später",
+        "victim_room4": "Opfer in Raum 4 werden im Raum-4-Editor gesetzt",
+        "victim_outside": "Außerhalb der Karte",
+        "curve_curveRoom3": "Gebogene Wände gibt es nur in Raum 3",
+        "curve_room4": "Nicht in Raum 4",
+        "victim_notQuarterTile": "Nicht hier",
+        "room4NoTiles": "Male zuerst den Bereich von Raum 4 mit dem Raumpinsel",
+        "passage_open": "Durchgang gesetzt",
+        "passage_moved": "Durchgang auf diese Seite verschoben",
+        "passage_closed": "Durchgang entfernt",
+        "passageOpen": "Klicke, um den Durchgang auf die farbige Seite zu setzen",
+        "passageClose": "Klicke, um den Durchgang zu entfernen",
+        "passageRemove": "Klicke, um diesen Durchgang zu entfernen",
+        "shapeOut": "Klicke oder ziehe, um Kacheln aus der Karte zu nehmen",
+        "shapeIn": "Klicke oder ziehe, um Kacheln zurück in die Karte zu holen",
+        "passageRoom4": "Ein Durchgang in Raum 4 kommt auf die Kachel außerhalb von Raum 4 (wie es der Raum-4-Editor und die Checkpoint-Regel {{rule_room4Checkpoint}} erwarten)",
+        "regionPick": "Ziehen zum Auswählen",
+        "regionDrag": "Ziehen zum Verschieben, Alt+Ziehen zum Kopieren. Pfeiltasten verschieben um eine Kachel; auch Strg+C / X / V und Entf funktionieren",
+        "regionCopied": "Kopiert. Strg+V fügt an der Kachel unter dem Zeiger ein",
+        "regionNoRoom": "Daneben oder darunter ist kein Platz für eine Kopie",
+        "line_addRow": "Klicke, um an der grünen Linie eine Zeile hinzuzufügen",
+        "line_addCol": "Klicke, um an der grünen Linie eine Spalte hinzuzufügen",
+        "line_delRow": "Klicke, um die rote Zeile zu entfernen",
+        "line_delCol": "Klicke, um die rote Spalte zu entfernen",
+        "lineLimit": "Die Karte bleibt bei 1 bis 40 Kacheln",
+        "fixed": "Behoben (rückgängig: Strg+Z)",
+        "fixPartly": "Behoben, was sich beheben ließ; den Rest musst du selbst erledigen",
+        "fixAllLeft": "Behoben, was sich beheben ließ; {{count}} bleiben für dich (rückgängig: Strg+Z)",
+        "undone": "Rückgängig gemacht (wiederholen: Strg+Y)",
+        "redone": "Wiederholt",
+        "wallsDrawn": "{{cm}} cm Wand gezeichnet",
+        "lineDone_addRow": "Zeile eingefügt (rückgängig: Strg+Z)",
+        "lineDone_addCol": "Spalte eingefügt (rückgängig: Strg+Z)",
+        "lineDone_delRow": "Zeile entfernt (rückgängig: Strg+Z)",
+        "lineDone_delCol": "Spalte entfernt (rückgängig: Strg+Z)",
+        "lineDrawing": "{{cm}} cm Wand. Loslassen zum Zeichnen, Esc zum Abbrechen (zurückgehen nimmt eine Ecke weg)",
+        "lineDrawingStraight": "{{cm}} cm gerade Wand. Loslassen zum Zeichnen, Esc zum Abbrechen",
+        "line_room4": "Keine Wände in Raum 4: Doppelklicke, um ihn im Raum-4-Editor zu zeichnen",
+        "line_fine": "Ziehen, um Wände zu zeichnen (Raum {{room}}: 6-cm-Raster). Umschalt+Ziehen für eine einzige gerade Linie",
+        "line_tile": "Ziehen, um Wände zu zeichnen (Raum 1: Kachelkanten, 12 cm). Umschalt+Ziehen für eine einzige gerade Linie",
+        "hand": "Ziehen, um die Ansicht zu verschieben",
+        "room_outside": "Außerhalb der Karte (das Umriss-Werkzeug holt sie zurück)",
+        "room_room4": "Eine Kachel von Raum 4: Doppelklicke, um in Raum 4 zu zeichnen",
+        "room_same": "Schon Raum {{room}}. Wähle den Raum zum Malen im linken Bereich",
+        "room_paint": "Klicke oder ziehe, um Raum {{room}} zu malen (jetzt Raum {{cur}})",
+        "floor_outside": "Außerhalb der Karte",
+        "floor_isStart": "Das ist die Startkachel (der Radierer entfernt sie)",
+        "floor_start": "Klicke, um den Start hierher zu verschieben (es gibt einen Start)",
+        "floor_clear": "Klicke, um den Boden zu entfernen (Loch, Sumpf, Checkpoint)",
+        "floor_off": "Klicke zum Entfernen: {{floor}}",
+        "floor_on": "Klicke zum Setzen: {{floor}}",
+        "curve_on": "Klicke, um die blaue Kurve hierher zu setzen",
+        "curve_off": "Klicke, um diese Kurve zu entfernen",
+        "erase_victim": "Klicke, um dieses Opfer zu entfernen",
+        "erase_curve": "Klicke, um diese Kurve zu entfernen (ziehen zum Weitermachen)",
+        "erase_wall": "Klicke, um diese Wand zu entfernen (6 cm; ziehen zum Weitermachen)",
+        "erase_wallWhole": "Klicke, um diese Wand zu entfernen (12 cm; ziehen zum Weitermachen)",
+        "erase_floor": "Klicke, um den Boden dieser Kachel zu entfernen",
+        "erase_start": "Klicke, um die Startkachel zu entfernen",
+        "victim_place": "Klicke, um „{{name}}“ zu setzen",
+        "victim_move": "Klicke, um „{{name}}“ hierher zu setzen (das Opfer der Kachel wandert hierher: eins pro Kachel)",
+        "victim_replace": "Klicke, um es in „{{name}}“ zu ändern",
+        "victim_unreachable": "Der Roboter kommt hier nicht nahe heran, also kommt hier kein Opfer hin (Regel {{rule_reach}})",
+        "victim_selectDrag": "Klicke zum Auswählen, ziehe, um es entlang seiner Wand zu verschieben",
+        "victim_moveSlot": "Klicke, um „{{name}}“ hierher zu setzen (das Opfer auf dieser Fläche wandert hierher)",
+        "victim_moving": "{{cm}} cm entlang seiner Wand (stoppt vor dem Wandende und vor anderen Opfern)",
+        "victim_moved": "Auf {{cm}} cm entlang seiner Wand verschoben (rückgängig: Strg+Z)",
+        "victim_noRoom": "Hier ist kein Platz für ein Opfer (zu nah am Wandende oder an einem anderen Opfer)",
+        "rulesSwitched": "Zu den Regeln {{year}} gewechselt (rückgängig: Strg+Z)",
+        "floor_notOuter": "{{floor}}: nur auf einer Kachel an der Außenwand",
+        "openedOtherYear": "Diese Karte wurde mit den Regeln {{year}} geöffnet. Um sie auf die Regeln {{chosen}} zu bringen, wechsle über Regeln in der oberen Leiste"
+    },
+    "guide": {
+        "button": "Anleitung (Lektion, Bildschirmrundgang, Raum 4 erstellen)",
+        "short": "Anleitung",
+        "empty": {
+            "title": "Neu hier? So funktioniert es",
+            "note": "Wähle, ob du beim Erstellen einer Karte lernst oder den Bildschirmrundgang machst"
+        },
+        "pick": {
+            "title": "Wie möchtest du lernen?",
+            "room4Title": "Wie möchtest du Raum 4 lernen?",
+            "lead": "Du kannst jederzeit unten rechts über Anleitung neu wählen.",
+            "later": "Später"
+        },
+        "nav": {
+            "end": "Ende",
+            "skip": "Rundgang beenden",
+            "back": "Zurück",
+            "next": "Weiter",
+            "begin": "Los geht’s",
+            "finish": "Fertig",
+            "keys": "← → zum Blättern   Esc zum Beenden"
+        },
+        "lesson": {
+            "name": "Lernen mit einer Beispielkarte",
+            "time": "Etwa 15 Minuten · zum Mitmachen",
+            "note": "Erstelle eine Beispielkarte und nutze dabei jede Funktion der Reihe nach. Jeder Schritt geht weiter, wenn er erledigt ist, und Für mich erledigen kann es für dich tun.",
+            "map": "Die geöffnete Karte wird geschlossen und eine neue begonnen (bei ungespeicherten Änderungen wirst du vorher gefragt).",
+            "tip": "Der Editor funktioniert während der Lektion wie gewohnt",
+            "todo": "Zu tun:",
+            "done": "Geschafft!",
+            "skip": "Diesen Schritt überspringen",
+            "doIt": "Für mich erledigen",
+            "fold": "Text einklappen",
+            "unfold": "Text zeigen",
+            "creatorClosed": "Der Raum-4-Editor ist geschlossen.",
+            "openCreator": "Öffnen",
+            "creatorOver": "Der Raum-4-Editor ist offen. Schließe ihn, um weiterzumachen.",
+            "closeCreator": "Schließen (OK)",
+            "planLabel": "Die fertige Beispielkarte",
+            "states": {
+                "tool": "Wähle das Werkzeug {{name}} (in der Werkzeugspalte links)"
             },
-            "fixAll": "Alles Behebbare beheben",
-            "fixShort": "Beheben",
-            "fixThis": "Dieses Problem beheben",
-            "fixDrawShort": "Zeichnen",
-            "fixDraw": "Raum-4-Editor öffnen",
-            "linear": "Linear",
-            "linearTitle": "Linear / schwebend einfärben (bestimmt, was Opfer wert sind)",
-            "legendLinear": "Lineare Kacheln (an Wänden, die mit dem Start verbunden sind: Opfer sind weniger wert)",
-            "legendFloating": "Schwebende Kacheln (Opfer sind mehr wert)",
-            "legendFloatingWall": "Schwebende Wände",
-            "linearNoStart": "Setze die Startkachel, um linear / schwebend zu sehen",
-            "legendUnreached": "Vom Start aus nicht erreicht (kein Durchgang, ...): weder linear noch schwebend",
-            "close": "Schließen",
-            "cancel": "Abbrechen",
-            "discardTitle": "Ungespeicherte Änderungen",
-            "saveFirst": "Speichern und weiter",
-            "discardGo": "Nicht speichern",
-            "exportBlockedLead": "Behebe diese {{count}}, um zu exportieren. Klicke eins an, um zu sehen, wo es ist.",
-            "betaMenu": "Über diesen Editor",
-            "betaLead": "Erebus World Editor (Beta). Er liest und schreibt dasselbe JSON wie der klassische Editor, sodass eine gespeicherte Karte in beiden geöffnet werden kann.",
-            "backToClassicNote": "Speichere zuerst die Karte, an der du arbeitest (Speichern, JSON)",
-            "tourStart": "Anleitung (Lektion, Bildschirmrundgang, Raum 4 erstellen)",
-            "tourShort": "Anleitung",
-            "listSep": ", ",
-            "rules": {
-                "title": "Die Regeln dieser Karte",
-                "label": "Regeln {{year}}",
-                "lead": "Die Regeln, denen diese Karte folgt: Prüfungen, Punktzahl und die exportierte Welt richten sich nach ihnen.",
-                "book": "Regelwerk",
-                "soon": "Demnächst",
-                "switchTitle": "Zu den Regeln {{year}} wechseln?",
-                "switchLead": "Diese Karte wechselt von den Regeln {{from}} zu den Regeln {{to}}. Wände und Opfer, die nicht zu den neuen Regeln passen, werden in den Prüfungen angezeigt (rückgängig: Strg+Z).",
-                "switch": "Wechseln",
-                "pick": "Regeln welchen Jahres?",
-                "pickNote": "Eine gespeicherte Karte öffnet sich mit ihren eigenen Regeln. Du kannst sie später auch in der oberen Leiste wechseln.",
-                "draft": "Entwurf"
-            },
-            "build": {
-                "title": "Über diesen Build",
-                "commit": "Commit",
-                "dirty": "(mit nicht committeten Änderungen)",
-                "branch": "Branch",
-                "commitDate": "Committet",
-                "builtAt": "Gebaut",
-                "copy": "Kopieren",
-                "copied": "Kopiert"
-            },
-            "tourEmpty": "Neu hier? So funktioniert es",
-            "tourEmptyNote": "Wähle, ob du beim Erstellen einer Karte lernst oder den Bildschirmrundgang machst",
-            "tourEnd": "Ende",
-            "tourSkip": "Rundgang beenden",
-            "tourBack": "Zurück",
-            "tourNext": "Weiter",
-            "tourBegin": "Los geht’s",
-            "tourFinish": "Fertig",
-            "tourKeys": "← → zum Blättern   Esc zum Beenden",
-            "guideLesson": "Lernen mit einer Beispielkarte",
-            "guideTour": "Bildschirmrundgang",
-            "guideRoom4": "Raum 4 durch Erstellen lernen",
-            "guideRoom4Need": "Male zuerst Raum 4 mit dem Raumwerkzeug.",
-            "lessonTodo": "Zu tun:",
-            "lessonDone": "Geschafft!",
-            "lessonSkip": "Diesen Schritt überspringen",
-            "lessonDoIt": "Für mich erledigen",
-            "lessonCreatorClosed": "Der Raum-4-Editor ist geschlossen.",
-            "lessonOpenCreator": "Öffnen",
-            "lessonTip": "Der Editor funktioniert während der Lektion wie gewohnt",
-            "pickTitle": "Wie möchtest du lernen?",
-            "pickLead": "Du kannst jederzeit unten rechts über Anleitung neu wählen.",
-            "pickLessonTime": "Etwa 15 Minuten · zum Mitmachen",
-            "pickLessonNote": "Erstelle eine Beispielkarte und nutze dabei jede Funktion der Reihe nach. Jeder Schritt geht weiter, wenn er erledigt ist, und Für mich erledigen kann es für dich tun.",
-            "pickLessonMap": "Die geöffnete Karte wird geschlossen und eine neue begonnen (bei ungespeicherten Änderungen wirst du vorher gefragt).",
-            "pickTourTime": "Etwa 3 Minuten · nur zuschauen",
-            "pickTourNote": "Jeder Teil des Bildschirms und jedes Werkzeug, einzeln hervorgehoben und erklärt. Die Karte wird nicht verändert.",
-            "pickRoom4Time": "Etwa 5 Minuten · zum Mitmachen",
-            "pickRoom4Note": "Zeichne im Raum-4-Editor selbst Wände und setze Opfer und nutze dabei jede Funktion der Reihe nach.",
-            "pickLater": "Später",
-            "guideRoom4Tour": "Rundgang durch den Raum-4-Editor",
-            "pickRoom4Title": "Wie möchtest du Raum 4 lernen?",
-            "pickRoom4TourTime": "Etwa 2 Minuten · nur zuschauen",
-            "pickRoom4TourNote": "Jeder Teil des Raum-4-Editors und jedes Werkzeug, einzeln hervorgehoben und erklärt. Das Bild wird nicht verändert.",
-            "tourRoom4Inside": "Auch den Rundgang durch den Raum-4-Editor ansehen (danach zurück hierher)",
-            "tourBackTo": "Wenn er endet, geht „{{name}}“ dort weiter, wo es war",
-            "lessonCreatorOver": "Der Raum-4-Editor ist offen. Schließe ihn, um weiterzumachen.",
-            "lessonCloseCreator": "Schließen (OK)",
-            "lessonFold": "Text einklappen",
-            "lessonUnfold": "Text zeigen",
-            "tour": {
-                "chapters": {
-                    "start": "Willkommen",
-                    "screen": "Der Bildschirm",
-                    "tools": "Werkzeuge",
-                    "shape": "Größe und Form",
-                    "rooms": "Räume",
-                    "passages": "Durchgänge",
-                    "walls": "Wände",
-                    "floors": "Böden",
-                    "victims": "Opfer",
-                    "room4": "Raum 4",
-                    "finish": "Fertigstellen und exportieren"
-                },
-                "welcome": {
-                    "title": "Willkommen im Erebus World Editor",
-                    "body": "Dieser Editor erstellt Welten für die Regeln 2026 der RoboCupJunior Rescue Simulation (Erebus). Du zeichnest die Karte direkt auf die Fläche, und Wände und Opfer rasten an den Stellen ein, die die Regeln des Raums unter dem Zeiger erlauben.\nDieser Rundgang geht jeden Teil des Bildschirms und jedes Werkzeug durch (etwa 3 Minuten). Der erklärte Teil ist hervorgehoben.\nDrücke → oder Enter für den nächsten Schritt, ← zum Zurückgehen und jederzeit Esc zum Beenden. Zum Lernen durch Mitmachen wähle unten rechts unter Anleitung Lernen mit einer Beispielkarte."
-                },
-                "file": {
-                    "title": "Datei: neu, öffnen, speichern",
-                    "body": "Neu erstellt eine leere Karte. Hat die geöffnete Karte ungespeicherte Änderungen, wird vorher gefragt, ob sie verworfen werden sollen.\nÖffnen liest das JSON einer Karte, und Speichern schreibt die Karte in eine JSON-Datei. Eine auf die Karte gezogene JSON-Datei wird ebenfalls geöffnet.\nÄnderungen werden auch im Browser gespeichert, gehen aber in einem anderen Browser oder beim Löschen der Browserdaten verloren. Sichere wichtige Karten mit Speichern als JSON."
-                },
-                "name": {
-                    "title": "Kartenname",
-                    "body": "Der Name der Karte. Klicke darauf, um ihn zu ändern.\nEr benennt das gespeicherte JSON und die exportierte Welt (.wbt)."
-                },
-                "history": {
-                    "title": "Rückgängig und wiederholen",
-                    "body": "Nimm Änderungen einzeln zurück oder wiederhole sie (bis zu 100).\nAutomatische Korrekturen und das Verschieben oder Einfügen eines Bereichs werden jeweils als ein Schritt rückgängig gemacht – probier also ruhig aus."
-                },
-                "view": {
-                    "title": "Die Karte ansehen und verschieben",
-                    "body": "Das ist die Karte. Drehe das Mausrad zum Zoomen und ziehe mit gedrückter Leertaste (oder mit der Radtaste), um sie zu verschieben. Mit dem Handwerkzeug (H) verschiebt ein einfaches Ziehen sie.\nDie Schaltflächen in der oberen Leiste (gestrichelter Rahmen) zoomen ebenfalls, und die rechte passt die ganze Karte wieder ein. Die Zahl ist der Zoom (Pixel pro cm).\nDie Karte besteht aus 12-cm-Kacheln. Jeder Raum hat seine eigene Bodenfarbe, und Wände entstehen von selbst an den Raumgrenzen und rundherum außen."
-                },
-                "rail": {
-                    "title": "Werkzeuge",
-                    "body": "Die Werkzeuge, die die Karte ändern, in vier Gruppen von oben: Ansehen (Auswählen, Hand), Karte und Räume (Form, Raum, Durchgang), Wände (Linie, Kurve, Radierer) sowie Böden und Opfer (Boden, Opfer).\nDer Buchstabe unten rechts auf jeder Schaltfläche ist ihre Taste: Ein Tastendruck wählt das Werkzeug.\nAls Nächstes die Werkzeuge einzeln, in der Reihenfolge, in der eine Karte entsteht."
-                },
-                "panel": {
-                    "title": "Was das Werkzeug tut, und seine Einstellungen",
-                    "body": "Das gewählte Werkzeug zeigt hier, wie es benutzt wird, und seine Einstellungen. Im Zweifel lies zuerst das.\nDie Statuszeile unten (gestrichelter Rahmen) sagt, was du dort tun kannst, wo der Zeiger ist, oder warum nicht."
-                },
-                "shape": {
-                    "title": "Form (X): Größe und Umriss der Karte",
-                    "body": "Eine neue Karte beginnt hier mit ihrer Größe: Klicke auf die Kacheln in der Breite oder Höhe, um sie einzutippen, oder nutze − und + (bis 40). Sie wächst oder schrumpft rechts und unten; was noch passt, bleibt.\nMit Umriss klickst oder ziehst du über Kacheln, um sie aus der Karte zu nehmen (kein Boden) oder zurückzuholen – für eine L-Form oder jede Karte, die kein Rechteck ist. Die Außenwände folgen dem Umriss von selbst.\nZeile einfügen, Spalte einfügen, Zeile entfernen und Spalte entfernen fügen dort, wo du auf die Karte klickst, eine Zeile oder Spalte ein oder nehmen sie heraus."
-                },
-                "room": {
-                    "title": "Raum (M): die Räume malen",
-                    "body": "Wähle eine Raumnummer und male Kacheln damit. Raum 1 malen nimmt eine Kachel zurück.\nJeder Raum hat seine Regeln: Raum 1 hat 12-cm-Wände (auf Kachelkanten), Raum 2 hat 6-cm-Wände, Raum 3 hat 6-cm-Wände und Kurven, und Raum 4 wird frei als Bild gezeichnet.\nWände entstehen von selbst an den Raumgrenzen und rundherum außen. Um Räume zu verbinden, nutze als Nächstes das Durchgang-Werkzeug."
-                },
-                "passage": {
-                    "title": "Durchgang (P): die Räume verbinden",
-                    "body": "Klicke nahe einer Raumgrenze: Die Kachel auf der angeklickten Seite wird zum Durchgang, und die Wand an der Grenze öffnet sich.\nErneut klicken schließt ihn. Klicke auf die andere Seite, und der Durchgang wandert auf diese Kachel. Klicke in die Mitte einer Durchgangskachel, um ihn zu entfernen.\nEin Durchgang in Raum 4 kommt auf die Kachel außerhalb von Raum 4. Durchgänge, die nach dem Neumalen der Räume nicht mehr passen, werden von selbst entfernt."
-                },
-                "line": {
-                    "title": "Linie (L): Wände zeichnen",
-                    "body": "Ziehen, um Wände zu zeichnen. Die Wand folgt dem Zeiger, sodass ein Zickzack in einem Zug entsteht; den Weg zurückgehen nimmt es zurück.\nHalte beim Beginnen die Umschalttaste für nur eine gerade Linie.\nWände rasten am Raster des Raums unter dem Zeiger ein: 12 cm (Kachelkanten) in Raum 1, 6 cm (halbe Kacheln) in den Räumen 2 und 3. In Raum 4 können sie nicht gezeichnet werden (Raum 4 ist ein Bild)."
-                },
-                "curve": {
-                    "title": "Kurve (A): gebogene Wände",
-                    "body": "Nur in Raum 3. Zeige auf ein Viertel (6-cm-Quadrat) einer Kachel in Raum 3, und die vier möglichen Kurven erscheinen blass.\nEin Klick setzt die nächste (blau). Ein erneuter Klick auf dieselbe entfernt sie."
-                },
-                "eraser": {
-                    "title": "Radierer (E)",
-                    "body": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen; was verschwinden würde, wird unter dem Zeiger rot gezeigt.\nAbseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint). Der Start verschwindet nur mit einem Klick.\nEin Zug, der auf einer Wand beginnt, lässt Böden in Ruhe, sodass Böden nicht verschwinden, während du Wände wegradierst. Die Außenwände bleiben."
-                },
-                "floor": {
-                    "title": "Boden (F): Checkpoints, Löcher, Sümpfe, der Start",
-                    "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist die Kachel, auf die der Roboter gesetzt wird: eine pro Karte. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt."
-                },
-                "victim": {
-                    "title": "Opfer (V): Opfer und kognitive Ziele",
-                    "body": "Wähle im Bereich eine Art (Buchstabenopfer Φ, Ψ, Ω und falsche, kognitive Ziele von vier Typen – entzündliches Gas, Gift, ätzend, organisches Peroxid – und ein falsches) und klicke nahe einer Wand: Es kommt an die Wand, wo du klickst.\nSie kommen an Kachelseiten in Raum 1 (eins pro Kachel), an die Flächen der 6-cm-Wände in den Räumen 2 und 3 und an zwei Plätze an einer Kurve (innen und außen). Ziehe ein gesetztes, um es entlang seiner Wand zu verschieben. Wo eins nicht hinkann, sagt die Statuszeile warum.\nDrehe am Drehregler (Feste Drehung) für seine Drehung, oder wähle Zufällig für jedes Mal eine neue. Für ein kognitives Ziel klicke einen Ring des Ziels an, dann unten eine Farbe; die Summe der Ringe ergibt den Typ.\nKlicke ein Opfer mit derselben Art an, um es auszuwählen, und ändere dann Drehung, Ringe oder Position entlang der Wand, oder entferne es. Ein Klick mit einer anderen Art ändert seine Art."
-                },
-                "room4": {
-                    "title": "Raum 4 zeichnen",
-                    "body": "Raum 4 mit dem Raumwerkzeug malen erzeugt Raum 4. Seine Wände und Opfer werden als Bild gezeichnet.\nRaum 4 zeichnen (oder ein Doppelklick auf seinen Bereich) öffnet den Raum-4-Editor: Zeichne Wände frei mit Stift, Linien und Formen, und setze Opfer an Wände. Wo der Roboter nicht hinkommt, wird rot gestreift gezeigt.\nDie Schaltfläche Anleitung im Editor zeigt ausführlich, wie Raum 4 erstellt wird. Das Bild wird auf der Karte gezeigt und geht unverändert in die exportierte Welt."
-                },
-                "select": {
-                    "title": "Auswählen (S): einen Bereich verschieben und kopieren",
-                    "body": "Ziehe, um einen Bereich von Kacheln auszuwählen; seine Wände, Räume, Böden und Opfer werden zusammen genommen.\nZiehe darin, um ihn zu verschieben, oder mit gedrückter Alt-Taste, um eine Kopie zu verschieben. Die Pfeiltasten verschieben ihn kachelweise.\nStrg+C kopiert, Strg+X schneidet aus, Strg+V fügt ein (die Kachel unter dem Zeiger ist seine obere linke Ecke), Strg+D dupliziert und Entf leert ihn. Esc lässt den Bereich los."
-                },
-                "linear": {
-                    "title": "Linear",
-                    "body": "Eingeschaltet wird jede Kachel als linear (an einer Wand, die mit dem Start verbunden ist) oder schwebend eingefärbt. Opfer auf schwebenden Kacheln bringen mehr Punkte.\nDafür braucht es die Startkachel. Der Weltexport bestimmt lineare Kacheln auf dieselbe Weise."
-                },
-                "checks": {
-                    "title": "Prüfungen",
-                    "body": "Jede Änderung wird gegen die Regeln geprüft.\nEin rotes ✕ ist ein Problem, mit dem die Welt nicht exportiert werden kann; ein gelbes ! ist eine Warnung, die einen Blick wert ist, aber die Welt kann exportiert werden.\nZeige auf einen Eintrag, um zu sehen, wo er auf der Karte ist, und klicke, um dorthin zu gehen. Klicke auf die Überschrift, um die Karte einzuklappen.\nWo der Roboter (Radius 3,7 cm) nicht hinkommt, wird auf der Karte immer rot gestreift gezeigt, und ein Opfer dort bekommt eine Warnung."
-                },
-                "fix": {
-                    "title": "Automatisch beheben",
-                    "body": "Ein Eintrag mit der Schaltfläche Beheben wird mit einem Klick behoben (Start setzen, Räume mit Durchgängen verbinden, Wände entfernen, die die Regeln nicht erlauben, und so weiter).\nAlles Behebbare beheben erledigt alles auf einmal. Gefällt dir das Ergebnis nicht, nimmt Strg+Z es zurück.\nDie Prüfungen stellen auch sicher, dass jeder Raum von Raum 1 aus über Durchgänge erreichbar ist, und zeigen einen Raum, der es nicht ist."
-                },
-                "export": {
-                    "title": "Die Welt exportieren (.wbt)",
-                    "body": "Schreibt die Weltdatei (.wbt), die Erebus lädt.\nSolange ein Problem mit rotem ✕ übrig ist, ist die Schaltfläche grau, und ein Druck darauf zeigt, was zu beheben ist; von dort aus kann es das für dich beheben.\nSichere die Karte zum Weiterbearbeiten mit Speichern (JSON), nicht als .wbt: Eine .wbt wird nicht wieder zu einer bearbeitbaren Karte."
-                },
-                "more": {
-                    "title": "Anleitung und Sprache",
-                    "body": "Anleitung unten rechts bietet jederzeit die Lektion, die eine Beispielkarte baut, diesen Rundgang und wie man Raum 4 erstellt.\nDie Sprachschaltfläche (sie zeigt Flagge und Namen der aktuellen Sprache) wählt die Sprache."
-                },
-                "done": {
-                    "title": "Das war der Rundgang",
-                    "body": "Diese Schaltfläche startet den Rundgang jederzeit erneut.\nEine gute Arbeitsreihenfolge: Größe mit Form festlegen → Räume malen → mit Durchgängen verbinden → Wände zeichnen → Böden und Opfer setzen → Prüfungen ansehen und die .wbt exportieren.\nViel Spaß beim Erstellen deiner Karten!"
-                },
-                "score": {
-                    "title": "Höchstpunktzahl",
-                    "body": "Das Meiste, was diese Karte bringen kann: jedes Opfer und kognitive Ziel, an das der Roboter herankommt, mit dem richtigen Typ erkannt, und jeder Checkpoint passiert, berechnet nach Regel {{rule_scoring}}.\nDrücke darauf für den Anteil jedes Raums und die Punktzahl mit Ausgangs- und Kartierungsbonus. Sie wird bei jeder Änderung neu berechnet."
-                }
-            },
-            "lesson": {
-                "planLabel": "Die fertige Beispielkarte",
+            "steps": {
                 "intro": {
                     "title": "Lernen mit einer Beispielkarte",
                     "body": "In dieser Lektion erstellst du die Karte oben und nutzt unterwegs die Funktionen des Editors eine nach der anderen (etwa 15 Minuten).\nRaum 1 links, Raum 2 oben in der Mitte, Raum 3 unten in der Mitte, Raum 4 rechts. Du verbindest die Räume mit Durchgängen, setzt Wände, eine Kurve, Böden und Opfer, zeichnest das Innere von Raum 4 und endest mit einer exportfertigen Welt.\nTu, was jeder Schritt verlangt, dann wird er zu Geschafft!, und Weiter geht es. Klappt etwas nicht, erledigt Für mich erledigen es für dich. Der Editor funktioniert die ganze Zeit wie gewohnt."
@@ -738,312 +748,359 @@
                     "title": "Höchstpunktzahl",
                     "body": "Der Pokal in der oberen Leiste ist das Meiste, was diese Karte bringen kann: jedes Opfer und kognitive Ziel mit dem richtigen Typ erkannt und jeder Checkpoint passiert, berechnet nach Regel {{rule_scoring}}.\nDrücke darauf für den Anteil jedes Raums und die Punktzahl mit Ausgangs- und Kartierungsbonus. Opfer auf schwebenden Kacheln und in Räumen mit höherem Multiplikator sind mehr wert."
                 }
-            },
-            "toolHints": {
-                "select": "Ziehe, um Kacheln auszuwählen (Wände, Räume, Böden und Opfer werden zusammen verschoben oder kopiert)",
-                "select_region": "{{size}} Kacheln ausgewählt: darin ziehen zum Verschieben, Strg+C / X / V, Entf, Esc zum Loslassen",
-                "hand": "Ziehen, um die Ansicht zu verschieben",
-                "shape_outline": "Klicke oder ziehe über Kacheln, um sie aus der Karte zu nehmen oder zurückzuholen. Die Größe steht im linken Bereich",
-                "shape_addRow": "Zeige auf die Grenze, wo die Zeile hinkommt, und klicke",
-                "shape_addCol": "Zeige auf die Grenze, wo die Spalte hinkommt, und klicke",
-                "shape_delRow": "Zeige auf die Zeile, die raus soll, und klicke",
-                "shape_delCol": "Zeige auf die Spalte, die raus soll, und klicke",
-                "room": "Ziehe über Kacheln, um Raum {{room}} zu malen. Wände an Grenzen und außen kommen von selbst",
-                "passage": "Klicke nahe einer Raumgrenze (gepunktet), um einen Durchgang zu setzen",
-                "line": "Ziehe, um Wände zu zeichnen und unterwegs um Ecken zu gehen; Umschalttaste für eine gerade Linie",
-                "curve": "Zeige auf eine Viertelkachel in Raum 3 und klicke die blaue Kurve",
-                "eraser": "Zeige auf eine Wand, Kurve, ein Opfer oder einen Boden und klicke (ziehen zum Weitermachen)",
-                "floor": "Klicke auf eine Kachel zum Setzen: {{floor}} (erneut zum Entfernen)",
-                "victim": "Klicke nahe einer Wand, um „{{name}}“ dort zu setzen, wo du klickst (danach entlang der Wand ziehen). Wähle die Art im linken Bereich",
-                "victim_selected": "Ziehe das ausgewählte Opfer, um es entlang seiner Wand zu verschieben. Ändere Drehung, Ringe oder Position im linken Bereich oder entferne es"
-            },
-            "lessonState": {
-                "tool": "Wähle das Werkzeug {{name}} (in der Werkzeugspalte links)"
-            },
-            "score": {
-                "title": "Die höchstmögliche Punktzahl dieser Karte",
-                "button": "Höchstpunktzahl (berechnet nach Regel {{rule_scoring}})",
-                "short": "Max.",
-                "unit": " Pkt.",
-                "lead": "Was ein Roboter erzielt, wenn er jedes erreichbare Opfer und kognitive Ziel mit dem richtigen Typ erkennt und jeden Checkpoint passiert (Regel {{rule_scoring}}).",
-                "area": "Raum {{n}}",
-                "multiplier": "×{{m}}",
-                "victims": "Opfer {{n}}",
-                "targets": "Ziele {{n}}",
-                "checkpoints": "CP {{n}}",
-                "field": "Erkennung, Typ und Checkpoints",
-                "withExit": "Mit Ausgangsbonus (+10 %)",
-                "withMap": "Dazu mit vollem Kartierungsbonus (×2,2)",
-                "noStart": "Setze die Startkachel, um sie zu berechnen.",
-                "unreachableTokens": "{{n}} Opfer oder Ziele, an die der Roboter nicht nahe herankommt, sind nicht mitgezählt (behebe sie in den Prüfungen).",
-                "unreachableCheckpoints": "{{n}} Checkpoints, die der Roboter nicht erreichen kann, sind nicht mitgezählt.",
-                "presetNote": "Eine Vorlage für Raum 4 wird nicht gezählt (dieser Editor nutzt nur einen benutzerdefinierten Raum 4).",
-                "fakeNote": "Falsche Opfer und falsche kognitive Ziele (Ringe, deren Summe nicht 0-3 ergibt) bringen keine Punkte.",
-                "untypedNote": "{{n}} Opfer in Raum 4 ohne Typ sind nicht mitgezählt."
-            },
-            "tiles": "Kacheln",
-            "shapeEdit": "Auf der Karte bearbeiten",
-            "keySheet": {
-                "title": "Bedienung",
-                "open": "Bedienung",
-                "back": "Zurück zu den Anleitungen",
-                "view": "Ansicht",
-                "edit": "Bearbeiten",
-                "select": "Auswahlwerkzeug",
-                "guide": "Hilfe",
-                "rows": {
-                    "zoom": "Vergrößern und verkleinern",
-                    "pan": "Die Ansicht verschieben",
-                    "hand": "Handwerkzeug (mit linkem Ziehen verschieben)",
-                    "undo": "Rückgängig",
-                    "redo": "Wiederholen",
-                    "cancel": "Das gerade Gezeichnete abbrechen",
-                    "tools": "Werkzeug wechseln (Buchstaben in der linken Leiste)",
-                    "copy": "Kopieren, ausschneiden, einfügen",
-                    "duplicate": "Duplizieren",
-                    "clear": "Die Auswahl leeren",
-                    "nudge": "Die Auswahl um eine Kachel verschieben",
-                    "sheet": "Diese Liste öffnen"
-                },
-                "keys": {
-                    "wheel": "Mausrad",
-                    "spaceDrag": "Leertaste + Ziehen",
-                    "middleDrag": "Ziehen mit der mittleren Taste"
-                }
-            },
-            "along": "Position entlang der Wand",
-            "alongNote": "Du kannst es auch auf der Karte ziehen (Schritte von 0,1 cm)",
-            "alongMiddle": "In die Mitte"
+            }
         },
-        "simMapEditor": {
-            "name": "Name des Entwurfs: ",
-            "rotDialHint": "Ziehen zum Drehen (Umschalttaste für 1°-Schritte). Pfeiltasten gehen auch.",
-            "rotRandom": "Zufälliger Winkel",
-            "rotHelp": "Dreht sich im Uhrzeigersinn, vom Roboter aus gesehen. 0° ist aufrecht. Ziehe am Drehregler oder nutze die Schaltflächen.",
-            "connCheck": {
-                "passageNoRoom": "Es gibt einen {{name}}-Durchgang (Raum {{from}} ⇄ Raum {{to}}), aber keinen Raum {{room}}.",
-                "passageMisplaced": "Durch den {{name}}-Durchgang (Raum {{from}} ⇄ Raum {{to}}) kommt man nicht zugleich in Raum {{from}} und Raum {{to}}. Lege die Durchgangskachel in einen der Räume und lass sie zu beiden offen.",
-                "unmarkedGap": "Zwischen Raum {{from}} und Raum {{to}} gibt es {{count}} Lücke(n) ohne {{name}}-Durchgangskachel. Jede Lücke, durch die ein Roboter kommen könnte, muss eine {{name}}-Durchgangskachel sein oder mit einer Wand geschlossen werden.",
-                "notConnected": "Raum {{room}} ist nicht über Durchgänge mit Raum 1 verbunden."
+        "tour": {
+            "name": "Bildschirmrundgang",
+            "time": "Etwa 3 Minuten · nur zuschauen",
+            "note": "Jeder Teil des Bildschirms und jedes Werkzeug, einzeln hervorgehoben und erklärt. Die Karte wird nicht verändert.",
+            "room4Inside": "Auch den Rundgang durch den Raum-4-Editor ansehen (danach zurück hierher)",
+            "backTo": "Wenn er endet, geht „{{name}}“ dort weiter, wo es war",
+            "chapters": {
+                "start": "Willkommen",
+                "screen": "Der Bildschirm",
+                "tools": "Werkzeuge",
+                "shape": "Größe und Form",
+                "rooms": "Räume",
+                "passages": "Durchgänge",
+                "walls": "Wände",
+                "floors": "Böden",
+                "victims": "Opfer",
+                "room4": "Raum 4",
+                "finish": "Fertigstellen und exportieren"
             },
-            "room4Creator": {
-                "zoomIn": "Vergrößern",
-                "zoomOut": "Verkleinern",
-                "zoomFit": "Einpassen",
-                "viewReach": "Unerreichbar",
-                "viewGuides": "Eingänge / CP",
-                "unreachableShort": "Unerreichbar {{count}}",
-                "farShort": "Nicht an der Wand {{count}}",
-                "missingShort": "Fehlende CP {{count}}",
-                "noEntranceShort": "Kein Eingang",
-                "reachOff": "Erreichbarkeit nicht berechnet",
-                "legendMapWallShort": "Kartenwände",
-                "legendCheckpointShort": "Checkpoint",
-                "sel": {
-                    "ccw": "90° nach links drehen",
-                    "cw": "90° nach rechts drehen",
-                    "h": "Links / rechts spiegeln",
-                    "v": "Oben / unten spiegeln",
-                    "duplicate": "Duplizieren",
-                    "copy": "Kopieren",
-                    "paste": "Einfügen",
-                    "delete": "Löschen",
-                    "drop": "Fertig"
+            "steps": {
+                "welcome": {
+                    "title": "Willkommen im Erebus World Editor",
+                    "body": "Dieser Editor erstellt Welten für die Regeln 2026 der RoboCupJunior Rescue Simulation (Erebus). Du zeichnest die Karte direkt auf die Fläche, und Wände und Opfer rasten an den Stellen ein, die die Regeln des Raums unter dem Zeiger erlauben.\nDieser Rundgang geht jeden Teil des Bildschirms und jedes Werkzeug durch (etwa 3 Minuten). Der erklärte Teil ist hervorgehoben.\nDrücke → oder Enter für den nächsten Schritt, ← zum Zurückgehen und jederzeit Esc zum Beenden. Zum Lernen durch Mitmachen wähle unten rechts unter Anleitung Lernen mit einer Beispielkarte."
                 },
-                "randomPlace": "Zufällig setzen",
-                "randomModes": {
-                    "current": "Gewählter Typ",
-                    "mixed": "Gemischte Typen"
+                "file": {
+                    "title": "Datei: neu, öffnen, speichern",
+                    "body": "Neu erstellt eine leere Karte. Hat die geöffnete Karte ungespeicherte Änderungen, wird vorher gefragt, ob sie verworfen werden sollen.\nÖffnen liest das JSON einer Karte, und Speichern schreibt die Karte in eine JSON-Datei. Eine auf die Karte gezogene JSON-Datei wird ebenfalls geöffnet.\nÄnderungen werden auch im Browser gespeichert, gehen aber in einem anderen Browser oder beim Löschen der Browserdaten verloren. Sichere wichtige Karten mit Speichern als JSON."
                 },
-                "randomGo": "{{n}} setzen",
-                "randomNote2": "An Wänden, denen der Roboter bis auf eine halbe Kachel nahe kommt, mindestens eine halbe Kachel voneinander entfernt.",
-                "templates": {
-                    "maze": "Labyrinth",
-                    "pillars": "Säulen",
-                    "diagonal": "Diagonalen",
-                    "zigzag": "Zickzack",
-                    "rings": "Ringe",
-                    "obstacles": "Hindernisse"
+                "name": {
+                    "title": "Kartenname",
+                    "body": "Der Name der Karte. Klicke darauf, um ihn zu ändern.\nEr benennt das gespeicherte JSON und die exportierte Welt (.wbt)."
                 },
-                "templateHints": {
-                    "maze": "Ein Labyrinth aus Gängen von einer Kachel (mit ein paar Abkürzungen).",
-                    "pillars": "Runde Säulen an den Kachelecken.",
-                    "diagonal": "Kurze diagonale Wände in den Kacheln.",
-                    "zigzag": "Ein Weg, der an den Enden wendet.",
-                    "rings": "Ringe um die Mitte, jeder mit einer Lücke.",
-                    "obstacles": "Verstreute Kreise, Boxen und Dreiecke."
+                "history": {
+                    "title": "Rückgängig und wiederholen",
+                    "body": "Nimm Änderungen einzeln zurück oder wiederhole sie (bis zu 100).\nAutomatische Korrekturen und das Verschieben oder Einfügen eines Bereichs werden jeweils als ein Schritt rückgängig gemacht – probier also ruhig aus."
                 },
-                "templateClear": "Zuerst Wände und Opfer leeren",
-                "templateApply": "Setzen",
-                "showGuides": "Eingänge und Checkpoints zeigen",
-                "missingCheckpoints": "{{count}} Kachel(n) direkt hinter einem Durchgang sind keine Checkpoints (Regel {{rule_room4Checkpoint}}). Setze sie im Haupteditor (gestricheltes \"CP?\").",
-                "noEntrance": "Raum 4 hat keinen Eingang. Öffne im Haupteditor eine Wand zu einem Durchgang draußen.",
-                "rows": {
-                    "real": "Echt",
-                    "fake": "Falsch (3D)"
+                "view": {
+                    "title": "Die Karte ansehen und verschieben",
+                    "body": "Das ist die Karte. Drehe das Mausrad zum Zoomen und ziehe mit gedrückter Leertaste (oder mit der Radtaste), um sie zu verschieben. Mit dem Handwerkzeug (H) verschiebt ein einfaches Ziehen sie.\nDie Schaltflächen in der oberen Leiste (gestrichelter Rahmen) zoomen ebenfalls, und die rechte passt die ganze Karte wieder ein. Die Zahl ist der Zoom (Pixel pro cm).\nDie Karte besteht aus 12-cm-Kacheln. Jeder Raum hat seine eigene Bodenfarbe, und Wände entstehen von selbst an den Raumgrenzen und rundherum außen."
                 },
-                "curveSmooth": "Glatt",
-                "curveStraight": "Gerade",
-                "sides": "Seiten",
-                "shapeIcon": "Symbol",
-                "shapePicture": "Bild",
-                "iconSearch": "Suchen (z. B. star, car, tree)",
-                "iconAll": "Vorschläge (wähle eine Kategorie zum Eingrenzen)",
-                "iconLoading": "Symbole werden geladen…",
-                "iconUnavailable": "Die Symbolliste konnte nicht geladen werden.",
-                "iconNone": "Nichts gefunden.",
-                "pictureChoose": "Bild wählen",
-                "pictureNote": "Ein PNG oder SVG mit Transparenz nutzt seinen deckenden Teil; andere Bilder nutzen ihren dunklen Teil.",
-                "shapeStyles": {
-                    "fill": "Gefüllt",
-                    "outline": "Umriss"
+                "rail": {
+                    "title": "Werkzeuge",
+                    "body": "Die Werkzeuge, die die Karte ändern, in vier Gruppen von oben: Ansehen (Auswählen, Hand), Karte und Räume (Form, Raum, Durchgang), Wände (Linie, Kurve, Radierer) sowie Böden und Opfer (Boden, Opfer).\nDer Buchstabe unten rechts auf jeder Schaltfläche ist ihre Taste: Ein Tastendruck wählt das Werkzeug.\nAls Nächstes die Werkzeuge einzeln, in der Reihenfolge, in der eine Karte entsteht."
                 },
-                "mirror": "Spiegeln",
-                "mirrors": {
-                    "none": "Aus",
-                    "x": "Links / rechts",
-                    "y": "Oben / unten",
-                    "xy": "Beides"
+                "panel": {
+                    "title": "Was das Werkzeug tut, und seine Einstellungen",
+                    "body": "Das gewählte Werkzeug zeigt hier, wie es benutzt wird, und seine Einstellungen. Im Zweifel lies zuerst das.\nDie Statuszeile unten (gestrichelter Rahmen) sagt, was du dort tun kannst, wo der Zeiger ist, oder warum nicht."
                 },
-                "tipCurve": "Klick: Punkt hinzufügen   Doppelklick / Enter: beenden",
-                "tipArc": "Bewegen zum Biegen   Klick: fertig",
-                "unreachable": "{{count}}, denen der Roboter nicht bis auf eine halbe Kachel nahe kommt (können nicht erkannt werden)",
-                "showReach": "Zeigen, wo der Roboter nicht hinkann",
-                "legendReach": "Wo der Roboter nicht hinkann",
-                "reach": {
-                    "noSeed": "Der Roboter kann sich nicht von der Startkachel bewegen, deshalb wird nicht berechnet, wo er nicht hinkann (prüfe die Startkachel und die Wände drumherum).",
-                    "noStart": "Es gibt keine Startkachel, deshalb wird nicht berechnet, wo der Roboter nicht hinkann.",
-                    "unavailable": "Es konnte nicht berechnet werden, wo der Roboter nicht hinkann."
+                "shape": {
+                    "title": "Form (X): Größe und Umriss der Karte",
+                    "body": "Eine neue Karte beginnt hier mit ihrer Größe: Klicke auf die Kacheln in der Breite oder Höhe, um sie einzutippen, oder nutze − und + (bis 40). Sie wächst oder schrumpft rechts und unten; was noch passt, bleibt.\nMit Umriss klickst oder ziehst du über Kacheln, um sie aus der Karte zu nehmen (kein Boden) oder zurückzuholen – für eine L-Form oder jede Karte, die kein Rechteck ist. Die Außenwände folgen dem Umriss von selbst.\nZeile einfügen, Spalte einfügen, Zeile entfernen und Spalte entfernen fügen dort, wo du auf die Karte klickst, eine Zeile oder Spalte ein oder nehmen sie heraus."
                 },
-                "eraseTargets": {
-                    "all": "Alles",
-                    "tokens": "Nur Opfer"
+                "room": {
+                    "title": "Raum (M): die Räume malen",
+                    "body": "Wähle eine Raumnummer und male Kacheln damit. Raum 1 malen nimmt eine Kachel zurück.\nJeder Raum hat seine Regeln: Raum 1 hat 12-cm-Wände (auf Kachelkanten), Raum 2 hat 6-cm-Wände, Raum 3 hat 6-cm-Wände und Kurven, und Raum 4 wird frei als Bild gezeichnet.\nWände entstehen von selbst an den Raumgrenzen und rundherum außen. Um Räume zu verbinden, nutze als Nächstes das Durchgang-Werkzeug."
                 },
-                "tipStamp": "Klick: auswählen (Drehung, Ringe) oder Typ ändern   Rechtsklick: entfernen",
-                "tipOther": "Rechtsklick: entfernen",
-                "title": "Benutzerdefinierter Raum 4",
-                "tools": {
-                    "pen": "Stift",
-                    "line": "Linie",
-                    "rect": "Rechteck",
-                    "circle": "Kreis",
-                    "stamp": "Opfer",
-                    "floor": "Boden",
-                    "erase": "Radierer",
-                    "curve": "Kurve",
-                    "arc": "Bogen",
-                    "ellipse": "Ellipse",
-                    "polygon": "Vieleck",
-                    "shape": "Form",
-                    "select": "Auswählen",
-                    "template": "Vorlage"
+                "passage": {
+                    "title": "Durchgang (P): die Räume verbinden",
+                    "body": "Klicke nahe einer Raumgrenze: Die Kachel auf der angeklickten Seite wird zum Durchgang, und die Wand an der Grenze öffnet sich.\nErneut klicken schließt ihn. Klicke auf die andere Seite, und der Durchgang wandert auf diese Kachel. Klicke in die Mitte einer Durchgangskachel, um ihn zu entfernen.\nEin Durchgang in Raum 4 kommt auf die Kachel außerhalb von Raum 4. Durchgänge, die nach dem Neumalen der Räume nicht mehr passen, werden von selbst entfernt."
                 },
+                "line": {
+                    "title": "Linie (L): Wände zeichnen",
+                    "body": "Ziehen, um Wände zu zeichnen. Die Wand folgt dem Zeiger, sodass ein Zickzack in einem Zug entsteht; den Weg zurückgehen nimmt es zurück.\nHalte beim Beginnen die Umschalttaste für nur eine gerade Linie.\nWände rasten am Raster des Raums unter dem Zeiger ein: 12 cm (Kachelkanten) in Raum 1, 6 cm (halbe Kacheln) in den Räumen 2 und 3. In Raum 4 können sie nicht gezeichnet werden (Raum 4 ist ein Bild)."
+                },
+                "curve": {
+                    "title": "Kurve (A): gebogene Wände",
+                    "body": "Nur in Raum 3. Zeige auf ein Viertel (6-cm-Quadrat) einer Kachel in Raum 3, und die vier möglichen Kurven erscheinen blass.\nEin Klick setzt die nächste (blau). Ein erneuter Klick auf dieselbe entfernt sie."
+                },
+                "eraser": {
+                    "title": "Radierer (E)",
+                    "body": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen; was verschwinden würde, wird unter dem Zeiger rot gezeigt.\nAbseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint). Der Start verschwindet nur mit einem Klick.\nEin Zug, der auf einer Wand beginnt, lässt Böden in Ruhe, sodass Böden nicht verschwinden, während du Wände wegradierst. Die Außenwände bleiben."
+                },
+                "floor": {
+                    "title": "Boden (F): Checkpoints, Löcher, Sümpfe, der Start",
+                    "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist die Kachel, auf die der Roboter gesetzt wird: eine pro Karte. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt."
+                },
+                "victim": {
+                    "title": "Opfer (V): Opfer und kognitive Ziele",
+                    "body": "Wähle im Bereich eine Art (Buchstabenopfer Φ, Ψ, Ω und falsche, kognitive Ziele von vier Typen – entzündliches Gas, Gift, ätzend, organisches Peroxid – und ein falsches) und klicke nahe einer Wand: Es kommt an die Wand, wo du klickst.\nSie kommen an Kachelseiten in Raum 1 (eins pro Kachel), an die Flächen der 6-cm-Wände in den Räumen 2 und 3 und an zwei Plätze an einer Kurve (innen und außen). Ziehe ein gesetztes, um es entlang seiner Wand zu verschieben. Wo eins nicht hinkann, sagt die Statuszeile warum.\nDrehe am Drehregler (Feste Drehung) für seine Drehung, oder wähle Zufällig für jedes Mal eine neue. Für ein kognitives Ziel klicke einen Ring des Ziels an, dann unten eine Farbe; die Summe der Ringe ergibt den Typ.\nKlicke ein Opfer mit derselben Art an, um es auszuwählen, und ändere dann Drehung, Ringe oder Position entlang der Wand, oder entferne es. Ein Klick mit einer anderen Art ändert seine Art."
+                },
+                "room4": {
+                    "title": "Raum 4 zeichnen",
+                    "body": "Raum 4 mit dem Raumwerkzeug malen erzeugt Raum 4. Seine Wände und Opfer werden als Bild gezeichnet.\nRaum 4 zeichnen (oder ein Doppelklick auf seinen Bereich) öffnet den Raum-4-Editor: Zeichne Wände frei mit Stift, Linien und Formen, und setze Opfer an Wände. Wo der Roboter nicht hinkommt, wird rot gestreift gezeigt.\nDie Schaltfläche Anleitung im Editor zeigt ausführlich, wie Raum 4 erstellt wird. Das Bild wird auf der Karte gezeigt und geht unverändert in die exportierte Welt."
+                },
+                "select": {
+                    "title": "Auswählen (S): einen Bereich verschieben und kopieren",
+                    "body": "Ziehe, um einen Bereich von Kacheln auszuwählen; seine Wände, Räume, Böden und Opfer werden zusammen genommen.\nZiehe darin, um ihn zu verschieben, oder mit gedrückter Alt-Taste, um eine Kopie zu verschieben. Die Pfeiltasten verschieben ihn kachelweise.\nStrg+C kopiert, Strg+X schneidet aus, Strg+V fügt ein (die Kachel unter dem Zeiger ist seine obere linke Ecke), Strg+D dupliziert und Entf leert ihn. Esc lässt den Bereich los."
+                },
+                "linear": {
+                    "title": "Linear",
+                    "body": "Eingeschaltet wird jede Kachel als linear (an einer Wand, die mit dem Start verbunden ist) oder schwebend eingefärbt. Opfer auf schwebenden Kacheln bringen mehr Punkte.\nDafür braucht es die Startkachel. Der Weltexport bestimmt lineare Kacheln auf dieselbe Weise."
+                },
+                "checks": {
+                    "title": "Prüfungen",
+                    "body": "Jede Änderung wird gegen die Regeln geprüft.\nEin rotes ✕ ist ein Problem, mit dem die Welt nicht exportiert werden kann; ein gelbes ! ist eine Warnung, die einen Blick wert ist, aber die Welt kann exportiert werden.\nZeige auf einen Eintrag, um zu sehen, wo er auf der Karte ist, und klicke, um dorthin zu gehen. Klicke auf die Überschrift, um die Karte einzuklappen.\nWo der Roboter (Radius 3,7 cm) nicht hinkommt, wird auf der Karte immer rot gestreift gezeigt, und ein Opfer dort bekommt eine Warnung."
+                },
+                "fix": {
+                    "title": "Automatisch beheben",
+                    "body": "Ein Eintrag mit der Schaltfläche Beheben wird mit einem Klick behoben (Start setzen, Räume mit Durchgängen verbinden, Wände entfernen, die die Regeln nicht erlauben, und so weiter).\nAlles Behebbare beheben erledigt alles auf einmal. Gefällt dir das Ergebnis nicht, nimmt Strg+Z es zurück.\nDie Prüfungen stellen auch sicher, dass jeder Raum von Raum 1 aus über Durchgänge erreichbar ist, und zeigen einen Raum, der es nicht ist."
+                },
+                "export": {
+                    "title": "Die Welt exportieren (.wbt)",
+                    "body": "Schreibt die Weltdatei (.wbt), die Erebus lädt.\nSolange ein Problem mit rotem ✕ übrig ist, ist die Schaltfläche grau, und ein Druck darauf zeigt, was zu beheben ist; von dort aus kann es das für dich beheben.\nSichere die Karte zum Weiterbearbeiten mit Speichern (JSON), nicht als .wbt: Eine .wbt wird nicht wieder zu einer bearbeitbaren Karte."
+                },
+                "more": {
+                    "title": "Anleitung und Sprache",
+                    "body": "Anleitung unten rechts bietet jederzeit die Lektion, die eine Beispielkarte baut, diesen Rundgang und wie man Raum 4 erstellt.\nDie Sprachschaltfläche (sie zeigt Flagge und Namen der aktuellen Sprache) wählt die Sprache."
+                },
+                "done": {
+                    "title": "Das war der Rundgang",
+                    "body": "Diese Schaltfläche startet den Rundgang jederzeit erneut.\nEine gute Arbeitsreihenfolge: Größe mit Form festlegen → Räume malen → mit Durchgängen verbinden → Wände zeichnen → Böden und Opfer setzen → Prüfungen ansehen und die .wbt exportieren.\nViel Spaß beim Erstellen deiner Karten!"
+                },
+                "score": {
+                    "title": "Höchstpunktzahl",
+                    "body": "Das Meiste, was diese Karte bringen kann: jedes Opfer und kognitive Ziel, an das der Roboter herankommt, mit dem richtigen Typ erkannt, und jeder Checkpoint passiert, berechnet nach Regel {{rule_scoring}}.\nDrücke darauf für den Anteil jedes Raums und die Punktzahl mit Ausgangs- und Kartierungsbonus. Sie wird bei jeder Änderung neu berechnet."
+                }
+            }
+        },
+        "room4": {
+            "name": "Raum 4 durch Erstellen lernen",
+            "time": "Etwa 5 Minuten · zum Mitmachen",
+            "note": "Zeichne im Raum-4-Editor selbst Wände und setze Opfer und nutze dabei jede Funktion der Reihe nach.",
+            "need": "Male zuerst Raum 4 mit dem Raumwerkzeug."
+        },
+        "room4Tour": {
+            "name": "Rundgang durch den Raum-4-Editor",
+            "time": "Etwa 2 Minuten · nur zuschauen",
+            "note": "Jeder Teil des Raum-4-Editors und jedes Werkzeug, einzeln hervorgehoben und erklärt. Das Bild wird nicht verändert."
+        },
+        "keys": {
+            "title": "Bedienung",
+            "open": "Bedienung",
+            "back": "Zurück zu den Anleitungen",
+            "view": "Ansicht",
+            "edit": "Bearbeiten",
+            "select": "Auswahlwerkzeug",
+            "guide": "Hilfe",
+            "rows": {
+                "zoom": "Vergrößern und verkleinern",
+                "pan": "Die Ansicht verschieben",
+                "hand": "Handwerkzeug (mit linkem Ziehen verschieben)",
                 "undo": "Rückgängig",
                 "redo": "Wiederholen",
-                "clear": "Alles leeren",
-                "groups": {
-                    "victim": "Buchstabenopfer",
-                    "ct": "Kognitive Ziele",
-                    "hazmat": "Gefahrgutschilder",
-                    "fake": "Falsche Opfer"
-                },
-                "types": {
-                    "harmed": "Verletzt",
-                    "stable": "Stabil",
-                    "unharmed": "Unverletzt",
-                    "fakeHarmed": "Verletzt",
-                    "fakeStable": "Stabil",
-                    "fakeUnharmed": "Unverletzt"
-                },
-                "eraserSize": "Größe",
-                "size": {
-                    "s": "S",
-                    "m": "M",
-                    "l": "L"
-                },
-                "snap": "Am Raster ausrichten (1/4 Kachel)",
-                "hints": {
-                    "pen": "Ziehen, um frei Wände zu zeichnen.",
-                    "line": "Ziehen, um eine gerade Wand zu zeichnen. Umschalttaste für 45°-Schritte.",
-                    "rect": "Ziehen, um ein Rechteck aus Wänden zu zeichnen. Umschalttaste für ein Quadrat.",
-                    "circle": "Von der Mitte aus ziehen, um eine runde Wand zu zeichnen.",
-                    "stamp": "Klicke nahe einer Wand, um ein Opfer an der nächsten Wand anzubringen. Klicke ein gesetztes Opfer an, um seine Drehung oder Ringe zu ändern (mit einem anderen gewählten Typ nimmt es diesen Typ an). Ein Rechtsklick entfernt es.",
-                    "floor": "Klicke auf eine Kachel von Raum 4, um ihr den gewählten Boden zu geben (Loch, Sumpf, Checkpoint); erneut klicken nimmt ihn weg, ziehen macht mehrere. Ein Boden ist eine ganze Kachel (12 cm); ein Loch ist ebenfalls die ganze Kachel.",
-                    "erase": "Ziehen, um Wände und Opfer wegzuradieren. Ein Opfer lässt sich auch mit einem Rechtsklick entfernen, egal mit welchem Werkzeug.",
-                    "eraseTokens": "Entfernt jedes Opfer, das der Radierer berührt. Wände bleiben.",
-                    "curve": "Klicke Punkte an, und die Kurve geht durch sie. Doppelklick, Enter oder Rechtsklick zum Beenden; klicke den ersten Punkt an, um sie zu schließen. Rücktaste entfernt einen Punkt, Esc bricht ab.",
-                    "arc": "Ziehen, um beide Enden festzulegen, die Maus bewegen, um ihn zu biegen, dann klicken.",
-                    "ellipse": "Zeichnet die Ellipse, die in die aufgezogene Box passt. Umschalttaste für einen Kreis.",
-                    "polygon": "Von der Mitte aus ziehen, um ein regelmäßiges Vieleck zu zeichnen. Es dreht sich in 15°-Schritten (frei mit Umschalttaste).",
-                    "shape": "Wähle ein Symbol oder ein Bild und ziehe dann auf der Fläche, um seine Größe festzulegen (behält die Proportionen; frei mit Umschalttaste).",
-                    "select": "Ziehen, um eine Box auszuwählen, dann darin ziehen, um sie zu verschieben (Alt gedrückt zum Kopieren). Pfeiltasten schieben sie, [ ] drehen sie, Enter setzt sie ab, Entf löscht sie.",
-                    "template": "Wähle eine Vorlage und drücke Setzen. Anordnungen, die den Roboter aussperren, werden automatisch neu erzeugt."
-                },
-                "messages": {
-                    "outside": "Es kann nicht außerhalb von Raum 4 liegen.",
-                    "needWall": "Opfer kommen nur an Wände. Klicke nahe einer Wand.",
-                    "pickShape": "Wähle zuerst ein Symbol oder ein Bild.",
-                    "iconFailed": "Das Symbol konnte nicht geladen werden.",
-                    "imageFailed": "Das Bild konnte nicht geladen werden.",
-                    "randomDone": "{{placed}} gesetzt.",
-                    "randomShort": "Nur {{placed}} von {{asked}} gesetzt (nicht genug Wände dafür).",
-                    "templateBlocked": "Jede versuchte Anordnung lässt einen Teil des Raums unerreichbar. Prüfe die hellroten Teile.",
-                    "wallEnd": "Nicht an einem Wandende. Klicke auf eine Wandfläche, die mindestens so breit wie ein Opfer ist (2 cm).",
-                    "unreachable": "Der Roboter kommt hier nicht nahe heran: Wo der Roboter nicht hinkann, gibt es keine Opfer (Regel {{rule_reach}}).",
-                    "floorNotOuter": "Eine Kontaktkachel liegt nur auf einer Kachel an der Außenwand."
-                },
-                "tokens": "Wandmarker: {{count}}",
-                "farFromWall": "{{count}} von jeder Wand entfernt (gestrichelter roter Kreis)",
-                "import": "Bild importieren",
-                "download": "Als Bild speichern",
-                "hint": "Importiere ein PNG- / JPEG-Bild oder zeichne hier. Die Opfertypen werden im Bild gespeichert, sodass ein gespeichertes Bild sie zurückbringt.",
-                "selectedStamp": "Ausgewähltes Opfer",
-                "selectDone": "Fertig",
-                "randomCount": "Anzahl",
-                "randomKind": "Typen"
+                "cancel": "Das gerade Gezeichnete abbrechen",
+                "tools": "Werkzeug wechseln (Buchstaben in der linken Leiste)",
+                "copy": "Kopieren, ausschneiden, einfügen",
+                "duplicate": "Duplizieren",
+                "clear": "Die Auswahl leeren",
+                "nudge": "Die Auswahl um eine Kachel verschieben",
+                "sheet": "Diese Liste öffnen"
             },
-            "passageBlue": "Blau",
-            "passageYellow": "Gelb",
-            "passageGreen": "Grün",
-            "passagePurple": "Lila",
-            "passageOrange": "Orange",
-            "passageRed": "Rot",
-            "ctF": "Entzündliches Gas",
-            "ctP": "Gift",
-            "ctC": "Ätzend",
-            "ctO": "Organisches Peroxid",
-            "ctFake": "Falsches Ziel",
-            "exportW": "Diese Karte als Weltdatei für Erebus exportieren"
+            "keys": {
+                "wheel": "Mausrad",
+                "spaceDrag": "Leertaste + Ziehen",
+                "middleDrag": "Ziehen mit der mittleren Taste"
+            }
         }
+    },
+    "room4": {
+        "zoomIn": "Vergrößern",
+        "zoomOut": "Verkleinern",
+        "zoomFit": "Einpassen",
+        "viewReach": "Unerreichbar",
+        "viewGuides": "Eingänge / CP",
+        "unreachableShort": "Unerreichbar {{count}}",
+        "farShort": "Nicht an der Wand {{count}}",
+        "missingShort": "Fehlende CP {{count}}",
+        "noEntranceShort": "Kein Eingang",
+        "reachOff": "Erreichbarkeit nicht berechnet",
+        "legendMapWallShort": "Kartenwände",
+        "legendCheckpointShort": "Checkpoint",
+        "sel": {
+            "ccw": "90° nach links drehen",
+            "cw": "90° nach rechts drehen",
+            "h": "Links / rechts spiegeln",
+            "v": "Oben / unten spiegeln",
+            "duplicate": "Duplizieren",
+            "copy": "Kopieren",
+            "paste": "Einfügen",
+            "delete": "Löschen",
+            "drop": "Fertig"
+        },
+        "randomPlace": "Zufällig setzen",
+        "randomModes": {
+            "current": "Gewählter Typ",
+            "mixed": "Gemischte Typen"
+        },
+        "randomGo": "{{n}} setzen",
+        "randomNote2": "An Wänden, denen der Roboter bis auf eine halbe Kachel nahe kommt, mindestens eine halbe Kachel voneinander entfernt.",
+        "templates": {
+            "maze": "Labyrinth",
+            "pillars": "Säulen",
+            "diagonal": "Diagonalen",
+            "zigzag": "Zickzack",
+            "rings": "Ringe",
+            "obstacles": "Hindernisse"
+        },
+        "templateHints": {
+            "maze": "Ein Labyrinth aus Gängen von einer Kachel (mit ein paar Abkürzungen).",
+            "pillars": "Runde Säulen an den Kachelecken.",
+            "diagonal": "Kurze diagonale Wände in den Kacheln.",
+            "zigzag": "Ein Weg, der an den Enden wendet.",
+            "rings": "Ringe um die Mitte, jeder mit einer Lücke.",
+            "obstacles": "Verstreute Kreise, Boxen und Dreiecke."
+        },
+        "templateClear": "Zuerst Wände und Opfer leeren",
+        "templateApply": "Setzen",
+        "showGuides": "Eingänge und Checkpoints zeigen",
+        "missingCheckpoints": "{{count}} Kachel(n) direkt hinter einem Durchgang sind keine Checkpoints (Regel {{rule_room4Checkpoint}}). Setze sie im Haupteditor (gestricheltes \"CP?\").",
+        "noEntrance": "Raum 4 hat keinen Eingang. Öffne im Haupteditor eine Wand zu einem Durchgang draußen.",
+        "rows": {
+            "real": "Echt",
+            "fake": "Falsch (3D)"
+        },
+        "curveSmooth": "Glatt",
+        "curveStraight": "Gerade",
+        "sides": "Seiten",
+        "shapeIcon": "Symbol",
+        "shapePicture": "Bild",
+        "iconSearch": "Suchen (z. B. star, car, tree)",
+        "iconAll": "Vorschläge (wähle eine Kategorie zum Eingrenzen)",
+        "iconLoading": "Symbole werden geladen…",
+        "iconUnavailable": "Die Symbolliste konnte nicht geladen werden.",
+        "iconNone": "Nichts gefunden.",
+        "pictureChoose": "Bild wählen",
+        "pictureNote": "Ein PNG oder SVG mit Transparenz nutzt seinen deckenden Teil; andere Bilder nutzen ihren dunklen Teil.",
+        "shapeStyles": {
+            "fill": "Gefüllt",
+            "outline": "Umriss"
+        },
+        "mirror": "Spiegeln",
+        "mirrors": {
+            "none": "Aus",
+            "x": "Links / rechts",
+            "y": "Oben / unten",
+            "xy": "Beides"
+        },
+        "tipCurve": "Klick: Punkt hinzufügen   Doppelklick / Enter: beenden",
+        "tipArc": "Bewegen zum Biegen   Klick: fertig",
+        "unreachable": "{{count}}, denen der Roboter nicht bis auf eine halbe Kachel nahe kommt (können nicht erkannt werden)",
+        "showReach": "Zeigen, wo der Roboter nicht hinkann",
+        "legendReach": "Wo der Roboter nicht hinkann",
+        "reach": {
+            "noSeed": "Der Roboter kann sich nicht von der Startkachel bewegen, deshalb wird nicht berechnet, wo er nicht hinkann (prüfe die Startkachel und die Wände drumherum).",
+            "noStart": "Es gibt keine Startkachel, deshalb wird nicht berechnet, wo der Roboter nicht hinkann.",
+            "unavailable": "Es konnte nicht berechnet werden, wo der Roboter nicht hinkann."
+        },
+        "eraseTargets": {
+            "all": "Alles",
+            "tokens": "Nur Opfer"
+        },
+        "tipStamp": "Klick: auswählen (Drehung, Ringe) oder Typ ändern   Rechtsklick: entfernen",
+        "tipOther": "Rechtsklick: entfernen",
+        "title": "Benutzerdefinierter Raum 4",
+        "tools": {
+            "pen": "Stift",
+            "line": "Linie",
+            "rect": "Rechteck",
+            "circle": "Kreis",
+            "stamp": "Opfer",
+            "floor": "Boden",
+            "erase": "Radierer",
+            "curve": "Kurve",
+            "arc": "Bogen",
+            "ellipse": "Ellipse",
+            "polygon": "Vieleck",
+            "shape": "Form",
+            "select": "Auswählen",
+            "template": "Vorlage"
+        },
+        "undo": "Rückgängig",
+        "redo": "Wiederholen",
+        "clear": "Alles leeren",
+        "groups": {
+            "victim": "Buchstabenopfer",
+            "ct": "Kognitive Ziele",
+            "hazmat": "Gefahrgutschilder",
+            "fake": "Falsche Opfer"
+        },
+        "eraserSize": "Größe",
+        "size": {
+            "s": "S",
+            "m": "M",
+            "l": "L"
+        },
+        "snap": "Am Raster ausrichten (1/4 Kachel)",
+        "hints": {
+            "pen": "Ziehen, um frei Wände zu zeichnen.",
+            "line": "Ziehen, um eine gerade Wand zu zeichnen. Umschalttaste für 45°-Schritte.",
+            "rect": "Ziehen, um ein Rechteck aus Wänden zu zeichnen. Umschalttaste für ein Quadrat.",
+            "circle": "Von der Mitte aus ziehen, um eine runde Wand zu zeichnen.",
+            "stamp": "Klicke nahe einer Wand, um ein Opfer an der nächsten Wand anzubringen. Klicke ein gesetztes Opfer an, um seine Drehung oder Ringe zu ändern (mit einem anderen gewählten Typ nimmt es diesen Typ an). Ein Rechtsklick entfernt es.",
+            "floor": "Klicke auf eine Kachel von Raum 4, um ihr den gewählten Boden zu geben (Loch, Sumpf, Checkpoint); erneut klicken nimmt ihn weg, ziehen macht mehrere. Ein Boden ist eine ganze Kachel (12 cm); ein Loch ist ebenfalls die ganze Kachel.",
+            "erase": "Ziehen, um Wände und Opfer wegzuradieren. Ein Opfer lässt sich auch mit einem Rechtsklick entfernen, egal mit welchem Werkzeug.",
+            "eraseTokens": "Entfernt jedes Opfer, das der Radierer berührt. Wände bleiben.",
+            "curve": "Klicke Punkte an, und die Kurve geht durch sie. Doppelklick, Enter oder Rechtsklick zum Beenden; klicke den ersten Punkt an, um sie zu schließen. Rücktaste entfernt einen Punkt, Esc bricht ab.",
+            "arc": "Ziehen, um beide Enden festzulegen, die Maus bewegen, um ihn zu biegen, dann klicken.",
+            "ellipse": "Zeichnet die Ellipse, die in die aufgezogene Box passt. Umschalttaste für einen Kreis.",
+            "polygon": "Von der Mitte aus ziehen, um ein regelmäßiges Vieleck zu zeichnen. Es dreht sich in 15°-Schritten (frei mit Umschalttaste).",
+            "shape": "Wähle ein Symbol oder ein Bild und ziehe dann auf der Fläche, um seine Größe festzulegen (behält die Proportionen; frei mit Umschalttaste).",
+            "select": "Ziehen, um eine Box auszuwählen, dann darin ziehen, um sie zu verschieben (Alt gedrückt zum Kopieren). Pfeiltasten schieben sie, [ ] drehen sie, Enter setzt sie ab, Entf löscht sie.",
+            "template": "Wähle eine Vorlage und drücke Setzen. Anordnungen, die den Roboter aussperren, werden automatisch neu erzeugt."
+        },
+        "messages": {
+            "outside": "Es kann nicht außerhalb von Raum 4 liegen.",
+            "needWall": "Opfer kommen nur an Wände. Klicke nahe einer Wand.",
+            "pickShape": "Wähle zuerst ein Symbol oder ein Bild.",
+            "iconFailed": "Das Symbol konnte nicht geladen werden.",
+            "imageFailed": "Das Bild konnte nicht geladen werden.",
+            "randomDone": "{{placed}} gesetzt.",
+            "randomShort": "Nur {{placed}} von {{asked}} gesetzt (nicht genug Wände dafür).",
+            "templateBlocked": "Jede versuchte Anordnung lässt einen Teil des Raums unerreichbar. Prüfe die hellroten Teile.",
+            "wallEnd": "Nicht an einem Wandende. Klicke auf eine Wandfläche, die mindestens so breit wie ein Opfer ist (2 cm).",
+            "unreachable": "Der Roboter kommt hier nicht nahe heran: Wo der Roboter nicht hinkann, gibt es keine Opfer (Regel {{rule_reach}}).",
+            "floorNotOuter": "Eine Kontaktkachel liegt nur auf einer Kachel an der Außenwand."
+        },
+        "tokens": "Wandmarker: {{count}}",
+        "farFromWall": "{{count}} von jeder Wand entfernt (gestrichelter roter Kreis)",
+        "import": "Bild importieren",
+        "download": "Als Bild speichern",
+        "hint": "Importiere ein PNG- / JPEG-Bild oder zeichne hier. Die Opfertypen werden im Bild gespeichert, sodass ein gespeichertes Bild sie zurückbringt.",
+        "selectedStamp": "Ausgewähltes Opfer",
+        "selectDone": "Fertig",
+        "randomCount": "Anzahl",
+        "randomKind": "Typen"
     },
     "years": {
         "2027": {
-            "admin": {
-                "simBeta": {
-                    "hints": {
-                        "floor_notOuter": "{{floor}}: nur auf einer Kachel an der Außenwand (Regel {{rule_contactTile}})",
-                        "floor_clear": "Klicke, um den Boden zu entfernen (Loch, Sumpf, Checkpoint, Kontaktkachel)"
-                    },
-                    "problems": {
-                        "contactInside": "Kontaktkacheln nicht an der Außenwand ({{count}}). Eine Kontaktkachel liegt nur auf einer Kachel am Rand nach außen (Regel {{rule_contactTile}})",
-                        "presetNotSupported": "Vorlagen für Raum 4 sind in diesem Editor nicht verfügbar (wechsle zu benutzerdefiniert)"
-                    },
-                    "help": {
-                        "eraser": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen. Abseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint, Kontaktkachel); ein Klick entfernt den Start. Die Außenwände bleiben."
-                    },
-                    "tour": {
-                        "floor": {
-                            "title": "Boden (F): Checkpoints, Löcher, Sümpfe, Kontaktkacheln, der Start",
-                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist die Kachel, auf die der Roboter gesetzt wird: eine pro Karte. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand. Sie liegt nur auf einer Kachel an der Außenwand."
-                        },
-                        "victim": {
-                            "body": "Wähle im Bereich eine Art (Smiley-Opfer – verletzt ein trauriges Gesicht, stabil ein neutrales, unverletzt ein fröhliches – und falsche, kognitive Ziele von vier Typen – entzündliches Gas, Gift, ätzend, organisches Peroxid – und ein falsches) und klicke nahe einer Wand: Es kommt an die Wand, wo du klickst.\nSie kommen an Kachelseiten in Raum 1 (eins pro Kachel), an die Flächen der 6-cm-Wände in den Räumen 2 und 3 und an zwei Plätze an einer Kurve (innen und außen). Ziehe ein gesetztes, um es entlang seiner Wand zu verschieben. Wo eins nicht hinkann, sagt die Statuszeile warum.\nDrehe am Drehregler (Feste Drehung) für seine Drehung, oder wähle Zufällig für jedes Mal eine neue. Für ein kognitives Ziel klicke einen Ring des Ziels an, dann unten eine Farbe; die Summe der Ringe ergibt den Typ.\nKlicke ein Opfer mit derselben Art an, um es auszuwählen, und ändere dann Drehung, Ringe oder Position entlang der Wand, oder entferne es. Ein Klick mit einer anderen Art ändert seine Art."
-                        },
-                        "eraser": {
-                            "body": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen; was verschwinden würde, wird unter dem Zeiger rot gezeigt.\nAbseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint, Kontaktkachel). Der Start verschwindet nur mit einem Klick.\nEin Zug, der auf einer Wand beginnt, lässt Böden in Ruhe, sodass Böden nicht verschwinden, während du Wände wegradierst. Die Außenwände bleiben."
-                        }
-                    },
-                    "lesson": {
+            "app": {
+                "about": {
+                    "lead": "Erebus World Editor (Beta). Karten nach den Regeln 2027 werden nur in diesem Editor erstellt (für sie gibt es keinen klassischen Editor)."
+                }
+            },
+            "tools": {
+                "help": {
+                    "eraser": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen. Abseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint, Kontaktkachel); ein Klick entfernt den Start. Die Außenwände bleiben."
+                }
+            },
+            "checks": {
+                "problems": {
+                    "contactInside": "Kontaktkacheln nicht an der Außenwand ({{count}}). Eine Kontaktkachel liegt nur auf einer Kachel am Rand nach außen (Regel {{rule_contactTile}})",
+                    "presetNotSupported": "Vorlagen für Raum 4 sind in diesem Editor nicht verfügbar (wechsle zu benutzerdefiniert)"
+                }
+            },
+            "status": {
+                "floor_notOuter": "{{floor}}: nur auf einer Kachel an der Außenwand (Regel {{rule_contactTile}})",
+                "floor_clear": "Klicke, um den Boden zu entfernen (Loch, Sumpf, Checkpoint, Kontaktkachel)"
+            },
+            "guide": {
+                "lesson": {
+                    "steps": {
                         "floors": {
                             "title": "Checkpoints, Löcher, Sümpfe und Kontaktkacheln",
                             "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück; Keiner entfernt den Boden.\nEin Checkpoint bringt Punkte, wenn der Roboter ihn erreicht, und dorthin wird der Roboter nach einem Lack of Progress (LoP) zurückgesetzt. Ein Loch ist eine Kachel, die der Roboter meiden muss, und ein Sumpf leert seinen Akku schneller.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand. Sie liegt nur auf einer Kachel an der Außenwand.",
@@ -1058,21 +1115,32 @@
                         "erase": {
                             "body": "Der Radierer entfernt Wände, Kurven und Opfer mit einem Klick oder Zug. Abseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint, Kontaktkachel); der Start verschwindet nur mit einem Klick. Die Außenwände bleiben.\nRadierst du das Falsche weg, holt Rückgängig (Strg+Z oder ↶ in der oberen Leiste) es zurück; Wiederholen (Strg+Umschalt+Z oder ↷) geht wieder vor."
                         }
-                    },
-                    "betaLead": "Erebus World Editor (Beta). Karten nach den Regeln 2027 werden nur in diesem Editor erstellt (für sie gibt es keinen klassischen Editor)."
+                    }
                 },
-                "simMapEditor": {
-                    "room4Creator": {
-                        "messages": {
-                            "floorNotOuter": "Eine Kontaktkachel liegt nur auf einer Kachel an der Außenwand (Regel {{rule_contactTile}})."
+                "tour": {
+                    "steps": {
+                        "floor": {
+                            "title": "Boden (F): Checkpoints, Löcher, Sümpfe, Kontaktkacheln, der Start",
+                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist die Kachel, auf die der Roboter gesetzt wird: eine pro Karte. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand. Sie liegt nur auf einer Kachel an der Außenwand."
                         },
-                        "groups": {
-                            "victim": "Smiley-Opfer"
+                        "victim": {
+                            "body": "Wähle im Bereich eine Art (Smiley-Opfer – verletzt ein trauriges Gesicht, stabil ein neutrales, unverletzt ein fröhliches – und falsche, kognitive Ziele von vier Typen – entzündliches Gas, Gift, ätzend, organisches Peroxid – und ein falsches) und klicke nahe einer Wand: Es kommt an die Wand, wo du klickst.\nSie kommen an Kachelseiten in Raum 1 (eins pro Kachel), an die Flächen der 6-cm-Wände in den Räumen 2 und 3 und an zwei Plätze an einer Kurve (innen und außen). Ziehe ein gesetztes, um es entlang seiner Wand zu verschieben. Wo eins nicht hinkann, sagt die Statuszeile warum.\nDrehe am Drehregler (Feste Drehung) für seine Drehung, oder wähle Zufällig für jedes Mal eine neue. Für ein kognitives Ziel klicke einen Ring des Ziels an, dann unten eine Farbe; die Summe der Ringe ergibt den Typ.\nKlicke ein Opfer mit derselben Art an, um es auszuwählen, und ändere dann Drehung, Ringe oder Position entlang der Wand, oder entferne es. Ein Klick mit einer anderen Art ändert seine Art."
                         },
-                        "hints": {
-                            "floor": "Klicke auf eine Kachel von Raum 4, um ihr den gewählten Boden zu geben (Loch, Sumpf, Checkpoint, Kontaktkachel); erneut klicken nimmt ihn weg, ziehen macht mehrere. Ein Boden ist eine ganze Kachel (12 cm); ein Loch ist ebenfalls die ganze Kachel. Eine Kontaktkachel liegt nur auf einer Kachel an der Außenwand."
+                        "eraser": {
+                            "body": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen; was verschwinden würde, wird unter dem Zeiger rot gezeigt.\nAbseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint, Kontaktkachel). Der Start verschwindet nur mit einem Klick.\nEin Zug, der auf einer Wand beginnt, lässt Böden in Ruhe, sodass Böden nicht verschwinden, während du Wände wegradierst. Die Außenwände bleiben."
                         }
                     }
+                }
+            },
+            "room4": {
+                "messages": {
+                    "floorNotOuter": "Eine Kontaktkachel liegt nur auf einer Kachel an der Außenwand (Regel {{rule_contactTile}})."
+                },
+                "groups": {
+                    "victim": "Smiley-Opfer"
+                },
+                "hints": {
+                    "floor": "Klicke auf eine Kachel von Raum 4, um ihr den gewählten Boden zu geben (Loch, Sumpf, Checkpoint, Kontaktkachel); erneut klicken nimmt ihn weg, ziehen macht mehrere. Ein Boden ist eine ganze Kachel (12 cm); ein Loch ist ebenfalls die ganze Kachel. Eine Kontaktkachel liegt nur auf einer Kachel an der Außenwand."
                 }
             }
         }

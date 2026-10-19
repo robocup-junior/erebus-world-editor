@@ -1,409 +1,419 @@
 {
-    "admin": {
-        "simBeta": {
-            "fake": "Fausse victime",
+    "common": {
+        "listSep": ", ",
+        "close": "Fermer",
+        "cancel": "Annuler",
+        "done": "Terminé",
+        "remove": "Retirer",
+        "undo": "Annuler",
+        "redo": "Rétablir",
+        "zoomIn": "Zoom avant",
+        "zoomOut": "Zoom arrière"
+    },
+    "app": {
+        "title": "Erebus World Editor",
+        "about": {
+            "title": "À propos de cet éditeur",
+            "lead": "Erebus World Editor (bêta). Il lit et écrit le même JSON que l’éditeur classique, donc une carte enregistrée s’ouvre dans l’un ou l’autre.",
+            "classic": "Ouvrir l’éditeur classique",
+            "classicNote": "Enregistrez d’abord la carte en cours (Enregistrer, JSON)"
+        },
+        "build": {
+            "title": "À propos de cette version",
+            "commit": "Commit",
+            "dirty": "(avec des changements non commités)",
+            "branch": "Branche",
+            "commitDate": "Commité",
+            "builtAt": "Compilé",
+            "copy": "Copier",
+            "copied": "Copié"
+        }
+    },
+    "rules": {
+        "title": "Les règles de cette carte",
+        "label": "Règles {{year}}",
+        "lead": "Les règles que suit cette carte : les vérifications, le score et le monde exporté en dépendent.",
+        "book": "Livre des règles",
+        "soon": "Bientôt",
+        "switchTitle": "Passer aux règles {{year}} ?",
+        "switchLead": "Cette carte passe des règles {{from}} aux règles {{to}}. Les murs et victimes qui ne conviennent pas aux nouvelles règles sont signalés dans les vérifications (annuler : Ctrl+Z).",
+        "switch": "Changer",
+        "pick": "Les règles de quelle année ?",
+        "pickNote": "Une carte enregistrée s’ouvre avec ses propres règles. Vous pourrez aussi changer plus tard dans la barre du haut.",
+        "draft": "Brouillon"
+    },
+    "file": {
+        "start": {
+            "title": "Commencer une carte",
+            "lead": "Créez-en une nouvelle ou ouvrez une carte enregistrée (JSON)."
+        },
+        "new": "Nouvelle carte",
+        "newShort": "Nouveau",
+        "open": "Ouvrir une carte (JSON)",
+        "openShort": "Ouvrir",
+        "openJson": "Ouvrir un JSON",
+        "save": "Enregistrer en JSON",
+        "saveShort": "Enregistrer",
+        "noMap": "Aucune carte ouverte",
+        "dropHere": "Vous pouvez aussi déposer un fichier JSON ici",
+        "badFile": "Impossible de lire ceci comme une carte de l’éditeur Simulation 2026 (JSON)",
+        "unknownRules": "Cette carte suit les règles {{year}} ; cet éditeur prend en charge les règles {{years}} (ouvrez-la dans un éditeur plus récent)",
+        "restore": "Ouvrir le dernier travail",
+        "restoreOtherYear": "Le travail gardé est une carte des règles {{year}}. Choisissez les règles {{year}} ci-dessus pour l’ouvrir (pour la passer aux règles d’une autre année, ouvrez-la puis changez avec Règles dans la barre du haut)",
+        "discard": {
+            "title": "Modifications non enregistrées",
+            "lead": "Continuer abandonne les modifications de cette carte (la copie gardée dans ce navigateur reste).",
+            "save": "Enregistrer et continuer",
+            "go": "Ne pas enregistrer"
+        }
+    },
+    "export": {
+        "button": "Exporter cette carte en fichier de monde pour Erebus",
+        "blocked": "Le monde ne peut pas encore être exporté",
+        "blockedLead": "Corrigez ces {{count}} pour exporter. Cliquez sur l’un pour voir où il se trouve.",
+        "failed": "L’export du monde a échoué",
+        "broken": "Le monde aurait une valeur qui n’est pas un nombre, donc aucun fichier n’a été créé (Webots l’ouvrirait comme un monde vide). Merci de le signaler : {{line}}"
+    },
+    "map": {
+        "name": "Nom du design : ",
+        "fit": "Afficher toute la carte",
+        "size": {
+            "title": "Taille de la carte",
+            "note": "Cliquez sur un nombre pour le saisir, ou utilisez − et + (1-40). La carte grandit ou rétrécit à droite et en bas ; ce qui tient encore reste. Pour mettre une ligne ou une colonne au milieu, utilisez Insérer une ligne / Insérer une colonne ci-dessous.",
             "width": "Largeur",
             "length": "Hauteur",
-            "title": "Erebus World Editor",
-            "new": "Nouvelle carte",
-            "open": "Ouvrir une carte (JSON)",
-            "save": "Enregistrer en JSON",
-            "backToClassic": "Ouvrir l’éditeur classique",
-            "noMap": "Aucune carte ouverte",
-            "dropHere": "Vous pouvez aussi déposer un fichier JSON ici",
-            "badFile": "Impossible de lire ceci comme une carte de l’éditeur Simulation 2026 (JSON)",
-            "unknownRules": "Cette carte suit les règles {{year}} ; cet éditeur prend en charge les règles {{years}} (ouvrez-la dans un éditeur plus récent)",
-            "zoomIn": "Zoom avant",
-            "zoomOut": "Zoom arrière",
-            "fit": "Afficher toute la carte",
-            "room": "Salle {{n}}",
-            "discard": "Continuer abandonne les modifications de cette carte (la copie gardée dans ce navigateur reste).",
-            "exportBlocked": "Le monde ne peut pas encore être exporté",
-            "room4": "Salle 4",
-            "problemsTitle": "Vérifications",
-            "noProblems": "Aucun problème",
-            "undo": "Annuler",
-            "redo": "Rétablir",
-            "tools": {
-                "hand": "Déplacer",
-                "room": "Salles",
-                "passage": "Passages",
-                "line": "Ligne",
-                "eraser": "Gomme",
-                "floor": "Sol",
-                "victim": "Victimes",
-                "curve": "Courbe",
-                "select": "Sélection",
-                "shape": "Contour"
-            },
-            "help": {
-                "hand": "Faites glisser pour déplacer la carte.",
-                "room": "Peignez des cases dans une salle (la salle 1 les remet). Les murs se placent d’eux-mêmes là où les salles se touchent et autour de la carte. La salle 4 se dessine comme une image avec le bouton ci-dessous.",
-                "passage": "Cliquez près d’une limite de salle : la case du côté où vous cliquez devient le passage (cliquez à nouveau pour le fermer, de l’autre côté pour l’y déplacer). Cliquez au centre d’une case de passage pour le retirer. Un passage qui ne correspond plus à ses salles disparaît de lui-même.",
-                "line": "Faites glisser pour tracer des murs. La ligne tourne avec le pointeur, donc un seul tracé peut faire un zigzag (revenez sur vos pas pour annuler un virage). Commencez avec Maj enfoncée pour une seule ligne droite. La salle 1 s’aligne sur 12 cm (bords des cases), les salles 2 et 3 sur 6 cm. Pas dans la salle 4.",
-                "eraser": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint) ; un clic retire le départ. Les murs extérieurs restent.",
-                "floor": "Cliquez sur une case pour choisir son sol.",
-                "victim": "Cliquez près d’un mur : la victime se place sur le mur là où vous cliquez. Salle 1 : sur un côté de case (une par case) ; salles 2 et 3 : sur une face des murs de 6 cm (4 quarts × 4 faces) ; une courbe a deux places (intérieur et extérieur). Faites glisser une victime placée pour la déplacer le long de son mur (elle s’arrête avant le bout du mur et les autres victimes). Cliquez dessus avec son type choisi pour la sélectionner et changer son orientation, ses anneaux ou sa position, ou la retirer ; avec un autre type choisi, elle prend ce type.",
-                "curve": "Pointez un quart de case dans la salle 3 pour voir ses quatre courbes ; la plus proche (bleue) se place d’un clic. Cliquez à nouveau sur la même pour la retirer.",
-                "select": "Sélectionnez ensemble murs, salles, sols et victimes pour les déplacer, copier, coller ou effacer.",
-                "shape": "Changez la taille et la forme de la carte ; les murs extérieurs suivent d’eux-mêmes. Contour : cliquez ou faites glisser sur des cases pour les sortir de la carte ou les remettre. Insérer / supprimer : ajoute ou retire une ligne ou une colonne là où vous cliquez."
-            },
-            "floors": {
-                "checkpoint": "Checkpoint",
-                "black": "Trou",
-                "swamp": "Marais",
-                "start": "Départ",
-                "clear": "Aucun",
-                "contact": "Case de contact"
-            },
-            "problems": {
-                "noStart": "Il n’y a pas de case de départ",
-                "victimNoWall": "Des victimes ont perdu leur mur ({{count}})",
-                "victimInPassage": "Des victimes sont dans un passage entre zones ({{count}}) : il n’y en a pas dans les passages (règle {{rule_passageTokens}})",
-                "victimUnreachable": "Des victimes sont là où le robot ne peut pas aller ({{count}}) : il n’y en a pas là où le robot ne peut pas aller (règle {{rule_reach}})",
-                "wallRule": "Des murs ne suivent pas les règles de leur salle ({{count}})",
-                "room4Checkpoint": "La case de la salle 4 juste derrière un passage n’est pas un checkpoint ({{count}}, règle {{rule_room4Checkpoint}}). Placer un passage la définit d’elle-même",
-                "customRoom4NoPicture": "La salle 4 n’est pas encore dessinée",
-                "presetNotSupported": "Les modèles de salle 4 ne sont pas disponibles dans cet éditeur (passez en personnalisée ou utilisez l’éditeur classique)",
-                "room4Untyped": "Des victimes de la salle 4 n’ont pas de type ({{count}}) : donnez-leur en un dans Dessiner la salle 4",
-                "room4Unreachable": "Des victimes de la salle 4 sont là où le robot ne peut pas aller ({{count}}) : il n’y en a pas là où le robot ne peut pas aller (règle {{rule_reach}})",
-                "victimMisplaced": "Des victimes déplacées le long de leur mur chevauchent le bout d’un mur ou une autre victime ({{count}})",
-                "contactInside": "Des cases de contact ne touchent pas le mur extérieur ({{count}}). Une case de contact se place seulement sur une case au bord de l’extérieur"
-            },
-            "hints": {
-                "newMapSize": "Nouvelle carte : réglez d’abord sa taille (en cases) dans le panneau de gauche",
-                "someRefused": "{{count}} éléments ont été laissés de côté : les règles de la salle ne les permettent pas",
-                "refusedHere": "Les règles de cette salle ne permettent pas la partie rouge",
-                "noBorder": "Ce n’est pas une limite de salle",
-                "passageHere": "Cliquez sur une limite de salle (pointillés)",
-                "victim_noWall": "Il n’y a pas de mur de ce côté",
-                "victim_passage": "Aucune victime dans un passage entre zones (règle {{rule_passageTokens}})",
-                "victim_quarterTile": "Les victimes des salles 2 et 3 arrivent bientôt",
-                "victim_room4": "Les victimes de la salle 4 se placent dans le créateur de la salle 4",
-                "victim_outside": "Hors de la carte",
-                "curve_curveRoom3": "Les murs courbes vont seulement dans la salle 3",
-                "curve_room4": "Pas dans la salle 4",
-                "victim_notQuarterTile": "Pas ici",
-                "room4NoTiles": "Peignez d’abord la zone de la salle 4 avec le pinceau de salle",
-                "passage_open": "Passage placé",
-                "passage_moved": "Passage déplacé de ce côté",
-                "passage_closed": "Passage retiré",
-                "passageOpen": "Cliquez pour mettre le passage du côté coloré",
-                "passageClose": "Cliquez pour retirer le passage",
-                "passageRemove": "Cliquez pour retirer ce passage",
-                "shapeOut": "Cliquez ou faites glisser pour sortir des cases de la carte",
-                "shapeIn": "Cliquez ou faites glisser pour remettre des cases dans la carte",
-                "passageRoom4": "Un passage vers la salle 4 se place sur la case hors de la salle 4 (comme l’attendent le créateur de la salle 4 et la règle des checkpoints {{rule_room4Checkpoint}})",
-                "regionPick": "Faites glisser pour sélectionner",
-                "regionDrag": "Faites glisser pour déplacer, Alt+glisser pour copier. Les flèches déplacent d’une case ; Ctrl+C / X / V et Suppr marchent aussi",
-                "regionCopied": "Copié. Ctrl+V colle sur la case sous le pointeur",
-                "regionNoRoom": "Pas de place à côté ni en dessous pour une copie",
-                "line_addRow": "Cliquez pour ajouter une ligne sur le trait vert",
-                "line_addCol": "Cliquez pour ajouter une colonne sur le trait vert",
-                "line_delRow": "Cliquez pour retirer la ligne rouge",
-                "line_delCol": "Cliquez pour retirer la colonne rouge",
-                "lineLimit": "La carte reste entre 1 et 40 cases",
-                "fixed": "Corrigé (annuler : Ctrl+Z)",
-                "fixPartly": "Ce qui pouvait l’être a été corrigé ; le reste est à faire à la main",
-                "fixAllLeft": "Corrigé ce qui pouvait l’être ; {{count}} restent à faire à la main (annuler : Ctrl+Z)",
-                "undone": "Annulé (rétablir : Ctrl+Y)",
-                "redone": "Rétabli",
-                "wallsDrawn": "{{cm}} cm de mur tracés",
-                "lineDone_addRow": "Ligne insérée (annuler : Ctrl+Z)",
-                "lineDone_addCol": "Colonne insérée (annuler : Ctrl+Z)",
-                "lineDone_delRow": "Ligne retirée (annuler : Ctrl+Z)",
-                "lineDone_delCol": "Colonne retirée (annuler : Ctrl+Z)",
-                "lineDrawing": "{{cm}} cm de mur. Relâchez pour tracer, Échap pour annuler (revenir en arrière retire un angle)",
-                "lineDrawingStraight": "{{cm}} cm de mur droit. Relâchez pour tracer, Échap pour annuler",
-                "line_room4": "Pas de murs dans la salle 4 : double-cliquez pour la dessiner dans le créateur de la salle 4",
-                "line_fine": "Faites glisser pour tracer des murs (salle {{room}} : grille de 6 cm). Maj+glisser pour une seule ligne droite",
-                "line_tile": "Faites glisser pour tracer des murs (salle 1 : bords des cases, 12 cm). Maj+glisser pour une seule ligne droite",
-                "hand": "Faites glisser pour déplacer la vue",
-                "room_outside": "Hors de la carte (l’outil contour la remet)",
-                "room_room4": "Une case de la salle 4 : double-cliquez pour dessiner dans la salle 4",
-                "room_same": "Déjà la salle {{room}}. Choisissez la salle à peindre dans le panneau de gauche",
-                "room_paint": "Cliquez ou faites glisser pour peindre la salle {{room}} (actuellement salle {{cur}})",
-                "floor_outside": "Hors de la carte",
-                "floor_isStart": "C’est la case de départ (la gomme la retire)",
-                "floor_start": "Cliquez pour déplacer le départ ici (il n’y a qu’un départ)",
-                "floor_clear": "Cliquez pour retirer le sol (trou, marais, checkpoint)",
-                "floor_off": "Cliquez pour retirer : {{floor}}",
-                "floor_on": "Cliquez pour en faire : {{floor}}",
-                "curve_on": "Cliquez pour mettre la courbe bleue ici",
-                "curve_off": "Cliquez pour retirer cette courbe",
-                "erase_victim": "Cliquez pour retirer cette victime",
-                "erase_curve": "Cliquez pour retirer cette courbe (faites glisser pour continuer)",
-                "erase_wall": "Cliquez pour retirer ce mur (6 cm ; faites glisser pour continuer)",
-                "erase_wallWhole": "Cliquez pour retirer ce mur (12 cm ; faites glisser pour continuer)",
-                "erase_floor": "Cliquez pour retirer le sol de cette case",
-                "erase_start": "Cliquez pour retirer la case de départ",
-                "victim_place": "Cliquez pour placer « {{name}} »",
-                "victim_move": "Cliquez pour placer « {{name}} » ici (la victime de la case vient ici : une par case)",
-                "victim_replace": "Cliquez pour la changer en « {{name}} »",
-                "victim_unreachable": "Le robot ne peut pas s’approcher d’ici, donc aucune victime ne va ici (règle {{rule_reach}})",
-                "victim_selectDrag": "Cliquez pour la sélectionner, faites glisser pour la déplacer le long de son mur",
-                "victim_moveSlot": "Cliquez pour placer « {{name}} » ici (la victime de cette face vient ici)",
-                "victim_moving": "{{cm}} cm le long de son mur (elle s’arrête avant le bout du mur et les autres victimes)",
-                "victim_moved": "Déplacée à {{cm}} cm le long de son mur (annuler : Ctrl+Z)",
-                "victim_noRoom": "Pas de place pour une victime ici (trop près du bout du mur ou d’une autre victime)",
-                "rulesSwitched": "Passé aux règles {{year}} (annuler : Ctrl+Z)",
-                "floor_notOuter": "{{floor}} : seulement sur une case contre le mur extérieur",
-                "openedOtherYear": "Cette carte s’est ouverte avec les règles {{year}}. Pour la passer aux règles {{chosen}}, changez avec Règles dans la barre du haut"
-            },
-            "drawRoom4": "Dessiner la salle 4",
-            "drawRoom4Note": "Un double-clic sur la zone de la salle 4 l’ouvre aussi",
-            "exportFailed": "L’export du monde a échoué",
-            "exportBroken": "Le monde aurait une valeur qui n’est pas un nombre, donc aucun fichier n’a été créé (Webots l’ouvrirait comme un monde vide). Merci de le signaler : {{line}}",
-            "showWhere": "Cliquez pour voir où",
-            "restore": "Ouvrir le dernier travail",
-            "restoreOtherYear": "Le travail gardé est une carte des règles {{year}}. Choisissez les règles {{year}} ci-dessus pour l’ouvrir (pour la passer aux règles d’une autre année, ouvrez-la puis changez avec Règles dans la barre du haut)",
-            "ctRings": "Cible cognitive",
-            "ctFake": "Fausse",
-            "rot": "Orientation (degrés)",
-            "remove": "Retirer",
-            "newShort": "Nouveau",
-            "openShort": "Ouvrir",
-            "saveShort": "Enregistrer",
-            "toolsTitle": "Outils",
-            "kind": "Type",
-            "roomNote1": "murs de 12 cm",
-            "roomNote2": "murs de 6 cm",
-            "roomNote3": "murs de 6 cm, courbes",
-            "roomNote4": "dessinée comme une image",
-            "emptyTitle": "Commencer une carte",
-            "emptyLead": "Créez-en une nouvelle ou ouvrez une carte enregistrée (JSON).",
-            "openJson": "Ouvrir un JSON",
-            "ctSum": "Somme",
-            "ctHint": "Cliquez sur un anneau de la cible, puis sur une couleur en dessous (actuellement l’anneau {{n}} depuis l’extérieur)",
-            "rotFixed": "Orientation fixe",
-            "rotRandom": "Aléatoire",
-            "rotRandomNote": "Chacune reçoit une orientation aléatoire",
-            "room4Hint": "Peignez la zone de la salle 4 avec le pinceau de salle pour dessiner son intérieur comme une image.",
-            "room4NotDrawn": "La salle 4 n’est pas encore dessinée",
-            "room4Drawn": "La salle 4 est dessinée",
-            "room4PresetBeta": "Cette carte utilise un modèle de salle 4 ({{name}}). Cet éditeur ne fait que des salles 4 personnalisées.",
-            "room4ToCustom": "Passer à une salle 4 personnalisée",
-            "mapSize": "Taille de la carte",
-            "mapSizeNote": "Cliquez sur un nombre pour le saisir, ou utilisez − et + (1-40). La carte grandit ou rétrécit à droite et en bas ; ce qui tient encore reste. Pour mettre une ligne ou une colonne au milieu, utilisez Insérer une ligne / Insérer une colonne ci-dessous.",
-            "checksOpen": "Ouvrir",
-            "checksFold": "Replier",
-            "regionNone": "Faites glisser sur des cases pour les sélectionner. Faites glisser la sélection pour la déplacer (avec Alt, une copie) ; les flèches la déplacent case par case.",
-            "regionSize": "{{size}} cases sélectionnées",
-            "copy": "Copier",
-            "cut": "Couper",
-            "duplicate": "Dupliquer",
-            "clearRegion": "Effacer",
-            "paste": "Coller",
-            "regionHelp": "Faites glisser dans la sélection pour la déplacer, Alt+glisser pour déplacer une copie. Coller place le coin haut gauche sur la case sous le pointeur. Échap désélectionne.",
-            "selectedVictim": "Victime sélectionnée",
-            "selectDone": "Terminé",
-            "shapeModes": {
+            "tiles": "cases"
+        },
+        "shape": {
+            "title": "Modifier sur la carte",
+            "modes": {
                 "outline": "Contour (irrégulier)",
                 "addRow": "Insérer une ligne",
                 "addCol": "Insérer une colonne",
                 "delRow": "Retirer une ligne",
                 "delCol": "Retirer une colonne"
+            }
+        }
+    },
+    "tools": {
+        "title": "Outils",
+        "names": {
+            "hand": "Déplacer",
+            "room": "Salles",
+            "passage": "Passages",
+            "line": "Ligne",
+            "eraser": "Gomme",
+            "floor": "Sol",
+            "victim": "Victimes",
+            "curve": "Courbe",
+            "select": "Sélection",
+            "shape": "Contour"
+        },
+        "help": {
+            "hand": "Faites glisser pour déplacer la carte.",
+            "room": "Peignez des cases dans une salle (la salle 1 les remet). Les murs se placent d’eux-mêmes là où les salles se touchent et autour de la carte. La salle 4 se dessine comme une image avec le bouton ci-dessous.",
+            "passage": "Cliquez près d’une limite de salle : la case du côté où vous cliquez devient le passage (cliquez à nouveau pour le fermer, de l’autre côté pour l’y déplacer). Cliquez au centre d’une case de passage pour le retirer. Un passage qui ne correspond plus à ses salles disparaît de lui-même.",
+            "line": "Faites glisser pour tracer des murs. La ligne tourne avec le pointeur, donc un seul tracé peut faire un zigzag (revenez sur vos pas pour annuler un virage). Commencez avec Maj enfoncée pour une seule ligne droite. La salle 1 s’aligne sur 12 cm (bords des cases), les salles 2 et 3 sur 6 cm. Pas dans la salle 4.",
+            "eraser": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint) ; un clic retire le départ. Les murs extérieurs restent.",
+            "floor": "Cliquez sur une case pour choisir son sol.",
+            "victim": "Cliquez près d’un mur : la victime se place sur le mur là où vous cliquez. Salle 1 : sur un côté de case (une par case) ; salles 2 et 3 : sur une face des murs de 6 cm (4 quarts × 4 faces) ; une courbe a deux places (intérieur et extérieur). Faites glisser une victime placée pour la déplacer le long de son mur (elle s’arrête avant le bout du mur et les autres victimes). Cliquez dessus avec son type choisi pour la sélectionner et changer son orientation, ses anneaux ou sa position, ou la retirer ; avec un autre type choisi, elle prend ce type.",
+            "curve": "Pointez un quart de case dans la salle 3 pour voir ses quatre courbes ; la plus proche (bleue) se place d’un clic. Cliquez à nouveau sur la même pour la retirer.",
+            "select": "Sélectionnez ensemble murs, salles, sols et victimes pour les déplacer, copier, coller ou effacer.",
+            "shape": "Changez la taille et la forme de la carte ; les murs extérieurs suivent d’eux-mêmes. Contour : cliquez ou faites glisser sur des cases pour les sortir de la carte ou les remettre. Insérer / supprimer : ajoute ou retire une ligne ou une colonne là où vous cliquez."
+        },
+        "hints": {
+            "select": "Faites glisser pour sélectionner des cases (murs, salles, sols et victimes se déplacent ou se copient ensemble)",
+            "select_region": "{{size}} cases sélectionnées : glissez à l’intérieur pour déplacer, Ctrl+C / X / V, Suppr, Échap pour relâcher",
+            "hand": "Faites glisser pour déplacer la vue",
+            "shape_outline": "Cliquez ou faites glisser sur des cases pour les sortir de la carte ou les remettre. La taille est dans le panneau de gauche",
+            "shape_addRow": "Pointez la limite où va la ligne et cliquez",
+            "shape_addCol": "Pointez la limite où va la colonne et cliquez",
+            "shape_delRow": "Pointez la ligne à retirer et cliquez",
+            "shape_delCol": "Pointez la colonne à retirer et cliquez",
+            "room": "Faites glisser sur des cases pour peindre la salle {{room}}. Les murs des limites et de l’extérieur viennent d’eux-mêmes",
+            "passage": "Cliquez près d’une limite de salle (pointillés) pour placer un passage",
+            "line": "Faites glisser pour tracer des murs en tournant aux angles en chemin ; Maj pour une seule ligne droite",
+            "curve": "Pointez un quart de case dans la salle 3 et cliquez sur la courbe bleue",
+            "eraser": "Pointez un mur, une courbe, une victime ou un sol et cliquez (faites glisser pour continuer)",
+            "floor": "Cliquez sur une case pour en faire : {{floor}} (encore pour le retirer)",
+            "victim": "Cliquez près d’un mur pour placer « {{name}} » là où vous cliquez (faites-la glisser le long de son mur ensuite). Choisissez le type dans le panneau de gauche",
+            "victim_selected": "Faites glisser la victime sélectionnée pour la déplacer le long de son mur. Changez son orientation, ses anneaux ou sa position, ou retirez-la, dans le panneau de gauche"
+        }
+    },
+    "rooms": {
+        "name": "Salle {{n}}",
+        "notes": {
+            "1": "murs de 12 cm",
+            "2": "murs de 6 cm",
+            "3": "murs de 6 cm, courbes",
+            "4": "dessinée comme une image"
+        },
+        "room4": {
+            "name": "Salle 4",
+            "hint": "Peignez la zone de la salle 4 avec le pinceau de salle pour dessiner son intérieur comme une image.",
+            "notDrawn": "La salle 4 n’est pas encore dessinée",
+            "drawn": "La salle 4 est dessinée",
+            "draw": "Dessiner la salle 4",
+            "drawNote": "Un double-clic sur la zone de la salle 4 l’ouvre aussi",
+            "preset": "Cette carte utilise un modèle de salle 4 ({{name}}). Cet éditeur ne fait que des salles 4 personnalisées.",
+            "toCustom": "Passer à une salle 4 personnalisée"
+        }
+    },
+    "passages": {
+        "blue": "Bleu",
+        "yellow": "Jaune",
+        "green": "Vert",
+        "purple": "Violet",
+        "orange": "Orange",
+        "red": "Rouge"
+    },
+    "floors": {
+        "checkpoint": "Checkpoint",
+        "black": "Trou",
+        "swamp": "Marais",
+        "start": "Départ",
+        "clear": "Aucun",
+        "contact": "Case de contact"
+    },
+    "victims": {
+        "types": {
+            "harmed": "Blessée",
+            "stable": "Stable",
+            "unharmed": "Indemne",
+            "fakeHarmed": "Blessée",
+            "fakeStable": "Stable",
+            "fakeUnharmed": "Indemne"
+        },
+        "kind": "Type",
+        "fake": "Fausse victime",
+        "selected": "Victime sélectionnée",
+        "turn": {
+            "title": "Orientation (degrés)",
+            "fixed": "Orientation fixe",
+            "random": "Aléatoire",
+            "randomNote": "Chacune reçoit une orientation aléatoire",
+            "help": "Tourne dans le sens horaire vu depuis le robot. 0° est droit. Faites glisser le cadran ou utilisez les boutons.",
+            "dialHint": "Faites glisser pour tourner (Maj pour des pas de 1°). Les flèches marchent aussi.",
+            "dialRandom": "Angle aléatoire"
+        },
+        "along": {
+            "title": "Position le long de son mur",
+            "note": "Vous pouvez aussi la faire glisser sur la carte (pas de 0,1 cm)",
+            "middle": "Au milieu"
+        }
+    },
+    "targets": {
+        "types": {
+            "F": "Gaz inflammable",
+            "P": "Poison",
+            "C": "Corrosif",
+            "O": "Peroxyde organique",
+            "X": "Fausse cible"
+        },
+        "rings": "Cible cognitive",
+        "fake": "Fausse",
+        "sum": "Somme",
+        "hint": "Cliquez sur un anneau de la cible, puis sur une couleur en dessous (actuellement l’anneau {{n}} depuis l’extérieur)"
+    },
+    "select": {
+        "none": "Faites glisser sur des cases pour les sélectionner. Faites glisser la sélection pour la déplacer (avec Alt, une copie) ; les flèches la déplacent case par case.",
+        "size": "{{size}} cases sélectionnées",
+        "help": "Faites glisser dans la sélection pour la déplacer, Alt+glisser pour déplacer une copie. Coller place le coin haut gauche sur la case sous le pointeur. Échap désélectionne.",
+        "copy": "Copier",
+        "cut": "Couper",
+        "duplicate": "Dupliquer",
+        "paste": "Coller",
+        "clear": "Effacer"
+    },
+    "linear": {
+        "label": "Linéaire",
+        "title": "Colorer linéaire / flottant (fixe ce que valent les victimes)",
+        "noStart": "Placez la case de départ pour voir linéaire / flottant",
+        "legend": {
+            "linear": "Cases linéaires (près de murs reliés au départ : les victimes valent moins)",
+            "floating": "Cases flottantes (les victimes valent plus)",
+            "floatingWall": "Murs flottants",
+            "unreached": "Non atteint depuis le départ (pas de passage, ...) : ni linéaire ni flottant"
+        }
+    },
+    "checks": {
+        "title": "Vérifications",
+        "none": "Aucun problème",
+        "open": "Ouvrir",
+        "fold": "Replier",
+        "showWhere": "Cliquez pour voir où",
+        "fix": {
+            "all": "Corriger tout ce qui peut l’être",
+            "short": "Corriger",
+            "this": "Corriger ce problème",
+            "drawShort": "Dessiner",
+            "draw": "Ouvrir le créateur de la salle 4"
+        },
+        "problems": {
+            "noStart": "Il n’y a pas de case de départ",
+            "victimNoWall": "Des victimes ont perdu leur mur ({{count}})",
+            "victimInPassage": "Des victimes sont dans un passage entre zones ({{count}}) : il n’y en a pas dans les passages (règle {{rule_passageTokens}})",
+            "victimUnreachable": "Des victimes sont là où le robot ne peut pas aller ({{count}}) : il n’y en a pas là où le robot ne peut pas aller (règle {{rule_reach}})",
+            "wallRule": "Des murs ne suivent pas les règles de leur salle ({{count}})",
+            "room4Checkpoint": "La case de la salle 4 juste derrière un passage n’est pas un checkpoint ({{count}}, règle {{rule_room4Checkpoint}}). Placer un passage la définit d’elle-même",
+            "customRoom4NoPicture": "La salle 4 n’est pas encore dessinée",
+            "presetNotSupported": "Les modèles de salle 4 ne sont pas disponibles dans cet éditeur (passez en personnalisée ou utilisez l’éditeur classique)",
+            "room4Untyped": "Des victimes de la salle 4 n’ont pas de type ({{count}}) : donnez-leur en un dans Dessiner la salle 4",
+            "room4Unreachable": "Des victimes de la salle 4 sont là où le robot ne peut pas aller ({{count}}) : il n’y en a pas là où le robot ne peut pas aller (règle {{rule_reach}})",
+            "victimMisplaced": "Des victimes déplacées le long de leur mur chevauchent le bout d’un mur ou une autre victime ({{count}})",
+            "contactInside": "Des cases de contact ne touchent pas le mur extérieur ({{count}}). Une case de contact se place seulement sur une case au bord de l’extérieur"
+        },
+        "connection": {
+            "passageNoRoom": "Il y a un passage {{name}} (salle {{from}} ⇄ salle {{to}}), mais pas de salle {{room}}.",
+            "passageMisplaced": "Le passage {{name}} (salle {{from}} ⇄ salle {{to}}) ne permet pas d’aller à la fois vers la salle {{from}} et la salle {{to}}. Mettez la case de passage dans l’une des salles et laissez-la ouverte vers les deux.",
+            "unmarkedGap": "Il y a {{count}} ouverture(s) entre la salle {{from}} et la salle {{to}} sans case de passage {{name}}. Toute ouverture où un robot pourrait passer doit être une case de passage {{name}} ou être fermée par un mur.",
+            "notConnected": "La salle {{room}} n’est pas reliée à la salle 1 par des passages."
+        }
+    },
+    "score": {
+        "title": "Le score maximal possible de cette carte",
+        "button": "Score maximum (calculé selon la règle {{rule_scoring}})",
+        "short": "Max",
+        "unit": " pts",
+        "lead": "Ce que rapporte un robot qui identifie chaque victime et cible cognitive qu’il peut atteindre, avec le bon type, et franchit chaque checkpoint (règle {{rule_scoring}}).",
+        "area": "Salle {{n}}",
+        "multiplier": "×{{m}}",
+        "victims": "Victimes {{n}}",
+        "targets": "Cibles {{n}}",
+        "checkpoints": "CP {{n}}",
+        "field": "Identification, type et checkpoints",
+        "withExit": "Avec le bonus de sortie (+10 %)",
+        "withMap": "Avec en plus un bonus de cartographie complet (×2,2)",
+        "noStart": "Placez la case de départ pour le calculer.",
+        "unreachableTokens": "{{n}} victimes ou cibles dont le robot ne peut pas s’approcher sont laissées de côté (corrigez-les dans les vérifications).",
+        "unreachableCheckpoints": "{{n}} checkpoints que le robot ne peut pas atteindre sont laissés de côté.",
+        "presetNote": "Un modèle de salle 4 n’est pas compté (cet éditeur utilise seulement une salle 4 personnalisée).",
+        "fakeNote": "Les fausses victimes et les fausses cibles cognitives (anneaux dont la somme n’est pas entre 0 et 3) ne rapportent rien.",
+        "untypedNote": "{{n}} victimes de la salle 4 sans type sont laissées de côté."
+    },
+    "status": {
+        "newMapSize": "Nouvelle carte : réglez d’abord sa taille (en cases) dans le panneau de gauche",
+        "someRefused": "{{count}} éléments ont été laissés de côté : les règles de la salle ne les permettent pas",
+        "refusedHere": "Les règles de cette salle ne permettent pas la partie rouge",
+        "noBorder": "Ce n’est pas une limite de salle",
+        "passageHere": "Cliquez sur une limite de salle (pointillés)",
+        "victim_noWall": "Il n’y a pas de mur de ce côté",
+        "victim_passage": "Aucune victime dans un passage entre zones (règle {{rule_passageTokens}})",
+        "victim_quarterTile": "Les victimes des salles 2 et 3 arrivent bientôt",
+        "victim_room4": "Les victimes de la salle 4 se placent dans le créateur de la salle 4",
+        "victim_outside": "Hors de la carte",
+        "curve_curveRoom3": "Les murs courbes vont seulement dans la salle 3",
+        "curve_room4": "Pas dans la salle 4",
+        "victim_notQuarterTile": "Pas ici",
+        "room4NoTiles": "Peignez d’abord la zone de la salle 4 avec le pinceau de salle",
+        "passage_open": "Passage placé",
+        "passage_moved": "Passage déplacé de ce côté",
+        "passage_closed": "Passage retiré",
+        "passageOpen": "Cliquez pour mettre le passage du côté coloré",
+        "passageClose": "Cliquez pour retirer le passage",
+        "passageRemove": "Cliquez pour retirer ce passage",
+        "shapeOut": "Cliquez ou faites glisser pour sortir des cases de la carte",
+        "shapeIn": "Cliquez ou faites glisser pour remettre des cases dans la carte",
+        "passageRoom4": "Un passage vers la salle 4 se place sur la case hors de la salle 4 (comme l’attendent le créateur de la salle 4 et la règle des checkpoints {{rule_room4Checkpoint}})",
+        "regionPick": "Faites glisser pour sélectionner",
+        "regionDrag": "Faites glisser pour déplacer, Alt+glisser pour copier. Les flèches déplacent d’une case ; Ctrl+C / X / V et Suppr marchent aussi",
+        "regionCopied": "Copié. Ctrl+V colle sur la case sous le pointeur",
+        "regionNoRoom": "Pas de place à côté ni en dessous pour une copie",
+        "line_addRow": "Cliquez pour ajouter une ligne sur le trait vert",
+        "line_addCol": "Cliquez pour ajouter une colonne sur le trait vert",
+        "line_delRow": "Cliquez pour retirer la ligne rouge",
+        "line_delCol": "Cliquez pour retirer la colonne rouge",
+        "lineLimit": "La carte reste entre 1 et 40 cases",
+        "fixed": "Corrigé (annuler : Ctrl+Z)",
+        "fixPartly": "Ce qui pouvait l’être a été corrigé ; le reste est à faire à la main",
+        "fixAllLeft": "Corrigé ce qui pouvait l’être ; {{count}} restent à faire à la main (annuler : Ctrl+Z)",
+        "undone": "Annulé (rétablir : Ctrl+Y)",
+        "redone": "Rétabli",
+        "wallsDrawn": "{{cm}} cm de mur tracés",
+        "lineDone_addRow": "Ligne insérée (annuler : Ctrl+Z)",
+        "lineDone_addCol": "Colonne insérée (annuler : Ctrl+Z)",
+        "lineDone_delRow": "Ligne retirée (annuler : Ctrl+Z)",
+        "lineDone_delCol": "Colonne retirée (annuler : Ctrl+Z)",
+        "lineDrawing": "{{cm}} cm de mur. Relâchez pour tracer, Échap pour annuler (revenir en arrière retire un angle)",
+        "lineDrawingStraight": "{{cm}} cm de mur droit. Relâchez pour tracer, Échap pour annuler",
+        "line_room4": "Pas de murs dans la salle 4 : double-cliquez pour la dessiner dans le créateur de la salle 4",
+        "line_fine": "Faites glisser pour tracer des murs (salle {{room}} : grille de 6 cm). Maj+glisser pour une seule ligne droite",
+        "line_tile": "Faites glisser pour tracer des murs (salle 1 : bords des cases, 12 cm). Maj+glisser pour une seule ligne droite",
+        "hand": "Faites glisser pour déplacer la vue",
+        "room_outside": "Hors de la carte (l’outil contour la remet)",
+        "room_room4": "Une case de la salle 4 : double-cliquez pour dessiner dans la salle 4",
+        "room_same": "Déjà la salle {{room}}. Choisissez la salle à peindre dans le panneau de gauche",
+        "room_paint": "Cliquez ou faites glisser pour peindre la salle {{room}} (actuellement salle {{cur}})",
+        "floor_outside": "Hors de la carte",
+        "floor_isStart": "C’est la case de départ (la gomme la retire)",
+        "floor_start": "Cliquez pour déplacer le départ ici (il n’y a qu’un départ)",
+        "floor_clear": "Cliquez pour retirer le sol (trou, marais, checkpoint)",
+        "floor_off": "Cliquez pour retirer : {{floor}}",
+        "floor_on": "Cliquez pour en faire : {{floor}}",
+        "curve_on": "Cliquez pour mettre la courbe bleue ici",
+        "curve_off": "Cliquez pour retirer cette courbe",
+        "erase_victim": "Cliquez pour retirer cette victime",
+        "erase_curve": "Cliquez pour retirer cette courbe (faites glisser pour continuer)",
+        "erase_wall": "Cliquez pour retirer ce mur (6 cm ; faites glisser pour continuer)",
+        "erase_wallWhole": "Cliquez pour retirer ce mur (12 cm ; faites glisser pour continuer)",
+        "erase_floor": "Cliquez pour retirer le sol de cette case",
+        "erase_start": "Cliquez pour retirer la case de départ",
+        "victim_place": "Cliquez pour placer « {{name}} »",
+        "victim_move": "Cliquez pour placer « {{name}} » ici (la victime de la case vient ici : une par case)",
+        "victim_replace": "Cliquez pour la changer en « {{name}} »",
+        "victim_unreachable": "Le robot ne peut pas s’approcher d’ici, donc aucune victime ne va ici (règle {{rule_reach}})",
+        "victim_selectDrag": "Cliquez pour la sélectionner, faites glisser pour la déplacer le long de son mur",
+        "victim_moveSlot": "Cliquez pour placer « {{name}} » ici (la victime de cette face vient ici)",
+        "victim_moving": "{{cm}} cm le long de son mur (elle s’arrête avant le bout du mur et les autres victimes)",
+        "victim_moved": "Déplacée à {{cm}} cm le long de son mur (annuler : Ctrl+Z)",
+        "victim_noRoom": "Pas de place pour une victime ici (trop près du bout du mur ou d’une autre victime)",
+        "rulesSwitched": "Passé aux règles {{year}} (annuler : Ctrl+Z)",
+        "floor_notOuter": "{{floor}} : seulement sur une case contre le mur extérieur",
+        "openedOtherYear": "Cette carte s’est ouverte avec les règles {{year}}. Pour la passer aux règles {{chosen}}, changez avec Règles dans la barre du haut"
+    },
+    "guide": {
+        "button": "Guide (leçon, visite de l’écran, faire la salle 4)",
+        "short": "Guide",
+        "empty": {
+            "title": "Nouveau ? Découvrez comment ça marche",
+            "note": "Choisissez d’apprendre en faisant une carte, ou de faire la visite de l’écran"
+        },
+        "pick": {
+            "title": "Comment voulez-vous apprendre ?",
+            "room4Title": "Comment voulez-vous apprendre la salle 4 ?",
+            "lead": "Vous pouvez rechoisir à tout moment depuis Guide en bas à droite.",
+            "later": "Plus tard"
+        },
+        "nav": {
+            "end": "Fin",
+            "skip": "Terminer la visite",
+            "back": "Retour",
+            "next": "Suivant",
+            "begin": "Commencer",
+            "finish": "Terminé",
+            "keys": "← → pour avancer   Échap pour terminer"
+        },
+        "lesson": {
+            "name": "Apprendre en faisant une carte d’exemple",
+            "time": "Environ 15 minutes · en pratique",
+            "note": "Faites une carte d’exemple en utilisant chaque fonction tour à tour. Chaque étape avance une fois faite, et Le faire pour moi peut la faire à votre place.",
+            "map": "La carte ouverte est fermée et une nouvelle commence (on vous demande d’abord si elle a des modifications non enregistrées).",
+            "tip": "L’éditeur fonctionne normalement pendant la leçon",
+            "todo": "À faire :",
+            "done": "Fait !",
+            "skip": "Passer cette étape",
+            "doIt": "Le faire pour moi",
+            "fold": "Replier le texte",
+            "unfold": "Afficher le texte",
+            "creatorClosed": "Le créateur de la salle 4 est fermé.",
+            "openCreator": "L’ouvrir",
+            "creatorOver": "Le créateur de la salle 4 est ouvert. Fermez-le pour continuer.",
+            "closeCreator": "Fermer (OK)",
+            "planLabel": "La carte d’exemple, terminée",
+            "states": {
+                "tool": "Choisissez l’outil {{name}} (dans la colonne d’outils à gauche)"
             },
-            "fixAll": "Corriger tout ce qui peut l’être",
-            "fixShort": "Corriger",
-            "fixThis": "Corriger ce problème",
-            "fixDrawShort": "Dessiner",
-            "fixDraw": "Ouvrir le créateur de la salle 4",
-            "linear": "Linéaire",
-            "linearTitle": "Colorer linéaire / flottant (fixe ce que valent les victimes)",
-            "legendLinear": "Cases linéaires (près de murs reliés au départ : les victimes valent moins)",
-            "legendFloating": "Cases flottantes (les victimes valent plus)",
-            "legendFloatingWall": "Murs flottants",
-            "linearNoStart": "Placez la case de départ pour voir linéaire / flottant",
-            "legendUnreached": "Non atteint depuis le départ (pas de passage, ...) : ni linéaire ni flottant",
-            "close": "Fermer",
-            "cancel": "Annuler",
-            "discardTitle": "Modifications non enregistrées",
-            "saveFirst": "Enregistrer et continuer",
-            "discardGo": "Ne pas enregistrer",
-            "exportBlockedLead": "Corrigez ces {{count}} pour exporter. Cliquez sur l’un pour voir où il se trouve.",
-            "betaMenu": "À propos de cet éditeur",
-            "betaLead": "Erebus World Editor (bêta). Il lit et écrit le même JSON que l’éditeur classique, donc une carte enregistrée s’ouvre dans l’un ou l’autre.",
-            "backToClassicNote": "Enregistrez d’abord la carte en cours (Enregistrer, JSON)",
-            "tourStart": "Guide (leçon, visite de l’écran, faire la salle 4)",
-            "tourShort": "Guide",
-            "listSep": ", ",
-            "rules": {
-                "title": "Les règles de cette carte",
-                "label": "Règles {{year}}",
-                "lead": "Les règles que suit cette carte : les vérifications, le score et le monde exporté en dépendent.",
-                "book": "Livre des règles",
-                "soon": "Bientôt",
-                "switchTitle": "Passer aux règles {{year}} ?",
-                "switchLead": "Cette carte passe des règles {{from}} aux règles {{to}}. Les murs et victimes qui ne conviennent pas aux nouvelles règles sont signalés dans les vérifications (annuler : Ctrl+Z).",
-                "switch": "Changer",
-                "pick": "Les règles de quelle année ?",
-                "pickNote": "Une carte enregistrée s’ouvre avec ses propres règles. Vous pourrez aussi changer plus tard dans la barre du haut.",
-                "draft": "Brouillon"
-            },
-            "build": {
-                "title": "À propos de cette version",
-                "commit": "Commit",
-                "dirty": "(avec des changements non commités)",
-                "branch": "Branche",
-                "commitDate": "Commité",
-                "builtAt": "Compilé",
-                "copy": "Copier",
-                "copied": "Copié"
-            },
-            "tourEmpty": "Nouveau ? Découvrez comment ça marche",
-            "tourEmptyNote": "Choisissez d’apprendre en faisant une carte, ou de faire la visite de l’écran",
-            "tourEnd": "Fin",
-            "tourSkip": "Terminer la visite",
-            "tourBack": "Retour",
-            "tourNext": "Suivant",
-            "tourBegin": "Commencer",
-            "tourFinish": "Terminé",
-            "tourKeys": "← → pour avancer   Échap pour terminer",
-            "guideLesson": "Apprendre en faisant une carte d’exemple",
-            "guideTour": "Visite de l’écran",
-            "guideRoom4": "Apprendre la salle 4 en la faisant",
-            "guideRoom4Need": "Peignez d’abord la salle 4 avec l’outil salle.",
-            "lessonTodo": "À faire :",
-            "lessonDone": "Fait !",
-            "lessonSkip": "Passer cette étape",
-            "lessonDoIt": "Le faire pour moi",
-            "lessonCreatorClosed": "Le créateur de la salle 4 est fermé.",
-            "lessonOpenCreator": "L’ouvrir",
-            "lessonTip": "L’éditeur fonctionne normalement pendant la leçon",
-            "pickTitle": "Comment voulez-vous apprendre ?",
-            "pickLead": "Vous pouvez rechoisir à tout moment depuis Guide en bas à droite.",
-            "pickLessonTime": "Environ 15 minutes · en pratique",
-            "pickLessonNote": "Faites une carte d’exemple en utilisant chaque fonction tour à tour. Chaque étape avance une fois faite, et Le faire pour moi peut la faire à votre place.",
-            "pickLessonMap": "La carte ouverte est fermée et une nouvelle commence (on vous demande d’abord si elle a des modifications non enregistrées).",
-            "pickTourTime": "Environ 3 minutes · juste regarder",
-            "pickTourNote": "Chaque partie de l’écran et chaque outil, mis en valeur et expliqués un par un. La carte n’est pas modifiée.",
-            "pickRoom4Time": "Environ 5 minutes · en pratique",
-            "pickRoom4Note": "Dans le créateur de la salle 4, tracez des murs et placez des victimes vous-même, en utilisant chaque fonction tour à tour.",
-            "pickLater": "Plus tard",
-            "guideRoom4Tour": "Visite du créateur de la salle 4",
-            "pickRoom4Title": "Comment voulez-vous apprendre la salle 4 ?",
-            "pickRoom4TourTime": "Environ 2 minutes · juste regarder",
-            "pickRoom4TourNote": "Chaque partie du créateur de la salle 4 et chaque outil, mis en valeur et expliqués un par un. L’image n’est pas modifiée.",
-            "tourRoom4Inside": "Voir aussi la visite du créateur de la salle 4 (puis revenir ici)",
-            "tourBackTo": "À la fin, « {{name}} » reprend là où il en était",
-            "lessonCreatorOver": "Le créateur de la salle 4 est ouvert. Fermez-le pour continuer.",
-            "lessonCloseCreator": "Fermer (OK)",
-            "lessonFold": "Replier le texte",
-            "lessonUnfold": "Afficher le texte",
-            "tour": {
-                "chapters": {
-                    "start": "Bienvenue",
-                    "screen": "L’écran",
-                    "tools": "Outils",
-                    "shape": "Taille et forme",
-                    "rooms": "Salles",
-                    "passages": "Passages",
-                    "walls": "Murs",
-                    "floors": "Sols",
-                    "victims": "Victimes",
-                    "room4": "Salle 4",
-                    "finish": "Finir et exporter"
-                },
-                "welcome": {
-                    "title": "Bienvenue dans Erebus World Editor",
-                    "body": "Cet éditeur crée des mondes pour les règles 2026 de la RoboCupJunior Rescue Simulation (Erebus). Vous dessinez la carte directement sur le canevas, et les murs et victimes s’alignent sur les emplacements que permettent les règles de la salle sous le pointeur.\nCette visite passe en revue chaque partie de l’écran et chaque outil (environ 3 minutes). La partie expliquée est mise en valeur.\nAppuyez sur → ou Entrée pour l’étape suivante, ← pour revenir et Échap pour terminer à tout moment. Pour apprendre en pratiquant, choisissez Apprendre en faisant une carte d’exemple dans Guide en bas à droite."
-                },
-                "file": {
-                    "title": "Fichier : nouveau, ouvrir, enregistrer",
-                    "body": "Nouveau crée une carte vide. Si la carte ouverte a des modifications non enregistrées, il demande d’abord s’il faut les abandonner.\nOuvrir lit le JSON d’une carte, et Enregistrer écrit la carte dans un fichier JSON. Un fichier JSON déposé sur la carte s’ouvre aussi.\nLes modifications sont aussi gardées dans le navigateur, mais elles se perdent dans un autre navigateur ou quand les données de navigation sont effacées. Gardez les cartes importantes en JSON avec Enregistrer."
-                },
-                "name": {
-                    "title": "Nom de la carte",
-                    "body": "Le nom de la carte. Cliquez dessus pour le changer.\nIl nomme le JSON que vous enregistrez et le monde (.wbt) que vous exportez."
-                },
-                "history": {
-                    "title": "Annuler et rétablir",
-                    "body": "Annulez les modifications une par une, ou refaites-les (jusqu’à 100).\nLes corrections automatiques, et déplacer ou coller une zone, s’annulent chacun en une étape : n’hésitez pas à essayer."
-                },
-                "view": {
-                    "title": "Voir et déplacer la carte",
-                    "body": "Voici la carte. Tournez la molette pour zoomer, et faites glisser avec Espace enfoncé (ou avec le bouton de la molette) pour la déplacer. Avec l’outil main (H), un simple glisser la déplace.\nLes boutons de la barre du haut (cadre pointillé) zooment aussi, et celui le plus à droite affiche de nouveau toute la carte. Le nombre est le zoom (pixels par cm).\nLa carte est faite de cases de 12 cm. Chaque salle a sa couleur de sol, et les murs se dressent d’eux-mêmes aux limites des salles et tout autour."
-                },
-                "rail": {
-                    "title": "Outils",
-                    "body": "Les outils qui modifient la carte, en quatre groupes de haut en bas : voir (sélection, main), carte et salles (forme, salle, passage), murs (ligne, courbe, gomme), et sols et victimes (sol, victime).\nLa lettre en bas à droite de chaque bouton est sa touche : un appui prend l’outil.\nEnsuite, les outils un par un, dans l’ordre où l’on fait une carte."
-                },
-                "panel": {
-                    "title": "Ce que fait l’outil, et ses réglages",
-                    "body": "L’outil choisi montre ici comment l’utiliser et ses réglages. En cas de doute, lisez d’abord ceci.\nLa ligne d’état en bas (cadre pointillé) dit ce que vous pouvez faire là où est le pointeur, ou pourquoi vous ne pouvez pas."
-                },
-                "shape": {
-                    "title": "Forme (X) : taille et contour de la carte",
-                    "body": "Une nouvelle carte commence ici par sa taille : cliquez sur le nombre de cases en largeur ou en hauteur pour le saisir, ou utilisez − et + (jusqu’à 40). Elle grandit ou rétrécit à droite et en bas ; ce qui tient encore reste.\nAvec Contour, cliquez ou faites glisser sur des cases pour les sortir de la carte (pas de sol) ou les remettre, pour une forme en L ou toute carte qui n’est pas un rectangle. Les murs extérieurs suivent le contour d’eux-mêmes.\nInsérer une ligne, Insérer une colonne, Retirer une ligne et Retirer une colonne ajoutent ou retirent une ligne ou une colonne là où vous cliquez sur la carte."
-                },
-                "room": {
-                    "title": "Salle (M) : peindre les salles",
-                    "body": "Choisissez un numéro de salle et peignez des cases avec. Peindre la salle 1 remet une case.\nChaque salle a ses règles : la salle 1 a des murs de 12 cm (sur les bords des cases), la salle 2 des murs de 6 cm, la salle 3 des murs de 6 cm et des courbes, et la salle 4 se dessine librement comme une image.\nLes murs se dressent d’eux-mêmes aux limites des salles et tout autour. Pour relier des salles, utilisez ensuite l’outil Passage."
-                },
-                "passage": {
-                    "title": "Passage (P) : relier les salles",
-                    "body": "Cliquez près d’une limite de salle : la case du côté cliqué devient un passage, et le mur de la limite s’ouvre.\nCliquez à nouveau pour le fermer. Cliquez de l’autre côté et le passage passe sur cette case. Cliquez au centre d’une case de passage pour le retirer.\nUn passage vers la salle 4 se place sur la case hors de la salle 4. Les passages qui ne conviennent plus après avoir repeint les salles sont retirés d’eux-mêmes."
-                },
-                "line": {
-                    "title": "Ligne (L) : tracer des murs",
-                    "body": "Faites glisser pour tracer des murs. Le mur suit le pointeur, donc un zigzag se trace d’un coup ; revenir sur vos pas l’annule.\nMaintenez Maj au départ pour une seule ligne droite.\nLes murs s’alignent sur la grille de la salle sous le pointeur : 12 cm (bords des cases) dans la salle 1, 6 cm (demi-cases) dans les salles 2 et 3. Ils ne peuvent pas être tracés dans la salle 4 (la salle 4 est une image)."
-                },
-                "curve": {
-                    "title": "Courbe (A) : murs courbes",
-                    "body": "Salle 3 seulement. Pointez un quart (carré de 6 cm) d’une case de la salle 3 et les quatre courbes possibles s’affichent en pâle.\nUn clic place la plus proche (bleue). Cliquer de nouveau sur la même la retire."
-                },
-                "eraser": {
-                    "title": "Gomme (E)",
-                    "body": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer ; ce qui partirait s’affiche en rouge sous le pointeur.\nLoin des murs, elle retire le sol d’une case (trou, marais, checkpoint). Le départ ne part que d’un clic.\nUn glisser qui commence sur un mur ne touche pas aux sols, donc les sols ne partent pas pendant que vous gommez des murs. Les murs extérieurs restent."
-                },
-                "floor": {
-                    "title": "Sol (F) : checkpoints, trous, marais, le départ",
-                    "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire.\nDépart est la case où l’on pose le robot : une par carte. Aucun retire le sol.\nLes règles demandent un checkpoint à chaque passage vers la salle 4, donc il s’y place de lui-même."
-                },
-                "victim": {
-                    "title": "Victime (V) : victimes et cibles cognitives",
-                    "body": "Choisissez un type dans le panneau (victimes lettres Φ, Ψ, Ω et leurs fausses, cibles cognitives de quatre types - gaz inflammable, poison, corrosif, peroxyde organique - et une fausse) et cliquez près d’un mur : elle se place sur le mur là où vous cliquez.\nElles vont sur les côtés des cases dans la salle 1 (une par case), sur les faces des murs de 6 cm dans les salles 2 et 3, et à deux places sur une courbe (intérieur et extérieur). Faites glisser une victime placée pour la déplacer le long de son mur. Là où elle ne peut pas aller, la ligne d’état dit pourquoi.\nTournez le cadran (Orientation fixe) pour son orientation, ou choisissez Aléatoire pour une nouvelle à chaque fois. Pour une cible cognitive, cliquez sur un anneau de la cible puis sur une couleur en dessous ; la somme des anneaux donne son type.\nCliquez sur une victime avec le même type pour la sélectionner, puis changez son orientation, ses anneaux ou sa position le long du mur, ou retirez-la. Un clic avec un autre type change son type."
-                },
-                "room4": {
-                    "title": "Dessiner la salle 4",
-                    "body": "Peindre la salle 4 avec l’outil salle crée la salle 4. Ses murs et victimes se dessinent comme une image.\nDessiner la salle 4 (ou un double-clic sur sa zone) ouvre le créateur de la salle 4 : tracez librement des murs au stylo, en lignes et en formes, et placez des victimes contre les murs. Là où le robot ne peut pas aller s’affiche en rayures rouges.\nLe bouton Guide du créateur montre en détail comment faire la salle 4. L’image s’affiche sur la carte et passe telle quelle dans le monde exporté."
-                },
-                "select": {
-                    "title": "Sélection (S) : déplacer et copier une zone",
-                    "body": "Faites glisser pour sélectionner une zone de cases ; ses murs, salles, sols et victimes sont pris ensemble.\nFaites glisser à l’intérieur pour la déplacer, ou avec Alt enfoncé pour déplacer une copie. Les flèches la déplacent case par case.\nCtrl+C copie, Ctrl+X coupe, Ctrl+V colle (la case sous le pointeur est son coin haut gauche), Ctrl+D duplique et Suppr l’efface. Échap relâche la zone."
-                },
-                "linear": {
-                    "title": "Linéaire",
-                    "body": "Activé, chaque case est colorée en linéaire (près d’un mur relié au départ) ou flottante. Les victimes sur des cases flottantes rapportent plus.\nIl faut la case de départ. L’export du monde détermine les cases linéaires de la même façon."
-                },
-                "checks": {
-                    "title": "Vérifications",
-                    "body": "Chaque modification est vérifiée par rapport aux règles.\nUn ✕ rouge est un problème qui empêche d’exporter le monde ; un ! jaune est un avertissement à regarder, mais le monde peut être exporté.\nPointez un élément pour voir où il est sur la carte, et cliquez pour y aller. Cliquez sur le titre pour replier la carte.\nLà où le robot (rayon 3,7 cm) ne peut pas aller s’affiche toujours sur la carte en rayures rouges, et une victime placée là reçoit un avertissement."
-                },
-                "fix": {
-                    "title": "Corriger automatiquement",
-                    "body": "Un élément avec un bouton Corriger se corrige d’un clic (placer le départ, relier des salles par des passages, retirer les murs que les règles n’autorisent pas, etc.).\nCorriger tout ce qui peut l’être les fait tous d’un coup. Si le résultat ne vous plaît pas, Ctrl+Z l’annule.\nLes vérifications s’assurent aussi que chaque salle est atteinte depuis la salle 1 par des passages, et signalent celle qui ne l’est pas."
-                },
-                "export": {
-                    "title": "Exporter le monde (.wbt)",
-                    "body": "Écrit le fichier de monde (.wbt) que charge Erebus.\nTant qu’il reste un problème ✕ rouge, le bouton est gris, et appuyer dessus liste ce qu’il faut corriger ; il peut le corriger pour vous depuis là.\nGardez la carte pour la modifier plus tard avec Enregistrer (JSON), pas le .wbt : un .wbt ne redevient pas une carte modifiable."
-                },
-                "more": {
-                    "title": "Guide et langue",
-                    "body": "Guide en bas à droite propose à tout moment la leçon qui construit une carte d’exemple, cette visite et comment faire la salle 4.\nLe bouton de langue (il affiche le drapeau et le nom de la langue utilisée) choisit la langue."
-                },
-                "done": {
-                    "title": "C’est la fin de la visite",
-                    "body": "Ce bouton relance la visite à tout moment.\nUn bon ordre de travail : réglez la taille avec Forme → peignez les salles → reliez-les par des passages → tracez les murs → placez sols et victimes → regardez les vérifications et exportez le .wbt.\nBonne création de cartes !"
-                },
-                "score": {
-                    "title": "Score maximum",
-                    "body": "Le plus que cette carte peut rapporter : chaque victime et cible cognitive dont le robot peut s’approcher identifiée avec le bon type, et chaque checkpoint franchi, calculé selon la règle {{rule_scoring}}.\nAppuyez dessus pour la part de chaque salle et le score avec les bonus de sortie et de cartographie. Il est recalculé à chaque modification."
-                }
-            },
-            "lesson": {
-                "planLabel": "La carte d’exemple, terminée",
+            "steps": {
                 "intro": {
                     "title": "Apprendre en faisant une carte d’exemple",
                     "body": "Dans cette leçon, vous faites la carte ci-dessus en utilisant au passage les fonctions de l’éditeur l’une après l’autre (environ 15 minutes).\nSalle 1 à gauche, salle 2 en haut au milieu, salle 3 en bas au milieu, salle 4 à droite. Vous reliez les salles par des passages, placez murs, une courbe, sols et victimes, dessinez l’intérieur de la salle 4 et terminez avec un monde prêt à exporter.\nFaites ce que demande chaque étape et elle passe à Fait !, puis Suivant continue. Si quelque chose ne marche pas, Le faire pour moi le fait à votre place. L’éditeur fonctionne normalement tout du long."
@@ -738,312 +748,359 @@
                     "title": "Score maximum",
                     "body": "Le trophée de la barre du haut est le plus que cette carte peut rapporter : chaque victime et cible cognitive identifiée avec le bon type, et chaque checkpoint franchi, calculé selon la règle {{rule_scoring}}.\nAppuyez dessus pour la part de chaque salle et le score avec les bonus de sortie et de cartographie. Les victimes sur des cases flottantes et dans des salles à plus fort multiplicateur valent plus."
                 }
-            },
-            "toolHints": {
-                "select": "Faites glisser pour sélectionner des cases (murs, salles, sols et victimes se déplacent ou se copient ensemble)",
-                "select_region": "{{size}} cases sélectionnées : glissez à l’intérieur pour déplacer, Ctrl+C / X / V, Suppr, Échap pour relâcher",
-                "hand": "Faites glisser pour déplacer la vue",
-                "shape_outline": "Cliquez ou faites glisser sur des cases pour les sortir de la carte ou les remettre. La taille est dans le panneau de gauche",
-                "shape_addRow": "Pointez la limite où va la ligne et cliquez",
-                "shape_addCol": "Pointez la limite où va la colonne et cliquez",
-                "shape_delRow": "Pointez la ligne à retirer et cliquez",
-                "shape_delCol": "Pointez la colonne à retirer et cliquez",
-                "room": "Faites glisser sur des cases pour peindre la salle {{room}}. Les murs des limites et de l’extérieur viennent d’eux-mêmes",
-                "passage": "Cliquez près d’une limite de salle (pointillés) pour placer un passage",
-                "line": "Faites glisser pour tracer des murs en tournant aux angles en chemin ; Maj pour une seule ligne droite",
-                "curve": "Pointez un quart de case dans la salle 3 et cliquez sur la courbe bleue",
-                "eraser": "Pointez un mur, une courbe, une victime ou un sol et cliquez (faites glisser pour continuer)",
-                "floor": "Cliquez sur une case pour en faire : {{floor}} (encore pour le retirer)",
-                "victim": "Cliquez près d’un mur pour placer « {{name}} » là où vous cliquez (faites-la glisser le long de son mur ensuite). Choisissez le type dans le panneau de gauche",
-                "victim_selected": "Faites glisser la victime sélectionnée pour la déplacer le long de son mur. Changez son orientation, ses anneaux ou sa position, ou retirez-la, dans le panneau de gauche"
-            },
-            "lessonState": {
-                "tool": "Choisissez l’outil {{name}} (dans la colonne d’outils à gauche)"
-            },
-            "score": {
-                "title": "Le score maximal possible de cette carte",
-                "button": "Score maximum (calculé selon la règle {{rule_scoring}})",
-                "short": "Max",
-                "unit": " pts",
-                "lead": "Ce que rapporte un robot qui identifie chaque victime et cible cognitive qu’il peut atteindre, avec le bon type, et franchit chaque checkpoint (règle {{rule_scoring}}).",
-                "area": "Salle {{n}}",
-                "multiplier": "×{{m}}",
-                "victims": "Victimes {{n}}",
-                "targets": "Cibles {{n}}",
-                "checkpoints": "CP {{n}}",
-                "field": "Identification, type et checkpoints",
-                "withExit": "Avec le bonus de sortie (+10 %)",
-                "withMap": "Avec en plus un bonus de cartographie complet (×2,2)",
-                "noStart": "Placez la case de départ pour le calculer.",
-                "unreachableTokens": "{{n}} victimes ou cibles dont le robot ne peut pas s’approcher sont laissées de côté (corrigez-les dans les vérifications).",
-                "unreachableCheckpoints": "{{n}} checkpoints que le robot ne peut pas atteindre sont laissés de côté.",
-                "presetNote": "Un modèle de salle 4 n’est pas compté (cet éditeur utilise seulement une salle 4 personnalisée).",
-                "fakeNote": "Les fausses victimes et les fausses cibles cognitives (anneaux dont la somme n’est pas entre 0 et 3) ne rapportent rien.",
-                "untypedNote": "{{n}} victimes de la salle 4 sans type sont laissées de côté."
-            },
-            "tiles": "cases",
-            "shapeEdit": "Modifier sur la carte",
-            "keySheet": {
-                "title": "Commandes",
-                "open": "Commandes",
-                "back": "Retour aux guides",
-                "view": "Vue",
-                "edit": "Édition",
-                "select": "Outil de sélection",
-                "guide": "Aide",
-                "rows": {
-                    "zoom": "Zoomer et dézoomer",
-                    "pan": "Déplacer la vue",
-                    "hand": "Outil main (déplacer avec un glisser gauche)",
-                    "undo": "Annuler",
-                    "redo": "Rétablir",
-                    "cancel": "Arrêter le tracé en cours",
-                    "tools": "Changer d’outil (lettres de la barre de gauche)",
-                    "copy": "Copier, couper, coller",
-                    "duplicate": "Dupliquer",
-                    "clear": "Effacer la sélection",
-                    "nudge": "Déplacer la sélection d’une case",
-                    "sheet": "Ouvrir cette liste"
-                },
-                "keys": {
-                    "wheel": "Molette",
-                    "spaceDrag": "Espace + glisser",
-                    "middleDrag": "Glisser avec le bouton du milieu"
-                }
-            },
-            "along": "Position le long de son mur",
-            "alongNote": "Vous pouvez aussi la faire glisser sur la carte (pas de 0,1 cm)",
-            "alongMiddle": "Au milieu"
+            }
         },
-        "simMapEditor": {
-            "name": "Nom du design : ",
-            "rotDialHint": "Faites glisser pour tourner (Maj pour des pas de 1°). Les flèches marchent aussi.",
-            "rotRandom": "Angle aléatoire",
-            "rotHelp": "Tourne dans le sens horaire vu depuis le robot. 0° est droit. Faites glisser le cadran ou utilisez les boutons.",
-            "connCheck": {
-                "passageNoRoom": "Il y a un passage {{name}} (salle {{from}} ⇄ salle {{to}}), mais pas de salle {{room}}.",
-                "passageMisplaced": "Le passage {{name}} (salle {{from}} ⇄ salle {{to}}) ne permet pas d’aller à la fois vers la salle {{from}} et la salle {{to}}. Mettez la case de passage dans l’une des salles et laissez-la ouverte vers les deux.",
-                "unmarkedGap": "Il y a {{count}} ouverture(s) entre la salle {{from}} et la salle {{to}} sans case de passage {{name}}. Toute ouverture où un robot pourrait passer doit être une case de passage {{name}} ou être fermée par un mur.",
-                "notConnected": "La salle {{room}} n’est pas reliée à la salle 1 par des passages."
+        "tour": {
+            "name": "Visite de l’écran",
+            "time": "Environ 3 minutes · juste regarder",
+            "note": "Chaque partie de l’écran et chaque outil, mis en valeur et expliqués un par un. La carte n’est pas modifiée.",
+            "room4Inside": "Voir aussi la visite du créateur de la salle 4 (puis revenir ici)",
+            "backTo": "À la fin, « {{name}} » reprend là où il en était",
+            "chapters": {
+                "start": "Bienvenue",
+                "screen": "L’écran",
+                "tools": "Outils",
+                "shape": "Taille et forme",
+                "rooms": "Salles",
+                "passages": "Passages",
+                "walls": "Murs",
+                "floors": "Sols",
+                "victims": "Victimes",
+                "room4": "Salle 4",
+                "finish": "Finir et exporter"
             },
-            "room4Creator": {
-                "zoomIn": "Zoom avant",
-                "zoomOut": "Zoom arrière",
-                "zoomFit": "Ajuster",
-                "viewReach": "Inaccessible",
-                "viewGuides": "Entrées / CP",
-                "unreachableShort": "Inaccessibles {{count}}",
-                "farShort": "Loin du mur {{count}}",
-                "missingShort": "CP manquants {{count}}",
-                "noEntranceShort": "Pas d’entrée",
-                "reachOff": "Accessibilité non calculée",
-                "legendMapWallShort": "Murs de la carte",
-                "legendCheckpointShort": "Checkpoint",
-                "sel": {
-                    "ccw": "Tourner de 90° à gauche",
-                    "cw": "Tourner de 90° à droite",
-                    "h": "Retourner gauche / droite",
-                    "v": "Retourner haut / bas",
-                    "duplicate": "Dupliquer",
-                    "copy": "Copier",
-                    "paste": "Coller",
-                    "delete": "Supprimer",
-                    "drop": "Terminé"
+            "steps": {
+                "welcome": {
+                    "title": "Bienvenue dans Erebus World Editor",
+                    "body": "Cet éditeur crée des mondes pour les règles 2026 de la RoboCupJunior Rescue Simulation (Erebus). Vous dessinez la carte directement sur le canevas, et les murs et victimes s’alignent sur les emplacements que permettent les règles de la salle sous le pointeur.\nCette visite passe en revue chaque partie de l’écran et chaque outil (environ 3 minutes). La partie expliquée est mise en valeur.\nAppuyez sur → ou Entrée pour l’étape suivante, ← pour revenir et Échap pour terminer à tout moment. Pour apprendre en pratiquant, choisissez Apprendre en faisant une carte d’exemple dans Guide en bas à droite."
                 },
-                "randomPlace": "Placer au hasard",
-                "randomModes": {
-                    "current": "Type choisi",
-                    "mixed": "Types mélangés"
+                "file": {
+                    "title": "Fichier : nouveau, ouvrir, enregistrer",
+                    "body": "Nouveau crée une carte vide. Si la carte ouverte a des modifications non enregistrées, il demande d’abord s’il faut les abandonner.\nOuvrir lit le JSON d’une carte, et Enregistrer écrit la carte dans un fichier JSON. Un fichier JSON déposé sur la carte s’ouvre aussi.\nLes modifications sont aussi gardées dans le navigateur, mais elles se perdent dans un autre navigateur ou quand les données de navigation sont effacées. Gardez les cartes importantes en JSON avec Enregistrer."
                 },
-                "randomGo": "Placer {{n}}",
-                "randomNote2": "Le long de murs dont le robot peut s’approcher à une demi-case, à au moins une demi-case les unes des autres.",
-                "templates": {
-                    "maze": "Labyrinthe",
-                    "pillars": "Piliers",
-                    "diagonal": "Diagonales",
-                    "zigzag": "Zigzag",
-                    "rings": "Anneaux",
-                    "obstacles": "Obstacles"
+                "name": {
+                    "title": "Nom de la carte",
+                    "body": "Le nom de la carte. Cliquez dessus pour le changer.\nIl nomme le JSON que vous enregistrez et le monde (.wbt) que vous exportez."
                 },
-                "templateHints": {
-                    "maze": "Un labyrinthe de couloirs d’une case (avec quelques raccourcis).",
-                    "pillars": "Piliers ronds aux coins des cases.",
-                    "diagonal": "Courts murs diagonaux dans les cases.",
-                    "zigzag": "Un seul chemin qui tourne aux extrémités.",
-                    "rings": "Des anneaux autour du centre, chacun avec une ouverture.",
-                    "obstacles": "Cercles, boîtes et triangles dispersés."
+                "history": {
+                    "title": "Annuler et rétablir",
+                    "body": "Annulez les modifications une par une, ou refaites-les (jusqu’à 100).\nLes corrections automatiques, et déplacer ou coller une zone, s’annulent chacun en une étape : n’hésitez pas à essayer."
                 },
-                "templateClear": "Effacer d’abord murs et victimes",
-                "templateApply": "Placer",
-                "showGuides": "Afficher entrées et checkpoints",
-                "missingCheckpoints": "{{count}} case(s) juste derrière un passage ne sont pas des checkpoints (règle {{rule_room4Checkpoint}}). Définissez-les dans l’éditeur principal (\"CP?\" pointillé).",
-                "noEntrance": "La salle 4 n’a pas d’entrée. Ouvrez un mur vers un passage extérieur dans l’éditeur principal.",
-                "rows": {
-                    "real": "Vraie",
-                    "fake": "Fausse (3D)"
+                "view": {
+                    "title": "Voir et déplacer la carte",
+                    "body": "Voici la carte. Tournez la molette pour zoomer, et faites glisser avec Espace enfoncé (ou avec le bouton de la molette) pour la déplacer. Avec l’outil main (H), un simple glisser la déplace.\nLes boutons de la barre du haut (cadre pointillé) zooment aussi, et celui le plus à droite affiche de nouveau toute la carte. Le nombre est le zoom (pixels par cm).\nLa carte est faite de cases de 12 cm. Chaque salle a sa couleur de sol, et les murs se dressent d’eux-mêmes aux limites des salles et tout autour."
                 },
-                "curveSmooth": "Lisse",
-                "curveStraight": "Droit",
-                "sides": "Côtés",
-                "shapeIcon": "Icône",
-                "shapePicture": "Image",
-                "iconSearch": "Rechercher (p. ex. star, car, tree)",
-                "iconAll": "Suggestions (choisissez une catégorie pour affiner)",
-                "iconLoading": "Chargement des icônes…",
-                "iconUnavailable": "La liste des icônes n’a pas pu être chargée.",
-                "iconNone": "Aucun résultat.",
-                "pictureChoose": "Choisir une image",
-                "pictureNote": "Un PNG ou SVG avec transparence utilise sa partie opaque ; les autres images utilisent leur partie sombre.",
-                "shapeStyles": {
-                    "fill": "Rempli",
-                    "outline": "Contour"
+                "rail": {
+                    "title": "Outils",
+                    "body": "Les outils qui modifient la carte, en quatre groupes de haut en bas : voir (sélection, main), carte et salles (forme, salle, passage), murs (ligne, courbe, gomme), et sols et victimes (sol, victime).\nLa lettre en bas à droite de chaque bouton est sa touche : un appui prend l’outil.\nEnsuite, les outils un par un, dans l’ordre où l’on fait une carte."
                 },
-                "mirror": "Symétrie",
-                "mirrors": {
-                    "none": "Non",
-                    "x": "Gauche / droite",
-                    "y": "Haut / bas",
-                    "xy": "Les deux"
+                "panel": {
+                    "title": "Ce que fait l’outil, et ses réglages",
+                    "body": "L’outil choisi montre ici comment l’utiliser et ses réglages. En cas de doute, lisez d’abord ceci.\nLa ligne d’état en bas (cadre pointillé) dit ce que vous pouvez faire là où est le pointeur, ou pourquoi vous ne pouvez pas."
                 },
-                "tipCurve": "Clic : ajouter un point   Double-clic / Entrée : terminer",
-                "tipArc": "Bougez pour courber   Clic : terminé",
-                "unreachable": "{{count}} dont le robot ne peut pas s’approcher à une demi-case (non identifiables)",
-                "showReach": "Montrer où le robot ne peut pas aller",
-                "legendReach": "Là où le robot ne peut pas aller",
-                "reach": {
-                    "noSeed": "Le robot ne peut pas quitter la case de départ, donc l’endroit où il ne peut pas aller n’est pas calculé (vérifiez la case de départ et les murs autour).",
-                    "noStart": "Il n’y a pas de case de départ, donc l’endroit où le robot ne peut pas aller n’est pas calculé.",
-                    "unavailable": "Impossible de calculer où le robot ne peut pas aller."
+                "shape": {
+                    "title": "Forme (X) : taille et contour de la carte",
+                    "body": "Une nouvelle carte commence ici par sa taille : cliquez sur le nombre de cases en largeur ou en hauteur pour le saisir, ou utilisez − et + (jusqu’à 40). Elle grandit ou rétrécit à droite et en bas ; ce qui tient encore reste.\nAvec Contour, cliquez ou faites glisser sur des cases pour les sortir de la carte (pas de sol) ou les remettre, pour une forme en L ou toute carte qui n’est pas un rectangle. Les murs extérieurs suivent le contour d’eux-mêmes.\nInsérer une ligne, Insérer une colonne, Retirer une ligne et Retirer une colonne ajoutent ou retirent une ligne ou une colonne là où vous cliquez sur la carte."
                 },
-                "eraseTargets": {
-                    "all": "Tout",
-                    "tokens": "Victimes seulement"
+                "room": {
+                    "title": "Salle (M) : peindre les salles",
+                    "body": "Choisissez un numéro de salle et peignez des cases avec. Peindre la salle 1 remet une case.\nChaque salle a ses règles : la salle 1 a des murs de 12 cm (sur les bords des cases), la salle 2 des murs de 6 cm, la salle 3 des murs de 6 cm et des courbes, et la salle 4 se dessine librement comme une image.\nLes murs se dressent d’eux-mêmes aux limites des salles et tout autour. Pour relier des salles, utilisez ensuite l’outil Passage."
                 },
-                "tipStamp": "Clic : sélectionner (orientation, anneaux) ou changer le type   Clic droit : retirer",
-                "tipOther": "Clic droit : retirer",
-                "title": "Salle 4 personnalisée",
-                "tools": {
-                    "pen": "Stylo",
-                    "line": "Ligne",
-                    "rect": "Rectangle",
-                    "circle": "Cercle",
-                    "stamp": "Victime",
-                    "floor": "Sol",
-                    "erase": "Gomme",
-                    "curve": "Courbe",
-                    "arc": "Arc",
-                    "ellipse": "Ellipse",
-                    "polygon": "Polygone",
-                    "shape": "Forme",
-                    "select": "Sélection",
-                    "template": "Modèle"
+                "passage": {
+                    "title": "Passage (P) : relier les salles",
+                    "body": "Cliquez près d’une limite de salle : la case du côté cliqué devient un passage, et le mur de la limite s’ouvre.\nCliquez à nouveau pour le fermer. Cliquez de l’autre côté et le passage passe sur cette case. Cliquez au centre d’une case de passage pour le retirer.\nUn passage vers la salle 4 se place sur la case hors de la salle 4. Les passages qui ne conviennent plus après avoir repeint les salles sont retirés d’eux-mêmes."
                 },
+                "line": {
+                    "title": "Ligne (L) : tracer des murs",
+                    "body": "Faites glisser pour tracer des murs. Le mur suit le pointeur, donc un zigzag se trace d’un coup ; revenir sur vos pas l’annule.\nMaintenez Maj au départ pour une seule ligne droite.\nLes murs s’alignent sur la grille de la salle sous le pointeur : 12 cm (bords des cases) dans la salle 1, 6 cm (demi-cases) dans les salles 2 et 3. Ils ne peuvent pas être tracés dans la salle 4 (la salle 4 est une image)."
+                },
+                "curve": {
+                    "title": "Courbe (A) : murs courbes",
+                    "body": "Salle 3 seulement. Pointez un quart (carré de 6 cm) d’une case de la salle 3 et les quatre courbes possibles s’affichent en pâle.\nUn clic place la plus proche (bleue). Cliquer de nouveau sur la même la retire."
+                },
+                "eraser": {
+                    "title": "Gomme (E)",
+                    "body": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer ; ce qui partirait s’affiche en rouge sous le pointeur.\nLoin des murs, elle retire le sol d’une case (trou, marais, checkpoint). Le départ ne part que d’un clic.\nUn glisser qui commence sur un mur ne touche pas aux sols, donc les sols ne partent pas pendant que vous gommez des murs. Les murs extérieurs restent."
+                },
+                "floor": {
+                    "title": "Sol (F) : checkpoints, trous, marais, le départ",
+                    "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire.\nDépart est la case où l’on pose le robot : une par carte. Aucun retire le sol.\nLes règles demandent un checkpoint à chaque passage vers la salle 4, donc il s’y place de lui-même."
+                },
+                "victim": {
+                    "title": "Victime (V) : victimes et cibles cognitives",
+                    "body": "Choisissez un type dans le panneau (victimes lettres Φ, Ψ, Ω et leurs fausses, cibles cognitives de quatre types - gaz inflammable, poison, corrosif, peroxyde organique - et une fausse) et cliquez près d’un mur : elle se place sur le mur là où vous cliquez.\nElles vont sur les côtés des cases dans la salle 1 (une par case), sur les faces des murs de 6 cm dans les salles 2 et 3, et à deux places sur une courbe (intérieur et extérieur). Faites glisser une victime placée pour la déplacer le long de son mur. Là où elle ne peut pas aller, la ligne d’état dit pourquoi.\nTournez le cadran (Orientation fixe) pour son orientation, ou choisissez Aléatoire pour une nouvelle à chaque fois. Pour une cible cognitive, cliquez sur un anneau de la cible puis sur une couleur en dessous ; la somme des anneaux donne son type.\nCliquez sur une victime avec le même type pour la sélectionner, puis changez son orientation, ses anneaux ou sa position le long du mur, ou retirez-la. Un clic avec un autre type change son type."
+                },
+                "room4": {
+                    "title": "Dessiner la salle 4",
+                    "body": "Peindre la salle 4 avec l’outil salle crée la salle 4. Ses murs et victimes se dessinent comme une image.\nDessiner la salle 4 (ou un double-clic sur sa zone) ouvre le créateur de la salle 4 : tracez librement des murs au stylo, en lignes et en formes, et placez des victimes contre les murs. Là où le robot ne peut pas aller s’affiche en rayures rouges.\nLe bouton Guide du créateur montre en détail comment faire la salle 4. L’image s’affiche sur la carte et passe telle quelle dans le monde exporté."
+                },
+                "select": {
+                    "title": "Sélection (S) : déplacer et copier une zone",
+                    "body": "Faites glisser pour sélectionner une zone de cases ; ses murs, salles, sols et victimes sont pris ensemble.\nFaites glisser à l’intérieur pour la déplacer, ou avec Alt enfoncé pour déplacer une copie. Les flèches la déplacent case par case.\nCtrl+C copie, Ctrl+X coupe, Ctrl+V colle (la case sous le pointeur est son coin haut gauche), Ctrl+D duplique et Suppr l’efface. Échap relâche la zone."
+                },
+                "linear": {
+                    "title": "Linéaire",
+                    "body": "Activé, chaque case est colorée en linéaire (près d’un mur relié au départ) ou flottante. Les victimes sur des cases flottantes rapportent plus.\nIl faut la case de départ. L’export du monde détermine les cases linéaires de la même façon."
+                },
+                "checks": {
+                    "title": "Vérifications",
+                    "body": "Chaque modification est vérifiée par rapport aux règles.\nUn ✕ rouge est un problème qui empêche d’exporter le monde ; un ! jaune est un avertissement à regarder, mais le monde peut être exporté.\nPointez un élément pour voir où il est sur la carte, et cliquez pour y aller. Cliquez sur le titre pour replier la carte.\nLà où le robot (rayon 3,7 cm) ne peut pas aller s’affiche toujours sur la carte en rayures rouges, et une victime placée là reçoit un avertissement."
+                },
+                "fix": {
+                    "title": "Corriger automatiquement",
+                    "body": "Un élément avec un bouton Corriger se corrige d’un clic (placer le départ, relier des salles par des passages, retirer les murs que les règles n’autorisent pas, etc.).\nCorriger tout ce qui peut l’être les fait tous d’un coup. Si le résultat ne vous plaît pas, Ctrl+Z l’annule.\nLes vérifications s’assurent aussi que chaque salle est atteinte depuis la salle 1 par des passages, et signalent celle qui ne l’est pas."
+                },
+                "export": {
+                    "title": "Exporter le monde (.wbt)",
+                    "body": "Écrit le fichier de monde (.wbt) que charge Erebus.\nTant qu’il reste un problème ✕ rouge, le bouton est gris, et appuyer dessus liste ce qu’il faut corriger ; il peut le corriger pour vous depuis là.\nGardez la carte pour la modifier plus tard avec Enregistrer (JSON), pas le .wbt : un .wbt ne redevient pas une carte modifiable."
+                },
+                "more": {
+                    "title": "Guide et langue",
+                    "body": "Guide en bas à droite propose à tout moment la leçon qui construit une carte d’exemple, cette visite et comment faire la salle 4.\nLe bouton de langue (il affiche le drapeau et le nom de la langue utilisée) choisit la langue."
+                },
+                "done": {
+                    "title": "C’est la fin de la visite",
+                    "body": "Ce bouton relance la visite à tout moment.\nUn bon ordre de travail : réglez la taille avec Forme → peignez les salles → reliez-les par des passages → tracez les murs → placez sols et victimes → regardez les vérifications et exportez le .wbt.\nBonne création de cartes !"
+                },
+                "score": {
+                    "title": "Score maximum",
+                    "body": "Le plus que cette carte peut rapporter : chaque victime et cible cognitive dont le robot peut s’approcher identifiée avec le bon type, et chaque checkpoint franchi, calculé selon la règle {{rule_scoring}}.\nAppuyez dessus pour la part de chaque salle et le score avec les bonus de sortie et de cartographie. Il est recalculé à chaque modification."
+                }
+            }
+        },
+        "room4": {
+            "name": "Apprendre la salle 4 en la faisant",
+            "time": "Environ 5 minutes · en pratique",
+            "note": "Dans le créateur de la salle 4, tracez des murs et placez des victimes vous-même, en utilisant chaque fonction tour à tour.",
+            "need": "Peignez d’abord la salle 4 avec l’outil salle."
+        },
+        "room4Tour": {
+            "name": "Visite du créateur de la salle 4",
+            "time": "Environ 2 minutes · juste regarder",
+            "note": "Chaque partie du créateur de la salle 4 et chaque outil, mis en valeur et expliqués un par un. L’image n’est pas modifiée."
+        },
+        "keys": {
+            "title": "Commandes",
+            "open": "Commandes",
+            "back": "Retour aux guides",
+            "view": "Vue",
+            "edit": "Édition",
+            "select": "Outil de sélection",
+            "guide": "Aide",
+            "rows": {
+                "zoom": "Zoomer et dézoomer",
+                "pan": "Déplacer la vue",
+                "hand": "Outil main (déplacer avec un glisser gauche)",
                 "undo": "Annuler",
                 "redo": "Rétablir",
-                "clear": "Tout effacer",
-                "groups": {
-                    "victim": "Victimes à lettre",
-                    "ct": "Cibles cognitives",
-                    "hazmat": "Panneaux de matières dangereuses",
-                    "fake": "Fausses victimes"
-                },
-                "types": {
-                    "harmed": "Blessée",
-                    "stable": "Stable",
-                    "unharmed": "Indemne",
-                    "fakeHarmed": "Blessée",
-                    "fakeStable": "Stable",
-                    "fakeUnharmed": "Indemne"
-                },
-                "eraserSize": "Taille",
-                "size": {
-                    "s": "S",
-                    "m": "M",
-                    "l": "L"
-                },
-                "snap": "Aligner sur la grille (1/4 de case)",
-                "hints": {
-                    "pen": "Faites glisser pour tracer des murs librement.",
-                    "line": "Faites glisser pour tracer un mur droit. Maj pour des pas de 45°.",
-                    "rect": "Faites glisser pour tracer un rectangle de murs. Maj pour un carré.",
-                    "circle": "Faites glisser depuis le centre pour tracer un mur circulaire.",
-                    "stamp": "Cliquez près d’un mur pour fixer une victime au mur le plus proche. Cliquez sur une victime placée pour changer son orientation ou ses anneaux (avec un autre type choisi, elle prend ce type). Un clic droit la retire.",
-                    "floor": "Cliquez sur une case de la salle 4 pour lui donner le sol choisi (trou, marais, checkpoint) ; cliquez à nouveau pour le retirer, ou faites glisser pour en faire plusieurs. Un sol occupe une case entière (12 cm) ; un trou aussi est la case entière.",
-                    "erase": "Faites glisser pour effacer murs et victimes. Une victime peut aussi être retirée d’un clic droit, quel que soit l’outil.",
-                    "eraseTokens": "Retire chaque victime que touche la gomme. Les murs restent.",
-                    "curve": "Cliquez des points et la courbe passe par eux. Double-clic, Entrée ou clic droit pour terminer ; cliquez sur le premier point pour la fermer. Retour arrière retire un point, Échap annule.",
-                    "arc": "Faites glisser pour fixer les deux extrémités, bougez la souris pour le courber, puis cliquez.",
-                    "ellipse": "Trace l’ellipse qui tient dans la boîte tracée. Maj pour un cercle.",
-                    "polygon": "Faites glisser depuis le centre pour tracer un polygone régulier. Il tourne par pas de 15° (librement avec Maj).",
-                    "shape": "Choisissez une icône ou une image, puis faites glisser sur le canevas pour la dimensionner (garde ses proportions ; libre avec Maj).",
-                    "select": "Faites glisser pour sélectionner une boîte, puis faites glisser à l’intérieur pour la déplacer (Alt pour copier). Les flèches la poussent, [ ] la tournent, Entrée la pose, Suppr la supprime.",
-                    "template": "Choisissez un modèle et appuyez sur Placer. Les dispositions qui excluent le robot sont refaites automatiquement."
-                },
-                "messages": {
-                    "outside": "Impossible en dehors de la salle 4.",
-                    "needWall": "Les victimes vont seulement sur des murs. Cliquez près d’un mur.",
-                    "pickShape": "Choisissez d’abord une icône ou une image.",
-                    "iconFailed": "L’icône n’a pas pu être chargée.",
-                    "imageFailed": "L’image n’a pas pu être chargée.",
-                    "randomDone": "{{placed}} placée(s).",
-                    "randomShort": "Seulement {{placed}} placée(s) sur {{asked}} (pas assez de murs pour les mettre).",
-                    "templateBlocked": "Chaque disposition essayée laisse une partie de la salle inaccessible. Vérifiez les parties rouge clair.",
-                    "wallEnd": "Pas au bout d’un mur. Cliquez sur une face de mur au moins aussi large qu’une victime (2 cm).",
-                    "unreachable": "Le robot ne peut pas s’approcher d’ici : pas de victimes là où le robot ne peut pas aller (règle {{rule_reach}}).",
-                    "floorNotOuter": "Une case de contact se place seulement sur une case contre le mur extérieur."
-                },
-                "tokens": "Marques murales : {{count}}",
-                "farFromWall": "{{count}} loin de tout mur (cercle rouge pointillé)",
-                "import": "Importer une image",
-                "download": "Enregistrer comme image",
-                "hint": "Importez une image PNG / JPEG ou dessinez ici. Les types de victimes sont gardés dans l’image, donc une image enregistrée les rapporte.",
-                "selectedStamp": "Victime sélectionnée",
-                "selectDone": "Terminé",
-                "randomCount": "Nombre",
-                "randomKind": "Types"
+                "cancel": "Arrêter le tracé en cours",
+                "tools": "Changer d’outil (lettres de la barre de gauche)",
+                "copy": "Copier, couper, coller",
+                "duplicate": "Dupliquer",
+                "clear": "Effacer la sélection",
+                "nudge": "Déplacer la sélection d’une case",
+                "sheet": "Ouvrir cette liste"
             },
-            "passageBlue": "Bleu",
-            "passageYellow": "Jaune",
-            "passageGreen": "Vert",
-            "passagePurple": "Violet",
-            "passageOrange": "Orange",
-            "passageRed": "Rouge",
-            "ctF": "Gaz inflammable",
-            "ctP": "Poison",
-            "ctC": "Corrosif",
-            "ctO": "Peroxyde organique",
-            "ctFake": "Fausse cible",
-            "exportW": "Exporter cette carte en fichier de monde pour Erebus"
+            "keys": {
+                "wheel": "Molette",
+                "spaceDrag": "Espace + glisser",
+                "middleDrag": "Glisser avec le bouton du milieu"
+            }
         }
+    },
+    "room4": {
+        "zoomIn": "Zoom avant",
+        "zoomOut": "Zoom arrière",
+        "zoomFit": "Ajuster",
+        "viewReach": "Inaccessible",
+        "viewGuides": "Entrées / CP",
+        "unreachableShort": "Inaccessibles {{count}}",
+        "farShort": "Loin du mur {{count}}",
+        "missingShort": "CP manquants {{count}}",
+        "noEntranceShort": "Pas d’entrée",
+        "reachOff": "Accessibilité non calculée",
+        "legendMapWallShort": "Murs de la carte",
+        "legendCheckpointShort": "Checkpoint",
+        "sel": {
+            "ccw": "Tourner de 90° à gauche",
+            "cw": "Tourner de 90° à droite",
+            "h": "Retourner gauche / droite",
+            "v": "Retourner haut / bas",
+            "duplicate": "Dupliquer",
+            "copy": "Copier",
+            "paste": "Coller",
+            "delete": "Supprimer",
+            "drop": "Terminé"
+        },
+        "randomPlace": "Placer au hasard",
+        "randomModes": {
+            "current": "Type choisi",
+            "mixed": "Types mélangés"
+        },
+        "randomGo": "Placer {{n}}",
+        "randomNote2": "Le long de murs dont le robot peut s’approcher à une demi-case, à au moins une demi-case les unes des autres.",
+        "templates": {
+            "maze": "Labyrinthe",
+            "pillars": "Piliers",
+            "diagonal": "Diagonales",
+            "zigzag": "Zigzag",
+            "rings": "Anneaux",
+            "obstacles": "Obstacles"
+        },
+        "templateHints": {
+            "maze": "Un labyrinthe de couloirs d’une case (avec quelques raccourcis).",
+            "pillars": "Piliers ronds aux coins des cases.",
+            "diagonal": "Courts murs diagonaux dans les cases.",
+            "zigzag": "Un seul chemin qui tourne aux extrémités.",
+            "rings": "Des anneaux autour du centre, chacun avec une ouverture.",
+            "obstacles": "Cercles, boîtes et triangles dispersés."
+        },
+        "templateClear": "Effacer d’abord murs et victimes",
+        "templateApply": "Placer",
+        "showGuides": "Afficher entrées et checkpoints",
+        "missingCheckpoints": "{{count}} case(s) juste derrière un passage ne sont pas des checkpoints (règle {{rule_room4Checkpoint}}). Définissez-les dans l’éditeur principal (\"CP?\" pointillé).",
+        "noEntrance": "La salle 4 n’a pas d’entrée. Ouvrez un mur vers un passage extérieur dans l’éditeur principal.",
+        "rows": {
+            "real": "Vraie",
+            "fake": "Fausse (3D)"
+        },
+        "curveSmooth": "Lisse",
+        "curveStraight": "Droit",
+        "sides": "Côtés",
+        "shapeIcon": "Icône",
+        "shapePicture": "Image",
+        "iconSearch": "Rechercher (p. ex. star, car, tree)",
+        "iconAll": "Suggestions (choisissez une catégorie pour affiner)",
+        "iconLoading": "Chargement des icônes…",
+        "iconUnavailable": "La liste des icônes n’a pas pu être chargée.",
+        "iconNone": "Aucun résultat.",
+        "pictureChoose": "Choisir une image",
+        "pictureNote": "Un PNG ou SVG avec transparence utilise sa partie opaque ; les autres images utilisent leur partie sombre.",
+        "shapeStyles": {
+            "fill": "Rempli",
+            "outline": "Contour"
+        },
+        "mirror": "Symétrie",
+        "mirrors": {
+            "none": "Non",
+            "x": "Gauche / droite",
+            "y": "Haut / bas",
+            "xy": "Les deux"
+        },
+        "tipCurve": "Clic : ajouter un point   Double-clic / Entrée : terminer",
+        "tipArc": "Bougez pour courber   Clic : terminé",
+        "unreachable": "{{count}} dont le robot ne peut pas s’approcher à une demi-case (non identifiables)",
+        "showReach": "Montrer où le robot ne peut pas aller",
+        "legendReach": "Là où le robot ne peut pas aller",
+        "reach": {
+            "noSeed": "Le robot ne peut pas quitter la case de départ, donc l’endroit où il ne peut pas aller n’est pas calculé (vérifiez la case de départ et les murs autour).",
+            "noStart": "Il n’y a pas de case de départ, donc l’endroit où le robot ne peut pas aller n’est pas calculé.",
+            "unavailable": "Impossible de calculer où le robot ne peut pas aller."
+        },
+        "eraseTargets": {
+            "all": "Tout",
+            "tokens": "Victimes seulement"
+        },
+        "tipStamp": "Clic : sélectionner (orientation, anneaux) ou changer le type   Clic droit : retirer",
+        "tipOther": "Clic droit : retirer",
+        "title": "Salle 4 personnalisée",
+        "tools": {
+            "pen": "Stylo",
+            "line": "Ligne",
+            "rect": "Rectangle",
+            "circle": "Cercle",
+            "stamp": "Victime",
+            "floor": "Sol",
+            "erase": "Gomme",
+            "curve": "Courbe",
+            "arc": "Arc",
+            "ellipse": "Ellipse",
+            "polygon": "Polygone",
+            "shape": "Forme",
+            "select": "Sélection",
+            "template": "Modèle"
+        },
+        "undo": "Annuler",
+        "redo": "Rétablir",
+        "clear": "Tout effacer",
+        "groups": {
+            "victim": "Victimes à lettre",
+            "ct": "Cibles cognitives",
+            "hazmat": "Panneaux de matières dangereuses",
+            "fake": "Fausses victimes"
+        },
+        "eraserSize": "Taille",
+        "size": {
+            "s": "S",
+            "m": "M",
+            "l": "L"
+        },
+        "snap": "Aligner sur la grille (1/4 de case)",
+        "hints": {
+            "pen": "Faites glisser pour tracer des murs librement.",
+            "line": "Faites glisser pour tracer un mur droit. Maj pour des pas de 45°.",
+            "rect": "Faites glisser pour tracer un rectangle de murs. Maj pour un carré.",
+            "circle": "Faites glisser depuis le centre pour tracer un mur circulaire.",
+            "stamp": "Cliquez près d’un mur pour fixer une victime au mur le plus proche. Cliquez sur une victime placée pour changer son orientation ou ses anneaux (avec un autre type choisi, elle prend ce type). Un clic droit la retire.",
+            "floor": "Cliquez sur une case de la salle 4 pour lui donner le sol choisi (trou, marais, checkpoint) ; cliquez à nouveau pour le retirer, ou faites glisser pour en faire plusieurs. Un sol occupe une case entière (12 cm) ; un trou aussi est la case entière.",
+            "erase": "Faites glisser pour effacer murs et victimes. Une victime peut aussi être retirée d’un clic droit, quel que soit l’outil.",
+            "eraseTokens": "Retire chaque victime que touche la gomme. Les murs restent.",
+            "curve": "Cliquez des points et la courbe passe par eux. Double-clic, Entrée ou clic droit pour terminer ; cliquez sur le premier point pour la fermer. Retour arrière retire un point, Échap annule.",
+            "arc": "Faites glisser pour fixer les deux extrémités, bougez la souris pour le courber, puis cliquez.",
+            "ellipse": "Trace l’ellipse qui tient dans la boîte tracée. Maj pour un cercle.",
+            "polygon": "Faites glisser depuis le centre pour tracer un polygone régulier. Il tourne par pas de 15° (librement avec Maj).",
+            "shape": "Choisissez une icône ou une image, puis faites glisser sur le canevas pour la dimensionner (garde ses proportions ; libre avec Maj).",
+            "select": "Faites glisser pour sélectionner une boîte, puis faites glisser à l’intérieur pour la déplacer (Alt pour copier). Les flèches la poussent, [ ] la tournent, Entrée la pose, Suppr la supprime.",
+            "template": "Choisissez un modèle et appuyez sur Placer. Les dispositions qui excluent le robot sont refaites automatiquement."
+        },
+        "messages": {
+            "outside": "Impossible en dehors de la salle 4.",
+            "needWall": "Les victimes vont seulement sur des murs. Cliquez près d’un mur.",
+            "pickShape": "Choisissez d’abord une icône ou une image.",
+            "iconFailed": "L’icône n’a pas pu être chargée.",
+            "imageFailed": "L’image n’a pas pu être chargée.",
+            "randomDone": "{{placed}} placée(s).",
+            "randomShort": "Seulement {{placed}} placée(s) sur {{asked}} (pas assez de murs pour les mettre).",
+            "templateBlocked": "Chaque disposition essayée laisse une partie de la salle inaccessible. Vérifiez les parties rouge clair.",
+            "wallEnd": "Pas au bout d’un mur. Cliquez sur une face de mur au moins aussi large qu’une victime (2 cm).",
+            "unreachable": "Le robot ne peut pas s’approcher d’ici : pas de victimes là où le robot ne peut pas aller (règle {{rule_reach}}).",
+            "floorNotOuter": "Une case de contact se place seulement sur une case contre le mur extérieur."
+        },
+        "tokens": "Marques murales : {{count}}",
+        "farFromWall": "{{count}} loin de tout mur (cercle rouge pointillé)",
+        "import": "Importer une image",
+        "download": "Enregistrer comme image",
+        "hint": "Importez une image PNG / JPEG ou dessinez ici. Les types de victimes sont gardés dans l’image, donc une image enregistrée les rapporte.",
+        "selectedStamp": "Victime sélectionnée",
+        "selectDone": "Terminé",
+        "randomCount": "Nombre",
+        "randomKind": "Types"
     },
     "years": {
         "2027": {
-            "admin": {
-                "simBeta": {
-                    "hints": {
-                        "floor_notOuter": "{{floor}} : seulement sur une case contre le mur extérieur (règle {{rule_contactTile}})",
-                        "floor_clear": "Cliquez pour retirer le sol (trou, marais, checkpoint, case de contact)"
-                    },
-                    "problems": {
-                        "contactInside": "Des cases de contact ne touchent pas le mur extérieur ({{count}}). Une case de contact se place seulement sur une case au bord de l’extérieur (règle {{rule_contactTile}})",
-                        "presetNotSupported": "Les modèles de salle 4 ne sont pas disponibles dans cet éditeur (passez en personnalisée)"
-                    },
-                    "help": {
-                        "eraser": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint, case de contact) ; un clic retire le départ. Les murs extérieurs restent."
-                    },
-                    "tour": {
-                        "floor": {
-                            "title": "Sol (F) : checkpoints, trous, marais, cases de contact, le départ",
-                            "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire.\nDépart est la case où l’on pose le robot : une par carte. Aucun retire le sol.\nLes règles demandent un checkpoint à chaque passage vers la salle 4, donc il s’y place de lui-même.\nUne case de contact (cyan) est l’endroit où le robot reçoit une batterie neuve après y être resté immobile 5 secondes. Elle se place seulement sur une case contre le mur extérieur."
-                        },
-                        "victim": {
-                            "body": "Choisissez un type dans le panneau (victimes smileys - blessée un visage triste, stable un visage neutre, indemne un visage joyeux - et leurs fausses, cibles cognitives de quatre types - gaz inflammable, poison, corrosif, peroxyde organique - et une fausse) et cliquez près d’un mur : elle se place sur le mur là où vous cliquez.\nElles vont sur les côtés des cases dans la salle 1 (une par case), sur les faces des murs de 6 cm dans les salles 2 et 3, et à deux places sur une courbe (intérieur et extérieur). Faites glisser une victime placée pour la déplacer le long de son mur. Là où elle ne peut pas aller, la ligne d’état dit pourquoi.\nTournez le cadran (Orientation fixe) pour son orientation, ou choisissez Aléatoire pour une nouvelle à chaque fois. Pour une cible cognitive, cliquez sur un anneau de la cible puis sur une couleur en dessous ; la somme des anneaux donne son type.\nCliquez sur une victime avec le même type pour la sélectionner, puis changez son orientation, ses anneaux ou sa position le long du mur, ou retirez-la. Un clic avec un autre type change son type."
-                        },
-                        "eraser": {
-                            "body": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer ; ce qui partirait s’affiche en rouge sous le pointeur.\nLoin des murs, elle retire le sol d’une case (trou, marais, checkpoint, case de contact). Le départ ne part que d’un clic.\nUn glisser qui commence sur un mur ne touche pas aux sols, donc les sols ne partent pas pendant que vous gommez des murs. Les murs extérieurs restent."
-                        }
-                    },
-                    "lesson": {
+            "app": {
+                "about": {
+                    "lead": "Erebus World Editor (bêta). Les cartes des règles 2027 se font seulement dans cet éditeur (il n’y a pas d’éditeur classique pour elles)."
+                }
+            },
+            "tools": {
+                "help": {
+                    "eraser": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint, case de contact) ; un clic retire le départ. Les murs extérieurs restent."
+                }
+            },
+            "checks": {
+                "problems": {
+                    "contactInside": "Des cases de contact ne touchent pas le mur extérieur ({{count}}). Une case de contact se place seulement sur une case au bord de l’extérieur (règle {{rule_contactTile}})",
+                    "presetNotSupported": "Les modèles de salle 4 ne sont pas disponibles dans cet éditeur (passez en personnalisée)"
+                }
+            },
+            "status": {
+                "floor_notOuter": "{{floor}} : seulement sur une case contre le mur extérieur (règle {{rule_contactTile}})",
+                "floor_clear": "Cliquez pour retirer le sol (trou, marais, checkpoint, case de contact)"
+            },
+            "guide": {
+                "lesson": {
+                    "steps": {
                         "floors": {
                             "title": "Checkpoints, trous, marais et cases de contact",
                             "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire ; Aucun retire le sol.\nUn checkpoint rapporte des points quand le robot l’atteint, et c’est là que le robot est replacé après un manque de progrès (LoP). Un trou est une case que le robot doit éviter, et un marais vide sa batterie plus vite.\nUne case de contact (cyan) est l’endroit où le robot reçoit une batterie neuve après y être resté immobile 5 secondes. Elle se place seulement sur une case contre le mur extérieur.",
@@ -1058,21 +1115,32 @@
                         "erase": {
                             "body": "La gomme retire murs, courbes et victimes d’un clic ou d’un glisser. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint, case de contact) ; le départ ne part que d’un clic. Les murs extérieurs restent.\nSi vous gommez la mauvaise chose, annuler (Ctrl+Z, ou ↶ dans la barre du haut) la récupère ; rétablir (Ctrl+Maj+Z, ou ↷) avance de nouveau."
                         }
-                    },
-                    "betaLead": "Erebus World Editor (bêta). Les cartes des règles 2027 se font seulement dans cet éditeur (il n’y a pas d’éditeur classique pour elles)."
+                    }
                 },
-                "simMapEditor": {
-                    "room4Creator": {
-                        "messages": {
-                            "floorNotOuter": "Une case de contact se place seulement sur une case contre le mur extérieur (règle {{rule_contactTile}})."
+                "tour": {
+                    "steps": {
+                        "floor": {
+                            "title": "Sol (F) : checkpoints, trous, marais, cases de contact, le départ",
+                            "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire.\nDépart est la case où l’on pose le robot : une par carte. Aucun retire le sol.\nLes règles demandent un checkpoint à chaque passage vers la salle 4, donc il s’y place de lui-même.\nUne case de contact (cyan) est l’endroit où le robot reçoit une batterie neuve après y être resté immobile 5 secondes. Elle se place seulement sur une case contre le mur extérieur."
                         },
-                        "groups": {
-                            "victim": "Victimes smileys"
+                        "victim": {
+                            "body": "Choisissez un type dans le panneau (victimes smileys - blessée un visage triste, stable un visage neutre, indemne un visage joyeux - et leurs fausses, cibles cognitives de quatre types - gaz inflammable, poison, corrosif, peroxyde organique - et une fausse) et cliquez près d’un mur : elle se place sur le mur là où vous cliquez.\nElles vont sur les côtés des cases dans la salle 1 (une par case), sur les faces des murs de 6 cm dans les salles 2 et 3, et à deux places sur une courbe (intérieur et extérieur). Faites glisser une victime placée pour la déplacer le long de son mur. Là où elle ne peut pas aller, la ligne d’état dit pourquoi.\nTournez le cadran (Orientation fixe) pour son orientation, ou choisissez Aléatoire pour une nouvelle à chaque fois. Pour une cible cognitive, cliquez sur un anneau de la cible puis sur une couleur en dessous ; la somme des anneaux donne son type.\nCliquez sur une victime avec le même type pour la sélectionner, puis changez son orientation, ses anneaux ou sa position le long du mur, ou retirez-la. Un clic avec un autre type change son type."
                         },
-                        "hints": {
-                            "floor": "Cliquez sur une case de la salle 4 pour lui donner le sol choisi (trou, marais, checkpoint, case de contact) ; cliquez à nouveau pour le retirer, ou faites glisser pour en faire plusieurs. Un sol occupe une case entière (12 cm) ; un trou aussi est la case entière. Une case de contact se place seulement sur une case contre le mur extérieur."
+                        "eraser": {
+                            "body": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer ; ce qui partirait s’affiche en rouge sous le pointeur.\nLoin des murs, elle retire le sol d’une case (trou, marais, checkpoint, case de contact). Le départ ne part que d’un clic.\nUn glisser qui commence sur un mur ne touche pas aux sols, donc les sols ne partent pas pendant que vous gommez des murs. Les murs extérieurs restent."
                         }
                     }
+                }
+            },
+            "room4": {
+                "messages": {
+                    "floorNotOuter": "Une case de contact se place seulement sur une case contre le mur extérieur (règle {{rule_contactTile}})."
+                },
+                "groups": {
+                    "victim": "Victimes smileys"
+                },
+                "hints": {
+                    "floor": "Cliquez sur une case de la salle 4 pour lui donner le sol choisi (trou, marais, checkpoint, case de contact) ; cliquez à nouveau pour le retirer, ou faites glisser pour en faire plusieurs. Un sol occupe une case entière (12 cm) ; un trou aussi est la case entière. Une case de contact se place seulement sur une case contre le mur extérieur."
                 }
             }
         }

@@ -25,7 +25,7 @@
 // room4State, problems, sync() (border walls again after a change), act: { newMap(), resize(w, l),
 // openRoom4(), fixAll(), toggleLinear(), select(where), setRegion(r), rename(name) } }.
 //
-// Texts are in the language files: admin.simBeta.tour.<id> for TOUR, admin.simBeta.lesson.<id> for
+// Texts are in the language files: guide.tour.steps.<id> for TOUR, guide.lesson.steps.<id> for
 // LESSON and ROOM4 (title, body - paragraphs split by line breaks - and task, what to do).
 import type { MapData } from './types';
 import type * as Model from './model';
@@ -299,7 +299,7 @@ function drewWith(tool: string, test?: (r4: Record<string, any>) => boolean) {
 function otherTool(tool: string) {
     return function (env: TourEnv): TaskState | null {
         const cr = env.creator;
-        return cr && cr.r4.tool !== tool ? { key: 'tool', params: { name: tool }, nameOf: 'admin.simMapEditor.room4Creator.tools.' } : null;
+        return cr && cr.r4.tool !== tool ? { key: 'tool', params: { name: tool }, nameOf: 'room4.tools.' } : null;
     };
 }
 function drawStep(id: string, tool: string, guide: number[][][], auto: (env: TourEnv) => void, extra?: Partial<TourStep>): TourStep {
@@ -372,7 +372,7 @@ const ROOM4: TourStep[] = [
         state: function (env) {
             const cr = env.creator;
             if (!cr) return null;
-            if (cr.r4.tool !== 'select') return { key: 'tool', params: { name: 'select' }, nameOf: 'admin.simMapEditor.room4Creator.tools.' };
+            if (cr.r4.tool !== 'select') return { key: 'tool', params: { name: 'select' }, nameOf: 'room4.tools.' };
             return cr.r4.hasSelection ? null : { key: 'noSelection' };
         }
     },
@@ -389,7 +389,7 @@ const ROOM4: TourStep[] = [
         state: function (env) {
             const cr = env.creator;
             if (!cr) return null;
-            if (cr.r4.tool !== 'template') return { key: 'tool', params: { name: 'template' }, nameOf: 'admin.simMapEditor.room4Creator.tools.' };
+            if (cr.r4.tool !== 'template') return { key: 'tool', params: { name: 'template' }, nameOf: 'room4.tools.' };
             return cr.r4.templateClear ? null : { key: 'clearOff' };
         }
     },
@@ -419,7 +419,7 @@ const ROOM4: TourStep[] = [
         state: function (env) {
             const cr = env.creator;
             if (!cr) return null;
-            if (cr.r4.tool !== 'erase') return { key: 'tool', params: { name: 'erase' }, nameOf: 'admin.simMapEditor.room4Creator.tools.' };
+            if (cr.r4.tool !== 'erase') return { key: 'tool', params: { name: 'erase' }, nameOf: 'room4.tools.' };
             return cr.r4.eraseTarget !== 'tokens' ? { key: 'target' } : null;
         }
     },
@@ -601,7 +601,7 @@ const LESSON: TourStep[] = ([
         },
         state: function (env) {
             const kinds = floorKinds(env), left = kinds.filter(function (k) { return !floorCount(env, k); });
-            return left.length && left.length < kinds.length ? { key: 'left', params: { list: left, listOf: 'admin.simBeta.floors.' } } : null;
+            return left.length && left.length < kinds.length ? { key: 'left', params: { list: left, listOf: 'floors.' } } : null;
         }
     },
     {

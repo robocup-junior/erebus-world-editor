@@ -94,7 +94,7 @@ function keyDown(event: KeyboardEvent) {
 <template>
   <sim-rotation-dial @pointerdown="pointerDown" @keydown="keyDown">
     <div class="sim-rot" :class="{ disabled: disabled }">
-      <div class="sim-rot-dial" role="slider" :tabindex="disabled ? -1 : 0" aria-valuemin="0" aria-valuemax="359" :aria-valuenow="angle" :title="t('admin.simMapEditor.rotDialHint')">
+      <div class="sim-rot-dial" role="slider" :tabindex="disabled ? -1 : 0" aria-valuemin="0" aria-valuemax="359" :aria-valuenow="angle" :title="t('victims.turn.dialHint')">
         <span class="sim-rot-tick t0">0°</span>
         <span class="sim-rot-tick t90">90°</span>
         <span class="sim-rot-tick t180">180°</span>
@@ -121,11 +121,11 @@ function keyDown(event: KeyboardEvent) {
         </div>
         <div class="sim-rot-presets">
           <button type="button" v-for="p in [0, 90, 180, 270]" :key="p" :class="{ active: angle === p }" @click="set(p)" :disabled="disabled"><span class="sim-rot-num">{{ p }}<span class="sim-rot-deg">°</span></span></button>
-          <button type="button" class="sim-rot-random" @click="random()" :disabled="disabled" :title="t('admin.simMapEditor.rotRandom')">
+          <button type="button" class="sim-rot-random" @click="random()" :disabled="disabled" :title="t('victims.turn.dialRandom')">
             <i class="fas fa-dice"></i>
           </button>
         </div>
-        <div class="sim-rot-help">{{ t('admin.simMapEditor.rotHelp') }}</div>
+        <div class="sim-rot-help">{{ t('victims.turn.help') }}</div>
       </div>
     </div>
   </sim-rotation-dial>
