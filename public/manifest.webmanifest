@@ -1,0 +1,15 @@
+{
+  "name": "Erebus World Editor",
+  "short_name": "Erebus Editor",
+  "description": "Draw a map of RoboCupJunior Rescue Simulation (Erebus) and export it as a world file, by the rules of each year",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eef2f7",
+  "theme_color": "#f8fafc",
+  "icons": [
+    { "src": "/images/icon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/images/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/images/icon-512.png", "type": "image/png", "sizes": "512x512" },
+    { "src": "/images/icon-maskable-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}

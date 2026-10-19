@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- A map of two by two tiles: the outer wall, a room painted in the top right, the walls around it
+       with a way through, a curved wall in the bottom left and a victim in the bottom right. -->
+  <rect width="64" height="64" rx="14" fill="#2563eb"/>
+  <rect x="11" y="11" width="42" height="42" rx="3" fill="#fff"/>
+  <rect x="32" y="11" width="21" height="21" fill="#bfdbfe"/>
+  <path d="M32 11.5V53M11.5 32H53" stroke="#cbd5e1" stroke-width="1.2"/>
+  <path d="M32 11V32H42" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="square"/>
+  <path d="M11 34A19 19 0 0 1 30 53" fill="none" stroke="#0f172a" stroke-width="4"/>
+  <rect x="11" y="11" width="42" height="42" rx="3" fill="none" stroke="#0f172a" stroke-width="5"/>
+  <circle cx="42.5" cy="42.5" r="5.5" fill="#ea580c"/>
+  <circle cx="42.5" cy="42.5" r="2.2" fill="#fff"/>
+</svg>

@@ -71,7 +71,9 @@ src/
                     tour, icons, keys
   lang/             the texts, one file per language (de, en, es, fr, id, ja, ko, pt-BR, th, tr, zh-CN, zh-Hant)
   styles/           base.css (from Bootstrap), page.css, components.css, editor.css
-public/             files served as they are (fonts, images, _headers)
+public/             files served as they are (fonts, images, manifest.webmanifest, _headers)
+art/                the icon and the link preview picture (SVG), and render.mjs, which renders
+                    them to public/images/ (node art/render.mjs)
 test/               unit tests (vitest) with sample maps
 e2e/                end-to-end tests (Playwright): screenshots, and the files the editor saves
 ```
