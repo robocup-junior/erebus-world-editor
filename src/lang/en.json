@@ -383,7 +383,7 @@
                 },
                 "fix": {
                     "title": "Fixing automatically",
-                    "body": "An item with a Fix button is fixed with one click (putting the start, joining rooms with passages, removing walls the rules do not allow, and so on).\nFix all that can be fixed does them all at once. If you do not like the result, Ctrl+Z takes it back.\nUntick Check how the rooms connect to stop checking that every room is reached through passages, which is easier to read while the map is unfinished."
+                    "body": "An item with a Fix button is fixed with one click (putting the start, joining rooms with passages, removing walls the rules do not allow, and so on).\nFix all that can be fixed does them all at once. If you do not like the result, Ctrl+Z takes it back.\nThe checks also make sure every room is reached from room 1 through passages, and point out a room that is not."
                 },
                 "export": {
                     "title": "Exporting the world (.wbt)",
@@ -707,7 +707,7 @@
                 },
                 "checks": {
                     "title": "Look at the checks",
-                    "body": "Every change is checked against the rules, in the card at the top right. A red ✕ is a problem the world cannot be exported with; a yellow ! is a warning worth a look.\nPoint at an item to see where it is, and click it to go there. Fix fixes one; Fix all that can be fixed does them all.\nWhere the robot cannot get to is shown on the map with red stripes. Untick Check how the rooms connect to stop checking the passages.",
+                    "body": "Every change is checked against the rules, in the card at the top right. A red ✕ is a problem the world cannot be exported with; a yellow ! is a warning worth a look.\nPoint at an item to see where it is, and click it to go there. Fix fixes one; Fix all that can be fixed does them all.\nWhere the robot cannot get to is shown on the map with red stripes.",
                     "task": "Have no red ✕ problem left (if you followed every step, there is none)",
                     "tasks": {
                         "left": "{{n}} red ✕ problem(s) left. Press Fix all that can be fixed, or click an item to see where it is"
