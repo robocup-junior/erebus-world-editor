@@ -59,7 +59,7 @@ onMounted(function () {
     <input id="edFile" ref="fileEl" type="file" accept=".json,application/json" @click="clearValue" @change="E.fileChosen" style="display:none;">
     <div class="ed" :class="{ 'no-map': !S.map }">
       <header class="ed-top">
-        <span class="ed-title">{{ t('app.title') }}<span class="ed-beta-wrap">
+        <span class="ed-title"><img class="ed-logo" src="/images/icon.svg" alt="" width="22" height="22">{{ t('app.title') }}<span class="ed-beta-wrap">
           <button class="ed-beta-badge ed-beta-btn" type="button" @click="S.ui.betaMenu = !S.ui.betaMenu" :class="{ open: S.ui.betaMenu }" :title="t('app.about.title')" aria-haspopup="true" :aria-expanded="S.ui.betaMenu ? 'true' : 'false'">β<i class="fas fa-caret-down"></i></button>
           <div class="ed-beta-back" v-if="S.ui.betaMenu" @click="S.ui.betaMenu = false"></div>
           <div class="ed-beta-menu" v-if="S.ui.betaMenu" role="menu">
