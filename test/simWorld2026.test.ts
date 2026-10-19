@@ -2,6 +2,8 @@
 // sim_world_2026.js), run in Node on sample maps. The expected files were made by the editor in the
 // browser: the .wbt with DISABLE_RANDOMNESS and Math.random seeded as below, the .checks.json from
 // the editor's own connection check, room 4 preset check, tile dialog info and room 4 geometry.
+// Since, the fakes are named by their own count (Fake0, Fake1, ...; the editor named each after the
+// next victim, the same for fakes in a row): mapA.wbt has those names.
 import { test } from 'vitest';
 import assert from 'node:assert';
 import type { MapData } from '../src/lib/types';

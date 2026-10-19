@@ -1110,7 +1110,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
                             rot: humanRot,
                             frontRotation: tile.wall_token_front_rot,
                             is_fake: tile.wall_token_is_fake,
-                            id: humanId,
+                            id: fakeHumanId,
                             type: humanTypesVisual[tile.wall_token_type - 1],
                             score: 0
                         })
@@ -1188,7 +1188,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
                                         rot: humanRotationCurve[curveDir],
                                         frontRotation: humanFrontRotation,
                                         is_fake: humanIsFake,
-                                        id: humanId,
+                                        id: fakeHumanId,
                                         type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
                                         score: 0
                                     }))
@@ -1250,7 +1250,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
                                         rot: humanRotation[i % 4],
                                         frontRotation: humanFrontRotation,
                                         is_fake: humanIsFake,
-                                        id: humanId,
+                                        id: fakeHumanId,
                                         type: humanTypesVisual[tile.half_wall_tokens[i] - 1],
                                         score: 0
                                     })
@@ -1351,7 +1351,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
     if (map.area4Room.value == "Custom Room") {
         allTiles = allTiles + hooks!.createArea4Solid!();
         map.room4VicTypes = [];
-        let scoringElements = hooks!.createArea4Victims!(humanId, hazardId);
+        let scoringElements = hooks!.createArea4Victims!(humanId, hazardId, fakeHumanId);
         allHumans += scoringElements[0];
         allHazards += scoringElements[1];
         allFakes += scoringElements[2];
@@ -1392,7 +1392,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
                     z: vicPosTrans[1] + zOffset,
                     rot: area4Humans[i].rot + area4Rot * -1.57,
                     frontRotation: getRandomAngle(),
-                    id: humanId,
+                    id: area4Humans[i].is_fake ? fakeHumanId : humanId,
                     is_fake: area4Humans[i].is_fake,
                     type: area4Humans[i].type,
                     score: area4Humans[i].score,

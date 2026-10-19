@@ -98,6 +98,8 @@ test('Erebus 27: contact tiles in the world file (worldTile and halfTile), fakes
   assert.ok(world.indexOf('DEF STARTBOUNDS') < world.indexOf('DEF CONTACTBOUNDS') && world.indexOf('DEF CONTACTBOUNDS') < world.indexOf('DEF SWAMPBOUNDS'));
   const fakes = (world.match(/Fake \{[^}]*?type "(\w+)"/g) || []).map((f) => f.match(/type "(\w+)"/)![1]);
   assert.deepStrictEqual(fakes.sort(), ['phi', 'psi'], 'harmed: psi (H.stl), stable: phi (S.stl)');
+  // each fake its own name (Webots warns of a name a sibling has)
+  assert.deepStrictEqual((world.match(/name "Fake\d+"/g) || []).sort(), ['name "Fake0"', 'name "Fake1"']);
 });
 
 test('Erebus 26: a 2026 map is written as before - no contact field, the 2026 fakes', () => {

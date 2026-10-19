@@ -119,7 +119,7 @@ export interface Scoring {
 // What a custom room 4 adds to the world file (read from its picture)
 export interface WorldHooks {
     createArea4Solid(): string;
-    createArea4Victims(humanId: number, hazardId: number): [string, string, string];
+    createArea4Victims(humanId: number, hazardId: number, fakeId?: number): [string, string, string];
     room4CorrectSize?(): boolean;
 }
 

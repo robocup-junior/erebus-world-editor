@@ -1543,7 +1543,7 @@
             Fake {
                 translation -0.535 0 -0.12
                 rotation 0 -1.0000000000000002 0 1.57
-                name "Fake1"
+                name "Fake0"
                 type "omega"
                 scoreWorth 0
             }
@@ -1551,7 +1551,7 @@
             Fake {
                 translation 0.03 0 -0.4144
                 rotation 0.7071066690859958 0.707106669085996 0.0005630881064681181 3.140466477495882
-                name "Fake2"
+                name "Fake1"
                 type "psi"
                 scoreWorth 0
             }

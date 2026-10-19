@@ -293,7 +293,7 @@ function dist(point1: number[], point2: number[]) {
 
 
 
-function createArea4Victims(startHumanId: number, startHazardId: number): [string, string, string] {
+function createArea4Victims(startHumanId: number, startHazardId: number, startFakeId: number = 0): [string, string, string] {
     let finalAngles: any;
     let outputStrVic = "";
     let outputStrHaz = "";
@@ -478,12 +478,12 @@ function createArea4Victims(startHumanId: number, startHazardId: number): [strin
             `Fake {
                     translation ` + vicX.toString() + ' 0 ' + vicY.toString() + `
                     rotation ${fakeAngles.x} ${fakeAngles.y} ${fakeAngles.z} ${fakeAngles.angle}
-                    name "Fake` + startHumanId.toString() + `"
+                    name "Fake` + startFakeId.toString() + `"
                     type "` + flavor.fakeModel[chosen.type] + `"
                     scoreWorth 0
                 }
                 `;
-            startHumanId += 1;
+            startFakeId += 1;
         }
 
         /*cv.circle(src, new cv.Point(cx, cy), 3, new cv.Scalar(0, 255, 0, 255), 5);
