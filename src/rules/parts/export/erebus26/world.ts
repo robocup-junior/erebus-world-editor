@@ -269,7 +269,8 @@ function cognitive_string_to_hazmat(str: string): number | undefined {
 // (its fields change type while the export works: walls as arrays, then as strings for the file)
 type WorldTile = Record<string, any>;
 
-// What a version of Erebus writes otherwise than 26.x: contact tiles (a tile's contact field), and
+// What a version of Erebus writes otherwise than 26.x: contact tiles (a tile's contact field, and
+// their bounds in CONTACTBOUNDS as Erebus's own worlds have them, though it reads only the field), and
 // the model of a fake victim (Fake's type) for each type of victim
 export interface Flavor {
     contact: boolean;
@@ -542,6 +543,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
     let allTrapBounds = "";
     let allGoalBounds = "";
     let allSwampBounds = "";
+    let allContactBounds = "";
     let allObstacles = "";
 
     const boundsPart = ({name, id, xmin, zmin, xmax, zmax, y}: any) => `
@@ -746,6 +748,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
     let trapId     = 0
     let goalId     = 0
     let swampId    = 0
+    let contactId  = 0
     let humanId    = 0
     let fakeHumanId    = 0
     let obstacleId = 0
@@ -1038,6 +1041,16 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
                     y: floorPos
                 });
                 swampId +=1
+            }
+            //contact
+            if (tile.is_contact) {
+                allContactBounds += boundsPart({
+                    name: "contact",
+                    id: contactId,
+                    xmin, zmin, xmax, zmax,
+                    y: floorPos
+                });
+                contactId += 1
             }
             //Increment id counter
             tileId += 1
@@ -1417,6 +1430,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
     fileData = fileData + groupPart({data: allCheckpointBounds, name: "CHECKPOINTBOUNDS"})
     fileData = fileData + groupPart({data: allTrapBounds,       name: "TRAPBOUNDS"})
     fileData = fileData + groupPart({data: allGoalBounds,       name: "STARTBOUNDS"})
+    if (flavor.contact) fileData = fileData + groupPart({data: allContactBounds, name: "CONTACTBOUNDS"})
     fileData = fileData + groupPart({data: allSwampBounds,      name: "SWAMPBOUNDS"})
     fileData = fileData + groupPart({data: allObstacles,        name: "OBSTACLES"})
     fileData = fileData + groupPart({data: allHumans,           name: "HUMANGROUP"})

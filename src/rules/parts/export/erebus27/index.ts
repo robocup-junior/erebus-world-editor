@@ -1,5 +1,6 @@
 // The world file for Erebus 27 (Webots R2025a): the file of Erebus 26.x (../erebus26) with contact
-// tiles (a tile's contact field; Erebus colours it cyan) and the 2027 fake victims, whose models are
+// tiles (a tile's contact field; Erebus colours it cyan; and their bounds, CONTACTBOUNDS, as Erebus's
+// own worlds have them) and the 2027 fake victims, whose models are
 // smiley faces kept under the 2026 names - Fake's type phi is the neutral face (S.stl), psi the sad
 // one (H.stl), omega the happy one (U.stl)
 import type { Exporter } from '../../../types';

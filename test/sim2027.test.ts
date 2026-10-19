@@ -92,6 +92,10 @@ test('Erebus 27: contact tiles in the world file (worldTile and halfTile), fakes
   const world = quietly(() => M.world(map));
   assert.deepStrictEqual(contactTiles(world).sort(), ['halfTile', 'worldTile']);
   assert.strictEqual((world.match(/contact FALSE/g) || []).length, 1, 'the other tile says it is not one');
+  // their bounds too, as Erebus's own worlds have them (after STARTBOUNDS, before SWAMPBOUNDS)
+  const bounds = world.match(/DEF CONTACTBOUNDS Group \{[\s\S]*?\n {8}\}/)![0];
+  assert.deepStrictEqual(bounds.match(/DEF contact\d+m(in|ax)/g), ['DEF contact0min', 'DEF contact0max', 'DEF contact1min', 'DEF contact1max']);
+  assert.ok(world.indexOf('DEF STARTBOUNDS') < world.indexOf('DEF CONTACTBOUNDS') && world.indexOf('DEF CONTACTBOUNDS') < world.indexOf('DEF SWAMPBOUNDS'));
   const fakes = (world.match(/Fake \{[^}]*?type "(\w+)"/g) || []).map((f) => f.match(/type "(\w+)"/)![1]);
   assert.deepStrictEqual(fakes.sort(), ['phi', 'psi'], 'harmed: psi (H.stl), stable: phi (S.stl)');
 });
@@ -101,9 +105,9 @@ test('Erebus 26: a 2026 map is written as before - no contact field, the 2026 fa
   M.setFloor(map, 1, 1, 'start');
   assert.ok(M.setVictim(map, 1, 1, 'top', 'H', true, { rot: 0 }));
   const world = quietly(() => M.world(map));
-  assert.ok(!/\bcontact\b/.test(world));
+  assert.ok(!/\bcontact\b|CONTACTBOUNDS/.test(world));
   assert.ok(/Fake \{[^}]*?type "phi"/.test(world), 'harmed: phi');
   // a contact flag of a 2027 map switched to 2026 is not a floor there
   map.cells['3,1,0'].tile!.contact = true;
-  assert.ok(!/\bcontact\b/.test(quietly(() => M.world(map))));
+  assert.ok(!/\bcontact\b|CONTACTBOUNDS/.test(quietly(() => M.world(map))));
 });
