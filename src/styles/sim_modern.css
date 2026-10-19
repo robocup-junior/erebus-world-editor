@@ -862,11 +862,15 @@
     background: #f8fafc;
 }
 
-.sim-r4-random-field {
+.sim-r4-random-fields {
     display: grid;
-    grid-template-columns: 2.6rem 1fr;
+    grid-template-columns: minmax(2.6rem, max-content) 1fr;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.55rem 0.5rem;
+}
+
+.sim-r4-random-field {
+    display: contents;
 }
 
 .sim-r4-random-label {

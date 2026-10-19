@@ -104,7 +104,7 @@ onMounted(function () {
         </div>
         <div class="sbx-group sbx-score" v-if="S.map">
           <button class="sbx-btn sbx-score-btn" type="button" @click="S.ui.scoreMenu = !S.ui.scoreMenu" :class="{ open: S.ui.scoreMenu }" :title="t('admin.simBeta.score.button')" aria-haspopup="true" :aria-expanded="S.ui.scoreMenu ? 'true' : 'false'">
-            <i class="fas fa-trophy"></i><span class="sbx-score-value" v-if="S.score"><span class="sbx-score-word">{{ t('admin.simBeta.score.short') }} </span>{{ pts(S.score.field) }}<span class="sbx-score-word">{{ t('admin.simBeta.score.unit') }}</span></span><span class="sbx-score-value" v-else>–</span>
+            <i class="fas fa-trophy"></i><span class="sbx-score-value" v-if="S.score"><span class="sbx-score-word">{{ t('admin.simBeta.score.short') + ' ' }}</span>{{ pts(S.score.field) }}<span class="sbx-score-word">{{ t('admin.simBeta.score.unit') }}</span></span><span class="sbx-score-value" v-else>–</span>
           </button>
           <div class="sbx-beta-back" v-if="S.ui.scoreMenu" @click="S.ui.scoreMenu = false"></div>
           <div class="sbx-score-menu" v-if="S.ui.scoreMenu" role="dialog" :aria-label="t('admin.simBeta.score.title')">
@@ -196,6 +196,8 @@ onMounted(function () {
                 <span class="sbx-size-title">{{ t('admin.simBeta.mapSize') }}</span>
                 <span class="sbx-size-cm">{{ 12 * S.map.width }} × {{ 12 * S.map.length }} cm</span>
               </div>
+              <!-- one grid for both rows: the names' column is as wide as the longer name, in every language -->
+              <div class="sbx-size-rows">
               <div class="sbx-size" v-for="a in (['x', 'y'] as const)" :key="a">
                 <label class="sbx-size-name" :for="'sbxSize' + a">{{ t(a === 'x' ? 'admin.simBeta.width' : 'admin.simBeta.length') }}</label>
                 <div class="sbx-size-field">
@@ -205,6 +207,7 @@ onMounted(function () {
                   <button type="button" @click="a === 'x' ? E.resize(1, 0) : E.resize(0, 1)" :disabled="(a === 'x' ? S.map.width : S.map.length) >= 40" aria-label="+"><i class="fas fa-plus"></i></button>
                 </div>
                 <span class="sbx-size-unit">{{ t('admin.simBeta.tiles') }}</span>
+              </div>
               </div>
               <p class="sbx-size-note">{{ t('admin.simBeta.mapSizeNote') }}</p>
             </div>

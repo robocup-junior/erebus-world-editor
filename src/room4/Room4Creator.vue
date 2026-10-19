@@ -370,6 +370,8 @@ onBeforeUnmount(function () {
             <details class="sim-r4-more">
               <summary><i class="fas fa-dice"></i>{{ t('admin.simMapEditor.room4Creator.randomPlace') }}</summary>
               <div class="sim-r4-random-body">
+                <!-- one grid for both fields: the names' column as wide as the longer name -->
+                <div class="sim-r4-random-fields">
                 <div class="sim-r4-random-field">
                   <span class="sim-r4-random-label">{{ t('admin.simMapEditor.room4Creator.randomCount') }}</span>
                   <div class="sim-r4-stepper">
@@ -383,6 +385,7 @@ onBeforeUnmount(function () {
                   <div class="sbx-seg">
                     <button type="button" v-for="m in ['current', 'mixed']" :key="m" :class="{ active: r4.randomMode === m }" @click="r4.randomMode = m">{{ t('admin.simMapEditor.room4Creator.randomModes.' + m) }}</button>
                   </div>
+                </div>
                 </div>
                 <button type="button" class="btn btn-sm btn-primary btn-block sim-r4-random-go" @click="r4api.randomStamps(r4.randomCount, r4.randomMode)"><i class="fas fa-dice mr-1"></i>{{ t('admin.simMapEditor.room4Creator.randomGo', { n: r4.randomCount }) }}</button>
                 <p class="sim-r4-note">{{ t('admin.simMapEditor.room4Creator.randomNote2') }}</p>
