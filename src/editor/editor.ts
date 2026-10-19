@@ -14,6 +14,7 @@ import * as Icons from '../lib/icons';
 import * as View from '../lib/view';
 import * as T from '../lib/tour';
 import * as Keys from '../lib/keys';
+import { KEPT } from '../lib/kept';
 import { fixed } from './format';
 import { rulesOf, rulesFor, years, upcomingYears, FIRST_YEAR, LATEST_YEAR } from '../rules/registry';
 import type { Ruleset, MaxScore, StampType, Tokens, FloorKind } from '../rules/types';
@@ -304,7 +305,7 @@ export function createEditor() {
             onView: function (v) { later(function () { S.zoom = v.zoom; }); },
             // the checks card floats at the top right of the map: fit the map beside it while it is open
             fitInset: function () {
-                const card = document.querySelector('.sbx-checks');
+                const card = document.querySelector('.ed-checks');
                 if (!card || ui.checksFolded) return 0;
                 return card.getBoundingClientRect().width + 24;
             },
@@ -320,7 +321,7 @@ export function createEditor() {
             }
         });
         // for the end-to-end tests: where a point of the map is on the page
-        (window as any).__sbxView = view;
+        (window as any).__edView = view;
         listen();
         askGuideOnce();
     }
@@ -888,7 +889,7 @@ export function createEditor() {
 
     // ---- the work kept in this browser, in case the page is closed without saving -------------------
 
-    const AUTOSAVE = 'simBeta2026.autosave';
+    const AUTOSAVE = KEPT.autosave;
     let autosaveTimer: number | null = null;
     function autosave() {
         if (autosaveTimer) clearTimeout(autosaveTimer);
@@ -2008,10 +2009,10 @@ export function createEditor() {
     // ---- the guide (lib/tour): the tour of the screen, the lesson (a sample map built step by
     // step) and the room 4 part on its own. The window is shaded but for the parts the step is about,
     // with a card beside them. In the tour the editor waits; in the lesson it is used as usual.
-    const TOUR_SEEN = 'simBeta2026.tourSeen';
+    const TOUR_SEEN = KEPT.tourSeen;
     let tourKeep: TourKeep | null = null, tourTimer: number | null = null, tourTick: number | null = null;
     S.tourSeen = (function () { try { return !!localStorage.getItem(TOUR_SEEN); } catch (e) { return true; } })();
-    const GUIDE_ASKED = 'simBeta2026.guideAsked';
+    const GUIDE_ASKED = KEPT.guideAsked;
 
     // which way through the guide: the lesson, the tour of the screen or the room 4 part
     // what: 'main' (from the editor: everything), 'room4' (from the room 4 creator: its two ways) or
@@ -2182,7 +2183,7 @@ export function createEditor() {
 
     // what a lesson step sees and does (lib/tour's env)
     function creatorScope(): CreatorApi | null {
-        const el = document.querySelector('.sbx-r4-full .sim-r4');
+        const el = document.querySelector('.ed-r4-full .r4');
         return el && S.creator ? S.creator : null;
     }
     function tourEnv(): TourEnv {
@@ -2348,7 +2349,7 @@ export function createEditor() {
         if (cr && s.r4tool && cr.setTool) cr.setTool(s.r4tool);
         if (cr && s.showReach) cr.r4.showReach = true;
         if (cr && s.r4tool === 'erase') cr.r4.eraseTarget = s.eraseTokens ? 'tokens' : 'all';
-        if (s.openMore) later(function () { const d = document.querySelector('.sim-r4-more') as HTMLDetailsElement | null; if (d) d.open = true; }, 60);
+        if (s.openMore) later(function () { const d = document.querySelector('.r4-more') as HTMLDetailsElement | null; if (d) d.open = true; }, 60);
         if (s.enter && (map || s.noMap) && (!s.creator || cr)) { try { s.enter(tourEnv(), tr.st); } catch (e) { /* the step shows anyway */ } }
         tr.done = false;
         tr.task = '';
@@ -2368,7 +2369,7 @@ export function createEditor() {
         if (!tr) return;
         const s = tourStep()!, vw = window.innerWidth, vh = window.innerHeight;
         // while the room 4 creator is open it covers the editor: only its own parts are lit
-        const modal = creatorScope() ? document.querySelector('.sbx-r4-full') : null;
+        const modal = creatorScope() ? document.querySelector('.ed-r4-full') : null;
         const rectOf = function (sel?: string) {
             const el = sel && document.querySelector(sel);
             if (!el || (modal && !modal.contains(el))) return null;
@@ -2407,7 +2408,7 @@ export function createEditor() {
         tr.hole = main ? box(main) : null;
         tr.marks = marks.map(box);
         tr.regions = regions.map(box);
-        const card = document.querySelector('.sbx-tour-card') as HTMLElement | null;
+        const card = document.querySelector('.ed-tour-card') as HTMLElement | null;
         const cw = card ? card.offsetWidth : 380, ch = card ? card.offsetHeight : 260;
         let at: { left: number; top: number };
         const inside = s.cardIn && rectOf(s.cardIn);
@@ -2416,7 +2417,7 @@ export function createEditor() {
         } else if (regions.length || tr.guides.length) {
             // a step on the map: the card in a corner of the map that keeps the places (and the
             // panel) clear
-            const stageOf = modal && s.creator ? modal.querySelector('.sim-r4-viewport')! : stageEl;
+            const stageOf = modal && s.creator ? modal.querySelector('.r4-viewport')! : stageEl;
             const st = stageOf.getBoundingClientRect(), E = 14;
             const corners = [
                 { left: st.right - cw - E, top: st.bottom - ch - E }, { left: st.left + E, top: st.bottom - ch - E },

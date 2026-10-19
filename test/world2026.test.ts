@@ -15,7 +15,7 @@ import { createWorld } from '../src/rules/parts/export/erebus26/world';
 // the field, and the world file of Erebus 26 (the 2026 rules')
 const W = { ...F, createWorld };
 
-const DIR = path.join(__dirname, 'fixtures', 'sim2026');
+const DIR = path.join(__dirname, 'fixtures', 'maps2026');
 const load = (name: string): MapData => {
   const map = JSON.parse(fs.readFileSync(path.join(DIR, `${name}.json`), 'utf8'));
   map.area4 = W.area4Presets();

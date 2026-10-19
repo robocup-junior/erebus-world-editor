@@ -60,7 +60,7 @@ function angleFromEvent(dial: HTMLElement, event: PointerEvent) {
 }
 
 function pointerDown(event: PointerEvent) {
-    const dial = (event.target as HTMLElement).closest('.sim-rot-dial') as HTMLElement | null;
+    const dial = (event.target as HTMLElement).closest('.rot-dial') as HTMLElement | null;
     if (!dial || props.disabled) return;
     event.preventDefault();
     dial.focus();
@@ -80,7 +80,7 @@ function pointerDown(event: PointerEvent) {
 }
 
 function keyDown(event: KeyboardEvent) {
-    if (!(event.target as HTMLElement).closest('.sim-rot-dial') || props.disabled) return;
+    if (!(event.target as HTMLElement).closest('.rot-dial') || props.disabled) return;
     const amount = event.shiftKey ? 15 : 1;
     let delta = 0;
     if (event.key === 'ArrowRight' || event.key === 'ArrowUp') delta = amount;
@@ -92,41 +92,39 @@ function keyDown(event: KeyboardEvent) {
 </script>
 
 <template>
-  <sim-rotation-dial @pointerdown="pointerDown" @keydown="keyDown">
-    <div class="sim-rot" :class="{ disabled: disabled }">
-      <div class="sim-rot-dial" role="slider" :tabindex="disabled ? -1 : 0" aria-valuemin="0" aria-valuemax="359" :aria-valuenow="angle" :title="t('victims.turn.dialHint')">
-        <span class="sim-rot-tick t0">0°</span>
-        <span class="sim-rot-tick t90">90°</span>
-        <span class="sim-rot-tick t180">180°</span>
-        <span class="sim-rot-tick t270">270°</span>
-        <div class="sim-rot-arm" :style="{ transform: 'rotate(' + angle + 'deg)' }"><span class="sim-rot-knob"></span></div>
-        <div class="sim-rot-card" :class="{ 'has-image': image }" :style="{ transform: 'translate(-50%, -50%) rotate(' + angle + 'deg)' }">
-          <img class="sim-rot-image" v-if="image" :src="image" :alt="symbol || ''">
-          <span class="sim-rot-mark" v-if="!image && mark" :style="{ background: Icons.markBackground(mark) }"></span>
-          <span class="sim-rot-symbol" v-if="!image && !mark" :class="{ placeholder: !symbol && !face }"><VictimGlyph :symbol="symbol || 'Φ'" :face="face"></VictimGlyph></span>
-        </div>
-      </div>
-      <div class="sim-rot-controls">
-        <div class="sim-rot-value">
-          <button type="button" class="sim-rot-step" @click="step(-15)" :disabled="disabled" title="-15°">
-            <i class="fas fa-undo-alt"></i>
-          </button>
-          <span class="sim-rot-input">
-            <input type="number" min="0" max="359" :value="angleInput" @input="typed" @blur="angleInput = angle" :disabled="disabled">
-            <span class="sim-rot-unit">°</span>
-          </span>
-          <button type="button" class="sim-rot-step" @click="step(15)" :disabled="disabled" title="+15°">
-            <i class="fas fa-redo-alt"></i>
-          </button>
-        </div>
-        <div class="sim-rot-presets">
-          <button type="button" v-for="p in [0, 90, 180, 270]" :key="p" :class="{ active: angle === p }" @click="set(p)" :disabled="disabled"><span class="sim-rot-num">{{ p }}<span class="sim-rot-deg">°</span></span></button>
-          <button type="button" class="sim-rot-random" @click="random()" :disabled="disabled" :title="t('victims.turn.dialRandom')">
-            <i class="fas fa-dice"></i>
-          </button>
-        </div>
-        <div class="sim-rot-help">{{ t('victims.turn.help') }}</div>
+  <div class="rot" :class="{ disabled: disabled }" @pointerdown="pointerDown" @keydown="keyDown">
+    <div class="rot-dial" role="slider" :tabindex="disabled ? -1 : 0" aria-valuemin="0" aria-valuemax="359" :aria-valuenow="angle" :title="t('victims.turn.dialHint')">
+      <span class="rot-tick t0">0°</span>
+      <span class="rot-tick t90">90°</span>
+      <span class="rot-tick t180">180°</span>
+      <span class="rot-tick t270">270°</span>
+      <div class="rot-arm" :style="{ transform: 'rotate(' + angle + 'deg)' }"><span class="rot-knob"></span></div>
+      <div class="rot-card" :class="{ 'has-image': image }" :style="{ transform: 'translate(-50%, -50%) rotate(' + angle + 'deg)' }">
+        <img class="rot-image" v-if="image" :src="image" :alt="symbol || ''">
+        <span class="rot-mark" v-if="!image && mark" :style="{ background: Icons.markBackground(mark) }"></span>
+        <span class="rot-symbol" v-if="!image && !mark" :class="{ placeholder: !symbol && !face }"><VictimGlyph :symbol="symbol || 'Φ'" :face="face"></VictimGlyph></span>
       </div>
     </div>
-  </sim-rotation-dial>
+    <div class="rot-controls">
+      <div class="rot-value">
+        <button type="button" class="rot-step" @click="step(-15)" :disabled="disabled" title="-15°">
+          <i class="fas fa-undo-alt"></i>
+        </button>
+        <span class="rot-input">
+          <input type="number" min="0" max="359" :value="angleInput" @input="typed" @blur="angleInput = angle" :disabled="disabled">
+          <span class="rot-unit">°</span>
+        </span>
+        <button type="button" class="rot-step" @click="step(15)" :disabled="disabled" title="+15°">
+          <i class="fas fa-redo-alt"></i>
+        </button>
+      </div>
+      <div class="rot-presets">
+        <button type="button" v-for="p in [0, 90, 180, 270]" :key="p" :class="{ active: angle === p }" @click="set(p)" :disabled="disabled"><span class="rot-num">{{ p }}<span class="rot-deg">°</span></span></button>
+        <button type="button" class="rot-random" @click="random()" :disabled="disabled" :title="t('victims.turn.dialRandom')">
+          <i class="fas fa-dice"></i>
+        </button>
+      </div>
+      <div class="rot-help">{{ t('victims.turn.help') }}</div>
+    </div>
+  </div>
 </template>

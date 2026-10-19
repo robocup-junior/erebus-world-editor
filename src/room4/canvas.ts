@@ -293,7 +293,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         reachLayer = blocked ? layer : null;
         if (seed >= 0) reachInfo = { dist: Float32Array.from(rdist.data32F), gw: gw, gh: gh, need: need };
         reachStats = { blocked: blocked, room: roomCells };
-        // how much is out of reach (cells), for the guide of the new editor
+        // how much is out of reach (cells), for the editor's guide
         scope.$applyAsync(function () { r4.reachBlocked = blocked; r4.reachRoom = roomCells; });
         src.delete(); dist.delete(); rsrc.delete(); rdist.delete();
     }
@@ -518,7 +518,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
             };
             r4.summary = Object.keys(counts).map(Number).sort(function (a, b) { return order(a) - order(b); }).map(function (idx) { return { idx: idx, count: counts[idx] }; });
             r4.canUndo = undo.length > 0;
-            r4.undoCount = undo.length;     // the guide of the new editor sees drawing by it
+            r4.undoCount = undo.length;     // the editor's guide sees drawing by it
             r4.canRedo = redo.length > 0;
             if (r4.sel && !tokens.some(function (t) { return Math.hypot(t.cx - r4.sel!.cx, t.cy - r4.sel!.cy) < metaReach(); })) r4.sel = null;
         });
@@ -699,7 +699,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     // on the canvas, so it is seen whole even where the picture is narrower than its text; at
     // the window's edges it moves inwards
     const tipEl = document.createElement('div');
-    tipEl.className = 'sim-r4-tip';
+    tipEl.className = 'r4-tip';
     tipEl.style.display = 'none';
     document.body.appendChild(tipEl);
     scope.$on('$destroy', function () { if (tipEl.parentNode) tipEl.parentNode.removeChild(tipEl); });
@@ -2033,7 +2033,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     // ---- actions for the dialog -------------------------------------------------------
     // A pen stroke along pts ([x, y] fractions of the picture), as a drag with the pen would
     // draw it (one undo step); without pts, a gentle wave across the upper middle (the guide
-    // of the new editor draws it for "do it for me")
+    // of the editor draws it for "do it for me")
     scope.r4api.drawPen = function (pts) {
         if (!pts) {
             pts = [];
@@ -2048,7 +2048,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         }
         commit();
     };
-    // What the guide of the new editor does for "do it for me", as the tools do it. Points are
+    // What the editor's guide does for "do it for me", as the tools do it. Points are
     // [x, y] fractions of the picture, sizes fractions of its width.
     const atF = function (f: number[]): P { return { x: f[0] * W, y: f[1] * H }; };
     // spec: { type: line | rect | ellipse (a, b), circle (a, r), polygon (a, r, n, rot), arc (p0, c,

@@ -1,5 +1,5 @@
-// Walls of rooms 1-3 for the new Simulation 2026 editor (beta): unit segments on the 6 cm grid and
-// curves, and where each is kept in the map's cells (the format of the Simulation 2026 editor).
+// Walls of rooms 1-3: unit segments on the 6 cm grid and curves, and where each is kept in the map's
+// cells (the classic editor's format).
 //
 // Grid points (i, j) are 6 cm steps from the map's top-left corner. They are also the map's cell
 // coordinates: tiles at odd i and j, tile edges where one of them is even. A unit segment joins two

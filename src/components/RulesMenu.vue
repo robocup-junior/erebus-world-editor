@@ -35,23 +35,23 @@ onBeforeUnmount(close);
 </script>
 
 <template>
-  <span class="sbx-rules" ref="root">
-    <button class="sbx-btn sbx-rules-btn" type="button" @click="toggle" :class="{ open: open }" :title="t('rules.title') + ': ' + t('rules.label', { year: year })" aria-haspopup="menu" :aria-expanded="open">
-      <i class="fas fa-book"></i><span class="sbx-rules-year">{{ t('rules.label', { year: year }) }}</span><span class="sbx-rules-year short">{{ year }}</span><span class="sbx-rules-draft" v-if="draft(year)">{{ t('rules.draft') }}</span><i class="fas fa-caret-down sbx-rules-caret"></i>
+  <span class="ed-rules" ref="root">
+    <button class="ed-btn ed-rules-btn" type="button" @click="toggle" :class="{ open: open }" :title="t('rules.title') + ': ' + t('rules.label', { year: year })" aria-haspopup="menu" :aria-expanded="open">
+      <i class="fas fa-book"></i><span class="ed-rules-year">{{ t('rules.label', { year: year }) }}</span><span class="ed-rules-year short">{{ year }}</span><span class="ed-rules-draft" v-if="draft(year)">{{ t('rules.draft') }}</span><i class="fas fa-caret-down ed-rules-caret"></i>
     </button>
-    <div class="sbx-rules-menu" v-if="open" role="menu">
-      <p class="sbx-rules-lead">{{ t('rules.lead') }}</p>
-      <div class="sbx-rules-item" v-for="y in years" :key="y.year" :class="{ active: y.year === year }">
+    <div class="ed-rules-menu" v-if="open" role="menu">
+      <p class="ed-rules-lead">{{ t('rules.lead') }}</p>
+      <div class="ed-rules-item" v-for="y in years" :key="y.year" :class="{ active: y.year === year }">
         <button type="button" role="menuitemradio" :aria-checked="y.year === year" @click="pick(y.year)">
-          <i class="fas fa-check" :style="{ visibility: y.year === year ? 'visible' : 'hidden' }"></i>{{ t('rules.label', { year: y.year }) }}<span class="sbx-rules-draft" v-if="y.draft">{{ t('rules.draft') }}</span>
+          <i class="fas fa-check" :style="{ visibility: y.year === year ? 'visible' : 'hidden' }"></i>{{ t('rules.label', { year: y.year }) }}<span class="ed-rules-draft" v-if="y.draft">{{ t('rules.draft') }}</span>
         </button>
         <a :href="y.book" target="_blank" rel="noopener" :title="t('rules.book')"><i class="fas fa-file-pdf"></i>{{ t('rules.book') }}</a>
       </div>
-      <div class="sbx-rules-item soon" v-for="y in upcoming" :key="y">
+      <div class="ed-rules-item soon" v-for="y in upcoming" :key="y">
         <button type="button" role="menuitemradio" aria-checked="false" aria-disabled="true" disabled>
           <i class="fas fa-check" style="visibility: hidden"></i>{{ t('rules.label', { year: y }) }}
         </button>
-        <span class="sbx-rules-soon">{{ t('rules.soon') }}</span>
+        <span class="ed-rules-soon">{{ t('rules.soon') }}</span>
       </div>
     </div>
   </span>

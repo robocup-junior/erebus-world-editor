@@ -70,7 +70,7 @@ src/
                     connection check, the tiles the robot reaches - the same for every year), view,
                     tour, icons, keys
   lang/             the texts, one file per language (de, en, es, fr, id, ja, ko, pt-BR, th, tr, zh-CN, zh-Hant)
-  styles/           base.css (from Bootstrap), page.css, sim_modern.css, editor.css
+  styles/           base.css (from Bootstrap), page.css, components.css, editor.css
 public/             files served as they are (fonts, images, _headers)
 test/               unit tests (vitest) with sample maps
 e2e/                end-to-end tests (Playwright): screenshots, and the files the editor saves
@@ -91,9 +91,9 @@ One editor, one build, every year's rules in it - 2026, and 2027 (draft) - : a m
 | `export` | the world file, for the Erebus version the year is played on (`parts/export/erebus26/`: the tiles, walls and tokens, and a custom room 4 read from its picture; `parts/export/erebus27/`: the same with what Erebus 27 adds - contact tiles, the smiley fakes' models) |
 | `refs` | the rule numbers the texts cite (`{{rule_reach}}` in a text is the year's `refs.reach`) |
 
-The rest of the editor asks `rulesOf(map)` (`src/rules/registry.ts`) and never names or compares a year; `test/simRules.test.ts` fails if it does, checks each year is complete, and makes a world and a score with each.
+The rest of the editor asks `rulesOf(map)` (`src/rules/registry.ts`) and never names or compares a year; `test/rules.test.ts` fails if it does, checks each year is complete, and makes a world and a score with each.
 
-- **A new year**: copy the latest manifest to `src/rules/yYYYY.ts` and add it to `YEARS` in the registry. For each part the year changes, copy the part's latest version to the next one (`parts/tokens/v2.ts`) and change the copy; the parts it does not change stay shared. A text the year words otherwise goes under `"years": { "YYYY": { ... } }` in each language file, at the key's path. Give the year sample maps and expected world files in its tests. A test of one year's rules makes its maps of that year (`M.newMap(w, l, 2026)`; a map without a year is of the latest), so it keeps testing that year once a newer one is added. The guide's lesson builds its sample map in the year of the rules chosen (the map open, else the start screen's), its steps taking that year's floors and its texts that year's words; `test/simLesson.test.ts` runs it in every year.
+- **A new year**: copy the latest manifest to `src/rules/yYYYY.ts` and add it to `YEARS` in the registry. For each part the year changes, copy the part's latest version to the next one (`parts/tokens/v2.ts`) and change the copy; the parts it does not change stay shared. A text the year words otherwise goes under `"years": { "YYYY": { ... } }` in each language file, at the key's path. Give the year sample maps and expected world files in its tests. A test of one year's rules makes its maps of that year (`M.newMap(w, l, 2026)`; a map without a year is of the latest), so it keeps testing that year once a newer one is added. The guide's lesson builds its sample map in the year of the rules chosen (the map open, else the start screen's), its steps taking that year's floors and its texts that year's words; `test/lesson.test.ts` runs it in every year.
 - **A change to a year's rules** (a correction to its rule book): change that year's part version, or give the year a new version if other years share it.
 - **Dropping a year**: take it out of `YEARS` and delete its manifest; then delete the parts and `"years"` texts nothing uses any more.
 
@@ -101,7 +101,7 @@ The rest of the editor asks `rulesOf(map)` (`src/rules/registry.ts`) and never n
 
 1. Copy `src/lang/en.json` to `src/lang/<code>.json` (`<code>`: its BCP 47 code, such as `fr` or `pt-BR`) and translate the texts. Keep each `{{name}}` parameter as it is; it may move within the sentence. `listSep` is what joins the items of a list (`, ` in English, `・` in Japanese).
 2. Add it to `LANGUAGES` in `src/i18n.ts`: its code, its name in its own language (the list is in the order of these names: Latin script alphabetically, then the other scripts), the flag of the country most taken for it (from `flag-icons`, imported as a URL like the others), and its texts.
-3. `npm test`: `test/simLang.test.ts` checks that every language has each key English has, with the same parameters, and that each file is in `LANGUAGES`.
+3. `npm test`: `test/lang.test.ts` checks that every language has each key English has, with the same parameters, and that each file is in `LANGUAGES`.
 
 The texts are grouped by what they are for: `common` (words used all over: close, undo, ...), `app` (the editor, its about menu and build), `rules`, `file` (new, open, save, the work kept), `export`, `map` (its name, size and outline), `tools` (their names, help and hints), `rooms`, `passages`, `floors`, `victims`, `targets`, `select`, `linear`, `checks`, `score`, `status` (the status line's messages), `guide` (the tour, the lesson, room 4's guides and the keys) and `room4` (the room 4 creator).
 

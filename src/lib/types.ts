@@ -1,4 +1,4 @@
-// The map as the editor holds it and saves it (the JSON of the Simulation 2026 editor): cells keyed
+// The map as the editor holds it and saves it (the classic editor's JSON): cells keyed
 // "x,y,z" (tiles at odd x and y, the edges between them at even ones), the room of each tile, the
 // start, room 4 (a preset, or a custom picture with its stamps).
 

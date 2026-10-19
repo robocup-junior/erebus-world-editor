@@ -96,21 +96,21 @@ export interface TourStep {
 // A rect in window pixels
 export interface Rect { left: number; top: number; right: number; bottom: number }
 
-const PANEL = '.sbx-tool-panel';
-const tool = function (id: string) { return '.sbx-tool[data-tool="' + id + '"]'; };
-const r4tool = function (id: string) { return '.sim-r4-rail-tool[data-tool="' + id + '"]'; };
+const PANEL = '.ed-tool-panel';
+const tool = function (id: string) { return '.ed-tool[data-tool="' + id + '"]'; };
+const r4tool = function (id: string) { return '.r4-rail-tool[data-tool="' + id + '"]'; };
 const c = function (t: number) { return 2 * t + 1; };     // tile index -> cell coordinate
 
 // ---- the tour of the screen (a map open) ----------------------------------------------------
 const STEPS: TourStep[] = [
     { id: 'welcome', chapter: 'start' },
 
-    { id: 'file', chapter: 'screen', target: '.sbx-file', place: 'below' },
-    { id: 'name', chapter: 'screen', target: '.sbx-name', place: 'below' },
-    { id: 'history', chapter: 'screen', target: '.sbx-history', place: 'below', keys: ['Ctrl+Z', 'Ctrl+Shift+Z'] },
-    { id: 'view', chapter: 'screen', target: '#simBetaStage', mark: ['.sbx-view'], keys: ['Wheel', 'Space + Drag', 'H'] },
-    { id: 'rail', chapter: 'screen', target: '.sbx-rail' },
-    { id: 'panel', chapter: 'screen', target: PANEL, mark: ['.sbx-status'], tool: 'line' },
+    { id: 'file', chapter: 'screen', target: '.ed-file', place: 'below' },
+    { id: 'name', chapter: 'screen', target: '.ed-name', place: 'below' },
+    { id: 'history', chapter: 'screen', target: '.ed-history', place: 'below', keys: ['Ctrl+Z', 'Ctrl+Shift+Z'] },
+    { id: 'view', chapter: 'screen', target: '#edStage', mark: ['.ed-view'], keys: ['Wheel', 'Space + Drag', 'H'] },
+    { id: 'rail', chapter: 'screen', target: '.ed-rail' },
+    { id: 'panel', chapter: 'screen', target: PANEL, mark: ['.ed-status'], tool: 'line' },
 
     { id: 'shape', chapter: 'tools', target: PANEL, mark: [tool('shape')], tool: 'shape', keys: ['X'] },
     { id: 'room', chapter: 'tools', target: PANEL, mark: [tool('room')], tool: 'room', keys: ['M'] },
@@ -120,16 +120,16 @@ const STEPS: TourStep[] = [
     { id: 'eraser', chapter: 'tools', target: PANEL, mark: [tool('eraser')], tool: 'eraser', keys: ['E'] },
     { id: 'floor', chapter: 'tools', target: PANEL, mark: [tool('floor')], tool: 'floor', keys: ['F'] },
     { id: 'victim', chapter: 'tools', target: PANEL, mark: [tool('victim')], tool: 'victim', keys: ['V'] },
-    { id: 'room4', chapter: 'tools', target: '.sbx-room4-block', mark: [tool('room')], tool: 'room' },
+    { id: 'room4', chapter: 'tools', target: '.ed-room4-block', mark: [tool('room')], tool: 'room' },
     { id: 'select', chapter: 'tools', target: PANEL, mark: [tool('select')], tool: 'select', keys: ['S', 'Alt', 'Ctrl+C', 'Ctrl+V', 'Ctrl+D', 'Delete'] },
 
-    { id: 'linear', chapter: 'finish', target: '.sbx-linear', place: 'below' },
-    { id: 'score', chapter: 'finish', target: '.sbx-score', place: 'below' },
-    { id: 'checks', chapter: 'finish', target: '.sbx-checks', checks: true },
-    { id: 'fix', chapter: 'finish', target: '.sbx-checks', checks: true },
-    { id: 'export', chapter: 'finish', target: '.sbx-export', place: 'below' },
-    { id: 'more', chapter: 'finish', target: '.sbx-status-tools' },
-    { id: 'done', chapter: 'finish', target: '.sbx-tour-btn' }
+    { id: 'linear', chapter: 'finish', target: '.ed-linear', place: 'below' },
+    { id: 'score', chapter: 'finish', target: '.ed-score', place: 'below' },
+    { id: 'checks', chapter: 'finish', target: '.ed-checks', checks: true },
+    { id: 'fix', chapter: 'finish', target: '.ed-checks', checks: true },
+    { id: 'export', chapter: 'finish', target: '.ed-export', place: 'below' },
+    { id: 'more', chapter: 'finish', target: '.ed-status-tools' },
+    { id: 'done', chapter: 'finish', target: '.ed-tour-btn' }
 ];
 const CHAPTERS = ['start', 'screen', 'tools', 'finish'];
 
@@ -304,7 +304,7 @@ function otherTool(tool: string) {
 }
 function drawStep(id: string, tool: string, guide: number[][][], auto: (env: TourEnv) => void, extra?: Partial<TourStep>): TourStep {
     const step: Record<string, any> = {
-        id: id, chapter: 'room4', creator: true, target: '.sim-r4-viewport', mark: ['.sim-r4-panel', r4tool(tool)], r4tool: tool,
+        id: id, chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-panel', r4tool(tool)], r4tool: tool,
         r4guide: guide, goal: drewWith(tool), auto: auto, state: otherTool(tool)
     };
     Object.keys(extra || {}).forEach(function (k) { step[k] = (extra as Record<string, any>)[k]; });
@@ -336,8 +336,8 @@ const R4 = {
     square: [[0.4, 0.6], [0.6, 0.6], [0.6, 0.72], [0.4, 0.72], [0.4, 0.6]]
 };
 const ROOM4: TourStep[] = [
-    { id: 'r4intro', chapter: 'room4', creator: true, target: '.sim-r4-main' },
-    { id: 'r4screen', chapter: 'room4', creator: true, target: '.sim-r4-rail', mark: ['.sim-r4-panel', '.sim-r4-topbar', '.sim-r4-status'], cardIn: '.sim-r4-viewport' },
+    { id: 'r4intro', chapter: 'room4', creator: true, target: '.r4-main' },
+    { id: 'r4screen', chapter: 'room4', creator: true, target: '.r4-rail', mark: ['.r4-panel', '.r4-topbar', '.r4-status'], cardIn: '.r4-viewport' },
     drawStep('r4pen', 'pen', [R4.wave], function (env) { env.creator!.r4api.drawPen(R4.wave); }, { keys: ['Ctrl+Z'] }),
     drawStep('r4line', 'line', [R4.line], function (env) { env.creator!.r4api.drawShape({ type: 'line', a: R4.line[0], b: R4.line[1] }); }, { keys: ['Shift'] }),
     drawStep('r4curve', 'curve', [R4.curve], function (env) { env.creator!.r4api.drawShape({ type: 'curve', pts: R4.curve, smooth: true }); }, { keys: ['Enter', 'Backspace', 'Esc'] }),
@@ -353,7 +353,7 @@ const ROOM4: TourStep[] = [
     drawStep('r4shape', 'shape', [[R4.icon[0], [R4.icon[1][0], R4.icon[0][1]], R4.icon[1], [R4.icon[0][0], R4.icon[1][1]], R4.icon[0]]],
         function (env) { env.creator!.r4api.drawIcon('star', R4.icon[0], R4.icon[1]); }),
     {
-        id: 'r4select', chapter: 'room4', creator: true, target: '.sim-r4-viewport', mark: [r4tool('select')], r4tool: 'select',
+        id: 'r4select', chapter: 'room4', creator: true, target: '.r4-viewport', mark: [r4tool('select')], r4tool: 'select',
         r4guide: [[R4.select[0], [R4.select[1][0], R4.select[0][1]], R4.select[1], [R4.select[0][0], R4.select[1][1]], R4.select[0]]],
         goal: function (env) { return !!env.creator && !!env.creator!.r4.hasSelection; },
         auto: function (env) { env.creator!.r4api.selectBox(R4.select[0], R4.select[1]); },
@@ -361,7 +361,7 @@ const ROOM4: TourStep[] = [
     },
     {
         // turned (or flipped, moved, duplicated) and put down: the picture changes with the select tool
-        id: 'r4transform', chapter: 'room4', creator: true, target: '.sim-r4-panel', mark: ['.sim-r4-viewport', r4tool('select')], r4tool: 'select', keys: ['[', ']', 'Ctrl+D', 'Ctrl+C', 'Ctrl+V', 'Delete', 'Enter'],
+        id: 'r4transform', chapter: 'room4', creator: true, target: '.r4-panel', mark: ['.r4-viewport', r4tool('select')], r4tool: 'select', keys: ['[', ']', 'Ctrl+D', 'Ctrl+C', 'Ctrl+V', 'Delete', 'Enter'],
         goal: drewWith('select'),
         auto: function (env) {
             const api = env.creator!.r4api;
@@ -382,7 +382,7 @@ const ROOM4: TourStep[] = [
     }),
     {
         // a template laid over a cleared picture: the drawings so far make way for it
-        id: 'r4template', chapter: 'room4', creator: true, target: '.sim-r4-panel', mark: ['.sim-r4-viewport', r4tool('template')], r4tool: 'template',
+        id: 'r4template', chapter: 'room4', creator: true, target: '.r4-panel', mark: ['.r4-viewport', r4tool('template')], r4tool: 'template',
         // put with "clear first" on, so the practice shapes (which may close off the entrance) go
         goal: drewWith('template', function (r4) { return !!r4.templateClear; }),
         auto: function (env) { env.creator!.r4.templateClear = true; env.creator!.r4api.applyTemplate('pillars', true); },
@@ -394,7 +394,7 @@ const ROOM4: TourStep[] = [
         }
     },
     {
-        id: 'r4stamp', chapter: 'room4', creator: true, target: '.sim-r4-viewport', mark: ['.sim-r4-panel', r4tool('stamp')], r4tool: 'stamp',
+        id: 'r4stamp', chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-panel', r4tool('stamp')], r4tool: 'stamp',
         enter: function (env, st) { st.n0 = env.creator ? env.creator!.r4.tokenCount || 0 : 0; },
         goal: function (env, st) { return !!env.creator && (env.creator!.r4.tokenCount || 0) >= Math.max(2, st.n0 + 1); },
         auto: function (env) { env.creator!.r4api.randomStamps(3, 'mixed'); },
@@ -405,14 +405,14 @@ const ROOM4: TourStep[] = [
     },
     {
         // a victim put clicked with its own kind: selected, to change its turn or rings
-        id: 'r4pick', chapter: 'room4', creator: true, target: '.sim-r4-viewport', mark: ['.sim-r4-panel', r4tool('stamp')], r4tool: 'stamp',
+        id: 'r4pick', chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-panel', r4tool('stamp')], r4tool: 'stamp',
         goal: function (env) { return !!env.creator && !!env.creator!.r4.sel; },
         auto: function (env) { env.creator!.r4api.selectToken(0); },
         state: otherTool('stamp')
     },
     {
         // the eraser on victims only takes a victim off and leaves its wall
-        id: 'r4eraseTokens', chapter: 'room4', creator: true, target: '.sim-r4-viewport', mark: ['.sim-r4-panel', r4tool('erase')], r4tool: 'erase', eraseTokens: true,
+        id: 'r4eraseTokens', chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-panel', r4tool('erase')], r4tool: 'erase', eraseTokens: true,
         enter: function (env, st) { st.n0 = env.creator ? env.creator!.r4.tokenCount || 0 : 0; },
         goal: function (env, st) { return !!env.creator && (env.creator!.r4.tokenCount || 0) < st.n0; },
         auto: function (env) { env.creator!.r4.eraseTarget = 'tokens'; env.creator!.r4api.eraseToken(0); },
@@ -424,14 +424,14 @@ const ROOM4: TourStep[] = [
         }
     },
     {
-        id: 'r4random', chapter: 'room4', creator: true, target: '.sim-r4-more', mark: [r4tool('stamp')], r4tool: 'stamp', openMore: true,
+        id: 'r4random', chapter: 'room4', creator: true, target: '.r4-more', mark: [r4tool('stamp')], r4tool: 'stamp', openMore: true,
         enter: function (env, st) { st.n0 = env.creator ? env.creator!.r4.tokenCount || 0 : 0; },
         goal: function (env, st) { return !!env.creator && (env.creator!.r4.tokenCount || 0) > st.n0; },
         auto: function (env) { env.creator!.r4api.randomStamps(3, 'mixed'); }
     },
     {
         // a place the robot cannot get into made on purpose (a small closed square), and seen
-        id: 'r4reach', chapter: 'room4', creator: true, target: '.sim-r4-viewport', mark: ['.sim-r4-topbar', '.sim-r4-status', r4tool('rect')], r4tool: 'rect', showReach: true,
+        id: 'r4reach', chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-topbar', '.r4-status', r4tool('rect')], r4tool: 'rect', showReach: true,
         r4guide: [R4.square],
         enter: function (env, st) { st.b0 = env.creator ? env.creator!.r4.reachBlocked || 0 : 0; },
         goal: function (env, st) { return !!env.creator && (env.creator!.r4.reachBlocked || 0) > st.b0; },
@@ -445,9 +445,9 @@ const ROOM4: TourStep[] = [
             return null;
         }
     },
-    { id: 'r4file', chapter: 'room4', creator: true, target: '.sim-r4-topbar' },
+    { id: 'r4file', chapter: 'room4', creator: true, target: '.r4-topbar' },
     {
-        id: 'r4ok', chapter: 'room4', creator: true, target: '.sim-r4-head-ok', place: 'below', closes: true,
+        id: 'r4ok', chapter: 'room4', creator: true, target: '.r4-head-ok', place: 'below', closes: true,
         goal: function (env) { return !env.creator && env.room4State === 'drawn'; },
         auto: function (env) { if (env.creator) env.creator!.closeRoom4(); }
     }
@@ -464,13 +464,13 @@ const ROOM4_TOUR: TourStep[] = ROOM4.filter(function (s) { return !s.lessonOnly;
 const LESSON: TourStep[] = ([
     { id: 'intro', chapter: 'start', plan: true },
     {
-        id: 'new', chapter: 'start', target: '.sbx-empty-actions .btn-primary', noMap: true,
+        id: 'new', chapter: 'start', target: '.ed-empty-actions .btn-primary', noMap: true,
         goal: function (env) { return !!env.map; },
         auto: function (env) { env.act.newMap(); }
     },
 
     {
-        id: 'size', chapter: 'shape', target: '.sbx-size-box', mark: [tool('shape')], tool: 'shape', mode: 'outline',
+        id: 'size', chapter: 'shape', target: '.ed-size-box', mark: [tool('shape')], tool: 'shape', mode: 'outline',
         goal: function (env) { return env.map.width === SAMPLE.width && env.map.length === SAMPLE.length; },
         auto: function (env) { env.act.resize(SAMPLE.width, SAMPLE.length); },
         state: function (env) {
@@ -665,7 +665,7 @@ const LESSON: TourStep[] = ([
     },
 
     {
-        id: 'r4open', chapter: 'room4', target: '.sbx-room4-block', mark: [tool('room')], tool: 'room',
+        id: 'r4open', chapter: 'room4', target: '.ed-room4-block', mark: [tool('room')], tool: 'room',
         goal: function (env) { return !!env.creator; },
         auto: function (env) { env.act.openRoom4(); }
     }
@@ -676,15 +676,15 @@ const LESSON: TourStep[] = ([
         goal: function (env) { return !!env.region; },
         auto: function (env) { env.act.setRegion({ x0: 0, y0: 1, x1: 2, y1: 5 }); }
     },
-    { id: 'view', chapter: 'finish', target: '#simBetaStage', mark: ['.sbx-view', tool('hand')], keys: ['Wheel', 'Space + Drag', 'H'] },
+    { id: 'view', chapter: 'finish', target: '#edStage', mark: ['.ed-view', tool('hand')], keys: ['Wheel', 'Space + Drag', 'H'] },
     {
-        id: 'linear', chapter: 'finish', target: '.sbx-linear', place: 'below',
+        id: 'linear', chapter: 'finish', target: '.ed-linear', place: 'below',
         goal: function (env) { return !!env.ui.showLinear; },
         auto: function (env) { if (!env.ui.showLinear) env.act.toggleLinear(); }
     },
     {
         // done already when every step before it was followed
-        id: 'checks', chapter: 'finish', target: '.sbx-checks', checks: true, maybeDone: true,
+        id: 'checks', chapter: 'finish', target: '.ed-checks', checks: true, maybeDone: true,
         goal: function (env) { return !env.problems.some(function (p) { return p.block; }); },
         auto: function (env) { env.act.fixAll(); },
         state: function (env) {
@@ -693,17 +693,17 @@ const LESSON: TourStep[] = ([
         }
     },
     {
-        id: 'score', chapter: 'finish', target: '.sbx-score', place: 'below'
+        id: 'score', chapter: 'finish', target: '.ed-score', place: 'below'
     },
     {
-        id: 'name', chapter: 'finish', target: '.sbx-name', place: 'below',
+        id: 'name', chapter: 'finish', target: '.ed-name', place: 'below',
         enter: function (env, st) { st.name = env.map.name || ''; },
         goal: function (env, st) { return !!env.map.name && env.map.name !== st.name; },
         auto: function (env) { env.act.rename('my_first_world'); }
     },
-    { id: 'save', chapter: 'finish', target: '.sbx-file', place: 'below' },
-    { id: 'export', chapter: 'finish', target: '.sbx-export', place: 'below' },
-    { id: 'more', chapter: 'finish', target: '.sbx-status-tools' },
+    { id: 'save', chapter: 'finish', target: '.ed-file', place: 'below' },
+    { id: 'export', chapter: 'finish', target: '.ed-export', place: 'below' },
+    { id: 'more', chapter: 'finish', target: '.ed-status-tools' },
     { id: 'done', chapter: 'finish', plan: true }
 ] as TourStep[]);
 const LESSON_CHAPTERS = ['start', 'shape', 'rooms', 'passages', 'walls', 'floors', 'victims', 'room4', 'finish'];

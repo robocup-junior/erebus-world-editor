@@ -35,13 +35,13 @@ onBeforeUnmount(close);
 </script>
 
 <template>
-  <span class="sbx-lang-wrap" ref="root">
-    <button class="sbx-status-btn sbx-lang" type="button" @click="click" title="Language" aria-haspopup="menu" :aria-expanded="open">
-      <img class="sbx-lang-flag" v-if="shown" :src="shown.flag" alt=""><i class="fas fa-globe-asia" v-else></i><span>{{ shown ? shown.name : lang }}</span><i class="fas fa-caret-up sbx-lang-caret"></i>
+  <span class="ed-lang-wrap" ref="root">
+    <button class="ed-status-btn ed-lang" type="button" @click="click" title="Language" aria-haspopup="menu" :aria-expanded="open">
+      <img class="ed-lang-flag" v-if="shown" :src="shown.flag" alt=""><i class="fas fa-globe-asia" v-else></i><span>{{ shown ? shown.name : lang }}</span><i class="fas fa-caret-up ed-lang-caret"></i>
     </button>
-    <div class="sbx-lang-menu" v-if="open" role="menu">
-      <button class="sbx-lang-item" type="button" role="menuitemradio" v-for="l in LANGUAGES" :key="l.code" :lang="l.code" :aria-checked="l.code === lang" :class="{ active: l.code === lang }" @click="pick(l.code)">
-        <i class="fas fa-check" :style="{ visibility: l.code === lang ? 'visible' : 'hidden' }"></i><img class="sbx-lang-flag" :src="l.flag" alt="">{{ l.name }}
+    <div class="ed-lang-menu" v-if="open" role="menu">
+      <button class="ed-lang-item" type="button" role="menuitemradio" v-for="l in LANGUAGES" :key="l.code" :lang="l.code" :aria-checked="l.code === lang" :class="{ active: l.code === lang }" @click="pick(l.code)">
+        <i class="fas fa-check" :style="{ visibility: l.code === lang ? 'visible' : 'hidden' }"></i><img class="ed-lang-flag" :src="l.flag" alt="">{{ l.name }}
       </button>
     </div>
   </span>

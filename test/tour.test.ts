@@ -1,4 +1,4 @@
-// Erebus World Editor 2026's guide: the tour of the screen, the lesson and the room 4 part have their texts,
+// The guide: the tour of the screen, the lesson and the room 4 part have their texts,
 // light up parts that are in the pages, and place their card beside what it is about, in the window.
 import { test } from 'vitest';
 import assert from 'node:assert';
@@ -37,7 +37,7 @@ test('the parts the steps light up are in the pages', () => {
   for (const s of T.STEPS.concat(T.LESSON)) for (const sel of [s.target, ...(s.mark || [])].filter(Boolean)) sels.add(sel);
   for (const sel of sels) {
     const m = sel.match(/data-tool="([a-z]+)"/);
-    const where = sel.includes('sim-r4') ? creator : page;
+    const where = sel.includes('r4') ? creator : page;
     if (m) assert.ok(where.includes('data-tool='), sel);
     else for (const part of sel.split(/\s+/)) {
       const name = part.replace(/^[.#]/, '').split(/[.[]/)[0];
@@ -55,7 +55,7 @@ test('the steps are in chapter order; the tour starts with its welcome and ends 
   inOrder(T.STEPS, T.CHAPTERS);
   inOrder(T.LESSON, T.LESSON_CHAPTERS);
   assert.strictEqual(T.STEPS[0].id, 'welcome');
-  assert.strictEqual(T.STEPS[T.STEPS.length - 1].target, '.sbx-tour-btn');
+  assert.strictEqual(T.STEPS[T.STEPS.length - 1].target, '.ed-tour-btn');
   assert.ok(T.ROOM4.every((s) => s.creator));
   // the room 4 part to look at only: the same steps, with nothing to do
   assert.deepStrictEqual(T.ROOM4_TOUR.map((s) => s.id), T.ROOM4.filter((s) => !s.lessonOnly).map((s) => s.id));

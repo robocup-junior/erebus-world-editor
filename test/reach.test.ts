@@ -1,4 +1,4 @@
-// Where the robot can go in the new Simulation 2026 editor (src/lib/model.js)
+// Where the robot can go (src/lib/model.ts)
 import { test } from 'vitest';
 import assert from 'node:assert';
 import type { MapData } from '../src/lib/types';

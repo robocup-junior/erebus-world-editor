@@ -49,7 +49,7 @@ a {
 }
 
 /* Modals (as Bootstrap draws them, with rounded corners): the room 4 creator, a modal,
-   is drawn over these (sim_modern.css, .sbx-r4-full) */
+   is drawn over these (components.css, .ed-r4-full) */
 .modal.show, .modal.in {
     display: flex !important;
     align-items: center !important;

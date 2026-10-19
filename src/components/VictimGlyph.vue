@@ -13,11 +13,11 @@ const path = computed(function () { return props.face ? FACES[props.face] || '' 
 </script>
 
 <template>
-  <svg v-if="path && color" class="sbx-glyph-disc" viewBox="0 0 100 100" role="img" :aria-label="symbol || ''">
+  <svg v-if="path && color" class="ed-glyph-disc" viewBox="0 0 100 100" role="img" :aria-label="symbol || ''">
     <circle v-if="!hollow" cx="50" cy="50" r="50" :fill="color"></circle>
     <circle v-else cx="50" cy="50" r="45" fill="#fff" :stroke="color" stroke-width="10"></circle>
     <path :d="path" :fill="hollow ? color : '#fff'" :transform="'translate(' + AT + ' ' + AT + ') scale(' + FACE / FACE_BOX + ')'"></path>
   </svg>
-  <svg v-else-if="path" class="sbx-glyph-face" :viewBox="'0 0 ' + FACE_BOX + ' ' + FACE_BOX" role="img" :aria-label="symbol || ''"><path :d="path" fill="currentColor"></path></svg>
+  <svg v-else-if="path" class="ed-glyph-face" :viewBox="'0 0 ' + FACE_BOX + ' ' + FACE_BOX" role="img" :aria-label="symbol || ''"><path :d="path" fill="currentColor"></path></svg>
   <template v-else>{{ symbol }}</template>
 </template>

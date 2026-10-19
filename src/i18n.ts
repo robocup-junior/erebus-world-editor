@@ -1,17 +1,18 @@
 // The page's texts, one file per language (src/lang). Their parameters are written {{name}}. A text
 // not in a language yet is shown in English; a key with no text at all gives the key back, which the
-// editor uses to tell a missing text. The language chosen is kept in this browser (under the key the
-// earlier version of the page used, so the choice carries over).
+// editor uses to tell a missing text. The language chosen is kept in this browser (lib/kept: what an
+// earlier version kept is carried over first, so the choice stays).
 //
 // Texts that depend on the rules follow the year of the map open (setRuleTexts): the rule numbers
 // they cite are parameters ({{rule_reach}}: the year's refs.reach), and a year whose rules say
 // otherwise has its own text of a key under "years": { "<year>": { <the key's path> } } in each
 // language file, which is used in place of the key's.
 //
-// To add a language: its file in src/lang (a copy of en.json, translated; test/simLang.test.ts checks
+// To add a language: its file in src/lang (a copy of en.json, translated; test/lang.test.ts checks
 // it has every key with the same parameters), and a line in LANGUAGES with the flag of the country
 // most taken for it (flag-icons). The language menu shows each language by its own name and flag.
 import { createI18n, type MessageCompiler, type MessageContext } from 'vue-i18n';
+import { KEPT, carryOver } from './lib/kept';
 import en from './lang/en.json';
 import ja from './lang/ja.json';
 import es from './lang/es.json';
@@ -57,7 +58,7 @@ export const LANGUAGES = [
 export type Lang = typeof LANGUAGES[number]['code'];
 // for a text not in the chosen language yet
 const FALLBACK: Lang = 'en';
-const LANG_KEY = 'NG_TRANSLATE_LANG_KEY';
+const LANG_KEY = KEPT.lang;
 
 function known(code: string | null | undefined): Lang | null {
     if (!code) return null;
@@ -92,6 +93,7 @@ function preferred(): Lang {
     return FALLBACK;
 }
 
+carryOver();
 const start = preferred();
 // told to the browser at once, so kanji are drawn with Japanese glyph shapes
 document.documentElement.lang = start;

@@ -4,7 +4,7 @@ import '@fortawesome/fontawesome-free/css/fontawesome.css';
 import '@fortawesome/fontawesome-free/css/solid.css';
 import '@fortawesome/fontawesome-free/css/regular.css';
 import './styles/page.css';
-import './styles/sim_modern.css';
+import './styles/components.css';
 import './styles/editor.css';
 import { createApp } from 'vue';
 import { i18n } from './i18n';

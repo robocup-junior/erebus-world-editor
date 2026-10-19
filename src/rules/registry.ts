@@ -1,5 +1,5 @@
 // The years the editor takes, and the rules of a map. The only module that names the years: the rest
-// of the editor asks rulesOf(map) and never compares years itself (test/simRulesBoundary.test.ts).
+// of the editor asks rulesOf(map) and never compares years itself (test/rules.test.ts).
 //
 // To add a year: rules/yYYYY.ts (a manifest: copy the last one, and give a new version of each part
 // that year changes - rules/parts/<part>/vN.ts, copied from the last version and changed), and a line

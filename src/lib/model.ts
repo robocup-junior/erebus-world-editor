@@ -1,5 +1,5 @@
-// Editing a map: the map is kept in the format of the Simulation 2026 editor (cells, roomTiles,
-// startTile, area4Room ...), so either editor opens it. Coordinates are the map's cell coordinates
+// Editing a map: the map is kept in the classic editor's format (cells, roomTiles, startTile,
+// area4Room ...), so either editor opens it. Coordinates are the map's cell coordinates
 // (tiles at odd x and y). What the map's year takes comes from its rules (rulesOf).
 import type { MapData, Cell, Tile, Pt } from './types';
 import * as L from './lattice';

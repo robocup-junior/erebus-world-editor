@@ -7,7 +7,7 @@ import * as M from '../src/lib/model';
 import * as Score from '../src/rules/parts/scoring/v1';
 import type { MapData } from '../src/lib/types';
 
-const load = (name: string): MapData => JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'sim2026', `${name}.json`), 'utf8'));
+const load = (name: string): MapData => JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'maps2026', `${name}.json`), 'utf8'));
 
 test('mapA: each area times its multiplier, the bonuses on top', () => {
   const s = Score.maxScore(load('mapA'), null);

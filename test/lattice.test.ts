@@ -1,5 +1,4 @@
-// Walls on the 6 cm grid and their place in the map's cells, for the new Simulation 2026 editor
-// (src/lib/lattice.js)
+// Walls on the 6 cm grid and their place in the map's cells (src/lib/lattice.ts)
 import { test } from 'vitest';
 import assert from 'node:assert';
 import type { MapData } from '../src/lib/types';
@@ -11,7 +10,7 @@ import { rulesFor } from '../src/rules/registry';
 // the rooms of 2026
 const rooms = rulesFor(2026)!.rooms;
 
-const DIR = path.join(__dirname, 'fixtures', 'sim2026');
+const DIR = path.join(__dirname, 'fixtures', 'maps2026');
 const load = (name: string): MapData => JSON.parse(fs.readFileSync(path.join(DIR, `${name}.json`), 'utf8'));
 const sorted = (set: Iterable<string>) => [...set].sort();
 const arcs = (list: L.Arc[]) => list.map((a) => `${a.x},${a.y},${a.q}=${a.v}`).sort();

@@ -27,24 +27,24 @@ function ringColor(i: number) {
 </script>
 
 <template>
-  <div class="sbx-ct">
-    <div class="sbx-ct-top">
-      <svg class="sbx-ct-target" viewBox="0 0 100 100" role="img" :aria-label="t('targets.rings')">
+  <div class="ed-ct">
+    <div class="ed-ct-top">
+      <svg class="ed-ct-target" viewBox="0 0 100 100" role="img" :aria-label="t('targets.rings')">
         <circle v-for="r in [0, 1, 2, 3, 4]" :key="r" cx="50" cy="50" :r="48 - 9 * r" :fill="ringColor(r)" @click="emit('pick-ring', r)" stroke="#fff" stroke-width="1"></circle>
-        <circle class="sbx-ct-sel" cx="50" cy="50" :r="43.5 - 9 * ring" fill="none"></circle>
+        <circle class="ed-ct-sel" cx="50" cy="50" :r="43.5 - 9 * ring" fill="none"></circle>
       </svg>
-      <div class="sbx-ct-info">
-        <span class="sbx-ct-type"><span class="sbx-ct-mark" :style="typeMark()"></span>{{ typeName() }}</span>
-        <div class="sbx-ct-sum">{{ t('targets.sum') }} {{ sum > 0 ? '+' : '' }}{{ sum }}</div>
-        <div class="sbx-ct-code">
+      <div class="ed-ct-info">
+        <span class="ed-ct-type"><span class="ed-ct-mark" :style="typeMark()"></span>{{ typeName() }}</span>
+        <div class="ed-ct-sum">{{ t('targets.sum') }} {{ sum > 0 ? '+' : '' }}{{ sum }}</div>
+        <div class="ed-ct-code">
           <span v-for="(c, i) in rings" :key="i" :class="{ sel: ring === i }" @click="emit('pick-ring', i)">{{ c }}</span>
         </div>
       </div>
     </div>
-    <div class="sbx-ct-hint">{{ t('targets.hint', { n: ring + 1 }) }}</div>
-    <div class="sbx-ct-palette">
-      <button class="sbx-ct-swatch" type="button" v-for="c in colors" :key="c.id" @click="emit('pick-color', c.id)" :class="{ active: rings[ring] === c.id }" :title="c.id">
-        <span class="sbx-ct-dot" :style="{ background: c.color }"></span><span class="sbx-ct-val">{{ c.value > 0 ? '+' : '' }}{{ c.value }}</span>
+    <div class="ed-ct-hint">{{ t('targets.hint', { n: ring + 1 }) }}</div>
+    <div class="ed-ct-palette">
+      <button class="ed-ct-swatch" type="button" v-for="c in colors" :key="c.id" @click="emit('pick-color', c.id)" :class="{ active: rings[ring] === c.id }" :title="c.id">
+        <span class="ed-ct-dot" :style="{ background: c.color }"></span><span class="ed-ct-val">{{ c.value > 0 ? '+' : '' }}{{ c.value }}</span>
       </button>
     </div>
   </div>

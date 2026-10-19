@@ -11,7 +11,7 @@ async function openCreator(page: Page): Promise<void> {
     await openMap(page, 'mapD.json');
     await page.waitForFunction(() => typeof (window as any).cv !== 'undefined' && (window as any).cv.Mat, null, { timeout: 30000 });
     await tool(page, 'room');
-    await page.locator('.sbx-room4-block .btn-outline-primary').click();
+    await page.locator('.ed-room4-block .btn-outline-primary').click();
     await expect(page.locator('canvas.r4-over')).toBeVisible();
     await settle(page, 800);
 }
@@ -28,13 +28,13 @@ test('the creator: every tool and its panel', async ({ page }) => {
 test('the creator: the shape tool lists Font Awesome icons', async ({ page }) => {
     await openCreator(page);
     await r4tool(page, 'shape');
-    await expect(page.locator('.sim-r4-icon-grid button').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('.r4-icon-grid button').first()).toBeVisible({ timeout: 15000 });
     await settle(page, 400);
     await shot(page, 'r4-shape-icons');
-    await page.locator('.sim-r4-shape-icons input[type=search]').fill('car');
+    await page.locator('.r4-shape-icons input[type=search]').fill('car');
     await settle(page, 300);
     await shot(page, 'r4-shape-search');
-    await page.locator('.sim-r4-icon-grid button').first().click();
+    await page.locator('.r4-icon-grid button').first().click();
     await settle(page, 600);
     await r4drag(page, [[0.55, 0.55], [0.8, 0.8]]);
     await shot(page, 'r4-shape-drawn');
@@ -52,10 +52,10 @@ test('the creator: walls and stamps drawn, back on the map, saved and exported',
     await r4drag(page, [[0.7, 0.65], [0.78, 0.72]]);
     await shot(page, 'r4-walls');
     await r4tool(page, 'stamp');
-    await page.locator('.sim-r4-stamp').nth(0).click();
+    await page.locator('.r4-stamp').nth(0).click();
     // under the box and on the line: where the robot gets to (a stamp is not put where it does not)
     await r4click(page, 0.3, 0.47);
-    await page.locator('.sim-r4-stamp').nth(6).click();
+    await page.locator('.r4-stamp').nth(6).click();
     await r4click(page, 0.35, 0.66);
     await shot(page, 'r4-stamps');
     await r4click(page, 0.3, 0.47);
@@ -64,24 +64,24 @@ test('the creator: walls and stamps drawn, back on the map, saved and exported',
     await settle(page, 300);
     await page.keyboard.press('Control+Shift+z');
     await settle(page, 300);
-    await page.locator('.sim-r4-more summary').click();
+    await page.locator('.r4-more summary').click();
     await reseed(page, 11);
-    await page.locator('.sim-r4-more .btn-primary').click();
+    await page.locator('.r4-more .btn-primary').click();
     await settle(page, 800);
     await shot(page, 'r4-random-stamps');
     await r4tool(page, 'erase');
     await r4drag(page, [[0.1, 0.7], [0.25, 0.7]]);
     await shot(page, 'r4-erased');
-    await page.locator('.sim-r4-head-ok').click();
+    await page.locator('.r4-head-ok').click();
     await settle(page, 800);
     await shot(page, 'r4-on-map');
-    const saved = await download(page, () => page.locator('.sbx-file button').nth(2).click());
+    const saved = await download(page, () => page.locator('.ed-file button').nth(2).click());
     keep('room4.json', saved.text);
-    await page.locator('.sbx-fix-all').click();
+    await page.locator('.ed-fix-all').click();
     await settle(page, 400);
     await shot(page, 'r4-fixed');
     await reseed(page, 12);
-    const world = await download(page, () => page.locator('.sbx-export').click());
+    const world = await download(page, () => page.locator('.ed-export').click());
     keep('room4.wbt', world.text);
 });
 
@@ -91,7 +91,7 @@ const tileAt = (c: number, r: number): [number, number] => [(c + 0.5) / 4, (r + 
 test('the creator: holes, swamps and checkpoints on room 4\'s tiles, undone, and on the map', async ({ page }) => {
     await openCreator(page);
     await r4tool(page, 'floor');
-    const choice = (i: number) => page.locator('.sim-r4-panel .sbx-choice').nth(i).click();
+    const choice = (i: number) => page.locator('.r4-panel .ed-choice').nth(i).click();
     await choice(1);                                    // hole
     await r4click(page, ...tileAt(1, 1));
     await choice(2);                                    // swamp, dragged along the bottom row
@@ -106,10 +106,10 @@ test('the creator: holes, swamps and checkpoints on room 4\'s tiles, undone, and
     for (let i = 0; i < 3; i++) { await page.keyboard.press('Control+z'); await settle(page, 300); }
     await shot(page, 'r4-floors-undone');
     for (let i = 0; i < 3; i++) { await page.keyboard.press('Control+Shift+z'); await settle(page, 300); }
-    await page.locator('.sim-r4-head-ok').click();
+    await page.locator('.r4-head-ok').click();
     await settle(page, 800);
     await shot(page, 'r4-floors-on-map');
-    const saved = JSON.parse((await download(page, () => page.locator('.sbx-file button').nth(2).click())).text);
+    const saved = JSON.parse((await download(page, () => page.locator('.ed-file button').nth(2).click())).text);
     const floor = (k: string) => { const t = (saved.cells[k] || {}).tile || {}; return ['black', 'swamp', 'checkpoint'].filter((f) => t[f]); };
     expect(floor('7,5,0')).toEqual(['black']);
     expect([floor('5,7,0'), floor('7,7,0'), floor('9,7,0')]).toEqual([['swamp'], ['swamp'], ['swamp']]);
@@ -120,24 +120,24 @@ test('the creator: holes, swamps and checkpoints on room 4\'s tiles, undone, and
 test('the creator: a template, selection turned, zoom', async ({ page }) => {
     await openCreator(page);
     await r4tool(page, 'template');
-    await page.locator('.sim-r4-template').nth(1).click();
+    await page.locator('.r4-template').nth(1).click();
     await reseed(page, 13);
-    await page.locator('.sim-r4-templates .btn-primary').click();
+    await page.locator('.r4-templates .btn-primary').click();
     await settle(page, 600);
     await shot(page, 'r4-template');
     await r4tool(page, 'select');
     await r4drag(page, [[0.05, 0.05], [0.5, 0.5]]);
-    await page.locator('.sim-r4-sel-buttons button').nth(1).click();
-    await page.locator('.sim-r4-sel-buttons button').nth(2).click();
+    await page.locator('.r4-sel-buttons button').nth(1).click();
+    await page.locator('.r4-sel-buttons button').nth(2).click();
     await settle(page, 400);
     await shot(page, 'r4-selection');
     await page.keyboard.press('Enter');
-    await page.locator('.sim-r4-zoom button').nth(2).click();
-    await page.locator('.sim-r4-zoom button').nth(2).click();
+    await page.locator('.r4-zoom button').nth(2).click();
+    await page.locator('.r4-zoom button').nth(2).click();
     await settle(page, 400);
     await shot(page, 'r4-zoomed');
-    await page.locator('.sim-r4-chip').nth(0).click();
-    await page.locator('.sim-r4-chip').nth(1).click();
+    await page.locator('.r4-chip').nth(0).click();
+    await page.locator('.r4-chip').nth(1).click();
     await settle(page, 300);
     await shot(page, 'r4-views-off');
     await page.keyboard.press('Escape');

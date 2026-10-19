@@ -1,5 +1,5 @@
-// Map view of the new Simulation 2026 editor (beta): draws a map (the format of the Simulation 2026
-// editor) on a canvas in cm, with zoom (wheel, buttons) and pan (drag).
+// The map view: draws a map (the classic editor's format) on a canvas in cm, with zoom (wheel,
+// buttons) and pan (drag).
 import type { MapData } from './types';
 import * as L from './lattice';
 import * as Icons from './icons';

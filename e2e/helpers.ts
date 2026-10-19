@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-export const FIXTURES = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'test', 'fixtures', 'sim2026');
+export const FIXTURES = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'test', 'fixtures', 'maps2026');
 
 // Where the files the editor saves are kept, to compare two builds (E2E_OUT, else not kept)
 export function keep(name: string, text: string): void {
@@ -44,18 +44,18 @@ export async function boot(page: Page, opts: { lang?: string; fresh?: boolean } 
             if (!sessionStorage.getItem('e2e.booted')) {
                 sessionStorage.setItem('e2e.booted', '1');
                 localStorage.clear();
-                localStorage.setItem('NG_TRANSLATE_LANG_KEY', o.lang);
+                localStorage.setItem('erebusEditor.lang', o.lang);
                 if (!o.fresh) {
-                    localStorage.setItem('simBeta2026.tourSeen', '1');
-                    localStorage.setItem('simBeta2026.guideAsked', '1');
+                    localStorage.setItem('erebusEditor.tourSeen', '1');
+                    localStorage.setItem('erebusEditor.guideAsked', '1');
                 }
             }
         } catch (e) { /* storage off */ }
     }, { lang: opts.lang || 'ja', fresh: !!opts.fresh });
     await page.clock.setFixedTime(new Date('2026-10-17T10:00:00+09:00'));
     await page.goto('/');
-    await expect(page.locator('.sbx-title')).toContainText('Erebus World Editor');
-    await expect(page.locator('.sbx-empty h2')).not.toContainText('admin.');
+    await expect(page.locator('.ed-title')).toContainText('Erebus World Editor');
+    await expect(page.locator('.ed-empty h2')).not.toContainText('admin.');
     await settle(page);
 }
 
@@ -69,19 +69,18 @@ export async function settle(page: Page, ms = 250): Promise<void> {
 // they open in the year chosen; year null leaves the year chosen as it is
 export async function openMap(page: Page, name: string, opts: { year?: number | null } = {}): Promise<void> {
     const year = opts.year === undefined ? 2026 : opts.year;
-    const choice = page.locator('.sbx-empty-rules-choices button', { hasText: String(year) });
+    const choice = page.locator('.ed-empty-rules-choices button', { hasText: String(year) });
     if (year && await choice.count()) await choice.click();
-    await page.locator('#simBetaFile').setInputFiles(path.join(FIXTURES, name));
-    await expect(page.locator('.sbx-name-input')).toBeVisible();
+    await page.locator('#edFile').setInputFiles(path.join(FIXTURES, name));
+    await expect(page.locator('.ed-name-input')).toBeVisible();
     await settle(page, 400);
 }
 
 // A point of the map (cm) in window pixels
 export async function at(page: Page, x: number, y: number): Promise<[number, number]> {
     return page.evaluate(([x, y]) => {
-        const w = window as any;
-        const v = w.angular ? w.angular.element(document.body).scope().viewApi : w.__sbxView;
-        const c = document.getElementById('simBetaCanvas')!.getBoundingClientRect();
+        const v = (window as any).__edView;
+        const c = document.getElementById('edCanvas')!.getBoundingClientRect();
         const q = v.toPx(x, y);
         return [c.left + q[0], c.top + q[1]] as [number, number];
     }, [x, y]);
@@ -118,7 +117,7 @@ export async function hover(page: Page, x: number, y: number): Promise<void> {
 }
 
 export async function tool(page: Page, id: string): Promise<void> {
-    await page.locator('.sbx-rail [data-tool="' + id + '"]').click();
+    await page.locator('.ed-rail [data-tool="' + id + '"]').click();
     await settle(page, 120);
 }
 
@@ -161,7 +160,7 @@ export async function r4click(page: Page, fx: number, fy: number): Promise<void>
 }
 
 export async function r4tool(page: Page, id: string): Promise<void> {
-    await page.locator('.sim-r4-rail [data-tool="' + id + '"]').click();
+    await page.locator('.r4-rail [data-tool="' + id + '"]').click();
     await settle(page, 150);
 }
 

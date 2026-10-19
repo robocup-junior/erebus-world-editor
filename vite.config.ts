@@ -42,14 +42,7 @@ function buildInfo() {
 }
 
 export default defineConfig({
-    plugins: [opencvAsIs(), vue({
-        template: {
-            compilerOptions: {
-                // the rotation dial keeps its own element (the styles name it)
-                isCustomElement: function (tag) { return tag === 'sim-rotation-dial'; }
-            }
-        }
-    })],
+    plugins: [opencvAsIs(), vue()],
     // vue-i18n's features: the Composition API only, no devtools in production
     define: {
         __VUE_I18N_FULL_INSTALL__: true,

@@ -1,4 +1,4 @@
-// Map editing of the new Simulation 2026 editor (src/lib/model.js)
+// Map editing (src/lib/model.ts)
 import { test } from 'vitest';
 import assert from 'node:assert';
 import type { MapData } from '../src/lib/types';
@@ -132,7 +132,7 @@ test('victims go on walls, one per tile; a victim whose wall goes is reported', 
   assert.strictEqual(M.victimRule(map, 3, 3, 'bottom').reason, 'quarterTile');
 });
 
-test('a room 4 preset (from a classic map) borders get no walls, and the new editor asks to switch it', () => {
+test('a room 4 preset (from a classic map) borders get no walls, and the editor asks to switch it', () => {
   const map = M.newMap(9, 7, 2026);
   M.setFloor(map, 1, 13, 'start');
   map.area4Room = W.area4Presets()[2];
@@ -244,8 +244,8 @@ test('a custom room 4 needs its picture, and a checkpoint behind each passage', 
 });
 
 for (const name of ['mapA', 'mapB', 'mapC']) {
-  test(`${name}: a classic map opened and saved in the new editor exports the same world`, () => {
-    const orig = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'sim2026', `${name}.json`), 'utf8'));
+  test(`${name}: a classic map opened and saved in the editor exports the same world`, () => {
+    const orig = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'maps2026', `${name}.json`), 'utf8'));
     const random = Math.random;
     const seeded = () => {
       let a = 7;
