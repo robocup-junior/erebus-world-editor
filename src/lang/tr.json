@@ -27,6 +27,12 @@
             "builtAt": "Derlenme",
             "copy": "Kopyala",
             "copied": "Kopyalandı"
+        },
+        "small": {
+            "title": "Bu ekran düzenleyici için çok küçük",
+            "lead": "Erebus World Editor fare ve klavyesi olan bir bilgisayar için yapıldı. Bir bilgisayarda açın veya bu pencereyi büyütün.",
+            "need": "En az {{width}} × {{height}} piksel gerekir",
+            "now": "Bu pencere: {{width}} × {{height}}"
         }
     },
     "rules": {

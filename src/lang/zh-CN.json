@@ -27,6 +27,12 @@
             "builtAt": "构建时间",
             "copy": "复制",
             "copied": "已复制"
+        },
+        "small": {
+            "title": "此屏幕太小，无法使用编辑器",
+            "lead": "Erebus World Editor 适用于配有鼠标和键盘的电脑。请在电脑上打开，或将此窗口调大。",
+            "need": "至少需要 {{width}} × {{height}} 像素",
+            "now": "此窗口：{{width}} × {{height}}"
         }
     },
     "rules": {

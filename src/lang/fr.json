@@ -27,6 +27,12 @@
             "builtAt": "Compilé",
             "copy": "Copier",
             "copied": "Copié"
+        },
+        "small": {
+            "title": "Cet écran est trop petit pour l’éditeur",
+            "lead": "Erebus World Editor est conçu pour un ordinateur avec souris et clavier. Ouvrez-le sur un ordinateur ou agrandissez cette fenêtre.",
+            "need": "Il faut au moins {{width}} × {{height}} pixels",
+            "now": "Cette fenêtre : {{width}} × {{height}}"
         }
     },
     "rules": {

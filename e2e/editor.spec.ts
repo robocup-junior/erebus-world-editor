@@ -43,6 +43,35 @@ test('the languages: each with its flag, each switching the page', async ({ page
     }
 });
 
+// a phone (or a window made that small): the notice over everything, and the editor behind takes
+// nothing, no click and no key; made big enough again, the editor is as it was
+test('a screen too small: the notice, nothing taken behind it, and the editor back when big enough', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    const name = await page.locator('.ed-name-input').inputValue();
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(page.locator('.ed-small')).toBeVisible();
+    await expect(page.locator('.ed-small-title')).toHaveText('この画面ではエディタを使えません');
+    await expect(page.locator('.ed-small-size span')).toHaveText('このウィンドウ：390 × 844');
+    await shot(page, 'small-phone');
+    // a click goes to the notice, not to the name behind it; typing changes nothing
+    await page.mouse.click(195, 20);
+    await page.keyboard.type('xyz');
+    await page.keyboard.press('Control+Z');
+    // a phone on its side: too low; a tablet held upright: too narrow; on its side, big enough
+    await page.setViewportSize({ width: 844, height: 390 });
+    await expect(page.locator('.ed-small')).toBeVisible();
+    await page.setViewportSize({ width: 820, height: 1180 });
+    await expect(page.locator('.ed-small')).toBeVisible();
+    await page.setViewportSize({ width: 1180, height: 820 });
+    await expect(page.locator('.ed-small')).toBeHidden();
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await expect(page.locator('.ed-small')).toBeHidden();
+    await expect(page.locator('.ed-name-input')).toHaveValue(name);
+    await expect(page.locator('.ed')).not.toHaveAttribute('inert');
+    await shot(page, 'mapA-open');
+});
+
 test('the start screen asks the year of the rules: 2027 (a draft) chosen, 2026 to choose; a new map is of the year chosen', async ({ page }) => {
     await boot(page);
     const choices = page.locator('.ed-empty-rules-choices button');

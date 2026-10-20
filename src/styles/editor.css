@@ -1449,3 +1449,19 @@
 .ed-glyph-disc { display: block; width: 100%; height: 100%; }
 .r4-stamp-badge:has(> .ed-glyph-disc), .ed-sel-symbol:has(> .ed-glyph-disc) { padding: 0; background: none; box-shadow: none; }
 .r4-stamp-badge:has(> .ed-glyph-disc) { width: 20px; }
+
+/* a screen too small to edit on: over everything, what size it needs */
+.ed-small {
+    position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem 1rem; overflow-y: auto; background: #f8fafc; color: var(--ed-text);
+}
+.ed-small-card { width: 100%; max-width: 26rem; margin: auto; text-align: center; }
+.ed-small-logo { display: block; width: 56px; height: 56px; margin: 0 auto 1rem; }
+.ed-small-title { margin: 0 0 0.75rem; font-size: 1.25rem; font-weight: 700; line-height: 1.4; color: #0f172a; }
+.ed-small-lead { margin: 0 0 1.25rem; font-size: 0.92rem; line-height: 1.7; }
+.ed-small-size {
+    margin: 0; padding: 0.75rem 1rem; border: 1px solid var(--ed-line); border-radius: 12px; background: #fff;
+    font-size: 0.85rem; font-weight: 600; line-height: 1.8; font-variant-numeric: tabular-nums;
+}
+.ed-small-size .fas { margin-right: 0.45rem; color: var(--ed-accent); }
+.ed-small-size span { font-weight: 400; color: var(--ed-muted); }

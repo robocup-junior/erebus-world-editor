@@ -27,6 +27,12 @@
             "builtAt": "Compilado",
             "copy": "Copiar",
             "copied": "Copiado"
+        },
+        "small": {
+            "title": "Esta tela é pequena demais para o editor",
+            "lead": "O Erebus World Editor foi feito para um computador com mouse e teclado. Abra-o em um computador ou aumente esta janela.",
+            "need": "Precisa de pelo menos {{width}} × {{height}} pixels",
+            "now": "Esta janela: {{width}} × {{height}}"
         }
     },
     "rules": {

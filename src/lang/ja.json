@@ -27,6 +27,12 @@
             "builtAt": "ビルド日時",
             "copy": "コピー",
             "copied": "コピーしました"
+        },
+        "small": {
+            "title": "この画面ではエディタを使えません",
+            "lead": "Erebus World Editor はマウスとキーボードのあるパソコン向けです。パソコンで開くか、ウィンドウを広げてください。",
+            "need": "{{width}} × {{height}} ピクセル以上が必要です",
+            "now": "このウィンドウ：{{width}} × {{height}}"
         }
     },
     "rules": {

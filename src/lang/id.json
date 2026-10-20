@@ -27,6 +27,12 @@
             "builtAt": "Dibuat",
             "copy": "Salin",
             "copied": "Disalin"
+        },
+        "small": {
+            "title": "Layar ini terlalu kecil untuk editor",
+            "lead": "Erebus World Editor dibuat untuk komputer dengan mouse dan keyboard. Buka di komputer, atau perbesar jendela ini.",
+            "need": "Perlu setidaknya {{width}} × {{height}} piksel",
+            "now": "Jendela ini: {{width}} × {{height}}"
         }
     },
     "rules": {

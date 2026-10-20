@@ -27,6 +27,12 @@
             "builtAt": "建置時間",
             "copy": "複製",
             "copied": "已複製"
+        },
+        "small": {
+            "title": "此螢幕太小，無法使用編輯器",
+            "lead": "Erebus World Editor 適用於配有滑鼠和鍵盤的電腦。請在電腦上開啟，或將此視窗調大。",
+            "need": "至少需要 {{width}} × {{height}} 像素",
+            "now": "此視窗：{{width}} × {{height}}"
         }
     },
     "rules": {

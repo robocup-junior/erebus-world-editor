@@ -27,6 +27,12 @@
             "builtAt": "빌드 시각",
             "copy": "복사",
             "copied": "복사함"
+        },
+        "small": {
+            "title": "이 화면은 편집기를 쓰기에 너무 작습니다",
+            "lead": "Erebus World Editor는 마우스와 키보드가 있는 컴퓨터용입니다. 컴퓨터에서 열거나 이 창을 크게 해 주세요.",
+            "need": "최소 {{width}} × {{height}} 픽셀이 필요합니다",
+            "now": "이 창: {{width}} × {{height}}"
         }
     },
     "rules": {

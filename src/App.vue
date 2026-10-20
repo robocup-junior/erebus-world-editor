@@ -15,6 +15,7 @@ import Modal from './components/Modal.vue';
 import BuildInfo from './components/BuildInfo.vue';
 import LangMenu from './components/LangMenu.vue';
 import RulesMenu from './components/RulesMenu.vue';
+import SmallScreen from './components/SmallScreen.vue';
 import Room4Creator from './room4/Room4Creator.vue';
 
 const E = createEditor();
@@ -578,5 +579,6 @@ onMounted(function () {
     <Modal v-if="S.room4" :open="S.room4.open" window-class="r4-window ed-r4-full" size="xl" @dismiss="E.closeRoom4()" @gone="E.room4Gone()">
       <Room4Creator :editor="E"></Room4Creator>
     </Modal>
+    <SmallScreen></SmallScreen>
   </template>
 </template>
