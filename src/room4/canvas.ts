@@ -167,7 +167,8 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         reachInfo = null;
         reachStats = null;
         let state = 'ok';
-        if (!reachBase || !OpenCV.isReady()) state = 'unavailable';
+        if (!reachBase || OpenCV.failed()) state = 'unavailable';
+        else if (!OpenCV.isReady()) state = 'loading';
         else if (!geo!.start) state = 'noStart';
         scope.$applyAsync(function () { r4.reachState = state; if (state !== 'ok') r4.reachBlocked = 0; });
         if (state !== 'ok') return;
@@ -535,11 +536,11 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         analyse();
     }
 
-    // OpenCV still loading when the creator opened: where the robot gets to is worked out once it is
-    // there
+    // OpenCV loaded as the creator opens (or still loading): where the robot gets to is worked out
+    // once it is there
     let open = true;
     scope.$on('$destroy', function () { open = false; });
-    if (!OpenCV.isReady()) OpenCV.ready.then(function () { if (open && pixels) { analyse(); drawOverlay(); } });
+    if (!OpenCV.isReady()) OpenCV.load().then(function () { if (open && pixels) { analyse(); drawOverlay(); } });
 
     function restore(s: Step) {
         ctx.putImageData(s.img, 0, 0);

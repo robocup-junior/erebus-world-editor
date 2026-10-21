@@ -11,20 +11,13 @@
 // To add a language: its file in src/lang (a copy of en.json, translated; test/lang.test.ts checks
 // it has every key with the same parameters), and a line in LANGUAGES with the flag of the country
 // most taken for it (flag-icons). The language menu shows each language by its own name and flag.
+//
+// Only English (what a missing text falls back to) is part of the page's script; each other
+// language is a file of its own, loaded when it is chosen (loadLang) - the page waits for the one it
+// starts in.
 import { createI18n, type MessageCompiler, type MessageContext } from 'vue-i18n';
 import { KEPT, carryOver } from './lib/kept';
 import en from './lang/en.json';
-import ja from './lang/ja.json';
-import es from './lang/es.json';
-import ptBR from './lang/pt-BR.json';
-import de from './lang/de.json';
-import zhCN from './lang/zh-CN.json';
-import ko from './lang/ko.json';
-import fr from './lang/fr.json';
-import tr from './lang/tr.json';
-import id from './lang/id.json';
-import th from './lang/th.json';
-import zhHant from './lang/zh-Hant.json';
 import flagJp from 'flag-icons/flags/4x3/jp.svg?url';
 import flagGb from 'flag-icons/flags/4x3/gb.svg?url';
 import flagEs from 'flag-icons/flags/4x3/es.svg?url';
@@ -40,20 +33,21 @@ import flagHk from 'flag-icons/flags/4x3/hk.svg?url';
 
 // The languages, in the order the language menu lists them - by their own names, as language menus
 // usually are: Latin script alphabetically, then the others by their characters: code (BCP 47, also
-// the page's lang attribute), name (in that language), flag (a picture's URL), texts
+// the page's lang attribute and the name of its file in src/lang), name (in that language), flag (a
+// picture's URL)
 export const LANGUAGES = [
-    { code: 'id', name: 'Bahasa Indonesia', flag: flagId, messages: id },
-    { code: 'de', name: 'Deutsch', flag: flagDe, messages: de },
-    { code: 'en', name: 'English', flag: flagGb, messages: en },
-    { code: 'es', name: 'Español', flag: flagEs, messages: es },
-    { code: 'fr', name: 'Français', flag: flagFr, messages: fr },
-    { code: 'pt-BR', name: 'Português (Brasil)', flag: flagBr, messages: ptBR },
-    { code: 'tr', name: 'Türkçe', flag: flagTr, messages: tr },
-    { code: 'th', name: 'ไทย', flag: flagTh, messages: th },
-    { code: 'zh-CN', name: '中文（简体）', flag: flagCn, messages: zhCN },
-    { code: 'zh-Hant', name: '中文（繁體）', flag: flagHk, messages: zhHant },
-    { code: 'ja', name: '日本語', flag: flagJp, messages: ja },
-    { code: 'ko', name: '한국어', flag: flagKr, messages: ko }
+    { code: 'id', name: 'Bahasa Indonesia', flag: flagId },
+    { code: 'de', name: 'Deutsch', flag: flagDe },
+    { code: 'en', name: 'English', flag: flagGb },
+    { code: 'es', name: 'Español', flag: flagEs },
+    { code: 'fr', name: 'Français', flag: flagFr },
+    { code: 'pt-BR', name: 'Português (Brasil)', flag: flagBr },
+    { code: 'tr', name: 'Türkçe', flag: flagTr },
+    { code: 'th', name: 'ไทย', flag: flagTh },
+    { code: 'zh-CN', name: '中文（简体）', flag: flagCn },
+    { code: 'zh-Hant', name: '中文（繁體）', flag: flagHk },
+    { code: 'ja', name: '日本語', flag: flagJp },
+    { code: 'ko', name: '한국어', flag: flagKr }
 ] as const;
 export type Lang = typeof LANGUAGES[number]['code'];
 // for a text not in the chosen language yet
@@ -98,14 +92,16 @@ const start = preferred();
 // told to the browser at once, so kanji are drawn with Japanese glyph shapes
 document.documentElement.lang = start;
 
-const messages: Record<string, any> = {};
-LANGUAGES.forEach(function (l) { messages[l.code] = l.messages; });
+// the languages' files, each loaded when first asked for (English is here already)
+const FILES = import.meta.glob<{ default: Record<string, any> }>(['./lang/*.json', '!./lang/en.json']);
+const loaded: Partial<Record<Lang, Promise<void>>> = { en: Promise.resolve() };
 
 export const i18n = createI18n({
     legacy: false,
-    locale: start,
+    // the language started in is set once its texts are there (main.ts: loadLang)
+    locale: FALLBACK,
     fallbackLocale: FALLBACK,
-    messages: messages,
+    messages: { en: en } as Record<string, any>,
     messageCompiler: compile,
     missingWarn: false,
     fallbackWarn: false,
@@ -135,8 +131,36 @@ export function lang(): Lang {
     return i18n.global.locale.value as Lang;
 }
 
-export function setLang(l: Lang): void {
-    i18n.global.locale.value = l;
-    document.documentElement.lang = l;
-    try { window.localStorage.setItem(LANG_KEY, l); } catch (e) { /* storage off */ }
+// The language's texts, loaded once (a language that would not load stays in English)
+function texts(l: Lang): Promise<void> {
+    if (!loaded[l]) {
+        const file = FILES['./lang/' + l + '.json'];
+        loaded[l] = file().then(function (m) {
+            i18n.global.setLocaleMessage(l, m.default);
+        }, function (err) {
+            delete loaded[l];
+            throw err;
+        });
+    }
+    return loaded[l]!;
+}
+
+// The language the page starts in, once its texts are there (English, if they would not load)
+export function loadLang(): Promise<void> {
+    return texts(start).then(function () {
+        i18n.global.locale.value = start;
+    }, function (err) {
+        console.warn(err);
+        document.documentElement.lang = FALLBACK;
+    });
+}
+
+// The language chosen: the page turns to it once its texts are there (a language that would not
+// load leaves the page as it is)
+export function setLang(l: Lang): Promise<void> {
+    return texts(l).then(function () {
+        i18n.global.locale.value = l;
+        document.documentElement.lang = l;
+        try { window.localStorage.setItem(LANG_KEY, l); } catch (e) { /* storage off */ }
+    }, function (err) { console.warn(err); });
 }

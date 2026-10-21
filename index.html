@@ -24,7 +24,95 @@
 <meta property="og:image:alt" content="Erebus World Editor, beside a map of four by four tiles with rooms, walls and victims">
 <meta name="twitter:card" content="summary_large_image">
 <script type="module" src="/src/main.ts"></script>
+<!-- the loading screen: shown while the page's script and texts load, faded out once the editor is
+     mounted on the body (src/main.ts). Its own styles and texts, here: the page's are not loaded
+     yet. Outfit's two weights it uses are the page's own, fetched now rather than after the script -->
+<link rel="preload" href="/fonts/outfit/Outfit-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/outfit/Outfit-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-SemiBold.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+.boot { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 16px;
+  background: radial-gradient(ellipse at 50% 42%, #ffffff 0%, #f8fafc 55%, #eef2f7 100%);
+  font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", sans-serif; color: #0f172a; transition: opacity .35s ease, visibility .35s; }
+/* the tiles of a map, faded out towards the edges */
+.boot::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+  background-size: 48px 48px; background-position: center;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 0%, transparent 62%); mask-image: radial-gradient(ellipse at 50% 45%, #000 0%, transparent 62%); }
+.boot.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+.boot-card { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center;
+  animation: boot-in .5s cubic-bezier(.2, .8, .2, 1) both; }
+.boot-mark { position: relative; width: 88px; height: 88px; margin-bottom: 22px; }
+.boot-mark img { position: relative; width: 100%; height: 100%; border-radius: 20px; box-shadow: 0 12px 32px -10px rgba(37, 99, 235, .55), 0 2px 6px rgba(15, 23, 42, .08); }
+/* a ring going out from the icon, as a sonar's */
+.boot-mark::before { content: ""; position: absolute; inset: 0; border-radius: 22px; border: 2px solid #3b82f6; opacity: 0; animation: boot-ping 2.2s cubic-bezier(0, 0, .2, 1) .4s infinite; }
+.boot-title { margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -.01em; }
+.boot-sub { margin: 4px 0 26px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #64748b; }
+.boot-bar { position: relative; width: 220px; height: 6px; border-radius: 3px; background: #e2e8f0; overflow: hidden; }
+.boot-bar::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 38%; border-radius: 3px;
+  background: linear-gradient(90deg, #60a5fa, #2563eb); animation: boot-slide 1.25s cubic-bezier(.65, 0, .35, 1) infinite; }
+.boot-note { position: relative; height: 20px; margin: 14px 0 0; width: 100%; font-size: 13px; font-weight: 600; color: #64748b; }
+.boot-note span { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+/* a slow connection: after a while, a word that it is still coming */
+.boot-slow { opacity: 0; animation: boot-show .4s ease 7s forwards; }
+.boot-now { animation: boot-hide .4s ease 7s forwards; }
+.boot.slow .boot-slow, .boot.slow .boot-now { animation-delay: 0s; }
+@keyframes boot-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes boot-ping { 0% { transform: scale(1); opacity: .5; } 80%, 100% { transform: scale(1.45); opacity: 0; } }
+@keyframes boot-slide { from { transform: translateX(-100%); } to { transform: translateX(270%); } }
+@keyframes boot-show { to { opacity: 1; } }
+@keyframes boot-hide { to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .boot-card, .boot-mark::before { animation: none; }
+  .boot-bar::after { animation-duration: 3s; }
+}
+</style>
 </head>
 <body>
+<div class="boot" id="boot" role="status" aria-live="polite">
+  <div class="boot-card">
+    <div class="boot-mark"><img src="/images/icon.svg" alt=""></div>
+    <h1 class="boot-title">Erebus World Editor</h1>
+    <p class="boot-sub">RoboCupJunior Rescue Simulation</p>
+    <div class="boot-bar"></div>
+    <p class="boot-note"><span class="boot-now">Loading…</span><span class="boot-slow">Still loading - a slow connection takes a while</span></p>
+    <noscript><p class="boot-note">This editor needs JavaScript.</p></noscript>
+  </div>
+</div>
+<script>
+// the loading screen's words in the language the page will start in (the one kept, else the
+// browser's: as src/i18n.ts chooses, roughly)
+(function () {
+  var T = {
+    ja: ['読み込み中…', '読み込みに時間がかかっています…'],
+    'zh-hant': ['載入中…', '仍在載入，網路較慢時需要一些時間'],
+    zh: ['加载中…', '仍在加载，网络较慢时需要一些时间'],
+    ko: ['불러오는 중…', '아직 불러오는 중입니다. 연결이 느리면 시간이 걸립니다'],
+    de: ['Wird geladen…', 'Lädt noch - bei langsamer Verbindung dauert es etwas'],
+    es: ['Cargando…', 'Sigue cargando: con una conexión lenta tarda un poco'],
+    fr: ['Chargement…', 'Chargement en cours - une connexion lente prend du temps'],
+    pt: ['Carregando…', 'Ainda carregando - uma conexão lenta demora um pouco'],
+    tr: ['Yükleniyor…', 'Hâlâ yükleniyor - yavaş bağlantıda biraz sürer'],
+    id: ['Memuat…', 'Masih memuat - koneksi lambat butuh waktu'],
+    th: ['กำลังโหลด…', 'ยังโหลดอยู่ การเชื่อมต่อที่ช้าอาจใช้เวลาสักครู่']
+  };
+  var langs = [];
+  try { langs.push(localStorage.getItem('erebusEditor.lang') || localStorage.getItem('NG_TRANSLATE_LANG_KEY')); } catch (e) { /* storage off */ }
+  langs = langs.concat(navigator.languages || [navigator.language]);
+  for (var i = 0; i < langs.length; i++) {
+    var c = String(langs[i] || '').toLowerCase();
+    if (!c) continue;
+    if (/^zh-(hant|tw|hk|mo)\b/.test(c)) c = 'zh-hant';
+    else c = c.split('-')[0];
+    if (c === 'en') return;
+    if (T[c]) {
+      document.querySelector('.boot-now').textContent = T[c][0];
+      document.querySelector('.boot-slow').textContent = T[c][1];
+      return;
+    }
+  }
+})();
+</script>
 </body>
 </html>

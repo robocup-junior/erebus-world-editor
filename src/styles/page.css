@@ -1,9 +1,9 @@
 /* The page's base: 14 px text in Outfit, Japanese in the system's Japanese fonts. */
-@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; }
-@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-SemiBold.ttf') format('truetype'); font-weight: 600; font-style: normal; }
-@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; }
-@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-ExtraBold.ttf') format('truetype'); font-weight: 800; font-style: normal; }
-@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-Black.ttf') format('truetype'); font-weight: 900; font-style: normal; }
+@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-SemiBold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-ExtraBold.woff2') format('woff2'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Outfit'; src: url('/fonts/outfit/Outfit-Black.woff2') format('woff2'); font-weight: 900; font-style: normal; font-display: swap; }
 
 /* Icons as wide as they are drawn (Font Awesome 7 makes them all 1.25em wide unless told so):
    .fa-fw keeps its fixed width */

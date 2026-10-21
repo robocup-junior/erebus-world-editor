@@ -53,7 +53,7 @@ So that no old file is used after an update, two things work together:
 
 The page's base styles (`src/styles/base.css`) are the parts of Bootstrap 4.4.1's CSS the editor uses (its reboot, buttons, the modal); Bootstrap itself is not a dependency. TypeScript stays at 6 until vue-tsc supports TypeScript 7.
 
-OpenCV.js (13 MB) and Font Awesome's icon lists are files of their own, loaded when needed: Vite takes them from `node_modules/` into the build with their content's hash in their names. The room 4 creator's shape tool draws its icons with Font Awesome's font, which the page loads anyway.
+OpenCV.js (13 MB) and Font Awesome's icon lists are files of their own, loaded when needed (OpenCV.js when a map with a custom room 4 picture is opened, the room 4 creator opens or such a world is exported; the icon lists when the shape tool is used): Vite takes them from `node_modules/` into the build with their content's hash in their names. So is the room 4 creator (fetched once the page is idle), and each language but English: the page's script has English (what a missing text falls back to), and loads the language it starts in, or the one chosen, as it is needed. The build's files are kept by the browser (`public/_headers`: their names change when they do); the page itself is checked each time. The room 4 creator's shape tool draws its icons with Font Awesome's font, which the page loads anyway.
 
 ## Layout
 

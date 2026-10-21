@@ -9,10 +9,11 @@ test.afterEach(async ({ page }) => {
 async function openCreator(page: Page): Promise<void> {
     await boot(page);
     await openMap(page, 'mapD.json');
-    await page.waitForFunction(() => typeof (window as any).cv !== 'undefined' && (window as any).cv.Mat, null, { timeout: 30000 });
     await tool(page, 'room');
     await page.locator('.ed-room4-block .btn-outline-primary').click();
     await expect(page.locator('canvas.r4-over')).toBeVisible();
+    // OpenCV loads as the creator opens
+    await page.waitForFunction(() => typeof (window as any).cv !== 'undefined' && (window as any).cv.Mat, null, { timeout: 30000 });
     await settle(page, 800);
 }
 

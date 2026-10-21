@@ -330,10 +330,10 @@ export function createEditor() {
     // floats over it; the next fit - the fit button, a new size of the window - keeps clear of it)
     watch(function () { return ui.checksFolded; }, function (now, was) { if (now !== was && now) later(function () { view.fitIfAuto(); }); });
 
-    // to the language picked in the language button
+    // to the language picked in the language button (S.lang follows once its texts are loaded: the
+    // watch below)
     function switchLang(code: Lang) {
-        S.lang = code;
-        setLang(S.lang);
+        setLang(code);
     }
     watch(function () { return i18n.global.locale.value; }, function () { S.lang = lang(); changed(); digest(); });
 
@@ -351,6 +351,8 @@ export function createEditor() {
         changed(true);
         // fit again once the side panel is there
         later(function () { view.fit(); });
+        // a map with a custom room 4 picture: OpenCV (to export it, to open the creator) starts loading
+        if (map.area4Room && map.area4Room.type === 1 && map.room4CanvasSave) OpenCV.load();
     }
 
     function begin() {
@@ -748,7 +750,7 @@ export function createEditor() {
     // The world with a custom room 4: its picture is read with OpenCV, once both are loaded
     function customWorld(): Promise<string> {
         return new Promise(function (resolve, reject) {
-            OpenCV.ready.then(go, reject);
+            OpenCV.load().then(go, reject);
             function go() {
                 const img = new Image();
                 img.onload = function () {
@@ -832,6 +834,8 @@ export function createEditor() {
             room4Open = false;
         };
         room4Open = true;
+        // OpenCV starts loading with the creator's script (App.vue), not after it
+        OpenCV.load();
         S.room4 = { host: markRaw(host), open: true };
     }
     // the creator closed (OK, Esc, or by the guide): its picture taken into the map

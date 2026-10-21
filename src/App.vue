@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // The editor's page: the top bar, the tool rail and panel, the map with its checks card, the status
 // line, the dialogs, the guide, and the room 4 creator over all of it.
-import { onMounted, ref } from 'vue';
+import { defineAsyncComponent, h, onMounted, ref } from 'vue';
 import { createEditor } from './editor/editor';
 import { tick } from './editor/runtime';
 import { fixed, monthDayTime } from './editor/format';
@@ -16,7 +16,15 @@ import BuildInfo from './components/BuildInfo.vue';
 import LangMenu from './components/LangMenu.vue';
 import RulesMenu from './components/RulesMenu.vue';
 import SmallScreen from './components/SmallScreen.vue';
-import Room4Creator from './room4/Room4Creator.vue';
+
+// The room 4 creator: a script of its own, not needed till it is opened. It is fetched once the page
+// is up and idle, so it is there by then; opened before, a spinner shows in its window till it is.
+function loadCreator() { return import('./room4/Room4Creator.vue'); }
+const Room4Creator = defineAsyncComponent({
+    loader: loadCreator,
+    loadingComponent: { render: function () { return h('div', { class: 'r4-loading' }, [h('i', { class: 'fas fa-spinner fa-spin' })]); } },
+    delay: 150
+});
 
 const E = createEditor();
 const S = E.S;
@@ -52,6 +60,8 @@ function rename(e: Event) {
 
 onMounted(function () {
     E.mount({ canvas: canvasEl.value!, stage: stageEl.value! });
+    const idle = window.requestIdleCallback || function (f: () => void) { return window.setTimeout(f, 2000); };
+    idle(function () { loadCreator().catch(function () { /* fetched again when opened */ }); });
 });
 </script>
 

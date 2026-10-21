@@ -7,7 +7,7 @@ const root = new URL('..', import.meta.url);
 const read = (path) => readFileSync(new URL(path, root), 'utf8');
 const fonts = [400, 700, 800].map((weight) => {
   const file = { 400: 'Regular', 700: 'Bold', 800: 'ExtraBold' }[weight];
-  return `@font-face { font-family: 'Outfit'; font-weight: ${weight}; src: url(/fonts/outfit/Outfit-${file}.ttf); }`;
+  return `@font-face { font-family: 'Outfit'; font-weight: ${weight}; src: url(/fonts/outfit/Outfit-${file}.woff2); }`;
 }).join('\n');
 
 // The icon as it is (rounded, on nothing), or full bleed for the platforms that cut their own shape:

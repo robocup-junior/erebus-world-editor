@@ -54,7 +54,7 @@ const r4 = reactive<R4State>({
     entranceCount: 0,
     passageCount: 0,
     missingCheckpoints: 0,
-    reachState: '',         // '', 'ok', 'noStart' or 'unavailable'
+    reachState: '',         // '', 'ok', 'noStart', 'loading' (OpenCV) or 'unavailable'
     canUndo: false,
     canRedo: false,
     summary: [],

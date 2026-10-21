@@ -522,6 +522,17 @@
     margin: 12px auto;
 }
 
+/* the creator's script still loading (App.vue) */
+.r4-loading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    color: #94a3b8;
+    font-size: 28px;
+}
+
 .r4 {
     display: grid;
     grid-template-columns: 300px minmax(0, 1fr);
