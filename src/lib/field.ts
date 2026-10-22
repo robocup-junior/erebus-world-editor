@@ -16,7 +16,7 @@ export type WallShape =
     | { type: 'arc'; cx: number; cy: number; r: number; dx: number; dy: number };
 export interface RoomPassage { from: number; to: number; color: string; [key: string]: any }
 export interface MapGeometry {
-    width: number; length: number; tileCm: number; wallHalfCm: number; robotRadiusCm: number;
+    width: number; length: number; tileCm: number; wallHalfCm: number; robotRadiusCm: number; holeRimCm: number;
     shapes: WallShape[]; holes: Pt[]; start: { x: number; y: number } | null; [key: string]: any;
 }
 
@@ -453,7 +453,8 @@ function mapGeometry(map: MapData): MapGeometry {
         start: hasStart ? { x: 6 * st.x, y: 6 * st.y } : null,
         tileCm: g.tileCm,
         wallHalfCm: g.wallHalfCm,
-        robotRadiusCm: g.robotRadiusCm
+        robotRadiusCm: g.robotRadiusCm,
+        holeRimCm: g.holeRimCm
     };
 };
 

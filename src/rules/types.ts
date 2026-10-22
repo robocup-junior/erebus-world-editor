@@ -12,6 +12,7 @@ export interface Geometry {
     wallHalfCm: number;     // half a wall's thickness
     robotRadiusCm: number;  // the robot, as the editor reckons where it gets to
     identifyCm: number;     // how near the robot's centre comes to a token to identify it
+    holeRimCm: number;      // the rim of a black tile round its hole
 }
 
 // The walls a room takes, and where its victims go. A kind of wall is drawn only in the rooms that

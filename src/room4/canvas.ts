@@ -6,6 +6,7 @@
 // here), its host (the editor's map side) and the few scope functions the drawing needs.
 import * as R4 from '../lib/room4';
 import * as Icons from '../lib/icons';
+import { drawHole } from '../lib/hole';
 import type * as World from '../lib/field';
 import type { CreatorScope } from './scope';
 import * as OpenCV from '../lib/opencv';
@@ -108,7 +109,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         x.lineWidth = geo.wallHalfCm * 2;
         x.lineCap = 'square';
         geo.shapes.forEach(function (sh) { mapShapePath(x, sh); x.stroke(); });
-        return { canvas: c, gw: gw, gh: gh, holes: new Uint8Array(gw * gh) };
+        return { canvas: c, gw: gw, gh: gh, holes: new Uint8Array(gw * gh), holeTiles: new Uint8Array(gw * gh) };
     })();
 
     // ---- the floors of room 4's tiles: holes, swamps, checkpoints (the floor tool) ---------------
@@ -123,14 +124,23 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         const id = floorAt(tx, ty);
         return id ? editor.room4FloorKinds.find(function (k) { return k.id === id; }) || null : null;
     }
-    // the holes on the reach grid: the map's, outside room 4, and room 4's as they are here
+    // the holes on the reach grid: the map's, outside room 4, and room 4's as they are here. A black
+    // tile is a hole inside its black rim: the robot's centre keeps off the hole (holes) and
+    // may go onto the rim; the whole tile is no floor to reach (holeTiles).
     function markHoles() {
         if (!reachBase || !geo) return;
-        const holes = reachBase.holes, gw = reachBase.gw, gh = reachBase.gh, n = Math.round(geo.tileCm / REACH_RES);
+        const holes = reachBase.holes, holeTiles = reachBase.holeTiles, gw = reachBase.gw, gh = reachBase.gh, n = Math.round(geo.tileCm / REACH_RES);
+        const rim = Math.round(geo.holeRimCm / REACH_RES);
         holes.fill(0);
+        holeTiles.fill(0);
         const mark = function (tx: number, ty: number) {
             const x0 = Math.floor(tx * geo.tileCm / REACH_RES), y0 = Math.floor(ty * geo.tileCm / REACH_RES);
-            for (let yy = y0; yy < Math.min(gh, y0 + n); yy++) for (let xx = x0; xx < Math.min(gw, x0 + n); xx++) holes[yy * gw + xx] = 1;
+            for (let yy = y0; yy < Math.min(gh, y0 + n); yy++) {
+                for (let xx = x0; xx < Math.min(gw, x0 + n); xx++) {
+                    holeTiles[yy * gw + xx] = 1;
+                    if (yy >= y0 + rim && yy < y0 + n - rim && xx >= x0 + rim && xx < x0 + n - rim) holes[yy * gw + xx] = 1;
+                }
+            }
         };
         geo.holes.forEach(function (h) { if (!inRoom[(h[0] - box.x) + ',' + (h[1] - box.y)]) mark(h[0], h[1]); });
         Object.keys(inRoom).forEach(function (k) {
@@ -261,8 +271,8 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
                 const gx = gx0 + bx, gy = gy0 + by;
                 if (gx < 0 || gy < 0 || gx >= gw || gy >= gh) continue;
                 const i = gy * gw + gx;
-                // a hole is no floor to cover
-                if (reachBase!.holes[i]) continue;
+                // a black tile is no floor to cover
+                if (reachBase!.holeTiles[i]) continue;
                 if (src.data[i] !== 0) roomCells++;
                 if (src.data[i] !== 0 && rdist.data32F[i] > need + 0.5) miss[by * bw + bx] = 1;
             }
@@ -751,7 +761,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     }
     checkGuide();
 
-    // The floors as the map editor shows them (a hole the whole tile, as Erebus has it), under the
+    // The floors as the map editor shows them (a black tile with its hole inside the rim), under the
     // picture's walls, see-through so the walls drawn over them still show
     function drawFloors() {
         octx.save();
@@ -770,9 +780,13 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
                 octx.font = '700 ' + (11 * k) + 'px system-ui, sans-serif';
                 octx.textBaseline = 'top';
                 octx.fillText('CP', x + 5 * k, y + 5 * k);
+            } else if (kind.hole && geo) {
+                // a hole with its rim, see-through so the walls over it still show
+                octx.globalAlpha = 0.6;
+                drawHole(octx, x, y, block, block * geo.holeRimCm / geo.tileCm, kind.color);
+                octx.globalAlpha = 1;
             } else {
-                // a hole darker, so the walls over it still show
-                octx.globalAlpha = kind.hole ? 0.6 : 0.45;
+                octx.globalAlpha = 0.45;
                 octx.fillStyle = kind.color;
                 octx.fillRect(x, y, block, block);
                 octx.globalAlpha = 1;

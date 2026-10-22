@@ -107,3 +107,32 @@ test('a hole is no floor - the whole tile, as in Erebus: the robot\'s centre kee
   // the hole itself is not pointed out as floor out of reach
   assert.ok(!r.pocketAt(18, 6));
 });
+
+test('a black tile stops the robot in a 12 cm corridor; the black tile itself is not pointed out', () => {
+  // a row of three room 2 tiles, the middle one black
+  const map = M.newMap(3, 1, 2026);
+  for (let x = 1; x <= 5; x += 2) M.setRoom(map, x, 1, 2);
+  map.startTile = { x: 1, y: 1, z: 0 };
+  M.setFloor(map, 3, 1, 'black');
+  const r = M.robotReach(map);
+  assert.strictEqual(r.pocketCount, 1);
+  assert.ok(r.pocketAt(30, 6), 'the tile past the hole is out of reach');
+  assert.ok(!r.pocketAt(13, 6) && !r.pocketAt(18, 6) && !r.pocketAt(23, 6), 'the black tile, rim and all, is not');
+});
+
+test('a black tile with walls round it closes off the tile only reached across it', () => {
+  // the top right tile of 3 x 3 is walled off from below; its way in is the black top middle tile
+  const map = room2();
+  for (let i = 4; i < 6; i++) L.setSeg(map, `h,${i},2`, true);
+  M.setFloor(map, 3, 1, 'black');
+  const r = M.robotReach(map);
+  assert.strictEqual(r.pocketCount, 1);
+  assert.ok(r.pocketAt(30, 6), 'the top right tile is out of reach');
+  assert.ok(!r.pocketAt(6, 6) && !r.pocketAt(30, 18), 'the rest is not');
+});
+
+test('a black tile in the open leaves no place out of reach: the robot goes round it', () => {
+  const map = room2();
+  M.setFloor(map, 3, 3, 'black');
+  assert.strictEqual(M.robotReach(map).pocketCount, 0);
+});

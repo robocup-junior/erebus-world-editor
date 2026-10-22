@@ -3,6 +3,7 @@
 import type { MapData } from './types';
 import * as L from './lattice';
 import * as Icons from './icons';
+import { drawHole } from './hole';
 import * as R4 from './room4';
 import { rulesOf } from '../rules/registry';
 
@@ -260,6 +261,9 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
                 const g = ctx.createLinearGradient(r[0] + TILE, r[1] + TILE, r[0], r[1]);
                 g.addColorStop(0, '#a5a5a5'); g.addColorStop(0.5, '#e8e8e8'); g.addColorStop(1, '#babac2');
                 ctx.fillStyle = g; ctx.fillRect(r[0], r[1], r[2], r[3]);
+            } else if (floor && floor.hole) {
+                const g = rulesOf(map!).geometry;
+                drawHole(ctx, r[0], r[1], TILE, TILE * g.holeRimCm / g.tileCm, floor.color);
             } else if (floor) { ctx.fillStyle = floor.color; ctx.fillRect(r[0], r[1], r[2], r[3]); }
             if (t.color) { ctx.fillStyle = t.color; ctx.globalAlpha = 0.75; ctx.fillRect(r[0], r[1], r[2], r[3]); ctx.globalAlpha = 1; }
         });

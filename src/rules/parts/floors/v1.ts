@@ -1,5 +1,5 @@
-// The floors of 2026: checkpoints (silver, rule 3.5), holes (3.6.4: the whole tile, the robot keeps
-// off it) and swamps (brown, 3.6.2)
+// The floors of 2026: checkpoints (silver, rule 3.5), holes (3.6.4: a black tile, a hole inside its
+// 1.5 cm rim; the robot's centre keeps off the hole) and swamps (brown, 3.6.2)
 import type { FloorKind } from '../../types';
 
 export const floors: FloorKind[] = [

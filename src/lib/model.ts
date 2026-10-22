@@ -1313,17 +1313,21 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
             }
         }
     };
-    // no floor: an outside tile (a wall to the robot), or a hole - the whole tile, as Erebus has no
-    // floor there and counts the robot fallen in once its centre is over it: its centre keeps off it
+    // an outside tile (a wall to the robot), and a black tile: a hole inside its black rim,
+    // as Erebus counts the robot fallen in once its centre is over the hole: its centre keeps off
+    // the hole and may go onto the rim. Neither is floor to reach (a black tile is not to go on).
     const outside = new Uint8Array(gw * gh), hole = new Uint8Array(gw * gh);
+    const rim = geometry.holeRimCm / res;
     for (let x = 1; x < 2 * map.width; x += 2) {
         for (let y = 1; y < 2 * map.length; y += 2) {
             const t = tileOf(map, x, y), off = isOutside(map, x, y);
             if (!off && !W.isHole(map, t)) continue;
-            for (let j = 6 * (y - 1) / res; j < 6 * (y + 1) / res; j++) {
-                for (let i = 6 * (x - 1) / res; i < 6 * (x + 1) / res; i++) {
+            const i0 = 6 * (x - 1) / res, i1 = 6 * (x + 1) / res, j0 = 6 * (y - 1) / res, j1 = 6 * (y + 1) / res;
+            for (let j = j0; j < j1; j++) {
+                for (let i = i0; i < i1; i++) {
                     outside[j * gw + i] = 1;
-                    if (off) wall[j * gw + i] = 1; else hole[j * gw + i] = 1;
+                    if (off) wall[j * gw + i] = 1;
+                    else if (i >= i0 + rim && i < i1 - rim && j >= j0 + rim && j < j1 - rim) hole[j * gw + i] = 1;
                 }
             }
         }
