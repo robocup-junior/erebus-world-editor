@@ -25,6 +25,8 @@ interface ViewOptions {
     // under the tiles' floors (over the rooms' colours), and over them (under the grid and walls)
     underlay?(ctx: CanvasRenderingContext2D, v: { scale: number }): void;
     overFloor?(ctx: CanvasRenderingContext2D, v: { scale: number }): void;
+    // over the walls, under the victims
+    overWalls?(ctx: CanvasRenderingContext2D, v: { scale: number }): void;
     overlay?(ctx: CanvasRenderingContext2D, v: { scale: number; rooms: Record<string, number> }): void;
     tool?: ViewTool;
 }
@@ -478,6 +480,7 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
             drawRoomEdges();
             drawStart();
             drawWalls();
+            if (options.overWalls) options.overWalls(ctx, { scale: view.scale });
             drawRoom4Victims();
             drawVictims();
             if (options.overlay) options.overlay(ctx, { scale: view.scale, rooms: rooms });

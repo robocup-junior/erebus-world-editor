@@ -312,6 +312,7 @@ export function createEditor() {
             overlay: drawOverlay,
             underlay: drawLinear,
             overFloor: drawOverFloor,
+            overWalls: drawFloatingWalls,
             tool: {
                 pans: function () { return ui.tool === 'hand'; },
                 down: function (p, e) { apply(function () { toolDown(p, e); }); },
@@ -1832,7 +1833,6 @@ export function createEditor() {
     function drawOverlay(ctx: CanvasRenderingContext2D, v: { scale: number }) {
         if (!map) return;
         const px = 1 / v.scale;
-        drawFloatingWalls(ctx);
         drawBadVictims(ctx, px);
         const tool = ui.tool;
         // the borders where a passage can go, while the passage tool is out
