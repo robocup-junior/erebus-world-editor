@@ -311,6 +311,7 @@ export function createEditor() {
             },
             overlay: drawOverlay,
             underlay: drawLinear,
+            overFloor: drawOverFloor,
             tool: {
                 pans: function () { return ui.tool === 'hand'; },
                 down: function (p, e) { apply(function () { toolDown(p, e); }); },
@@ -401,7 +402,7 @@ export function createEditor() {
     // As the world export works it out (W.recalculate, as the classic editor): from the start tile
     // along the walls joined to it; the walls reached and the tiles beside them are linear, and a
     // victim on a linear tile is worth less. Worked out on a copy of the map, when it is shown.
-    let linear: { noStart?: boolean; tiles?: Record<string, string>; floating?: number[][]; unreached?: boolean } | null = null;
+    let linear: { noStart?: boolean; tiles?: Record<string, string>; floating?: { segs: string[]; arcs: L.Arc[] }; unreached?: boolean } | null = null;
     function computeLinear() {
         linear = null;
         if (!ui.showLinear || !map) return;
@@ -409,29 +410,58 @@ export function createEditor() {
         if (!st || !(st.x > 0)) { linear = { noStart: true }; return; }
         const copy = JSON.parse(JSON.stringify(M.saved(map)));
         W.recalculate(copy);
-        const tiles: Record<string, string> = {}, floating: number[][] = [];
+        const tiles: Record<string, string> = {};
         Object.keys(copy.cells).forEach(function (k) {
             const p = k.split(',').map(Number), c = copy.cells[k];
-            if (p[2] !== 0) return;
-            if (p[0] % 2 === 1 && p[1] % 2 === 1) {
-                if (!M.inMap(map, p[0], p[1])) return;     // the calculation also makes tiles round the map
-                // only where a victim can be: a tile with a wall on a side, or inside it
-                // not reached from the start (a room without its passage): no linear / floating to tell
-                if (!M.isOutside(map, p[0], p[1]) && hasAnyWall(p[0], p[1])) tiles[p[0] + ',' + p[1]] = !c.reachable ? 'U' : c.isLinear ? 'L' : 'F';
-            } else if ((p[0] + p[1]) % 2 === 1 && c.isWall && !c.isLinear && p[0] <= 2 * map.width && p[1] <= 2 * map.length) {
-                floating.push(p);
-            }
+            if (p[2] !== 0 || p[0] % 2 !== 1 || p[1] % 2 !== 1) return;
+            if (!M.inMap(map, p[0], p[1])) return;     // the calculation also makes tiles round the map
+            // every tile of rooms 1-3, linear or floating (room 4's victims score as floating ones
+            // whatever their walls); not reached from the start (a room without its passage): no
+            // linear / floating to tell
+            if (!M.isOutside(map, p[0], p[1]) && M.roomOf(map, p[0], p[1]) !== 4) tiles[p[0] + ',' + p[1]] = !c.reachable ? 'U' : c.isLinear ? 'L' : 'F';
         });
-        linear = { tiles: tiles, floating: floating, unreached: Object.keys(tiles).some(function (k) { return tiles[k] === 'U'; }) };
+        linear = { tiles: tiles, floating: floatingWalls(), unreached: Object.keys(tiles).some(function (k) { return tiles[k] === 'U'; }) };
     }
 
-    function hasAnyWall(x: number, y: number) {
-        const tl = M.tileOf(map, x, y);
-        if (tl && ((tl.halfWallIn || []).some(Boolean) || (tl.curve || []).some(function (v) { return Number(v); }))) return true;
-        return Object.keys(M.SIDES).some(function (d) {
-            const e = map.cells[M.key(x + M.SIDES[d][0], y + M.SIDES[d][1])];
-            return !!(e && (e.isWall || e.halfWall));
+    // The walls not joined to the start tile, 12 and 6 cm ones and curves alike: the walls meet at the
+    // points of the 6 cm grid, and the sides of the start tile and of the holes join what touches them
+    // (the virtual walls of the calculation)
+    function floatingWalls() {
+        const up: Record<string, string> = {};
+        const find = function (a: string): string { while (up[a] && up[a] !== a) a = up[a] = up[up[a]] || up[a]; return a; };
+        const join = function (a: number[], b: number[]) { const ra = find(a + ''), rb = find(b + ''); if (ra !== rb) up[ra] = rb; };
+        const ring = function (x: number, y: number) {
+            for (let i = -1; i < 1; i++) {
+                join([x + i, y - 1], [x + i + 1, y - 1]); join([x + i, y + 1], [x + i + 1, y + 1]);
+                join([x - 1, y + i], [x - 1, y + i + 1]); join([x + 1, y + i], [x + 1, y + i + 1]);
+            }
+        };
+        const segEnds = function (s: string) {
+            const g = L.parseSeg(s);
+            return [[g.i, g.j], g.dir === 'v' ? [g.i, g.j + 1] : [g.i + 1, g.j]];
+        };
+        const arcEnds = function (a: L.Arc) {
+            // as view draws it: centre at a corner of the quarter, a quarter circle of 6 cm
+            const c = [[0, 1], [0, 0], [1, 0], [1, 1]][a.v - 1];
+            const turn = [[-Math.PI / 2, 0], [0, Math.PI / 2], [Math.PI / 2, Math.PI], [Math.PI, 1.5 * Math.PI]][a.v - 1];
+            const ox = a.x - 1 + (a.q % 2) + c[0], oy = a.y - 1 + Math.floor(a.q / 2) + c[1];
+            return turn.map(function (t) { return [Math.round(ox + Math.cos(t)), Math.round(oy + Math.sin(t))]; });
+        };
+        const st = map.startTile;
+        ring(st.x, st.y);
+        Object.keys(map.cells).forEach(function (k) {
+            const p = k.split(',').map(Number), c = map.cells[k];
+            if (p[2] === 0 && p[0] % 2 === 1 && p[1] % 2 === 1 && W.isHole(map, c.tile)) ring(p[0], p[1]);
         });
+        const walls = L.fromCells(map, 0);
+        const segs = Array.from(walls.segs), arcs = walls.arcs.filter(function (a) { return a.v >= 1 && a.v <= 4; });
+        segs.forEach(function (s) { const e = segEnds(s); join(e[0], e[1]); });
+        arcs.forEach(function (a) { const e = arcEnds(a); join(e[0], e[1]); });
+        const linearRoot = find([st.x - 1, st.y - 1] + '');
+        return {
+            segs: segs.filter(function (s) { return find(segEnds(s)[0] + '') !== linearRoot; }),
+            arcs: arcs.filter(function (a) { return find(arcEnds(a)[0] + '') !== linearRoot; })
+        };
     }
 
     // where the robot cannot get to (M.robotReach): its mask as a picture, shown hatched light red
@@ -496,19 +526,28 @@ export function createEditor() {
         ctx.restore();
     }
 
-    function drawLinear(ctx: CanvasRenderingContext2D, v: { scale: number }) {
-        if (linear && !linear.noStart) drawLinearTiles(ctx);
+    // Linear / floating colours, in place of the room's colour under the tile's floor (a light tint
+    // over the room colours would turn grey), and again as a tint over the floor: a passage, a
+    // checkpoint or any floor shows the same through it on every tile
+    function drawLinear(ctx: CanvasRenderingContext2D) {
+        if (linear && !linear.noStart) drawLinearTiles(ctx, 1);
+    }
+
+    function drawOverFloor(ctx: CanvasRenderingContext2D, v: { scale: number }) {
+        if (linear && !linear.noStart) drawLinearTiles(ctx, 0.6);
         drawPockets(ctx, v);
     }
 
-    function drawLinearTiles(ctx: CanvasRenderingContext2D) {
+    function drawLinearTiles(ctx: CanvasRenderingContext2D, alpha: number) {
         const tiles = linear!.tiles!;
+        ctx.save();
+        ctx.globalAlpha = alpha;
         Object.keys(tiles).forEach(function (k) {
             const p = k.split(',').map(Number);
-            // its own colours, nearly opaque: a light tint over the room colours would turn grey
-            ctx.fillStyle = ({ L: 'rgba(187, 247, 208, 0.92)', F: 'rgba(254, 215, 170, 0.95)', U: 'rgba(203, 213, 225, 0.9)' } as Record<string, string>)[tiles[k]];
+            ctx.fillStyle = ({ L: '#bbf7d0', F: '#fed7aa', U: '#cbd5e1' } as Record<string, string>)[tiles[k]];
             ctx.fillRect(6 * (p[0] - 1), 6 * (p[1] - 1), 12, 12);
         });
+        ctx.restore();
     }
 
     // floating walls over the walls, in amber
@@ -519,11 +558,17 @@ export function createEditor() {
         ctx.lineWidth = 1.1;
         ctx.lineCap = 'square';
         ctx.beginPath();
-        linear.floating.forEach(function (p) {
-            if (p[0] % 2 === 0) { ctx.moveTo(6 * p[0], 6 * (p[1] - 1)); ctx.lineTo(6 * p[0], 6 * (p[1] + 1)); }
-            else { ctx.moveTo(6 * (p[0] - 1), 6 * p[1]); ctx.lineTo(6 * (p[0] + 1), 6 * p[1]); }
-        });
+        linear.floating.segs.forEach(function (s) { segLine(ctx, s); });
         ctx.stroke();
+        ctx.lineCap = 'butt';
+        linear.floating.arcs.forEach(function (a) {
+            const ox = 6 * (a.x - 1) + (a.q % 2) * 6, oy = 6 * (a.y - 1) + Math.floor(a.q / 2) * 6;
+            const c = [[0, 6], [0, 0], [6, 0], [6, 6]][a.v - 1];
+            const turn = [[-Math.PI / 2, 0], [0, Math.PI / 2], [Math.PI / 2, Math.PI], [Math.PI, 1.5 * Math.PI]][a.v - 1];
+            ctx.beginPath();
+            ctx.arc(ox + c[0], oy + c[1], 6, turn[0], turn[1]);
+            ctx.stroke();
+        });
         ctx.restore();
     }
 

@@ -22,7 +22,9 @@ interface ViewTool {
 interface ViewOptions {
     onView?(v: { zoom: number }): void;
     fitInset?(): number;
+    // under the tiles' floors (over the rooms' colours), and over them (under the grid and walls)
     underlay?(ctx: CanvasRenderingContext2D, v: { scale: number }): void;
+    overFloor?(ctx: CanvasRenderingContext2D, v: { scale: number }): void;
     overlay?(ctx: CanvasRenderingContext2D, v: { scale: number; rooms: Record<string, number> }): void;
     tool?: ViewTool;
 }
@@ -235,6 +237,15 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
             }
             ctx.fillStyle = ROOM_FILL[rooms[k]];
             ctx.fillRect(r[0], r[1], r[2], r[3]);
+        });
+    }
+
+    // each tile's own floor: its kind, and its colour (a passage's)
+    function drawTileFloors() {
+        Object.keys(rooms).forEach(function (k) {
+            if (!rooms[k]) return;
+            const p = k.split(',').map(Number);
+            const r = tileRect(p[0], p[1]);
             const cell = map!.cells[k + ',0'];
             const t = cell && cell.tile;
             if (!t) return;
@@ -460,6 +471,8 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
             ctx.scale(view.scale, view.scale);
             drawFloor();
             if (options.underlay) options.underlay(ctx, { scale: view.scale });
+            drawTileFloors();
+            if (options.overFloor) options.overFloor(ctx, { scale: view.scale });
             drawGrid();
             drawRoom4();
             drawRoomEdges();
