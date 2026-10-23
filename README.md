@@ -117,4 +117,4 @@ They drive the built site in Chromium with the same random numbers and time each
 
 ## Licence
 
-MIT (`LICENSE`). The libraries are under their own licences (each package in `node_modules/`).
+GNU Affero General Public License v3.0 or later (`LICENSE`). The libraries are under their own licences (each package in `node_modules/`); so are the parts of Bootstrap's CSS in `src/styles/base.css` (MIT) and the Outfit font (`public/fonts/outfit/OFL.txt`).

@@ -3,7 +3,7 @@
   "version": "26.1.1",
   "private": true,
   "description": "Erebus World Editor: the RoboCupJunior Rescue Simulation (Erebus) world editor, for the rules of 2026 and later, as a static site (Vue 3, TypeScript, Vite)",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "engines": {
     "node": ">=22.12"
   },
