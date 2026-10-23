@@ -2,6 +2,8 @@
 
 **Erebus World Editor** — the world editor for the RoboCupJunior Rescue Simulation (Erebus), for the rules of 2026 and later (a map keeps the year of its rules) — as a static site. It needs no server: serve `dist/` as it is (Cloudflare Workers, or any static host).
 
+**Use it at https://world.erebus.rcj.cloud/**
+
 It started in [rcj-rescue-cms](https://github.com/robocup-junior/rcj-rescue-cms) (taken from 26.1.1) and is now made here, on its own. The β menu links to the classic editor, which stays in the CMS at https://osaka.rcj.cloud/service/editor/simulation/2026/classic.
 
 Built with Vue 3, TypeScript and Vite.
