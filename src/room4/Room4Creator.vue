@@ -403,7 +403,6 @@ onBeforeUnmount(function () {
             <button type="button" class="r4-icon" @click="r4api.selection('copy')" :disabled="!r4.hasSelection" :title="t('room4.sel.copy') + ' (' + keyName('Ctrl+C') + ')'"><i class="far fa-copy"></i></button>
             <button type="button" class="r4-icon" @click="r4api.selection('paste')" :disabled="!r4.hasClip" :title="t('room4.sel.paste') + ' (' + keyName('Ctrl+V') + ')'"><i class="fas fa-paste"></i></button>
             <button type="button" class="r4-icon danger" @click="r4api.selection('delete')" :disabled="!r4.hasSelection" :title="t('room4.sel.delete') + ' (Delete)'"><i class="fas fa-trash-alt"></i></button>
-            <button type="button" class="r4-icon" @click="r4api.selection('drop')" :disabled="!r4.hasSelection" :title="t('room4.sel.drop') + ' (Enter)'"><i class="fas fa-check"></i></button>
           </div>
 
           <!-- Templates -->

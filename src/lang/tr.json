@@ -644,8 +644,8 @@
                 },
                 "r4transform": {
                     "title": "Döndür, çevir, çoğalt",
-                    "body": "Paneldeki düğmeler seçili parçayı iki yöne de 90° döndürür ([ ve ]), iki yöne de çevirir, çoğaltır (Ctrl+D), kopyalar (Ctrl+C) ve yapıştırır (Ctrl+V) veya siler (Delete). Bitti (✓, Enter) onu resme geri koyar.",
-                    "task": "Seçili parçayı döndürün veya çevirin, sonra “Bitti” düğmesine (✓ veya Enter) basın",
+                    "body": "Paneldeki düğmeler seçili parçayı iki yöne de 90° döndürür ([ ve ]), iki yöne de çevirir, çoğaltır (Ctrl+D), kopyalar (Ctrl+C) ve yapıştırır (Ctrl+V) veya siler (Delete). Enter veya dışına bir tıklama onu resme geri koyar.",
+                    "task": "Seçili parçayı döndürün veya çevirin, sonra Enter’a basın veya dışına tıklayın",
                     "tasks": {
                         "noSelection": "Hiçbir şey seçili değil. Seç ile kesikli kutunun çevresinde sürükleyin"
                     }
@@ -935,8 +935,7 @@
             "duplicate": "Çoğalt",
             "copy": "Kopyala",
             "paste": "Yapıştır",
-            "delete": "Sil",
-            "drop": "Bitti"
+            "delete": "Sil"
         },
         "randomPlace": "Rastgele yerleştir",
         "randomModes": {
@@ -1056,7 +1055,7 @@
             "ellipse": "Sürüklenen kutuya sığan elipsi çizer. Daire için Shift'i basılı tutun.",
             "polygon": "Düzgün bir çokgen çizmek için merkezden sürükleyin. 15° adımlarla döner (Shift ile serbest).",
             "shape": "Bir simge veya resim seçin, sonra boyutlandırmak için tuvalde sürükleyin (oranları korur; Shift ile serbest).",
-            "select": "Bir kutu seçmek için sürükleyin, sonra taşımak için içinde sürükleyin (kopyalamak için Alt'ı basılı tutun). Ok tuşları iter, [ ] döndürür, Enter bırakır, Delete siler.",
+            "select": "Bir kutu seçmek için sürükleyin, sonra taşımak için içinde sürükleyin (kopyalamak için Alt'ı basılı tutun). Ok tuşları iter, [ ] döndürür, Enter veya dışına tıklamak bırakır, Delete siler.",
             "template": "Bir şablon seçin ve “Yerleştir” düğmesine basın. Robotu dışarıda bırakan yerleşimler otomatik olarak yeniden yapılır."
         },
         "messages": {

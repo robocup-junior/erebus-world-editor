@@ -644,8 +644,8 @@
                 },
                 "r4transform": {
                     "title": "Putar, balik, gandakan",
-                    "body": "Tombol panel memutar bagian terpilih 90° ke salah satu arah ([ dan ]), membaliknya ke salah satu arah, menggandakannya (Ctrl+D), menyalin (Ctrl+C) dan menempelnya (Ctrl+V), atau menghapusnya (Delete). Selesai (✓, Enter) mengembalikannya ke gambar.",
-                    "task": "Putar atau balik bagian terpilih, lalu tekan Selesai (✓ atau Enter)",
+                    "body": "Tombol panel memutar bagian terpilih 90° ke salah satu arah ([ dan ]), membaliknya ke salah satu arah, menggandakannya (Ctrl+D), menyalin (Ctrl+C) dan menempelnya (Ctrl+V), atau menghapusnya (Delete). Enter, atau klik di luarnya, mengembalikannya ke gambar.",
+                    "task": "Putar atau balik bagian terpilih, lalu tekan Enter atau klik di luarnya",
                     "tasks": {
                         "noSelection": "Tidak ada yang terpilih. Dengan Pilih, seret di sekeliling kotak putus-putus"
                     }
@@ -935,8 +935,7 @@
             "duplicate": "Gandakan",
             "copy": "Salin",
             "paste": "Tempel",
-            "delete": "Hapus",
-            "drop": "Selesai"
+            "delete": "Hapus"
         },
         "randomPlace": "Penempatan acak",
         "randomModes": {
@@ -1056,7 +1055,7 @@
             "ellipse": "Menggambar elips yang pas di kotak yang diseret. Tahan Shift untuk lingkaran.",
             "polygon": "Seret dari pusat untuk menggambar poligon beraturan. Berputar dalam langkah 15° (bebas dengan Shift).",
             "shape": "Pilih ikon atau gambar, lalu seret di kanvas untuk mengatur ukurannya (proporsi tetap; bebas dengan Shift).",
-            "select": "Seret untuk memilih kotak, lalu seret di dalamnya untuk memindahkannya (tahan Alt untuk menyalin). Tombol panah menggesernya, [ ] memutarnya, Enter meletakkannya, Delete menghapusnya.",
+            "select": "Seret untuk memilih kotak, lalu seret di dalamnya untuk memindahkannya (tahan Alt untuk menyalin). Tombol panah menggesernya, [ ] memutarnya, Enter atau klik di luarnya meletakkannya, Delete menghapusnya.",
             "template": "Pilih templat dan tekan Pasang. Tata letak yang menghalangi robot dibuat ulang secara otomatis."
         },
         "messages": {

@@ -887,6 +887,8 @@ export function createEditor() {
     // the creator closed (OK, Esc, or by the guide): its picture taken into the map
     function closeRoom4() {
         if (!S.room4 || !S.room4.open) return;
+        // a selection still held in the creator is put down onto the picture first
+        if (S.creator) S.creator.r4api.selection('drop');
         S.room4.open = false;
         const done = room4Done;
         room4Done = null;

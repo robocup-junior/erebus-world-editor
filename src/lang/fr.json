@@ -644,8 +644,8 @@
                 },
                 "r4transform": {
                     "title": "Tourner, retourner, dupliquer",
-                    "body": "Les boutons du panneau tournent la partie sélectionnée de 90° dans un sens ou l’autre ([ et ]), la retournent dans un sens ou l’autre, la dupliquent (Ctrl+D), la copient (Ctrl+C) et la collent (Ctrl+V), ou la suppriment (Suppr). Terminé (✓, Entrée) la remet dans l’image.",
-                    "task": "Tournez ou retournez la partie sélectionnée, puis appuyez sur Terminé (✓ ou Entrée)",
+                    "body": "Les boutons du panneau tournent la partie sélectionnée de 90° dans un sens ou l’autre ([ et ]), la retournent dans un sens ou l’autre, la dupliquent (Ctrl+D), la copient (Ctrl+C) et la collent (Ctrl+V), ou la suppriment (Suppr). Entrée, ou un clic en dehors, la remet dans l’image.",
+                    "task": "Tournez ou retournez la partie sélectionnée, puis appuyez sur Entrée ou cliquez en dehors",
                     "tasks": {
                         "noSelection": "Rien n’est sélectionné. Avec Sélection, faites glisser autour de la boîte pointillée"
                     }
@@ -935,8 +935,7 @@
             "duplicate": "Dupliquer",
             "copy": "Copier",
             "paste": "Coller",
-            "delete": "Supprimer",
-            "drop": "Terminé"
+            "delete": "Supprimer"
         },
         "randomPlace": "Placer au hasard",
         "randomModes": {
@@ -1056,7 +1055,7 @@
             "ellipse": "Trace l’ellipse qui tient dans la boîte tracée. Maj pour un cercle.",
             "polygon": "Faites glisser depuis le centre pour tracer un polygone régulier. Il tourne par pas de 15° (librement avec Maj).",
             "shape": "Choisissez une icône ou une image, puis faites glisser sur le canevas pour la dimensionner (garde ses proportions ; libre avec Maj).",
-            "select": "Faites glisser pour sélectionner une boîte, puis faites glisser à l’intérieur pour la déplacer (Alt pour copier). Les flèches la poussent, [ ] la tournent, Entrée la pose, Suppr la supprime.",
+            "select": "Faites glisser pour sélectionner une boîte, puis faites glisser à l’intérieur pour la déplacer (Alt pour copier). Les flèches la poussent, [ ] la tournent, Entrée ou un clic en dehors la pose, Suppr la supprime.",
             "template": "Choisissez un modèle et appuyez sur Placer. Les dispositions qui excluent le robot sont refaites automatiquement."
         },
         "messages": {

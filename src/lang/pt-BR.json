@@ -644,8 +644,8 @@
                 },
                 "r4transform": {
                     "title": "Girar, espelhar, duplicar",
-                    "body": "Os botões do painel giram a parte selecionada 90° para um lado ou outro ([ e ]), espelham-na em um sentido ou outro, duplicam-na (Ctrl+D), copiam (Ctrl+C) e colam (Ctrl+V), ou a apagam (Delete). Pronto (✓, Enter) a devolve à imagem.",
-                    "task": "Gire ou espelhe a parte selecionada e depois pressione Pronto (✓ ou Enter)",
+                    "body": "Os botões do painel giram a parte selecionada 90° para um lado ou outro ([ e ]), espelham-na em um sentido ou outro, duplicam-na (Ctrl+D), copiam (Ctrl+C) e colam (Ctrl+V), ou a apagam (Delete). Enter, ou um clique fora dela, a devolve à imagem.",
+                    "task": "Gire ou espelhe a parte selecionada e depois pressione Enter ou clique fora dela",
                     "tasks": {
                         "noSelection": "Nada está selecionado. Com Selecionar, arraste em volta da caixa tracejada"
                     }
@@ -935,8 +935,7 @@
             "duplicate": "Duplicar",
             "copy": "Copiar",
             "paste": "Colar",
-            "delete": "Apagar",
-            "drop": "Pronto"
+            "delete": "Apagar"
         },
         "randomPlace": "Colocar aleatoriamente",
         "randomModes": {
@@ -1056,7 +1055,7 @@
             "ellipse": "Desenha a elipse que cabe na caixa arrastada. Segure Shift para um círculo.",
             "polygon": "Arraste a partir do centro para desenhar um polígono regular. Gira em passos de 15° (livre com Shift).",
             "shape": "Escolha um ícone ou uma imagem e depois arraste na tela para definir o tamanho (mantém as proporções; livre com Shift).",
-            "select": "Arraste para selecionar uma caixa e depois arraste dentro dela para movê-la (segure Alt para copiar). As setas a empurram, [ ] a giram, Enter a solta, Delete a apaga.",
+            "select": "Arraste para selecionar uma caixa e depois arraste dentro dela para movê-la (segure Alt para copiar). As setas a empurram, [ ] a giram, Enter ou um clique fora a solta, Delete a apaga.",
             "template": "Escolha um modelo e pressione Colocar. Disposições que deixam o robô de fora são refeitas automaticamente."
         },
         "messages": {

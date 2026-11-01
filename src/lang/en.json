@@ -644,8 +644,8 @@
                 },
                 "r4transform": {
                     "title": "Turn, flip, duplicate",
-                    "body": "The panel's buttons turn the selected part 90° either way ([ and ]), flip it either way, duplicate it (Ctrl+D), copy (Ctrl+C) and paste it (Ctrl+V), or delete it (Delete). Done (✓, Enter) puts it back into the picture.",
-                    "task": "Turn or flip the selected part, then press Done (✓ or Enter)",
+                    "body": "The panel's buttons turn the selected part 90° either way ([ and ]), flip it either way, duplicate it (Ctrl+D), copy (Ctrl+C) and paste it (Ctrl+V), or delete it (Delete). Enter, or a click outside it, puts it back into the picture.",
+                    "task": "Turn or flip the selected part, then press Enter or click outside it",
                     "tasks": {
                         "noSelection": "Nothing is selected. With Select, drag round the dashed box"
                     }
@@ -935,8 +935,7 @@
             "duplicate": "Duplicate",
             "copy": "Copy",
             "paste": "Paste",
-            "delete": "Delete",
-            "drop": "Done"
+            "delete": "Delete"
         },
         "randomPlace": "Place at random",
         "randomModes": {
@@ -1056,7 +1055,7 @@
             "ellipse": "Draws the ellipse that fits the dragged box. Hold Shift for a circle.",
             "polygon": "Drag from the centre to draw a regular polygon. It turns in 15° steps (free with Shift).",
             "shape": "Choose an icon or a picture, then drag on the canvas to size it (keeps its proportions; free with Shift).",
-            "select": "Drag to select a box, then drag inside it to move it (hold Alt to copy). Arrow keys nudge it, [ ] turn it, Enter puts it down, Delete removes it.",
+            "select": "Drag to select a box, then drag inside it to move it (hold Alt to copy). Arrow keys nudge it, [ ] turn it, Enter or a click outside puts it down, Delete removes it.",
             "template": "Choose a template and press Place. Layouts that shut the robot out are made again automatically."
         },
         "messages": {

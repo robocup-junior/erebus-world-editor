@@ -644,8 +644,8 @@
                 },
                 "r4transform": {
                     "title": "Drehen, spiegeln, duplizieren",
-                    "body": "Die Schaltflächen im Bereich drehen den ausgewählten Teil um 90° in eine der Richtungen ([ und ]), spiegeln ihn in eine der Richtungen, duplizieren ihn (Strg+D), kopieren (Strg+C) und fügen ihn ein (Strg+V) oder löschen ihn (Entf). Fertig (✓, Enter) setzt ihn zurück ins Bild.",
-                    "task": "Drehe oder spiegle den ausgewählten Teil und drücke dann Fertig (✓ oder Enter)",
+                    "body": "Die Schaltflächen im Bereich drehen den ausgewählten Teil um 90° in eine der Richtungen ([ und ]), spiegeln ihn in eine der Richtungen, duplizieren ihn (Strg+D), kopieren (Strg+C) und fügen ihn ein (Strg+V) oder löschen ihn (Entf). Enter oder ein Klick daneben setzt ihn zurück ins Bild.",
+                    "task": "Drehe oder spiegle den ausgewählten Teil und drücke dann Enter oder klicke daneben",
                     "tasks": {
                         "noSelection": "Nichts ist ausgewählt. Ziehe mit Auswählen um die gestrichelte Box"
                     }
@@ -935,8 +935,7 @@
             "duplicate": "Duplizieren",
             "copy": "Kopieren",
             "paste": "Einfügen",
-            "delete": "Löschen",
-            "drop": "Fertig"
+            "delete": "Löschen"
         },
         "randomPlace": "Zufällig setzen",
         "randomModes": {
@@ -1056,7 +1055,7 @@
             "ellipse": "Zeichnet die Ellipse, die in die aufgezogene Box passt. Umschalttaste für einen Kreis.",
             "polygon": "Von der Mitte aus ziehen, um ein regelmäßiges Vieleck zu zeichnen. Es dreht sich in 15°-Schritten (frei mit Umschalttaste).",
             "shape": "Wähle ein Symbol oder ein Bild und ziehe dann auf der Fläche, um seine Größe festzulegen (behält die Proportionen; frei mit Umschalttaste).",
-            "select": "Ziehen, um eine Box auszuwählen, dann darin ziehen, um sie zu verschieben (Alt gedrückt zum Kopieren). Pfeiltasten schieben sie, [ ] drehen sie, Enter setzt sie ab, Entf löscht sie.",
+            "select": "Ziehen, um eine Box auszuwählen, dann darin ziehen, um sie zu verschieben (Alt gedrückt zum Kopieren). Pfeiltasten schieben sie, [ ] drehen sie, Enter oder ein Klick daneben setzt sie ab, Entf löscht sie.",
             "template": "Wähle eine Vorlage und drücke Setzen. Anordnungen, die den Roboter aussperren, werden automatisch neu erzeugt."
         },
         "messages": {

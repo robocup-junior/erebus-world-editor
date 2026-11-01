@@ -644,8 +644,8 @@
                 },
                 "r4transform": {
                     "title": "Girar, voltear, duplicar",
-                    "body": "Los botones del panel giran la parte seleccionada 90° en un sentido u otro ([ y ]), la voltean en un sentido u otro, la duplican (Ctrl+D), la copian (Ctrl+C) y la pegan (Ctrl+V), o la eliminan (Supr). Listo (✓, Intro) la devuelve a la imagen.",
-                    "task": "Gira o voltea la parte seleccionada y luego pulsa Listo (✓ o Intro)",
+                    "body": "Los botones del panel giran la parte seleccionada 90° en un sentido u otro ([ y ]), la voltean en un sentido u otro, la duplican (Ctrl+D), la copian (Ctrl+C) y la pegan (Ctrl+V), o la eliminan (Supr). Intro, o un clic fuera de ella, la devuelve a la imagen.",
+                    "task": "Gira o voltea la parte seleccionada y luego pulsa Intro o haz clic fuera de ella",
                     "tasks": {
                         "noSelection": "No hay nada seleccionado. Con Seleccionar, arrastra alrededor de la caja discontinua"
                     }
@@ -935,8 +935,7 @@
             "duplicate": "Duplicar",
             "copy": "Copiar",
             "paste": "Pegar",
-            "delete": "Eliminar",
-            "drop": "Listo"
+            "delete": "Eliminar"
         },
         "randomPlace": "Colocar al azar",
         "randomModes": {
@@ -1056,7 +1055,7 @@
             "ellipse": "Dibuja la elipse que cabe en la caja arrastrada. Mantén Shift para un círculo.",
             "polygon": "Arrastra desde el centro para dibujar un polígono regular. Gira en pasos de 15° (libre con Shift).",
             "shape": "Elige un icono o una imagen, y luego arrastra en el lienzo para darle tamaño (mantiene sus proporciones; libre con Shift).",
-            "select": "Arrastra para seleccionar una caja, y luego arrastra dentro de ella para moverla (mantén Alt para copiar). Las flechas la empujan, [ ] la giran, Intro la suelta, Supr la elimina.",
+            "select": "Arrastra para seleccionar una caja, y luego arrastra dentro de ella para moverla (mantén Alt para copiar). Las flechas la empujan, [ ] la giran, Intro o un clic fuera la suelta, Supr la elimina.",
             "template": "Elige una plantilla y pulsa Colocar. Las disposiciones que dejan fuera al robot se vuelven a generar automáticamente."
         },
         "messages": {
