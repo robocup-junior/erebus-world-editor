@@ -76,6 +76,7 @@
     "export": {
         "button": "Bu haritayı Erebus için bir dünya dosyası olarak dışa aktar",
         "blocked": "Dünya henüz dışa aktarılamaz",
+        "working": "Dünya dosyası oluşturuluyor…",
         "blockedLead": "Dışa aktarmak için bu {{count}} tanesini düzeltin. Nerede olduğunu görmek için birine tıklayın.",
         "failed": "Dünya dışa aktarılamadı",
         "broken": "Dünyada sayı olmayan bir değer olacaktı, bu yüzden dosya oluşturulmadı (Webots onu boş bir dünya olarak açardı). Lütfen bildirin: {{line}}"

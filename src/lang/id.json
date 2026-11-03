@@ -76,6 +76,7 @@
     "export": {
         "button": "Ekspor peta ini sebagai file dunia untuk Erebus",
         "blocked": "Dunia belum dapat diekspor",
+        "working": "Membuat file dunia…",
         "blockedLead": "Perbaiki {{count}} ini untuk mengekspor. Klik salah satunya untuk melihat lokasinya.",
         "failed": "Ekspor dunia gagal",
         "broken": "Dunia akan memiliki nilai yang bukan angka, jadi tidak ada file yang dibuat (Webots akan membukanya sebagai dunia kosong). Mohon laporkan ini: {{line}}"

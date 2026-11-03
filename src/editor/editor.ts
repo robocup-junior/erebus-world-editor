@@ -178,6 +178,8 @@ export function createEditor() {
         fileName: '',
         problems: [] as ProblemItem[],
         blocking: false,
+        // a world file being made (the .wbt button turns and takes no other click until it is saved)
+        exporting: false,
         // the most the map can score (rules: scoring), worked out after each change; null without a start
         score: null as MaxScore | null,
         hint: '',
@@ -754,7 +756,7 @@ export function createEditor() {
     }
 
     function exportWorld() {
-        if (!map) return;
+        if (!map || S.exporting) return;
         const blocking = S.problems.filter(function (p) { return p.block; });
         if (blocking.length) {
             const fixable = blocking.some(function (p) { return p.fix === 'fix'; });
@@ -774,20 +776,36 @@ export function createEditor() {
             });
             return;
         }
+        // the button shows it is working (drawn before the work starts), and the file is saved only
+        // once it is made
+        const name = (map.name || 'world') + '.wbt';
+        S.exporting = true;
+        digest();
+        const done = function () { S.exporting = false; digest(); };
         const failed = function (err: any) {
+            done();
             applyAsync(function () {
                 // a value that is not a number: what it is on, and that the file was not made
                 const message = err instanceof M.BrokenWorld ? t('export.broken', { line: err.line }) : String(err && err.message || err);
                 openDialog({ kind: 'error', title: t('export.failed'), message: message });
             });
         };
-        if (map.area4Room && map.area4Room.type === 1) {
-            customWorld().then(function (text) { download(text, 'text/plain', (map.name || 'world') + '.wbt'); }, failed);
-            return;
-        }
-        let text;
-        try { text = M.world(map); } catch (e) { failed(e); return; }
-        download(text, 'text/plain', (map.name || 'world') + '.wbt');
+        afterPaint(function () {
+            if (!map) { done(); return; }
+            if (map.area4Room && map.area4Room.type === 1) {
+                customWorld().then(function (text) { done(); download(text, 'text/plain', name); }, failed);
+                return;
+            }
+            let text;
+            try { text = M.world(map); } catch (e) { failed(e); return; }
+            done();
+            download(text, 'text/plain', name);
+        });
+    }
+
+    // fn once the page has been drawn (what was just changed on it is on the screen)
+    function afterPaint(fn: () => void) {
+        requestAnimationFrame(function () { window.setTimeout(fn, 0); });
     }
 
     // The world with a custom room 4: its picture is read with OpenCV, once both are loaded

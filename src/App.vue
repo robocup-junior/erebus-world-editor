@@ -159,8 +159,8 @@ onMounted(function () {
             <i class="fas fa-expand"></i>
           </button>
         </div>
-        <button class="ed-export" type="button" @click="E.exportWorld()" :disabled="!S.map" :class="{ blocked: S.blocking }" :title="S.blocking ? t('export.blocked') : t('export.button')">
-          <i class="fas fa-globe"></i>.wbt
+        <button class="ed-export" type="button" @click="E.exportWorld()" :disabled="!S.map || S.exporting" :class="{ blocked: S.blocking, working: S.exporting }" :aria-busy="S.exporting" :title="S.exporting ? t('export.working') : S.blocking ? t('export.blocked') : t('export.button')">
+          <i class="fas" :class="S.exporting ? 'fa-spinner fa-spin' : 'fa-globe'"></i>.wbt
         </button>
       </header>
       <div class="ed-body">

@@ -76,6 +76,7 @@
     "export": {
         "button": "Exportar este mapa como archivo de mundo para Erebus",
         "blocked": "Todavía no se puede exportar el mundo",
+        "working": "Creando el archivo del mundo…",
         "blockedLead": "Corrige estos {{count}} para exportar. Haz clic en uno para ver dónde está.",
         "failed": "Falló la exportación del mundo",
         "broken": "El mundo tendría un valor que no es un número, así que no se creó ningún archivo (Webots lo abriría como un mundo vacío). Por favor, informa de esto: {{line}}"

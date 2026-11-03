@@ -182,6 +182,12 @@
     cursor: default;
 }
 
+/* making the file: the button stays as it was, its globe turning into a spinner */
+.ed-export.working:disabled {
+    opacity: 1;
+    cursor: progress;
+}
+
 /* ---- body ---- */
 .ed-body {
     display: grid;

@@ -76,6 +76,7 @@
     "export": {
         "button": "把此地圖匯出為 Erebus 的世界檔案",
         "blocked": "暫時還不能匯出世界",
+        "working": "正在產生世界檔案…",
         "blockedLead": "修正這 {{count}} 項後即可匯出。點擊某一項可查看其位置。",
         "failed": "世界匯出失敗",
         "broken": "世界中會出現不是數字的值，因此沒有產生檔案（Webots 會把它當作空世界開啟）。請回報此問題：{{line}}"
