@@ -25,7 +25,6 @@ export const rules: Ruleset = {
     refs: {
         reach: '3.2.4',             // no tokens where the robot cannot go
         room4Checkpoint: '3.5.3',   // a checkpoint right behind each passage into area 4
-        contactTile: '4.3',         // a contact tile is in contact with the outside
         passageTokens: '3.8.2',     // no tokens in the passages between areas
         scoring: '5.6'
     }

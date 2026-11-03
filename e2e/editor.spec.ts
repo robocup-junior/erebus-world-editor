@@ -128,15 +128,14 @@ test('the work kept opens only in the rules of its year: chosen first, switched 
     await expect(page.locator('.ed-rules-btn')).toContainText('2026');
 });
 
-test('2027: contact tiles only beside the outer wall, smiley victims', async ({ page }) => {
+test('2027: contact tiles on any tile, smiley victims', async ({ page }) => {
     await boot(page);
     await page.locator('.ed-empty-actions .btn-primary').click();
     await settle(page, 400);
     await tool(page, 'floor');
     await page.locator('.ed-choice', { hasText: 'コンタクトタイル' }).click();
-    // a tile inside: refused, and said why
+    // a tile inside and one beside the outer wall: both take it
     await click(page, 30, 30);
-    await expect(page.locator('.ed-status')).toContainText('外周の壁に接するタイルにだけ');
     await click(page, 6, 30);
     await tool(page, 'victim');
     await click(page, 18, 1);

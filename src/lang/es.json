@@ -266,8 +266,7 @@
             "presetNotSupported": "Los modelos predefinidos de la sala 4 no están disponibles en este editor (cambia a personalizada o usa el editor clásico)",
             "room4Untyped": "Algunas víctimas de la sala 4 no tienen tipo ({{count}}): dales uno en Dibujar la sala 4",
             "room4Unreachable": "Algunas víctimas de la sala 4 están donde el robot no puede llegar ({{count}}): no hay víctimas donde el robot no puede ir (regla {{rule_reach}})",
-            "victimMisplaced": "Víctimas movidas a lo largo de su pared se solapan con el extremo de una pared o con otra víctima ({{count}})",
-            "contactInside": "Baldosas de contacto que no están junto a la pared exterior ({{count}}). Una baldosa de contacto solo va en una baldosa junto al exterior"
+            "victimMisplaced": "Víctimas movidas a lo largo de su pared se solapan con el extremo de una pared o con otra víctima ({{count}})"
         },
         "connection": {
             "passageNoRoom": "Hay un pasaje {{name}} (sala {{from}} ⇄ sala {{to}}), pero no hay sala {{room}}.",
@@ -374,7 +373,6 @@
         "victim_moved": "Movida a {{cm}} cm a lo largo de su pared (deshacer: Ctrl+Z)",
         "victim_noRoom": "No hay sitio para una víctima aquí (demasiado cerca del extremo de la pared o de otra víctima)",
         "rulesSwitched": "Cambiado a las reglas de {{year}} (deshacer: Ctrl+Z)",
-        "floor_notOuter": "{{floor}}: solo en una baldosa junto a la pared exterior",
         "openedOtherYear": "Este mapa se abrió con las reglas de {{year}}. Para pasarlo a las reglas de {{chosen}}, cámbialo con Reglas en la barra superior"
     },
     "guide": {
@@ -1068,8 +1066,7 @@
             "randomShort": "Solo se colocaron {{placed}} de {{asked}} (no hay suficientes paredes donde ponerlas).",
             "templateBlocked": "Todas las disposiciones probadas dejan parte de la sala inalcanzable. Revisa las partes en rojo claro.",
             "wallEnd": "No en el extremo de una pared. Haz clic en una cara de pared al menos tan ancha como una víctima (2 cm).",
-            "unreachable": "El robot no puede acercarse aquí: no hay víctimas donde el robot no puede ir (regla {{rule_reach}}).",
-            "floorNotOuter": "Una baldosa de contacto solo va en una baldosa junto a la pared exterior."
+            "unreachable": "El robot no puede acercarse aquí: no hay víctimas donde el robot no puede ir (regla {{rule_reach}})."
         },
         "tokens": "Marcas de pared: {{count}}",
         "farFromWall": "{{count}} lejos de cualquier pared (círculo rojo discontinuo)",
@@ -1095,12 +1092,10 @@
             },
             "checks": {
                 "problems": {
-                    "contactInside": "Baldosas de contacto que no están junto a la pared exterior ({{count}}). Una baldosa de contacto solo va en una baldosa junto al exterior (regla {{rule_contactTile}})",
                     "presetNotSupported": "Los modelos predefinidos de la sala 4 no están disponibles en este editor (cambia a personalizada)"
                 }
             },
             "status": {
-                "floor_notOuter": "{{floor}}: solo en una baldosa junto a la pared exterior (regla {{rule_contactTile}})",
                 "floor_clear": "Haz clic para quitar el suelo (agujero, pantano, punto de control, baldosa de contacto)"
             },
             "guide": {
@@ -1108,7 +1103,7 @@
                     "steps": {
                         "floors": {
                             "title": "Puntos de control, agujeros, pantanos y baldosas de contacto",
-                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita; Ninguno quita el suelo.\nUn punto de control puntúa cuando el robot llega a él, y es donde se vuelve a colocar el robot tras una falta de progreso (LoP). Un agujero es una baldosa en la que el robot no debe entrar, y un pantano gasta su batería más rápido.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos. Solo va en una baldosa junto a la pared exterior.",
+                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita; Ninguno quita el suelo.\nUn punto de control puntúa cuando el robot llega a él, y es donde se vuelve a colocar el robot tras una falta de progreso (LoP). Un agujero es una baldosa en la que el robot no debe entrar, y un pantano gasta su batería más rápido.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos. Puede ir en cualquier baldosa.",
                             "task": "Pon un punto de control, un agujero, un pantano y una baldosa de contacto (los cuatro marcos verdes son buenos sitios)"
                         },
                         "victim": {
@@ -1126,7 +1121,7 @@
                     "steps": {
                         "floor": {
                             "title": "Suelo (F): puntos de control, agujeros, pantanos, baldosas de contacto, la salida",
-                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es la baldosa donde se coloca el robot: una por mapa. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos. Solo va en una baldosa junto a la pared exterior."
+                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es la baldosa donde se coloca el robot: una por mapa. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos. Puede ir en cualquier baldosa."
                         },
                         "victim": {
                             "body": "Elige un tipo en el panel (víctimas sonrientes - herido una cara triste, estable una cara neutra, ileso una cara feliz - y sus falsas, objetivos cognitivos de cuatro tipos - gas inflamable, veneno, corrosivo, peróxido orgánico - y uno falso) y haz clic cerca de una pared: se coloca en la pared donde haces clic.\nVan en los lados de baldosa en la sala 1 (una por baldosa), en las caras de las paredes de 6 cm en las salas 2 y 3, y en dos sitios de una curva (dentro y fuera). Arrastra una colocada para moverla a lo largo de su pared. Donde no se puede poner, la línea de estado dice por qué.\nGira el dial (Giro fijo) para su rotación, o elige Aleatorio para una nueva cada vez. Para un objetivo cognitivo, haz clic en un anillo del objetivo y luego en un color abajo; la suma de los anillos da su tipo.\nHaz clic en una víctima con el mismo tipo para seleccionarla, y luego cambia su giro, anillos o posición a lo largo de su pared, o quítala. Un clic con otro tipo cambia su tipo."
@@ -1138,14 +1133,12 @@
                 }
             },
             "room4": {
-                "messages": {
-                    "floorNotOuter": "Una baldosa de contacto solo va en una baldosa junto a la pared exterior (regla {{rule_contactTile}})."
-                },
+                "messages": {},
                 "groups": {
                     "victim": "Víctimas sonrientes"
                 },
                 "hints": {
-                    "floor": "Haz clic en una baldosa de la sala 4 para darle el suelo elegido (agujero, pantano, punto de control, baldosa de contacto); otro clic lo quita, o arrastra para hacer varias. Un suelo ocupa una baldosa entera (12 cm); un agujero también es la baldosa entera. Una baldosa de contacto solo va en una baldosa junto a la pared exterior."
+                    "floor": "Haz clic en una baldosa de la sala 4 para darle el suelo elegido (agujero, pantano, punto de control, baldosa de contacto); otro clic lo quita, o arrastra para hacer varias. Un suelo ocupa una baldosa entera (12 cm); un agujero también es la baldosa entera. Una baldosa de contacto puede ir en cualquier baldosa."
                 }
             }
         }

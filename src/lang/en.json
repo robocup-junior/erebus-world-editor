@@ -266,8 +266,7 @@
             "presetNotSupported": "Room 4 presets are not available in this editor (switch to custom, or use the classic editor)",
             "room4Untyped": "Some victims in room 4 have no type ({{count}}): give them one in Draw room 4",
             "room4Unreachable": "Some victims in room 4 are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule {{rule_reach}})",
-            "victimMisplaced": "Victims moved along their wall overlap the end of a wall or another victim ({{count}})",
-            "contactInside": "Contact tiles not beside the outer wall ({{count}}). A contact tile goes only on a tile beside the outside"
+            "victimMisplaced": "Victims moved along their wall overlap the end of a wall or another victim ({{count}})"
         },
         "connection": {
             "passageNoRoom": "There is a {{name}} passage (room {{from}} ⇄ room {{to}}), but there is no room {{room}}.",
@@ -374,7 +373,6 @@
         "victim_moved": "Moved to {{cm}} cm along its wall (undo: Ctrl+Z)",
         "victim_noRoom": "No room for a victim here (too near the end of the wall or another victim)",
         "rulesSwitched": "Switched to the {{year}} rules (undo: Ctrl+Z)",
-        "floor_notOuter": "A {{floor}} goes only on a tile beside the outer wall",
         "openedOtherYear": "This map opened in the {{year}} rules. To take it to the {{chosen}} rules, switch with Rules in the top bar"
     },
     "guide": {
@@ -1068,8 +1066,7 @@
             "randomShort": "Placed only {{placed}} of {{asked}} (not enough walls to put them on).",
             "templateBlocked": "Every layout tried leaves part of the room out of reach. Check the light red parts.",
             "wallEnd": "Not on the end of a wall. Click a wall face at least as wide as a victim (2 cm).",
-            "unreachable": "The robot cannot get near here: no victims go where the robot cannot go (rule {{rule_reach}}).",
-            "floorNotOuter": "A contact tile goes only on a tile beside the outer wall."
+            "unreachable": "The robot cannot get near here: no victims go where the robot cannot go (rule {{rule_reach}})."
         },
         "tokens": "Wall tokens: {{count}}",
         "farFromWall": "{{count}} away from any wall (red dashed circle)",
@@ -1095,12 +1092,10 @@
             },
             "checks": {
                 "problems": {
-                    "contactInside": "Contact tiles not beside the outer wall ({{count}}). A contact tile goes only on a tile beside the outside (rule {{rule_contactTile}})",
                     "presetNotSupported": "Room 4 presets are not available in this editor (switch to custom)"
                 }
             },
             "status": {
-                "floor_notOuter": "A {{floor}} goes only on a tile beside the outer wall (rule {{rule_contactTile}})",
                 "floor_clear": "Click to take the floor off (hole, swamp, checkpoint, contact tile)"
             },
             "guide": {
@@ -1108,7 +1103,7 @@
                     "steps": {
                         "floors": {
                             "title": "Checkpoints, holes, swamps and contact tiles",
-                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back; None takes the floor off.\nA checkpoint scores when the robot reaches it, and is where the robot is put back after a lack of progress (LoP). A hole is a tile the robot must keep out of, and a swamp drains its battery faster.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds. It goes only on a tile beside the outer wall.",
+                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back; None takes the floor off.\nA checkpoint scores when the robot reaches it, and is where the robot is put back after a lack of progress (LoP). A hole is a tile the robot must keep out of, and a swamp drains its battery faster.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds. It goes on any tile.",
                             "task": "Put one checkpoint, one hole, one swamp and one contact tile (the four green frames are good places)"
                         },
                         "victim": {
@@ -1126,7 +1121,7 @@
                     "steps": {
                         "floor": {
                             "title": "Floor (F): checkpoints, holes, swamps, contact tiles, the start",
-                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is the tile the robot is put on: one on a map. None takes the floor off.\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds. It goes only on a tile beside the outer wall."
+                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is the tile the robot is put on: one on a map. None takes the floor off.\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds. It goes on any tile."
                         },
                         "victim": {
                             "body": "Pick a kind in the panel (smiley victims - harmed a sad face, stable a neutral face, unharmed a happy face - and fake ones, cognitive targets of four types - flammable gas, poison, corrosive, organic peroxide - and a fake one) and click near a wall: it goes on the wall where you click.\nThey go on tile sides in room 1 (one per tile), on the faces of the 6 cm walls in rooms 2 and 3, and on two places on a curve (inside and outside). Drag a placed one to move it along its wall. Where one cannot go, the status line says why.\nTurn the dial (Set the turn) for its rotation, or choose Random for a new one each time. For a cognitive target, click a ring of the target and then a colour below; the sum of the rings gives its type.\nClick a victim with the same kind to select it, then change its turn, rings or place along its wall, or remove it. Clicking it with another kind changes its kind."
@@ -1138,14 +1133,12 @@
                 }
             },
             "room4": {
-                "messages": {
-                    "floorNotOuter": "A contact tile goes only on a tile beside the outer wall (rule {{rule_contactTile}})."
-                },
+                "messages": {},
                 "groups": {
                     "victim": "Smiley victims"
                 },
                 "hints": {
-                    "floor": "Click a room 4 tile to give it the floor chosen (hole, swamp, checkpoint, contact tile); click it again to take it off, or drag to do several. A floor is a whole tile (12 cm); a hole is the whole tile too. A contact tile goes only on a tile beside the outer wall."
+                    "floor": "Click a room 4 tile to give it the floor chosen (hole, swamp, checkpoint, contact tile); click it again to take it off, or drag to do several. A floor is a whole tile (12 cm); a hole is the whole tile too. A contact tile goes on any tile."
                 }
             }
         }

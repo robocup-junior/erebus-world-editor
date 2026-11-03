@@ -266,8 +266,7 @@
             "presetNotSupported": "Modelos prontos da sala 4 não estão disponíveis neste editor (mude para personalizada ou use o editor clássico)",
             "room4Untyped": "Algumas vítimas da sala 4 não têm tipo ({{count}}): dê um tipo a elas em Desenhar a sala 4",
             "room4Unreachable": "Algumas vítimas da sala 4 estão onde o robô não consegue chegar ({{count}}): não há vítimas onde o robô não pode ir (regra {{rule_reach}})",
-            "victimMisplaced": "Vítimas movidas ao longo da parede se sobrepõem ao fim de uma parede ou a outra vítima ({{count}})",
-            "contactInside": "Ladrilhos de contato que não estão junto à parede externa ({{count}}). Um ladrilho de contato só vai em um ladrilho junto ao exterior"
+            "victimMisplaced": "Vítimas movidas ao longo da parede se sobrepõem ao fim de uma parede ou a outra vítima ({{count}})"
         },
         "connection": {
             "passageNoRoom": "Há uma passagem {{name}} (sala {{from}} ⇄ sala {{to}}), mas não há sala {{room}}.",
@@ -374,7 +373,6 @@
         "victim_moved": "Movida para {{cm}} cm ao longo da parede (desfazer: Ctrl+Z)",
         "victim_noRoom": "Não há espaço para uma vítima aqui (perto demais do fim da parede ou de outra vítima)",
         "rulesSwitched": "Mudado para as regras de {{year}} (desfazer: Ctrl+Z)",
-        "floor_notOuter": "{{floor}}: só em um ladrilho junto à parede externa",
         "openedOtherYear": "Este mapa abriu com as regras de {{year}}. Para levá-lo às regras de {{chosen}}, troque em Regras na barra superior"
     },
     "guide": {
@@ -1068,8 +1066,7 @@
             "randomShort": "Só {{placed}} de {{asked}} colocadas (não há paredes suficientes para elas).",
             "templateBlocked": "Todas as disposições testadas deixam parte da sala fora de alcance. Confira as partes em vermelho claro.",
             "wallEnd": "Não na ponta de uma parede. Clique em uma face de parede pelo menos tão larga quanto uma vítima (2 cm).",
-            "unreachable": "O robô não consegue chegar perto daqui: não há vítimas onde o robô não pode ir (regra {{rule_reach}}).",
-            "floorNotOuter": "Um ladrilho de contato só vai em um ladrilho junto à parede externa."
+            "unreachable": "O robô não consegue chegar perto daqui: não há vítimas onde o robô não pode ir (regra {{rule_reach}})."
         },
         "tokens": "Marcadores de parede: {{count}}",
         "farFromWall": "{{count}} longe de qualquer parede (círculo vermelho tracejado)",
@@ -1095,12 +1092,10 @@
             },
             "checks": {
                 "problems": {
-                    "contactInside": "Ladrilhos de contato que não estão junto à parede externa ({{count}}). Um ladrilho de contato só vai em um ladrilho junto ao exterior (regra {{rule_contactTile}})",
                     "presetNotSupported": "Modelos prontos da sala 4 não estão disponíveis neste editor (mude para personalizada)"
                 }
             },
             "status": {
-                "floor_notOuter": "{{floor}}: só em um ladrilho junto à parede externa (regra {{rule_contactTile}})",
                 "floor_clear": "Clique para remover o piso (buraco, pântano, checkpoint, ladrilho de contato)"
             },
             "guide": {
@@ -1108,7 +1103,7 @@
                     "steps": {
                         "floors": {
                             "title": "Checkpoints, buracos, pântanos e ladrilhos de contato",
-                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove; Nenhum remove o piso.\nUm checkpoint pontua quando o robô chega nele, e é onde o robô é recolocado depois de uma falta de progresso (LoP). Um buraco é um ladrilho em que o robô não deve entrar, e um pântano gasta a bateria dele mais rápido.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos. Só vai em um ladrilho junto à parede externa.",
+                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove; Nenhum remove o piso.\nUm checkpoint pontua quando o robô chega nele, e é onde o robô é recolocado depois de uma falta de progresso (LoP). Um buraco é um ladrilho em que o robô não deve entrar, e um pântano gasta a bateria dele mais rápido.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos. Pode ir em qualquer ladrilho.",
                             "task": "Coloque um checkpoint, um buraco, um pântano e um ladrilho de contato (as quatro molduras verdes são bons lugares)"
                         },
                         "victim": {
@@ -1126,7 +1121,7 @@
                     "steps": {
                         "floor": {
                             "title": "Piso (F): checkpoints, buracos, pântanos, ladrilhos de contato, a partida",
-                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é o ladrilho onde o robô é colocado: um por mapa. Nenhum remove o piso.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos. Só vai em um ladrilho junto à parede externa."
+                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é o ladrilho onde o robô é colocado: um por mapa. Nenhum remove o piso.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos. Pode ir em qualquer ladrilho."
                         },
                         "victim": {
                             "body": "Escolha um tipo no painel (vítimas sorridentes - ferida um rosto triste, estável um rosto neutro, ilesa um rosto feliz - e suas falsas, alvos cognitivos de quatro tipos - gás inflamável, veneno, corrosivo, peróxido orgânico - e um falso) e clique perto de uma parede: ela vai para a parede onde você clica.\nElas vão nos lados dos ladrilhos na sala 1 (uma por ladrilho), nas faces das paredes de 6 cm nas salas 2 e 3, e em dois lugares de uma curva (dentro e fora). Arraste uma colocada para movê-la ao longo da parede. Onde não dá para colocar, a linha de status diz por quê.\nGire o dial (Giro fixo) para a rotação, ou escolha Aleatório para uma nova a cada vez. Para um alvo cognitivo, clique em um anel do alvo e depois em uma cor abaixo; a soma dos anéis dá o tipo.\nClique em uma vítima com o mesmo tipo para selecioná-la e depois mude o giro, os anéis ou a posição ao longo da parede, ou remova-a. Clicar com outro tipo muda o tipo dela."
@@ -1138,14 +1133,12 @@
                 }
             },
             "room4": {
-                "messages": {
-                    "floorNotOuter": "Um ladrilho de contato só vai em um ladrilho junto à parede externa (regra {{rule_contactTile}})."
-                },
+                "messages": {},
                 "groups": {
                     "victim": "Vítimas sorridentes"
                 },
                 "hints": {
-                    "floor": "Clique em um ladrilho da sala 4 para dar a ele o piso escolhido (buraco, pântano, checkpoint, ladrilho de contato); clique de novo para tirar, ou arraste para fazer vários. Um piso ocupa um ladrilho inteiro (12 cm); um buraco também é o ladrilho inteiro. Um ladrilho de contato só vai em um ladrilho junto à parede externa."
+                    "floor": "Clique em um ladrilho da sala 4 para dar a ele o piso escolhido (buraco, pântano, checkpoint, ladrilho de contato); clique de novo para tirar, ou arraste para fazer vários. Um piso ocupa um ladrilho inteiro (12 cm); um buraco também é o ladrilho inteiro. Um ladrilho de contato pode ir em qualquer ladrilho."
                 }
             }
         }

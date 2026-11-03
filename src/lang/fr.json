@@ -266,8 +266,7 @@
             "presetNotSupported": "Les modèles de salle 4 ne sont pas disponibles dans cet éditeur (passez en personnalisée ou utilisez l’éditeur classique)",
             "room4Untyped": "Des victimes de la salle 4 n’ont pas de type ({{count}}) : donnez-leur en un dans Dessiner la salle 4",
             "room4Unreachable": "Des victimes de la salle 4 sont là où le robot ne peut pas aller ({{count}}) : il n’y en a pas là où le robot ne peut pas aller (règle {{rule_reach}})",
-            "victimMisplaced": "Des victimes déplacées le long de leur mur chevauchent le bout d’un mur ou une autre victime ({{count}})",
-            "contactInside": "Des cases de contact ne touchent pas le mur extérieur ({{count}}). Une case de contact se place seulement sur une case au bord de l’extérieur"
+            "victimMisplaced": "Des victimes déplacées le long de leur mur chevauchent le bout d’un mur ou une autre victime ({{count}})"
         },
         "connection": {
             "passageNoRoom": "Il y a un passage {{name}} (salle {{from}} ⇄ salle {{to}}), mais pas de salle {{room}}.",
@@ -374,7 +373,6 @@
         "victim_moved": "Déplacée à {{cm}} cm le long de son mur (annuler : Ctrl+Z)",
         "victim_noRoom": "Pas de place pour une victime ici (trop près du bout du mur ou d’une autre victime)",
         "rulesSwitched": "Passé aux règles {{year}} (annuler : Ctrl+Z)",
-        "floor_notOuter": "{{floor}} : seulement sur une case contre le mur extérieur",
         "openedOtherYear": "Cette carte s’est ouverte avec les règles {{year}}. Pour la passer aux règles {{chosen}}, changez avec Règles dans la barre du haut"
     },
     "guide": {
@@ -1068,8 +1066,7 @@
             "randomShort": "Seulement {{placed}} placée(s) sur {{asked}} (pas assez de murs pour les mettre).",
             "templateBlocked": "Chaque disposition essayée laisse une partie de la salle inaccessible. Vérifiez les parties rouge clair.",
             "wallEnd": "Pas au bout d’un mur. Cliquez sur une face de mur au moins aussi large qu’une victime (2 cm).",
-            "unreachable": "Le robot ne peut pas s’approcher d’ici : pas de victimes là où le robot ne peut pas aller (règle {{rule_reach}}).",
-            "floorNotOuter": "Une case de contact se place seulement sur une case contre le mur extérieur."
+            "unreachable": "Le robot ne peut pas s’approcher d’ici : pas de victimes là où le robot ne peut pas aller (règle {{rule_reach}})."
         },
         "tokens": "Marques murales : {{count}}",
         "farFromWall": "{{count}} loin de tout mur (cercle rouge pointillé)",
@@ -1095,12 +1092,10 @@
             },
             "checks": {
                 "problems": {
-                    "contactInside": "Des cases de contact ne touchent pas le mur extérieur ({{count}}). Une case de contact se place seulement sur une case au bord de l’extérieur (règle {{rule_contactTile}})",
                     "presetNotSupported": "Les modèles de salle 4 ne sont pas disponibles dans cet éditeur (passez en personnalisée)"
                 }
             },
             "status": {
-                "floor_notOuter": "{{floor}} : seulement sur une case contre le mur extérieur (règle {{rule_contactTile}})",
                 "floor_clear": "Cliquez pour retirer le sol (trou, marais, checkpoint, case de contact)"
             },
             "guide": {
@@ -1108,7 +1103,7 @@
                     "steps": {
                         "floors": {
                             "title": "Checkpoints, trous, marais et cases de contact",
-                            "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire ; Aucun retire le sol.\nUn checkpoint rapporte des points quand le robot l’atteint, et c’est là que le robot est replacé après un manque de progrès (LoP). Un trou est une case que le robot doit éviter, et un marais vide sa batterie plus vite.\nUne case de contact (cyan) est l’endroit où le robot reçoit une batterie neuve après y être resté immobile 5 secondes. Elle se place seulement sur une case contre le mur extérieur.",
+                            "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire ; Aucun retire le sol.\nUn checkpoint rapporte des points quand le robot l’atteint, et c’est là que le robot est replacé après un manque de progrès (LoP). Un trou est une case que le robot doit éviter, et un marais vide sa batterie plus vite.\nUne case de contact (cyan) est l’endroit où le robot reçoit une batterie neuve après y être resté immobile 5 secondes. Elle se place sur n’importe quelle case.",
                             "task": "Placez un checkpoint, un trou, un marais et une case de contact (les quatre cadres verts sont de bons endroits)"
                         },
                         "victim": {
@@ -1126,7 +1121,7 @@
                     "steps": {
                         "floor": {
                             "title": "Sol (F) : checkpoints, trous, marais, cases de contact, le départ",
-                            "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire.\nDépart est la case où l’on pose le robot : une par carte. Aucun retire le sol.\nLes règles demandent un checkpoint à chaque passage vers la salle 4, donc il s’y place de lui-même.\nUne case de contact (cyan) est l’endroit où le robot reçoit une batterie neuve après y être resté immobile 5 secondes. Elle se place seulement sur une case contre le mur extérieur."
+                            "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire.\nDépart est la case où l’on pose le robot : une par carte. Aucun retire le sol.\nLes règles demandent un checkpoint à chaque passage vers la salle 4, donc il s’y place de lui-même.\nUne case de contact (cyan) est l’endroit où le robot reçoit une batterie neuve après y être resté immobile 5 secondes. Elle se place sur n’importe quelle case."
                         },
                         "victim": {
                             "body": "Choisissez un type dans le panneau (victimes smileys - blessée un visage triste, stable un visage neutre, indemne un visage joyeux - et leurs fausses, cibles cognitives de quatre types - gaz inflammable, poison, corrosif, peroxyde organique - et une fausse) et cliquez près d’un mur : elle se place sur le mur là où vous cliquez.\nElles vont sur les côtés des cases dans la salle 1 (une par case), sur les faces des murs de 6 cm dans les salles 2 et 3, et à deux places sur une courbe (intérieur et extérieur). Faites glisser une victime placée pour la déplacer le long de son mur. Là où elle ne peut pas aller, la ligne d’état dit pourquoi.\nTournez le cadran (Orientation fixe) pour son orientation, ou choisissez Aléatoire pour une nouvelle à chaque fois. Pour une cible cognitive, cliquez sur un anneau de la cible puis sur une couleur en dessous ; la somme des anneaux donne son type.\nCliquez sur une victime avec le même type pour la sélectionner, puis changez son orientation, ses anneaux ou sa position le long du mur, ou retirez-la. Un clic avec un autre type change son type."
@@ -1138,14 +1133,12 @@
                 }
             },
             "room4": {
-                "messages": {
-                    "floorNotOuter": "Une case de contact se place seulement sur une case contre le mur extérieur (règle {{rule_contactTile}})."
-                },
+                "messages": {},
                 "groups": {
                     "victim": "Victimes smileys"
                 },
                 "hints": {
-                    "floor": "Cliquez sur une case de la salle 4 pour lui donner le sol choisi (trou, marais, checkpoint, case de contact) ; cliquez à nouveau pour le retirer, ou faites glisser pour en faire plusieurs. Un sol occupe une case entière (12 cm) ; un trou aussi est la case entière. Une case de contact se place seulement sur une case contre le mur extérieur."
+                    "floor": "Cliquez sur une case de la salle 4 pour lui donner le sol choisi (trou, marais, checkpoint, case de contact) ; cliquez à nouveau pour le retirer, ou faites glisser pour en faire plusieurs. Un sol occupe une case entière (12 cm) ; un trou aussi est la case entière. Une case de contact se place sur n’importe quelle case."
                 }
             }
         }

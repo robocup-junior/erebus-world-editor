@@ -1,5 +1,5 @@
-// The 2027 (draft) rules: contact tiles - only beside the field's outside (rule 4.3), in any room,
-// an error when the outline leaves one inside - and the world file of Erebus 27 (a tile's contact
+// The 2027 (draft) rules: contact tiles - on any tile, in any room (rule 4.3: a person can reach
+// the robot there, through the roof as well) - and the world file of Erebus 27 (a tile's contact
 // field, the smiley fakes' models); 2026 maps are written as before
 import { test } from 'vitest';
 import assert from 'node:assert';
@@ -25,60 +25,34 @@ test('the 2027 rules: a draft, its rule book, contact tiles, smiley victims, the
   assert.ok(r.draft);
   assert.strictEqual(r.book, 'https://junior.robocup.org/wp-content/uploads/2026/09/RCJRescueSimulation2027-draft.pdf');
   assert.ok(!R.rulesFor(2026)!.draft);
-  assert.deepStrictEqual(r.floors.filter((k) => k.outerOnly).map((k) => k.id), ['contact']);
+  assert.ok(r.floors.some((k) => k.id === 'contact'));
   assert.ok(!R.rulesFor(2026)!.floors.some((k) => k.id === 'contact'));
   assert.deepStrictEqual(r.tokens.kinds.filter((k) => k.face).map((k) => [k.id, k.face]),
     [['H', 'face-frown'], ['S', 'face-meh'], ['U', 'face-smile']]);
   assert.deepStrictEqual(r.tokens.stamps.filter((s) => s.face).map((s) => s.idx).sort((a, b) => a - b), [0, 1, 2, 8, 9, 10]);
   assert.strictEqual(r.refs.passageTokens, '3.8.2');
-  assert.strictEqual(r.refs.contactTile, '4.3');
   assert.deepStrictEqual(R.upcomingYears(), []);
 });
 
-test('a contact tile goes only on a tile beside the outside, in any room', () => {
+test('a contact tile goes on any tile, in any room: beside the outer wall or not', () => {
   const map = M.newMap(3, 3, 2027);
-  // the middle tile is inside: refused, by the floor tool and by the room 4 creator's
-  assert.ok(!M.touchesOutside(map, 3, 3));
-  assert.ok(!M.floorFits(map, 3, 3, 'contact'));
-  assert.ok(M.floorFits(map, 3, 3, 'swamp'), 'other floors go anywhere');
-  assert.strictEqual(M.setFloor(map, 3, 3, 'contact'), false);
-  assert.strictEqual(M.setFloorKind(map, 3, 3, 'contact'), false);
-  assert.ok(!(M.tileOf(map, 3, 3) || {}).contact);
-  // a tile on the border takes it, and loses the other floors
+  // the middle tile, inside the field: a person reaches the robot through the roof (4.3)
+  assert.ok(M.setFloor(map, 3, 3, 'contact'));
+  assert.strictEqual(M.floorKind(map, 3, 3), 'contact');
+  assert.ok(M.setFloorKind(map, 3, 3, ''));
+  assert.ok(M.setFloorKind(map, 3, 3, 'contact'));
+  // a tile on the border takes it too, and loses the other floors
   M.setFloor(map, 1, 3, 'swamp');
   assert.ok(M.setFloor(map, 1, 3, 'contact'));
   assert.deepStrictEqual([M.tileOf(map, 1, 3)!.contact, M.tileOf(map, 1, 3)!.swamp], [true, false]);
-  assert.strictEqual(M.floorKind(map, 1, 3), 'contact');
-  // beside a tile taken out of the map: beside the outside too
-  M.setRoom(map, 3, 1, 0);
-  assert.ok(M.touchesOutside(map, 3, 3));
-  assert.ok(M.setFloor(map, 3, 3, 'contact'));
-  // rooms 2 and 4 too (room 4: as its creator gives the floors)
+  // rooms 2 and 4 too (room 4: as its creator gives the floors), and no problem for an inner one
   const big = M.newMap(4, 2, 2027);
   let borders = paint(big, 2, [[1, 0]], new Set());
   borders = paint(big, 4, [[3, 0], [3, 1]], borders);
   assert.ok(M.setFloor(big, 3, 1, 'contact'));
   assert.ok(M.setFloorKind(big, 7, 3, 'contact'));
-  assert.deepStrictEqual(M.problems(big).filter((p) => p.key === 'contactInside'), []);
-});
-
-test('a contact tile the outline leaves inside is an error, and fixing it takes the floor off', () => {
-  const map = M.newMap(3, 3, 2027);
-  // the top middle tile taken out: the middle tile is beside the outside, and takes a contact tile
-  M.setRoom(map, 3, 1, 0);
-  assert.ok(M.setFloor(map, 3, 3, 'contact'));
-  assert.ok(!M.problems(map).some((p) => p.key === 'contactInside'));
-  // the tile back in the map: the contact tile is inside now
-  M.setRoom(map, 3, 1, 1);
-  const p = M.problems(map).find((q) => q.key === 'contactInside')!;
-  assert.ok(p && p.block, 'an error');
-  assert.deepStrictEqual(p.params, { count: 1 });
-  assert.deepStrictEqual(p.show!.tiles, [[1, 1]]);
-  assert.deepStrictEqual(p.at, [18, 18]);
-  assert.ok(M.FIXABLE.includes('contactInside'));
-  M.fixProblem(map, p, M.borderEdges(map));
-  assert.ok(!M.tileOf(map, 3, 3)!.contact);
-  assert.ok(!M.problems(map).some((q) => q.key === 'contactInside'));
+  assert.ok(M.setFloor(map, 5, 5, 'contact'));
+  assert.ok(!M.problems(map).some((p) => /contact/i.test(p.key)));
 });
 
 test('Erebus 27: contact tiles in the world file (worldTile and halfTile), fakes as their smiley models', () => {

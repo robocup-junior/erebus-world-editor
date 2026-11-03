@@ -266,8 +266,7 @@
             "presetNotSupported": "Preset ruang 4 tidak tersedia di editor ini (ganti ke kustom, atau gunakan editor klasik)",
             "room4Untyped": "Beberapa korban di ruang 4 tidak punya jenis ({{count}}): beri jenis di Gambar ruang 4",
             "room4Unreachable": "Beberapa korban di ruang 4 berada di tempat yang tidak bisa dicapai robot ({{count}}): tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}})",
-            "victimMisplaced": "Korban yang dipindahkan di sepanjang dindingnya tumpang tindih dengan ujung dinding atau korban lain ({{count}})",
-            "contactInside": "Petak kontak yang tidak berada di samping dinding luar ({{count}}). Petak kontak hanya ditempatkan di petak yang berbatasan dengan luar"
+            "victimMisplaced": "Korban yang dipindahkan di sepanjang dindingnya tumpang tindih dengan ujung dinding atau korban lain ({{count}})"
         },
         "connection": {
             "passageNoRoom": "Ada lorong {{name}} (ruang {{from}} ⇄ ruang {{to}}), tetapi tidak ada ruang {{room}}.",
@@ -374,7 +373,6 @@
         "victim_moved": "Dipindahkan ke {{cm}} cm di sepanjang dindingnya (urungkan: Ctrl+Z)",
         "victim_noRoom": "Tidak ada tempat untuk korban di sini (terlalu dekat dengan ujung dinding atau korban lain)",
         "rulesSwitched": "Beralih ke aturan {{year}} (urungkan: Ctrl+Z)",
-        "floor_notOuter": "{{floor}} hanya di petak di samping dinding luar",
         "openedOtherYear": "Peta ini dibuka dengan aturan {{year}}. Untuk membawanya ke aturan {{chosen}}, ganti melalui Aturan di bilah atas"
     },
     "guide": {
@@ -1068,8 +1066,7 @@
             "randomShort": "Hanya {{placed}} dari {{asked}} yang ditempatkan (dinding tidak cukup untuk menempatkannya).",
             "templateBlocked": "Setiap tata letak yang dicoba membuat sebagian ruang tidak terjangkau. Periksa bagian merah muda.",
             "wallEnd": "Tidak di ujung dinding. Klik muka dinding yang setidaknya selebar korban (2 cm).",
-            "unreachable": "Robot tidak bisa mendekat ke sini: tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}}).",
-            "floorNotOuter": "Petak kontak hanya ditempatkan di petak di samping dinding luar."
+            "unreachable": "Robot tidak bisa mendekat ke sini: tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}})."
         },
         "tokens": "Tanda dinding: {{count}}",
         "farFromWall": "{{count}} jauh dari dinding mana pun (lingkaran merah putus-putus)",
@@ -1095,12 +1092,10 @@
             },
             "checks": {
                 "problems": {
-                    "contactInside": "Petak kontak yang tidak berada di samping dinding luar ({{count}}). Petak kontak hanya ditempatkan di petak yang berbatasan dengan luar (aturan {{rule_contactTile}})",
                     "presetNotSupported": "Preset ruang 4 tidak tersedia di editor ini (ganti ke kustom)"
                 }
             },
             "status": {
-                "floor_notOuter": "{{floor}} hanya di petak di samping dinding luar (aturan {{rule_contactTile}})",
                 "floor_clear": "Klik untuk menghapus lantai (lubang, rawa, checkpoint, petak kontak)"
             },
             "guide": {
@@ -1108,7 +1103,7 @@
                     "steps": {
                         "floors": {
                             "title": "Checkpoint, lubang, rawa, dan petak kontak",
-                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya; Tidak ada menghapus lantai.\nCheckpoint memberi skor saat robot mencapainya, dan merupakan tempat robot dikembalikan setelah tidak ada kemajuan (LoP). Lubang adalah petak yang harus dihindari robot, dan rawa menguras baterainya lebih cepat.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik. Hanya ditempatkan di petak di samping dinding luar.",
+                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya; Tidak ada menghapus lantai.\nCheckpoint memberi skor saat robot mencapainya, dan merupakan tempat robot dikembalikan setelah tidak ada kemajuan (LoP). Lubang adalah petak yang harus dihindari robot, dan rawa menguras baterainya lebih cepat.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik. Dapat ditempatkan di petak mana pun.",
                             "task": "Pasang satu checkpoint, satu lubang, satu rawa, dan satu petak kontak (empat bingkai hijau adalah tempat yang baik)"
                         },
                         "victim": {
@@ -1126,7 +1121,7 @@
                     "steps": {
                         "floor": {
                             "title": "Lantai (F): checkpoint, lubang, rawa, petak kontak, start",
-                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah petak tempat robot diletakkan: satu per peta. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik. Hanya ditempatkan di petak di samping dinding luar."
+                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah petak tempat robot diletakkan: satu per peta. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik. Dapat ditempatkan di petak mana pun."
                         },
                         "victim": {
                             "body": "Pilih jenis di panel (korban smiley - terluka wajah sedih, stabil wajah datar, tidak terluka wajah senang - dan yang palsu, target kognitif empat jenis - gas mudah terbakar, racun, korosif, peroksida organik - dan yang palsu) lalu klik di dekat dinding: ia ditempatkan di dinding tempat Anda klik.\nDi ruang 1 di sisi petak (satu per petak), di ruang 2 dan 3 di muka dinding 6 cm, dan di dua tempat pada lengkung (dalam dan luar). Seret yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya. Jika tidak bisa ditempatkan, baris status memberi tahu alasannya.\nPutar dial (Putaran tetap) untuk rotasinya, atau pilih Acak untuk putaran baru setiap kali. Untuk target kognitif, klik cincin target lalu warna di bawah; jumlah cincin menentukan jenisnya.\nKlik korban dengan jenis yang sama untuk memilihnya, lalu ubah putaran, cincin, atau posisinya di sepanjang dinding, atau hapus. Klik dengan jenis lain mengubah jenisnya."
@@ -1138,14 +1133,12 @@
                 }
             },
             "room4": {
-                "messages": {
-                    "floorNotOuter": "Petak kontak hanya ditempatkan di petak di samping dinding luar (aturan {{rule_contactTile}})."
-                },
+                "messages": {},
                 "groups": {
                     "victim": "Korban smiley"
                 },
                 "hints": {
-                    "floor": "Klik petak ruang 4 untuk memberinya lantai terpilih (lubang, rawa, checkpoint, petak kontak); klik lagi untuk menghapusnya, atau seret untuk beberapa sekaligus. Lantai adalah satu petak penuh (12 cm); lubang juga satu petak penuh. Petak kontak hanya ditempatkan di petak di samping dinding luar."
+                    "floor": "Klik petak ruang 4 untuk memberinya lantai terpilih (lubang, rawa, checkpoint, petak kontak); klik lagi untuk menghapusnya, atau seret untuk beberapa sekaligus. Lantai adalah satu petak penuh (12 cm); lubang juga satu petak penuh. Petak kontak dapat ditempatkan di petak mana pun."
                 }
             }
         }

@@ -33,7 +33,6 @@ export interface FloorKind {
     color: string;              // how the map shows it
     hole: boolean;              // no floor there: the robot keeps off the tile
     checkpoint: boolean;        // a checkpoint (scores; wanted behind passages, see Passages)
-    outerOnly: boolean;         // only on a tile beside the field's outside (a side of it on the outer wall)
 }
 
 // The passage between two rooms: a tile in its colour (in the map file, the tile's colour)

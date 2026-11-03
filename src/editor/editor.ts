@@ -57,9 +57,6 @@ export interface Room4Host {
     // room 4
     room4FloorKinds: FloorKind[];
     room4Checkpoints: boolean;
-    // whether a floor of that kind may be on the tile of cell (x, y) (a contact tile only beside the
-    // field's outside)
-    room4FloorFits(x: number, y: number, kind: string): boolean;
     // the floor of each room 4 tile ('black', 'swamp', 'checkpoint'; none left out), by its cell key
     // "x,y": set in the creator, put on the map when it closes
     room4Floors: Record<string, string>;
@@ -856,7 +853,6 @@ export function createEditor() {
             room4Target: rulesOf(map).tokens.target,
             room4FloorKinds: rulesOf(map).floors,
             room4Checkpoints: rulesOf(map).passages.room4Checkpoints,
-            room4FloorFits: function (x, y, kind) { return M.floorFits(map, x, y, kind); },
             room4Floors: floors
         };
         room4Done = function () {
@@ -1174,9 +1170,7 @@ export function createEditor() {
             } else notify('noBorder', null, 'warn');
         } else if (tool === 'floor') {
             const tl = tileAt(p);
-            if (tl && !M.setFloor(map, tl.x, tl.y, ui.floor) && !M.floorFits(map, tl.x, tl.y, ui.floor)) {
-                notify('floor_notOuter', { floor: t('floors.' + ui.floor) }, 'warn');
-            }
+            if (tl) M.setFloor(map, tl.x, tl.y, ui.floor);
         } else if (tool === 'victim' && stroke.victim) {
             dropVictim();
         } else if (tool === 'victim') {
@@ -1735,7 +1729,6 @@ export function createEditor() {
             else if (kind === 'start') say(st && st.x === tl.x && st.y === tl.y ? 'floor_isStart' : 'floor_start');
             else if (kind === 'clear') say('floor_clear');
             else if (tile && tile[kind]) say('floor_off', { floor: name });
-            else if (!M.floorFits(map, tl.x, tl.y, kind)) { say('floor_notOuter', { floor: name }); return { kind: 'tile', tile: tl, color: '#dc2626' }; }
             else say('floor_on', { floor: name });
             return { kind: 'tile', tile: tl };
         }
