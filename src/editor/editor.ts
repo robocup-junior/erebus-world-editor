@@ -737,13 +737,18 @@ export function createEditor() {
         if (year !== chosen) notify('openedOtherYear', { year: year, chosen: chosen }, 'info', 9000);
     }
 
-    function download(data: string, type: string, name: string) {
+    // A file saved: as plain bytes (application/octet-stream), so that Safari saves it as it is rather
+    // than looking into it as text, and its blob URL let go a while after (as FileSaver.js does), not
+    // kept for as long as the page is open
+    function download(data: string, name: string) {
+        const url = URL.createObjectURL(new Blob([data], { type: 'application/octet-stream' }));
         const link = document.createElement('a');
-        link.href = URL.createObjectURL(new Blob([data], { type: type }));
+        link.href = url;
         link.download = name;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        window.setTimeout(function () { URL.revokeObjectURL(url); }, 40000);
     }
 
     // Saved as the classic editor saves (with its reachable / linear flags worked out)
@@ -751,7 +756,7 @@ export function createEditor() {
         if (!map) return;
         const data = JSON.parse(JSON.stringify(M.saved(map)));
         if (data.startTile && data.startTile.x > 0) W.recalculate(data);
-        download(JSON.stringify(data), 'application/json', (map.name || 'world') + '.json');
+        download(JSON.stringify(data), (map.name || 'world') + '.json');
         dirty = false;
     }
 
@@ -793,13 +798,13 @@ export function createEditor() {
         afterPaint(function () {
             if (!map) { done(); return; }
             if (map.area4Room && map.area4Room.type === 1) {
-                customWorld().then(function (text) { done(); download(text, 'text/plain', name); }, failed);
+                customWorld().then(function (text) { done(); download(text, name); }, failed);
                 return;
             }
             let text;
             try { text = M.world(map); } catch (e) { failed(e); return; }
             done();
-            download(text, 'text/plain', name);
+            download(text, name);
         });
     }
 
