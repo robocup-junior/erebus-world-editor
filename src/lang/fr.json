@@ -613,18 +613,13 @@
                 },
                 "r4rect": {
                     "title": "Rectangle (R)",
-                    "body": "Le rectangle trace des murs autour de la boîte entre les deux coins du glisser. Avec Maj enfoncée, c’est un carré.",
+                    "body": "Le rectangle trace des murs autour de la boîte entre les deux coins du glisser. Avec Maj enfoncée, c’est un carré. Avec Alt enfoncée, le point de départ du glisser est son centre.",
                     "task": "Faites glisser le rectangle pointillé avec l’outil rectangle"
                 },
-                "r4circle": {
-                    "title": "Cercle (C)",
-                    "body": "Le cercle trace un mur rond depuis son centre jusqu’où vous faites glisser : pratique pour des obstacles ronds comme des piliers.",
-                    "task": "Avec le cercle, faites glisser du centre du cercle pointillé vers l’extérieur"
-                },
                 "r4ellipse": {
-                    "title": "Ellipse (O)",
-                    "body": "L’ellipse trace un mur dans la boîte que vous faites glisser. Avec Maj enfoncée, c’est un cercle.",
-                    "task": "Avec l’ellipse, faites glisser une boîte autour de l’ellipse pointillée"
+                    "title": "Cercle / ellipse (O)",
+                    "body": "Cercle / ellipse trace un mur dans la boîte que vous faites glisser. Avec Maj enfoncée, c’est un cercle ; avec Alt enfoncée, le point de départ du glisser est son centre. Maj et Alt ensemble tracent un pilier rond depuis son centre.",
+                    "task": "Avec cercle / ellipse, faites glisser une boîte autour de l’ellipse pointillée"
                 },
                 "r4polygon": {
                     "title": "Polygone (G)",
@@ -1012,13 +1007,12 @@
             "pen": "Stylo",
             "line": "Ligne",
             "rect": "Rectangle",
-            "circle": "Cercle",
             "stamp": "Victime",
             "floor": "Sol",
             "erase": "Gomme",
             "curve": "Courbe",
             "arc": "Arc",
-            "ellipse": "Ellipse",
+            "ellipse": "Cercle / ellipse",
             "polygon": "Polygone",
             "shape": "Forme",
             "select": "Sélection",
@@ -1043,15 +1037,14 @@
         "hints": {
             "pen": "Faites glisser pour tracer des murs librement.",
             "line": "Faites glisser pour tracer un mur droit. Maj pour des pas de 45°.",
-            "rect": "Faites glisser pour tracer un rectangle de murs. Maj pour un carré.",
-            "circle": "Faites glisser depuis le centre pour tracer un mur circulaire.",
+            "rect": "Faites glisser pour tracer un rectangle de murs. Maj pour un carré. Alt trace depuis le centre.",
             "stamp": "Cliquez près d’un mur pour fixer une victime au mur le plus proche. Cliquez sur une victime placée pour changer son orientation ou ses anneaux (avec un autre type choisi, elle prend ce type). Un clic droit la retire.",
             "floor": "Cliquez sur une case de la salle 4 pour lui donner le sol choisi (trou, marais, checkpoint) ; cliquez à nouveau pour le retirer, ou faites glisser pour en faire plusieurs. Un sol occupe une case entière (12 cm) ; un trou aussi est la case entière.",
             "erase": "Faites glisser pour effacer murs et victimes. Une victime peut aussi être retirée d’un clic droit, quel que soit l’outil.",
             "eraseTokens": "Retire chaque victime que touche la gomme. Les murs restent.",
             "curve": "Cliquez des points et la courbe passe par eux. Double-clic, Entrée ou clic droit pour terminer ; cliquez sur le premier point pour la fermer. Retour arrière retire un point, Échap annule.",
             "arc": "Faites glisser pour fixer les deux extrémités, bougez la souris pour le courber, puis cliquez.",
-            "ellipse": "Trace l’ellipse qui tient dans la boîte tracée. Maj pour un cercle.",
+            "ellipse": "Trace l’ellipse qui tient dans la boîte tracée. Maj pour un cercle, Alt pour tracer depuis le centre.",
             "polygon": "Faites glisser depuis le centre pour tracer un polygone régulier. Il tourne par pas de 15° (librement avec Maj).",
             "shape": "Choisissez une icône ou une image, puis faites glisser sur le canevas pour la dimensionner (garde ses proportions ; libre avec Maj).",
             "select": "Faites glisser pour sélectionner une boîte, puis faites glisser à l’intérieur pour la déplacer (Alt pour copier). Les flèches la poussent, [ ] la tournent, Entrée ou un clic en dehors la pose, Suppr la supprime.",

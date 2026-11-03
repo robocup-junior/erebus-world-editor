@@ -17,7 +17,8 @@ type P = { x: number; y: number };
 type Ctx = CanvasRenderingContext2D;
 // a stamp found in the picture, with what the creator works out about it
 interface Token extends R4.FoundToken { nearWall?: boolean; anchor: R4.WallAnchor | null; unreachable?: boolean }
-// a shape being drawn: line / rect / ellipse (a, b), circle (a, r), polygon (a, r, n, rot), arc (p0, c, p1),
+// a shape being drawn: line / rect / ellipse (a, b; from: the centre it was drawn from, with Alt),
+// circle (a, r) (drawn by the lessons and the templates; the ellipse tool draws circles with Shift), polygon (a, r, n, rot), arc (p0, c, p1),
 // curve (pts, smooth, closed), icon (a, b, free)
 type Shape = { type: string; [key: string]: any };
 type Spot = { ok: true; x: number; y: number; wall: P } | { ok: false; reason: string };
@@ -960,6 +961,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
             }
             octx.save();
             if (preview.type === 'circle' || preview.type === 'polygon') dot(preview.a, '#2563eb');
+            if (preview.from) dot(preview.from, '#2563eb');
             if (preview.type === 'arc') { dot(preview.p0, '#2563eb'); dot(preview.p1, '#2563eb'); if (preview.c) dot(preview.c, '#a855f7'); }
             if (preview.type === 'curve') {
                 preview.pts.forEach(function (p: P, i: number) { dot(p, i === 0 ? '#16a34a' : '#2563eb', i === 0 ? 4.5 : 3); });
@@ -1352,7 +1354,9 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     }
 
     // Shapes drawn by dragging from a to p
-    function shapeFrom(a: P, p: P, shift: boolean): Shape {
+    // shift: a line keeps to 45 degrees, a rect or ellipse is square, a polygon turns freely, an icon
+    // is not kept to its proportions; alt: a rect or ellipse is drawn out from its centre at a
+    function shapeFrom(a: P, p: P, shift: boolean, alt: boolean): Shape {
         let b = snap(p);
         const tool = r4.tool;
         if (tool === 'line' && shift) {
@@ -1366,6 +1370,9 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
             b = { x: a.x + Math.sign(b.x - a.x || 1) * s, y: a.y + Math.sign(b.y - a.y || 1) * s };
         }
         if (tool === 'shape') return { type: 'icon', a: a, b: p, free: shift };
+        if ((tool === 'rect' || tool === 'ellipse') && alt) {
+            return { type: tool, a: { x: 2 * a.x - b.x, y: 2 * a.y - b.y }, b: b, from: a };
+        }
         const shape: Shape = { type: tool, a: a, b: b };
         if (tool === 'circle' || tool === 'polygon') {
             let r = Math.hypot(p.x - a.x, p.y - a.y);
@@ -1909,7 +1916,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
                 return;
             }
             drag = { start: tool === 'shape' ? p : snap(p) };
-            preview = shapeFrom(drag.start, p, e.shiftKey);
+            preview = shapeFrom(drag.start, p, e.shiftKey, e.altKey);
         }
         drawOverlay();
     });
@@ -1940,7 +1947,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
                 drag.last = p;
                 mask();
             } else {
-                preview = shapeFrom(drag.start, p, e.shiftKey);
+                preview = shapeFrom(drag.start, p, e.shiftKey, e.altKey);
             }
         } else if (pending) {
             updatePendingPreview(p);
@@ -1986,7 +1993,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
             return;
         }
         if (preview) {
-            const shape = shapeFrom(d.start, pos(e), e.shiftKey);
+            const shape = shapeFrom(d.start, pos(e), e.shiftKey, e.altKey);
             preview = null;
             if (shapeSize(shape) >= 2) { drawShape(shape); return; }
         }

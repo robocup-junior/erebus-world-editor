@@ -613,18 +613,13 @@
                 },
                 "r4rect": {
                     "title": "Retângulo (R)",
-                    "body": "O retângulo desenha paredes ao redor da caixa entre os dois cantos do arraste. Com Shift pressionado, é um quadrado.",
+                    "body": "O retângulo desenha paredes ao redor da caixa entre os dois cantos do arraste. Com Shift pressionado, é um quadrado. Com Alt pressionado, o ponto onde o arraste começa é o centro.",
                     "task": "Arraste o retângulo tracejado com a ferramenta de retângulo"
                 },
-                "r4circle": {
-                    "title": "Círculo (C)",
-                    "body": "O círculo desenha uma parede redonda do centro até onde você arrasta: útil para obstáculos redondos como pilares.",
-                    "task": "Com o círculo, arraste do centro do círculo tracejado para fora"
-                },
                 "r4ellipse": {
-                    "title": "Elipse (O)",
-                    "body": "A elipse desenha uma parede dentro da caixa que você arrasta. Com Shift pressionado, é um círculo.",
-                    "task": "Com a elipse, arraste uma caixa em volta da elipse tracejada"
+                    "title": "Círculo / elipse (O)",
+                    "body": "Círculo / elipse desenha uma parede dentro da caixa que você arrasta. Com Shift pressionado, é um círculo; com Alt pressionado, o ponto onde o arraste começa é o centro. Shift e Alt juntos desenham um pilar redondo a partir do centro.",
+                    "task": "Com círculo / elipse, arraste uma caixa em volta da elipse tracejada"
                 },
                 "r4polygon": {
                     "title": "Polígono (G)",
@@ -1012,13 +1007,12 @@
             "pen": "Caneta",
             "line": "Linha",
             "rect": "Retângulo",
-            "circle": "Círculo",
             "stamp": "Vítima",
             "floor": "Piso",
             "erase": "Borracha",
             "curve": "Curva",
             "arc": "Arco",
-            "ellipse": "Elipse",
+            "ellipse": "Círculo / elipse",
             "polygon": "Polígono",
             "shape": "Forma",
             "select": "Selecionar",
@@ -1043,15 +1037,14 @@
         "hints": {
             "pen": "Arraste para desenhar paredes livremente.",
             "line": "Arraste para desenhar uma parede reta. Segure Shift para passos de 45°.",
-            "rect": "Arraste para desenhar um retângulo de paredes. Segure Shift para um quadrado.",
-            "circle": "Arraste a partir do centro para desenhar uma parede circular.",
+            "rect": "Arraste para desenhar um retângulo de paredes. Segure Shift para um quadrado. Alt desenha a partir do centro.",
             "stamp": "Clique perto de uma parede para prender uma vítima na parede mais próxima. Clique em uma vítima colocada para mudar o giro ou os anéis (com outro tipo escolhido, ela assume esse tipo). O clique direito a remove.",
             "floor": "Clique em um ladrilho da sala 4 para dar a ele o piso escolhido (buraco, pântano, checkpoint); clique de novo para tirar, ou arraste para fazer vários. Um piso ocupa um ladrilho inteiro (12 cm); um buraco também é o ladrilho inteiro.",
             "erase": "Arraste para apagar paredes e vítimas. Uma vítima também pode ser removida com um clique direito, com qualquer ferramenta.",
             "eraseTokens": "Remove cada vítima que a borracha toca. As paredes ficam.",
             "curve": "Clique em pontos e a curva passa por eles. Clique duplo, Enter ou clique direito para terminar; clique no primeiro ponto para fechá-la. Backspace tira um ponto, Esc cancela.",
             "arc": "Arraste para definir as duas pontas, mova o mouse para curvar e clique.",
-            "ellipse": "Desenha a elipse que cabe na caixa arrastada. Segure Shift para um círculo.",
+            "ellipse": "Desenha a elipse que cabe na caixa arrastada. Segure Shift para um círculo e Alt para desenhar a partir do centro.",
             "polygon": "Arraste a partir do centro para desenhar um polígono regular. Gira em passos de 15° (livre com Shift).",
             "shape": "Escolha um ícone ou uma imagem e depois arraste na tela para definir o tamanho (mantém as proporções; livre com Shift).",
             "select": "Arraste para selecionar uma caixa e depois arraste dentro dela para movê-la (segure Alt para copiar). As setas a empurram, [ ] a giram, Enter ou um clique fora a solta, Delete a apaga.",

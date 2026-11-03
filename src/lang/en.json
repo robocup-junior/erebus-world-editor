@@ -613,18 +613,13 @@
                 },
                 "r4rect": {
                     "title": "Rectangle (R)",
-                    "body": "The rectangle draws walls round the box between the drag's two corners. With Shift held it is a square.",
+                    "body": "The rectangle draws walls round the box between the drag's two corners. With Shift held it is a square. With Alt held, the point where the drag starts is its centre.",
                     "task": "Drag the dashed rectangle with the rectangle tool"
                 },
-                "r4circle": {
-                    "title": "Circle (C)",
-                    "body": "The circle draws a round wall from its centre out to where you drag: handy for round obstacles like pillars.",
-                    "task": "With the circle, drag from the dashed circle's centre outwards"
-                },
                 "r4ellipse": {
-                    "title": "Ellipse (O)",
-                    "body": "The ellipse draws a wall inside the box you drag. With Shift held it is a circle.",
-                    "task": "With the ellipse, drag a box round the dashed ellipse"
+                    "title": "Circle / ellipse (O)",
+                    "body": "The circle / ellipse draws a wall inside the box you drag. With Shift held it is a circle; with Alt held, the point where the drag starts is its centre. Shift and Alt together draw a round pillar out from its centre.",
+                    "task": "With the circle / ellipse, drag a box round the dashed ellipse"
                 },
                 "r4polygon": {
                     "title": "Polygon (G)",
@@ -1012,13 +1007,12 @@
             "pen": "Pen",
             "line": "Line",
             "rect": "Rectangle",
-            "circle": "Circle",
             "stamp": "Victim",
             "floor": "Floor",
             "erase": "Eraser",
             "curve": "Curve",
             "arc": "Arc",
-            "ellipse": "Ellipse",
+            "ellipse": "Circle / ellipse",
             "polygon": "Polygon",
             "shape": "Shape",
             "select": "Select",
@@ -1043,15 +1037,14 @@
         "hints": {
             "pen": "Drag to draw walls freely.",
             "line": "Drag to draw a straight wall. Hold Shift for 45° steps.",
-            "rect": "Drag to draw a rectangle of walls. Hold Shift for a square.",
-            "circle": "Drag from the centre to draw a circular wall.",
+            "rect": "Drag to draw a rectangle of walls. Hold Shift for a square. Alt draws from the centre.",
             "stamp": "Click near a wall to attach a victim to the nearest wall. Click a placed victim to change its turn or rings (with another type chosen, it takes that type). Right-click removes it.",
             "floor": "Click a room 4 tile to give it the floor chosen (hole, swamp, checkpoint); click it again to take it off, or drag to do several. A floor is a whole tile (12 cm); a hole is the whole tile too.",
             "erase": "Drag to erase walls and victims. A victim can also be removed with a right-click, whatever the tool.",
             "eraseTokens": "Removes every victim the eraser touches. Walls stay.",
             "curve": "Click points and the curve passes through them. Double-click, Enter or right-click to finish; click the first point to close it. Backspace removes a point, Esc cancels.",
             "arc": "Drag to set both ends, move the mouse to bend it, then click.",
-            "ellipse": "Draws the ellipse that fits the dragged box. Hold Shift for a circle.",
+            "ellipse": "Draws the ellipse that fits the dragged box. Hold Shift for a circle, Alt to draw from the centre.",
             "polygon": "Drag from the centre to draw a regular polygon. It turns in 15° steps (free with Shift).",
             "shape": "Choose an icon or a picture, then drag on the canvas to size it (keeps its proportions; free with Shift).",
             "select": "Drag to select a box, then drag inside it to move it (hold Alt to copy). Arrow keys nudge it, [ ] turn it, Enter or a click outside puts it down, Delete removes it.",

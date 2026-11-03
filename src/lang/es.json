@@ -613,18 +613,13 @@
                 },
                 "r4rect": {
                     "title": "Rectángulo (R)",
-                    "body": "El rectángulo dibuja paredes alrededor de la caja entre las dos esquinas del arrastre. Con Shift pulsado es un cuadrado.",
+                    "body": "El rectángulo dibuja paredes alrededor de la caja entre las dos esquinas del arrastre. Con Shift pulsado es un cuadrado. Con Alt pulsado, el punto donde empieza el arrastre es su centro.",
                     "task": "Arrastra el rectángulo discontinuo con la herramienta de rectángulo"
                 },
-                "r4circle": {
-                    "title": "Círculo (C)",
-                    "body": "El círculo dibuja una pared redonda desde su centro hasta donde arrastras: útil para obstáculos redondos como columnas.",
-                    "task": "Con el círculo, arrastra desde el centro del círculo discontinuo hacia fuera"
-                },
                 "r4ellipse": {
-                    "title": "Elipse (O)",
-                    "body": "La elipse dibuja una pared dentro de la caja que arrastras. Con Shift pulsado es un círculo.",
-                    "task": "Con la elipse, arrastra una caja alrededor de la elipse discontinua"
+                    "title": "Círculo / elipse (O)",
+                    "body": "Círculo / elipse dibuja una pared dentro de la caja que arrastras. Con Shift pulsado es un círculo; con Alt pulsado, el punto donde empieza el arrastre es su centro. Shift y Alt juntos dibujan un pilar redondo desde su centro.",
+                    "task": "Con círculo / elipse, arrastra una caja alrededor de la elipse discontinua"
                 },
                 "r4polygon": {
                     "title": "Polígono (G)",
@@ -1012,13 +1007,12 @@
             "pen": "Lápiz",
             "line": "Línea",
             "rect": "Rectángulo",
-            "circle": "Círculo",
             "stamp": "Víctima",
             "floor": "Suelo",
             "erase": "Borrador",
             "curve": "Curva",
             "arc": "Arco",
-            "ellipse": "Elipse",
+            "ellipse": "Círculo / elipse",
             "polygon": "Polígono",
             "shape": "Forma",
             "select": "Seleccionar",
@@ -1043,15 +1037,14 @@
         "hints": {
             "pen": "Arrastra para dibujar paredes libremente.",
             "line": "Arrastra para dibujar una pared recta. Mantén Shift para pasos de 45°.",
-            "rect": "Arrastra para dibujar un rectángulo de paredes. Mantén Shift para un cuadrado.",
-            "circle": "Arrastra desde el centro para dibujar una pared circular.",
+            "rect": "Arrastra para dibujar un rectángulo de paredes. Mantén Shift para un cuadrado. Alt dibuja desde el centro.",
             "stamp": "Haz clic cerca de una pared para pegar una víctima a la pared más cercana. Haz clic en una víctima colocada para cambiar su giro o anillos (con otro tipo elegido, toma ese tipo). El clic derecho la quita.",
             "floor": "Haz clic en una baldosa de la sala 4 para darle el suelo elegido (agujero, pantano, punto de control); otro clic lo quita, o arrastra para hacer varias. Un suelo ocupa una baldosa entera (12 cm); un agujero también es la baldosa entera.",
             "erase": "Arrastra para borrar paredes y víctimas. Una víctima también se puede quitar con un clic derecho, sea cual sea la herramienta.",
             "eraseTokens": "Quita cada víctima que toca el borrador. Las paredes se quedan.",
             "curve": "Haz clic en puntos y la curva pasa por ellos. Doble clic, Intro o clic derecho para terminar; un clic en el primer punto la cierra. Retroceso quita un punto, Esc cancela.",
             "arc": "Arrastra para fijar los dos extremos, mueve el ratón para curvarlo y haz clic.",
-            "ellipse": "Dibuja la elipse que cabe en la caja arrastrada. Mantén Shift para un círculo.",
+            "ellipse": "Dibuja la elipse que cabe en la caja arrastrada. Mantén Shift para un círculo y Alt para dibujar desde el centro.",
             "polygon": "Arrastra desde el centro para dibujar un polígono regular. Gira en pasos de 15° (libre con Shift).",
             "shape": "Elige un icono o una imagen, y luego arrastra en el lienzo para darle tamaño (mantiene sus proporciones; libre con Shift).",
             "select": "Arrastra para seleccionar una caja, y luego arrastra dentro de ella para moverla (mantén Alt para copiar). Las flechas la empujan, [ ] la giran, Intro o un clic fuera la suelta, Supr la elimina.",

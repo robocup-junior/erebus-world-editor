@@ -613,18 +613,13 @@
                 },
                 "r4rect": {
                     "title": "Persegi panjang (R)",
-                    "body": "Persegi panjang menggambar dinding di sekeliling kotak antara dua sudut seretan. Dengan Shift ditahan, menjadi persegi.",
+                    "body": "Persegi panjang menggambar dinding di sekeliling kotak antara dua sudut seretan. Dengan Shift ditahan, menjadi persegi. Dengan Alt ditahan, titik awal seretan menjadi pusatnya.",
                     "task": "Seret persegi panjang putus-putus dengan alat persegi panjang"
                 },
-                "r4circle": {
-                    "title": "Lingkaran (C)",
-                    "body": "Lingkaran menggambar dinding bundar dari pusatnya ke tempat Anda menyeret: berguna untuk rintangan bundar seperti tiang.",
-                    "task": "Dengan lingkaran, seret dari pusat lingkaran putus-putus ke luar"
-                },
                 "r4ellipse": {
-                    "title": "Elips (O)",
-                    "body": "Elips menggambar dinding di dalam kotak yang Anda seret. Dengan Shift ditahan, menjadi lingkaran.",
-                    "task": "Dengan elips, seret kotak di sekeliling elips putus-putus"
+                    "title": "Lingkaran / elips (O)",
+                    "body": "Lingkaran / elips menggambar dinding di dalam kotak yang Anda seret. Dengan Shift ditahan, menjadi lingkaran; dengan Alt ditahan, titik awal seretan menjadi pusatnya. Shift dan Alt bersamaan menggambar pilar bundar dari pusatnya.",
+                    "task": "Dengan lingkaran / elips, seret kotak di sekeliling elips putus-putus"
                 },
                 "r4polygon": {
                     "title": "Poligon (G)",
@@ -1012,13 +1007,12 @@
             "pen": "Pena",
             "line": "Garis",
             "rect": "Persegi panjang",
-            "circle": "Lingkaran",
             "stamp": "Korban",
             "floor": "Lantai",
             "erase": "Penghapus",
             "curve": "Lengkung",
             "arc": "Busur",
-            "ellipse": "Elips",
+            "ellipse": "Lingkaran / elips",
             "polygon": "Poligon",
             "shape": "Bentuk",
             "select": "Pilih",
@@ -1043,15 +1037,14 @@
         "hints": {
             "pen": "Seret untuk menggambar dinding dengan bebas.",
             "line": "Seret untuk menggambar dinding lurus. Tahan Shift untuk langkah 45°.",
-            "rect": "Seret untuk menggambar persegi panjang dari dinding. Tahan Shift untuk persegi.",
-            "circle": "Seret dari pusat untuk menggambar dinding melingkar.",
+            "rect": "Seret untuk menggambar persegi panjang dari dinding. Tahan Shift untuk persegi. Alt menggambar dari tengah.",
             "stamp": "Klik di dekat dinding untuk menempelkan korban ke dinding terdekat. Klik korban yang sudah ditempatkan untuk mengubah putaran atau cincinnya (dengan jenis lain terpilih, ia berubah ke jenis itu). Klik kanan menghapusnya.",
             "floor": "Klik petak ruang 4 untuk memberinya lantai terpilih (lubang, rawa, checkpoint); klik lagi untuk menghapusnya, atau seret untuk beberapa sekaligus. Lantai adalah satu petak penuh (12 cm); lubang juga satu petak penuh.",
             "erase": "Seret untuk menghapus dinding dan korban. Korban juga bisa dihapus dengan klik kanan, alat apa pun yang dipakai.",
             "eraseTokens": "Menghapus setiap korban yang tersentuh penghapus. Dinding tetap ada.",
             "curve": "Klik titik-titik dan lengkung melewatinya. Klik dua kali, Enter, atau klik kanan untuk selesai; klik titik pertama untuk menutupnya. Backspace menghapus satu titik, Esc membatalkan.",
             "arc": "Seret untuk menetapkan kedua ujung, gerakkan mouse untuk membengkokkannya, lalu klik.",
-            "ellipse": "Menggambar elips yang pas di kotak yang diseret. Tahan Shift untuk lingkaran.",
+            "ellipse": "Menggambar elips yang pas di kotak yang diseret. Tahan Shift untuk lingkaran, Alt untuk menggambar dari tengah.",
             "polygon": "Seret dari pusat untuk menggambar poligon beraturan. Berputar dalam langkah 15° (bebas dengan Shift).",
             "shape": "Pilih ikon atau gambar, lalu seret di kanvas untuk mengatur ukurannya (proporsi tetap; bebas dengan Shift).",
             "select": "Seret untuk memilih kotak, lalu seret di dalamnya untuk memindahkannya (tahan Alt untuk menyalin). Tombol panah menggesernya, [ ] memutarnya, Enter atau klik di luarnya meletakkannya, Delete menghapusnya.",

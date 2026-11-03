@@ -20,7 +20,7 @@ async function openCreator(page: Page): Promise<void> {
 test('the creator: every tool and its panel', async ({ page }) => {
     await openCreator(page);
     await shot(page, 'r4-open');
-    for (const id of ['select', 'template', 'pen', 'line', 'curve', 'arc', 'rect', 'circle', 'ellipse', 'polygon', 'erase', 'floor', 'stamp']) {
+    for (const id of ['select', 'template', 'pen', 'line', 'curve', 'arc', 'rect', 'ellipse', 'polygon', 'erase', 'floor', 'stamp']) {
         await r4tool(page, id);
         await shot(page, 'r4-tool-' + id);
     }
@@ -49,8 +49,13 @@ test('the creator: walls and stamps drawn, back on the map, saved and exported',
     await r4drag(page, [[0.6, 0.15], [0.7, 0.3], [0.85, 0.25]]);
     await r4tool(page, 'line');
     await r4drag(page, [[0.1, 0.7], [0.45, 0.7]]);
-    await r4tool(page, 'circle');
+    // a circle drawn out from its centre: the ellipse with Shift (round) and Alt (from the centre)
+    await r4tool(page, 'ellipse');
+    await page.keyboard.down('Shift');
+    await page.keyboard.down('Alt');
     await r4drag(page, [[0.7, 0.65], [0.78, 0.72]]);
+    await page.keyboard.up('Alt');
+    await page.keyboard.up('Shift');
     await shot(page, 'r4-walls');
     await r4tool(page, 'stamp');
     await page.locator('.r4-stamp').nth(0).click();

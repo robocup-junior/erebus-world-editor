@@ -613,18 +613,13 @@
                 },
                 "r4rect": {
                     "title": "Rechteck (R)",
-                    "body": "Das Rechteck zeichnet Wände um die Box zwischen den zwei Ecken des Zugs. Mit gedrückter Umschalttaste ist es ein Quadrat.",
+                    "body": "Das Rechteck zeichnet Wände um die Box zwischen den zwei Ecken des Zugs. Mit gedrückter Umschalttaste ist es ein Quadrat. Mit gedrückter Alt-Taste ist der Startpunkt des Zugs die Mitte.",
                     "task": "Ziehe das gestrichelte Rechteck mit dem Rechteck-Werkzeug"
                 },
-                "r4circle": {
-                    "title": "Kreis (C)",
-                    "body": "Der Kreis zeichnet eine runde Wand von seiner Mitte bis dorthin, wohin du ziehst: praktisch für runde Hindernisse wie Säulen.",
-                    "task": "Ziehe mit dem Kreis von der Mitte des gestrichelten Kreises nach außen"
-                },
                 "r4ellipse": {
-                    "title": "Ellipse (O)",
-                    "body": "Die Ellipse zeichnet eine Wand in die Box, die du aufziehst. Mit gedrückter Umschalttaste ist sie ein Kreis.",
-                    "task": "Ziehe mit der Ellipse eine Box um die gestrichelte Ellipse"
+                    "title": "Kreis / Ellipse (O)",
+                    "body": "Kreis / Ellipse zeichnet eine Wand in die Box, die du aufziehst. Mit gedrückter Umschalttaste ist sie ein Kreis, mit gedrückter Alt-Taste ist der Startpunkt des Zugs die Mitte. Umschalttaste und Alt zusammen zeichnen eine runde Säule von ihrer Mitte aus.",
+                    "task": "Ziehe mit Kreis / Ellipse eine Box um die gestrichelte Ellipse"
                 },
                 "r4polygon": {
                     "title": "Vieleck (G)",
@@ -1012,13 +1007,12 @@
             "pen": "Stift",
             "line": "Linie",
             "rect": "Rechteck",
-            "circle": "Kreis",
             "stamp": "Opfer",
             "floor": "Boden",
             "erase": "Radierer",
             "curve": "Kurve",
             "arc": "Bogen",
-            "ellipse": "Ellipse",
+            "ellipse": "Kreis / Ellipse",
             "polygon": "Vieleck",
             "shape": "Form",
             "select": "Auswählen",
@@ -1043,15 +1037,14 @@
         "hints": {
             "pen": "Ziehen, um frei Wände zu zeichnen.",
             "line": "Ziehen, um eine gerade Wand zu zeichnen. Umschalttaste für 45°-Schritte.",
-            "rect": "Ziehen, um ein Rechteck aus Wänden zu zeichnen. Umschalttaste für ein Quadrat.",
-            "circle": "Von der Mitte aus ziehen, um eine runde Wand zu zeichnen.",
+            "rect": "Ziehen, um ein Rechteck aus Wänden zu zeichnen. Umschalttaste für ein Quadrat. Alt zeichnet von der Mitte aus.",
             "stamp": "Klicke nahe einer Wand, um ein Opfer an der nächsten Wand anzubringen. Klicke ein gesetztes Opfer an, um seine Drehung oder Ringe zu ändern (mit einem anderen gewählten Typ nimmt es diesen Typ an). Ein Rechtsklick entfernt es.",
             "floor": "Klicke auf eine Kachel von Raum 4, um ihr den gewählten Boden zu geben (Loch, Sumpf, Checkpoint); erneut klicken nimmt ihn weg, ziehen macht mehrere. Ein Boden ist eine ganze Kachel (12 cm); ein Loch ist ebenfalls die ganze Kachel.",
             "erase": "Ziehen, um Wände und Opfer wegzuradieren. Ein Opfer lässt sich auch mit einem Rechtsklick entfernen, egal mit welchem Werkzeug.",
             "eraseTokens": "Entfernt jedes Opfer, das der Radierer berührt. Wände bleiben.",
             "curve": "Klicke Punkte an, und die Kurve geht durch sie. Doppelklick, Enter oder Rechtsklick zum Beenden; klicke den ersten Punkt an, um sie zu schließen. Rücktaste entfernt einen Punkt, Esc bricht ab.",
             "arc": "Ziehen, um beide Enden festzulegen, die Maus bewegen, um ihn zu biegen, dann klicken.",
-            "ellipse": "Zeichnet die Ellipse, die in die aufgezogene Box passt. Umschalttaste für einen Kreis.",
+            "ellipse": "Zeichnet die Ellipse, die in die aufgezogene Box passt. Umschalttaste für einen Kreis, Alt zeichnet von der Mitte aus.",
             "polygon": "Von der Mitte aus ziehen, um ein regelmäßiges Vieleck zu zeichnen. Es dreht sich in 15°-Schritten (frei mit Umschalttaste).",
             "shape": "Wähle ein Symbol oder ein Bild und ziehe dann auf der Fläche, um seine Größe festzulegen (behält die Proportionen; frei mit Umschalttaste).",
             "select": "Ziehen, um eine Box auszuwählen, dann darin ziehen, um sie zu verschieben (Alt gedrückt zum Kopieren). Pfeiltasten schieben sie, [ ] drehen sie, Enter oder ein Klick daneben setzt sie ab, Entf löscht sie.",

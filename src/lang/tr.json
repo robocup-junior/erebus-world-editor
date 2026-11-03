@@ -613,18 +613,13 @@
                 },
                 "r4rect": {
                     "title": "Dikdörtgen (R)",
-                    "body": "Dikdörtgen, sürüklemenin iki köşesi arasındaki kutunun çevresine duvar çizer. Shift basılıyken kare olur.",
+                    "body": "Dikdörtgen, sürüklemenin iki köşesi arasındaki kutunun çevresine duvar çizer. Shift basılıyken kare olur. Alt basılıyken sürüklemenin başladığı nokta merkez olur.",
                     "task": "Dikdörtgen aracıyla kesikli dikdörtgeni sürükleyin"
                 },
-                "r4circle": {
-                    "title": "Daire (C)",
-                    "body": "Daire, merkezinden sürüklediğiniz yere kadar yuvarlak bir duvar çizer: sütun gibi yuvarlak engeller için kullanışlıdır.",
-                    "task": "Daireyle kesikli dairenin merkezinden dışarı doğru sürükleyin"
-                },
                 "r4ellipse": {
-                    "title": "Elips (O)",
-                    "body": "Elips, sürüklediğiniz kutunun içine bir duvar çizer. Shift basılıyken daire olur.",
-                    "task": "Elipsle kesikli elipsin çevresine bir kutu sürükleyin"
+                    "title": "Daire / elips (O)",
+                    "body": "Daire / elips, sürüklediğiniz kutunun içine bir duvar çizer. Shift basılıyken daire olur; Alt basılıyken sürüklemenin başladığı nokta merkez olur. Shift ve Alt birlikte yuvarlak bir sütunu merkezinden çizer.",
+                    "task": "Daire / elips ile kesikli elipsin çevresine bir kutu sürükleyin"
                 },
                 "r4polygon": {
                     "title": "Çokgen (G)",
@@ -1012,13 +1007,12 @@
             "pen": "Kalem",
             "line": "Çizgi",
             "rect": "Dikdörtgen",
-            "circle": "Daire",
             "stamp": "Kazazede",
             "floor": "Zemin",
             "erase": "Silgi",
             "curve": "Eğri",
             "arc": "Yay",
-            "ellipse": "Elips",
+            "ellipse": "Daire / elips",
             "polygon": "Çokgen",
             "shape": "Şekil",
             "select": "Seç",
@@ -1043,15 +1037,14 @@
         "hints": {
             "pen": "Serbestçe duvar çizmek için sürükleyin.",
             "line": "Düz bir duvar çizmek için sürükleyin. 45° adımlar için Shift'i basılı tutun.",
-            "rect": "Duvarlardan bir dikdörtgen çizmek için sürükleyin. Kare için Shift'i basılı tutun.",
-            "circle": "Yuvarlak bir duvar çizmek için merkezden sürükleyin.",
+            "rect": "Duvarlardan bir dikdörtgen çizmek için sürükleyin. Kare için Shift'i basılı tutun. Alt ile ortadan çizilir.",
             "stamp": "Bir kazazedeyi en yakın duvara takmak için duvarın yakınına tıklayın. Dönüşünü veya halkalarını değiştirmek için konmuş bir kazazedeye tıklayın (başka bir tür seçiliyse o türe dönüşür). Sağ tıklama onu kaldırır.",
             "floor": "Seçili zemini (çukur, bataklık, kontrol noktası) vermek için bir oda 4 karesine tıklayın; kaldırmak için tekrar tıklayın veya birkaçı için sürükleyin. Bir zemin tam bir karedir (12 cm); çukur da karenin tamamıdır.",
             "erase": "Duvarları ve kazazedeleri silmek için sürükleyin. Bir kazazede, hangi araç olursa olsun sağ tıklamayla da kaldırılabilir.",
             "eraseTokens": "Silginin dokunduğu her kazazedeyi kaldırır. Duvarlar kalır.",
             "curve": "Noktalara tıklayın, eğri onlardan geçer. Bitirmek için çift tıklama, Enter veya sağ tıklama; kapatmak için ilk noktaya tıklayın. Backspace bir noktayı kaldırır, Esc iptal eder.",
             "arc": "İki ucu belirlemek için sürükleyin, bükmek için fareyi oynatın, sonra tıklayın.",
-            "ellipse": "Sürüklenen kutuya sığan elipsi çizer. Daire için Shift'i basılı tutun.",
+            "ellipse": "Sürüklenen kutuya sığan elipsi çizer. Daire için Shift'i, ortadan çizmek için Alt'ı basılı tutun.",
             "polygon": "Düzgün bir çokgen çizmek için merkezden sürükleyin. 15° adımlarla döner (Shift ile serbest).",
             "shape": "Bir simge veya resim seçin, sonra boyutlandırmak için tuvalde sürükleyin (oranları korur; Shift ile serbest).",
             "select": "Bir kutu seçmek için sürükleyin, sonra taşımak için içinde sürükleyin (kopyalamak için Alt'ı basılı tutun). Ok tuşları iter, [ ] döndürür, Enter veya dışına tıklamak bırakır, Delete siler.",

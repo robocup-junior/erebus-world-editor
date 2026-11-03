@@ -99,8 +99,8 @@ const tools = [
     { id: 'curve', icon: 'fas fa-bezier-curve', key: 'B' },
     { id: 'arc', icon: 'fas fa-circle-notch', key: 'A' },
     { id: 'rect', icon: 'far fa-square', key: 'R' },
-    { id: 'circle', icon: 'far fa-circle', key: 'C' },
-    { id: 'ellipse', icon: 'far fa-dot-circle', key: 'O' },
+    // circles too: Shift keeps it round, Alt draws it out from its centre
+    { id: 'ellipse', icon: 'far fa-circle', key: 'O' },
     { id: 'polygon', icon: 'fas fa-draw-polygon', key: 'G' },
     { id: 'shape', icon: 'fas fa-icons', key: 'I' },
     { id: 'erase', icon: 'fas fa-eraser', key: 'E' },
@@ -112,7 +112,7 @@ const tools = [
 // and floors and victims
 const byId: Record<string, (typeof tools)[number]> = {};
 tools.forEach(function (x) { byId[x.id] = x; });
-const toolGroups = [['select'], ['template'], ['pen', 'line', 'curve', 'arc'], ['rect', 'circle', 'ellipse', 'polygon', 'shape', 'erase'], ['floor', 'stamp']]
+const toolGroups = [['select'], ['template'], ['pen', 'line', 'curve', 'arc'], ['rect', 'ellipse', 'polygon', 'shape', 'erase'], ['floor', 'stamp']]
     .map(function (g) { return g.map(function (id) { return byId[id]; }); });
 function toolKey(id: string) {
     return byId[id] ? byId[id].key : '';
