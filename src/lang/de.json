@@ -1103,7 +1103,7 @@
                     "steps": {
                         "floors": {
                             "title": "Checkpoints, Löcher, Sümpfe und Kontaktkacheln",
-                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück; Keiner entfernt den Boden.\nEin Checkpoint bringt Punkte, wenn der Roboter ihn erreicht, und dorthin wird der Roboter nach einem Lack of Progress (LoP) zurückgesetzt. Ein Loch ist eine Kachel, die der Roboter meiden muss, und ein Sumpf leert seinen Akku schneller.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand. Sie liegt auf jeder Kachel.",
+                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück; Keiner entfernt den Boden.\nEin Checkpoint bringt Punkte, wenn der Roboter ihn erreicht, und dorthin wird der Roboter nach einem Lack of Progress (LoP) zurückgesetzt. Ein Loch ist eine Kachel, die der Roboter meiden muss, und ein Sumpf leert seinen Akku schneller.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand.",
                             "task": "Setze einen Checkpoint, ein Loch, einen Sumpf und eine Kontaktkachel (die vier grünen Rahmen sind gute Stellen)"
                         },
                         "victim": {
@@ -1121,7 +1121,7 @@
                     "steps": {
                         "floor": {
                             "title": "Boden (F): Checkpoints, Löcher, Sümpfe, Kontaktkacheln, der Start",
-                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist die Kachel, auf die der Roboter gesetzt wird: eine pro Karte. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand. Sie liegt auf jeder Kachel."
+                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist die Kachel, auf die der Roboter gesetzt wird: eine pro Karte. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand."
                         },
                         "victim": {
                             "body": "Wähle im Bereich eine Art (Smiley-Opfer – verletzt ein trauriges Gesicht, stabil ein neutrales, unverletzt ein fröhliches – und falsche, kognitive Ziele von vier Typen – entzündliches Gas, Gift, ätzend, organisches Peroxid – und ein falsches) und klicke nahe einer Wand: Es kommt an die Wand, wo du klickst.\nSie kommen an Kachelseiten in Raum 1 (eins pro Kachel), an die Flächen der 6-cm-Wände in den Räumen 2 und 3 und an zwei Plätze an einer Kurve (innen und außen). Ziehe ein gesetztes, um es entlang seiner Wand zu verschieben. Wo eins nicht hinkann, sagt die Statuszeile warum.\nDrehe am Drehregler (Feste Drehung) für seine Drehung, oder wähle Zufällig für jedes Mal eine neue. Für ein kognitives Ziel klicke einen Ring des Ziels an, dann unten eine Farbe; die Summe der Ringe ergibt den Typ.\nKlicke ein Opfer mit derselben Art an, um es auszuwählen, und ändere dann Drehung, Ringe oder Position entlang der Wand, oder entferne es. Ein Klick mit einer anderen Art ändert seine Art."
@@ -1138,7 +1138,7 @@
                     "victim": "Smiley-Opfer"
                 },
                 "hints": {
-                    "floor": "Klicke auf eine Kachel von Raum 4, um ihr den gewählten Boden zu geben (Loch, Sumpf, Checkpoint, Kontaktkachel); erneut klicken nimmt ihn weg, ziehen macht mehrere. Ein Boden ist eine ganze Kachel (12 cm); ein Loch ist ebenfalls die ganze Kachel. Eine Kontaktkachel liegt auf jeder Kachel."
+                    "floor": "Klicke auf eine Kachel von Raum 4, um ihr den gewählten Boden zu geben (Loch, Sumpf, Checkpoint, Kontaktkachel); erneut klicken nimmt ihn weg, ziehen macht mehrere. Ein Boden ist eine ganze Kachel (12 cm); ein Loch ist ebenfalls die ganze Kachel."
                 }
             }
         }

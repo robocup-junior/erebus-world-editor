@@ -1103,7 +1103,7 @@
                     "steps": {
                         "floors": {
                             "title": "Checkpoints, buracos, pântanos e ladrilhos de contato",
-                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove; Nenhum remove o piso.\nUm checkpoint pontua quando o robô chega nele, e é onde o robô é recolocado depois de uma falta de progresso (LoP). Um buraco é um ladrilho em que o robô não deve entrar, e um pântano gasta a bateria dele mais rápido.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos. Pode ir em qualquer ladrilho.",
+                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove; Nenhum remove o piso.\nUm checkpoint pontua quando o robô chega nele, e é onde o robô é recolocado depois de uma falta de progresso (LoP). Um buraco é um ladrilho em que o robô não deve entrar, e um pântano gasta a bateria dele mais rápido.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos.",
                             "task": "Coloque um checkpoint, um buraco, um pântano e um ladrilho de contato (as quatro molduras verdes são bons lugares)"
                         },
                         "victim": {
@@ -1121,7 +1121,7 @@
                     "steps": {
                         "floor": {
                             "title": "Piso (F): checkpoints, buracos, pântanos, ladrilhos de contato, a partida",
-                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é o ladrilho onde o robô é colocado: um por mapa. Nenhum remove o piso.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos. Pode ir em qualquer ladrilho."
+                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é o ladrilho onde o robô é colocado: um por mapa. Nenhum remove o piso.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos."
                         },
                         "victim": {
                             "body": "Escolha um tipo no painel (vítimas sorridentes - ferida um rosto triste, estável um rosto neutro, ilesa um rosto feliz - e suas falsas, alvos cognitivos de quatro tipos - gás inflamável, veneno, corrosivo, peróxido orgânico - e um falso) e clique perto de uma parede: ela vai para a parede onde você clica.\nElas vão nos lados dos ladrilhos na sala 1 (uma por ladrilho), nas faces das paredes de 6 cm nas salas 2 e 3, e em dois lugares de uma curva (dentro e fora). Arraste uma colocada para movê-la ao longo da parede. Onde não dá para colocar, a linha de status diz por quê.\nGire o dial (Giro fixo) para a rotação, ou escolha Aleatório para uma nova a cada vez. Para um alvo cognitivo, clique em um anel do alvo e depois em uma cor abaixo; a soma dos anéis dá o tipo.\nClique em uma vítima com o mesmo tipo para selecioná-la e depois mude o giro, os anéis ou a posição ao longo da parede, ou remova-a. Clicar com outro tipo muda o tipo dela."
@@ -1138,7 +1138,7 @@
                     "victim": "Vítimas sorridentes"
                 },
                 "hints": {
-                    "floor": "Clique em um ladrilho da sala 4 para dar a ele o piso escolhido (buraco, pântano, checkpoint, ladrilho de contato); clique de novo para tirar, ou arraste para fazer vários. Um piso ocupa um ladrilho inteiro (12 cm); um buraco também é o ladrilho inteiro. Um ladrilho de contato pode ir em qualquer ladrilho."
+                    "floor": "Clique em um ladrilho da sala 4 para dar a ele o piso escolhido (buraco, pântano, checkpoint, ladrilho de contato); clique de novo para tirar, ou arraste para fazer vários. Um piso ocupa um ladrilho inteiro (12 cm); um buraco também é o ladrilho inteiro."
                 }
             }
         }

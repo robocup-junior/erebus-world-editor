@@ -1103,7 +1103,7 @@
                     "steps": {
                         "floors": {
                             "title": "Checkpoints, holes, swamps and contact tiles",
-                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back; None takes the floor off.\nA checkpoint scores when the robot reaches it, and is where the robot is put back after a lack of progress (LoP). A hole is a tile the robot must keep out of, and a swamp drains its battery faster.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds. It goes on any tile.",
+                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back; None takes the floor off.\nA checkpoint scores when the robot reaches it, and is where the robot is put back after a lack of progress (LoP). A hole is a tile the robot must keep out of, and a swamp drains its battery faster.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds.",
                             "task": "Put one checkpoint, one hole, one swamp and one contact tile (the four green frames are good places)"
                         },
                         "victim": {
@@ -1121,7 +1121,7 @@
                     "steps": {
                         "floor": {
                             "title": "Floor (F): checkpoints, holes, swamps, contact tiles, the start",
-                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is the tile the robot is put on: one on a map. None takes the floor off.\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds. It goes on any tile."
+                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is the tile the robot is put on: one on a map. None takes the floor off.\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds."
                         },
                         "victim": {
                             "body": "Pick a kind in the panel (smiley victims - harmed a sad face, stable a neutral face, unharmed a happy face - and fake ones, cognitive targets of four types - flammable gas, poison, corrosive, organic peroxide - and a fake one) and click near a wall: it goes on the wall where you click.\nThey go on tile sides in room 1 (one per tile), on the faces of the 6 cm walls in rooms 2 and 3, and on two places on a curve (inside and outside). Drag a placed one to move it along its wall. Where one cannot go, the status line says why.\nTurn the dial (Set the turn) for its rotation, or choose Random for a new one each time. For a cognitive target, click a ring of the target and then a colour below; the sum of the rings gives its type.\nClick a victim with the same kind to select it, then change its turn, rings or place along its wall, or remove it. Clicking it with another kind changes its kind."
@@ -1138,7 +1138,7 @@
                     "victim": "Smiley victims"
                 },
                 "hints": {
-                    "floor": "Click a room 4 tile to give it the floor chosen (hole, swamp, checkpoint, contact tile); click it again to take it off, or drag to do several. A floor is a whole tile (12 cm); a hole is the whole tile too. A contact tile goes on any tile."
+                    "floor": "Click a room 4 tile to give it the floor chosen (hole, swamp, checkpoint, contact tile); click it again to take it off, or drag to do several. A floor is a whole tile (12 cm); a hole is the whole tile too."
                 }
             }
         }

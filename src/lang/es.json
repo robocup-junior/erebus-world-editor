@@ -1103,7 +1103,7 @@
                     "steps": {
                         "floors": {
                             "title": "Puntos de control, agujeros, pantanos y baldosas de contacto",
-                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita; Ninguno quita el suelo.\nUn punto de control puntúa cuando el robot llega a él, y es donde se vuelve a colocar el robot tras una falta de progreso (LoP). Un agujero es una baldosa en la que el robot no debe entrar, y un pantano gasta su batería más rápido.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos. Puede ir en cualquier baldosa.",
+                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita; Ninguno quita el suelo.\nUn punto de control puntúa cuando el robot llega a él, y es donde se vuelve a colocar el robot tras una falta de progreso (LoP). Un agujero es una baldosa en la que el robot no debe entrar, y un pantano gasta su batería más rápido.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos.",
                             "task": "Pon un punto de control, un agujero, un pantano y una baldosa de contacto (los cuatro marcos verdes son buenos sitios)"
                         },
                         "victim": {
@@ -1121,7 +1121,7 @@
                     "steps": {
                         "floor": {
                             "title": "Suelo (F): puntos de control, agujeros, pantanos, baldosas de contacto, la salida",
-                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es la baldosa donde se coloca el robot: una por mapa. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos. Puede ir en cualquier baldosa."
+                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es la baldosa donde se coloca el robot: una por mapa. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos."
                         },
                         "victim": {
                             "body": "Elige un tipo en el panel (víctimas sonrientes - herido una cara triste, estable una cara neutra, ileso una cara feliz - y sus falsas, objetivos cognitivos de cuatro tipos - gas inflamable, veneno, corrosivo, peróxido orgánico - y uno falso) y haz clic cerca de una pared: se coloca en la pared donde haces clic.\nVan en los lados de baldosa en la sala 1 (una por baldosa), en las caras de las paredes de 6 cm en las salas 2 y 3, y en dos sitios de una curva (dentro y fuera). Arrastra una colocada para moverla a lo largo de su pared. Donde no se puede poner, la línea de estado dice por qué.\nGira el dial (Giro fijo) para su rotación, o elige Aleatorio para una nueva cada vez. Para un objetivo cognitivo, haz clic en un anillo del objetivo y luego en un color abajo; la suma de los anillos da su tipo.\nHaz clic en una víctima con el mismo tipo para seleccionarla, y luego cambia su giro, anillos o posición a lo largo de su pared, o quítala. Un clic con otro tipo cambia su tipo."
@@ -1138,7 +1138,7 @@
                     "victim": "Víctimas sonrientes"
                 },
                 "hints": {
-                    "floor": "Haz clic en una baldosa de la sala 4 para darle el suelo elegido (agujero, pantano, punto de control, baldosa de contacto); otro clic lo quita, o arrastra para hacer varias. Un suelo ocupa una baldosa entera (12 cm); un agujero también es la baldosa entera. Una baldosa de contacto puede ir en cualquier baldosa."
+                    "floor": "Haz clic en una baldosa de la sala 4 para darle el suelo elegido (agujero, pantano, punto de control, baldosa de contacto); otro clic lo quita, o arrastra para hacer varias. Un suelo ocupa una baldosa entera (12 cm); un agujero también es la baldosa entera."
                 }
             }
         }

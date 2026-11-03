@@ -1103,7 +1103,7 @@
                     "steps": {
                         "floors": {
                             "title": "Kontrol noktaları, çukurlar, bataklıklar ve temas kareleri",
-                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır; Yok zemini kaldırır.\nKontrol noktası, robot ona ulaştığında puan getirir ve ilerleme olmadığında (LoP) robotun geri konduğu yerdir. Çukur robotun girmemesi gereken bir karedir, bataklık ise pilini daha hızlı tüketir.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir. Herhangi bir kareye konabilir.",
+                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır; Yok zemini kaldırır.\nKontrol noktası, robot ona ulaştığında puan getirir ve ilerleme olmadığında (LoP) robotun geri konduğu yerdir. Çukur robotun girmemesi gereken bir karedir, bataklık ise pilini daha hızlı tüketir.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir.",
                             "task": "Bir kontrol noktası, bir çukur, bir bataklık ve bir temas karesi koyun (dört yeşil çerçeve iyi yerlerdir)"
                         },
                         "victim": {
@@ -1121,7 +1121,7 @@
                     "steps": {
                         "floor": {
                             "title": "Zemin (F): kontrol noktaları, çukurlar, bataklıklar, temas kareleri, başlangıç",
-                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, robotun konduğu karedir: haritada bir tane. Yok zemini kaldırır.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir. Herhangi bir kareye konabilir."
+                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, robotun konduğu karedir: haritada bir tane. Yok zemini kaldırır.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir."
                         },
                         "victim": {
                             "body": "Panelden bir tür seçin (gülen yüz kazazedeler - yaralı üzgün yüz, stabil nötr yüz, yaralanmamış mutlu yüz - ve sahteleri, dört türde bilişsel hedef - yanıcı gaz, zehir, aşındırıcı, organik peroksit - ve bir sahte) ve bir duvarın yakınına tıklayın: tıkladığınız yerdeki duvara konur.\nOda 1'de kare kenarlarına (kare başına bir), oda 2 ve 3'te 6 cm duvarların yüzlerine, bir eğride iki yere (iç ve dış) konur. Konmuş birini duvarı boyunca taşımak için sürükleyin. Konamayacağı yerde durum satırı nedenini söyler.\nDönüşü için kadranı çevirin (Sabit dönüş) veya her seferinde yenisi için “Rastgele” seçeneğini seçin. Bilişsel hedef için hedefin bir halkasına, sonra aşağıdaki bir renge tıklayın; halkaların toplamı türünü verir.\nSeçmek için aynı türle bir kazazedeye tıklayın, sonra dönüşünü, halkalarını veya duvar boyunca yerini değiştirin ya da kaldırın. Başka bir türle tıklamak türünü değiştirir."
@@ -1138,7 +1138,7 @@
                     "victim": "Gülen yüz kazazedeler"
                 },
                 "hints": {
-                    "floor": "Seçili zemini (çukur, bataklık, kontrol noktası, temas karesi) vermek için bir oda 4 karesine tıklayın; kaldırmak için tekrar tıklayın veya birkaçı için sürükleyin. Bir zemin tam bir karedir (12 cm); çukur da karenin tamamıdır. Temas karesi herhangi bir kareye konabilir."
+                    "floor": "Seçili zemini (çukur, bataklık, kontrol noktası, temas karesi) vermek için bir oda 4 karesine tıklayın; kaldırmak için tekrar tıklayın veya birkaçı için sürükleyin. Bir zemin tam bir karedir (12 cm); çukur da karenin tamamıdır."
                 }
             }
         }
