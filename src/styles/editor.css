@@ -252,6 +252,26 @@
     cursor: default;
 }
 
+/* the curve tool's icon: a quarter circle, drawn as Font Awesome's slash of the line tool (the same
+   576 x 512 glyph box, stroke 48 and round ends, from top left to bottom right), only bent */
+.ed-icon-arc {
+    display: inline-block;
+    position: relative;
+    width: 1.125em;
+    height: 1em;
+    vertical-align: -0.125em;
+}
+
+/* the slash runs a little above and below the em box, so the arc does too */
+.ed-icon-arc::before {
+    content: '';
+    position: absolute;
+    inset: -0.078125em 0;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -40 576 592'%3E%3Cpath d='M24 -8A528 528 0 0 1 552 520' fill='none' stroke='%23000' stroke-width='48' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -40 576 592'%3E%3Cpath d='M24 -8A528 528 0 0 1 552 520' fill='none' stroke='%23000' stroke-width='48' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
 .ed-tool-key {
     position: absolute;
     right: 2px;

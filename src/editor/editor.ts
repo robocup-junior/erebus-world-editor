@@ -95,7 +95,8 @@ export function createEditor() {
         { id: 'room', icon: 'fas fa-layer-group', key: 'M' },
         { id: 'passage', icon: 'fas fa-door-open', key: 'P' },
         { id: 'line', icon: 'fas fa-slash', key: 'L' },
-        { id: 'curve', icon: 'fas fa-circle-notch', key: 'A' },
+        // a quarter circle, as the most one curve can turn (Font Awesome has none: drawn in editor.css)
+        { id: 'curve', icon: 'ed-icon-arc', key: 'A' },
         { id: 'eraser', icon: 'fas fa-eraser', key: 'E' },
         { id: 'floor', icon: 'fas fa-fill-drip', key: 'F' },
         { id: 'victim', icon: 'fas fa-user-injured', key: 'V' }
