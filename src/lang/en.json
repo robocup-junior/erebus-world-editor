@@ -124,7 +124,7 @@
             "line": "Drag to draw walls. The line turns with the pointer, so one drag can draw a zigzag (go back the way you came to undo a turn). Start with Shift held for one straight line. Room 1 snaps to 12 cm (tile edges), rooms 2 and 3 to 6 cm. Not inside room 4.",
             "eraser": "Click or drag over walls, curves and victims to remove them. Away from walls it takes a tile's floor off (hole, swamp, checkpoint); a click takes the start off. The outer walls stay. An obstacle goes with a click too.",
             "floor": "Click a tile to set its floor.",
-            "obstacle": "An obstacle may be any shape (box, cylinder, cone, sphere, pyramid, regular prism or pyramid, an outline drawn on the map, an icon) and size, turned any way, one to a tile in rooms 1-3, its centre on its tile (rule {{rule_obstacles}}): set it in the panel, drag it on the map. The robot has to get round it: the checks see it.",
+            "obstacle": "Click a tile to put an obstacle of the shape and colour picked in the panel (rooms 1-3, one to a tile; rule {{rule_obstacles}}). Click one to pick it: its handles on the map change its size and turn (Shift: steps of 15°), the panel its height, colour and shape; drag it to move it, Delete takes it off. A drawn one's corners are clicked on the map; an icon is looked for by name.",
             "victim": "Click near a wall: the victim goes on the wall where you click. Room 1: on a tile side (one per tile); rooms 2 and 3: on a face of the 6 cm walls (4 quarters × 4 faces); a curve has two places (inside and outside). Drag a placed victim to move it along its wall (it stops short of the wall's end and other victims). Click a placed one to select it: its kind, rings and turn are then changed in the panel, or it is removed.",
             "curve": "Point at a quarter tile in room 3 to see its four curves; the nearest one (blue) goes in on a click. Click the same one again to remove it.",
             "select": "Select walls, rooms, floors and victims together to move, copy, paste or clear them. Click a victim or an obstacle to open its tool with it picked; click a wall or a curve to pick it and Delete to take it off.",
@@ -491,7 +491,7 @@
             "steps": {
                 "intro": {
                     "title": "Learn by making a sample map",
-                    "body": "In this lesson you make the map above and use the editor's features one after another on the way (about 15 minutes).\nRoom 1 on the left, room 2 top middle, room 3 bottom middle, room 4 on the right. You join the rooms with passages, put walls, a curve, floors and victims, draw the inside of room 4, and end with a world ready to export.\nDo what each step asks and it turns to Done!, and Next goes on. If something does not work, Do it for me does it for you. The editor works as usual all along."
+                    "body": "In this lesson you make the map above and use the editor's features one after another on the way (about 15 minutes).\nRoom 1 on the left, room 2 top middle, room 3 bottom middle, room 4 on the right. You join the rooms with passages, put walls, a curve, floors, an obstacle and victims, draw the inside of room 4, and end with a world ready to export.\nDo what each step asks and it turns to Done!, and Next goes on. If something does not work, Do it for me does it for you. The editor works as usual all along."
                 },
                 "new": {
                     "title": "Make a new map",
@@ -616,11 +616,21 @@
                 },
                 "erase": {
                     "title": "Rub out, and undo",
-                    "body": "The eraser removes walls, curves and victims with a click or a drag. Away from walls it takes a tile's floor off (hole, swamp, checkpoint); the start goes on a click only. The outer walls stay.\nIf you rub out the wrong thing, undo (Ctrl+Z, or ↶ in the top bar) brings it back; redo (Ctrl+Shift+Z, or ↷) goes forward again.",
+                    "body": "The eraser removes walls, curves, obstacles and victims with a click or a drag. Away from walls it takes a tile's floor off (hole, swamp, checkpoint); the start goes on a click only. The outer walls stay.\nIf you rub out the wrong thing, undo (Ctrl+Z, or ↶ in the top bar) brings it back; redo (Ctrl+Shift+Z, or ↷) goes forward again.",
                     "task": "Rub out the swamp (green frame), then bring it back with Ctrl+Z",
                     "tasks": {
                         "undo": "The swamp is gone. Now bring it back with Ctrl+Z (or ↶ in the top bar)"
                     }
+                },
+                "obstacle": {
+                    "title": "Put an obstacle",
+                    "body": "The obstacle tool (O) puts obstacles on tiles of rooms 1-3, one to a tile. Pick its shape (box, cylinder, cone, sphere, pyramid, regular prism or pyramid, an outline drawn on the map, an icon) and colour in the panel, then click a tile.\nAn obstacle does not go on the start, a passage, a hole, a swamp or a checkpoint. The robot has to get round it, so put it where it does not shut a way off: the checks tell you if it does.",
+                    "task": "With the obstacle tool, click the tile in the green frame to put an obstacle"
+                },
+                "obstacleEdit": {
+                    "title": "Change its size, turn and colour",
+                    "body": "The obstacle put is picked, with handles round it: drag a square one to change its size, the round one above it to turn it (Shift held: steps of 15°). Its height and colour are in the panel.\nDrag the obstacle itself to move it on its tile; it stops at a wall, as it cannot go through one. Delete takes it off.",
+                    "task": "Change the obstacle's size, turn or colour with its handles or the panel"
                 },
                 "victim": {
                     "title": "Put a victim",
@@ -645,8 +655,8 @@
                 },
                 "pick": {
                     "title": "Change a victim you put",
-                    "body": "Click a victim with the same kind picked to select it. In the panel, change its kind, whether it is fake, its turn (for a cognitive target, its rings), or remove it. Done ends the selection.\nClicking it with another kind picked changes its kind.",
-                    "task": "Click one of your victims with its kind picked, to select it"
+                    "body": "Click a victim you put to select it (its kind stays as it is). While it is selected, the kinds, real or fake, and turn (a cognitive target's rings) picked in the panel change it. Remove it with the panel's delete button or Delete.\nDone or Esc ends the selection, and the panel is back to setting the next victim.",
+                    "task": "Click one of your victims to select it"
                 },
                 "r4open": {
                     "title": "Draw the inside of room 4",
@@ -748,11 +758,6 @@
                         "target": "The eraser is on Everything. Switch it to Victims only"
                     }
                 },
-                "r4random": {
-                    "title": "Place at random",
-                    "body": "In Place at random, choose how many and of what kind (the chosen type or mixed types) and press Place: victims go in all at once.\nThey go along walls the robot can get within half a tile of, at least half a tile apart.",
-                    "task": "Press Place in Place at random"
-                },
                 "r4reach": {
                     "title": "Make a place out of reach, and see it",
                     "body": "With Out of reach on, where the robot (radius 3.7 cm) cannot get to is shown with red stripes: a place closed in by walls, or a gap narrower than the robot.\nA place out of reach is fine in itself (the inside of an obstacle is meant to be). But the robot cannot find a victim put there, so use the stripes when putting victims. Victims the robot cannot get near, or that are off their wall, get a dashed red ring, and the bottom line counts them.\nEntrances / CP shows the entrances and checkpoints. Try making a place out of reach.",
@@ -774,7 +779,7 @@
                 },
                 "select": {
                     "title": "Select, move and copy a region",
-                    "body": "Drag with the select tool to select a region of tiles; its walls, rooms, floors and victims are taken together.\nDrag inside it to move it, or with Alt held to move a copy. The arrow keys move it a tile at a time. Ctrl+C / Ctrl+X copy / cut, Ctrl+V pastes (the tile under the pointer is its top left), Ctrl+D duplicates and Delete clears it. Esc lets it go.\nJust select it here; if it moves, Ctrl+Z takes it back.",
+                    "body": "Drag with the select tool to select a region of tiles; its walls, rooms, floors, obstacles and victims are taken together.\nDrag inside it to move it, or with Alt held to move a copy. The arrow keys move it a tile at a time. Ctrl+C / Ctrl+X copy / cut, Ctrl+V pastes (the tile under the pointer is its top left), Ctrl+D duplicates and Delete clears it. Esc lets it go.\nJust select it here; if it moves, Ctrl+Z takes it back.",
                     "task": "Drag to select room 1 (green frame)"
                 },
                 "view": {
@@ -813,7 +818,7 @@
                 },
                 "done": {
                     "title": "Finished!",
-                    "body": "Well done: the sample map is made.\nSave it, or export the .wbt and run it in Erebus. For a new map, start from New.\nA good order to work in: size and outline → paint the rooms → join them with passages → draw walls → floors and victims → draw room 4 → look at the checks and export."
+                    "body": "Well done: the sample map is made.\nSave it, or export the .wbt and run it in Erebus. For a new map, start from New.\nA good order to work in: size and outline → paint the rooms → join them with passages → draw walls → floors, obstacles and victims → draw room 4 → look at the checks and export."
                 },
                 "score": {
                     "title": "Maximum score",
@@ -836,6 +841,7 @@
                 "passages": "Passages",
                 "walls": "Walls",
                 "floors": "Floors",
+                "obstacles": "Obstacles",
                 "victims": "Victims",
                 "room4": "Room 4",
                 "finish": "Finish and export"
@@ -899,7 +905,7 @@
                 },
                 "obstacle": {
                     "title": "Obstacle (O): any shape, size and colour",
-                    "body": "An obstacle may be any shape (box, cylinder, cone, sphere, pyramid, regular prism or pyramid, an outline drawn on the map, an icon) and size, turned any way, one to a tile in rooms 1-3, its centre on its tile (rule {{rule_obstacles}}): set it in the panel, drag it on the map. The robot has to get round it: the checks see it."
+                    "body": "Put obstacles on tiles of rooms 1-3, one to a tile, its centre on the tile (rule {{rule_obstacles}}): any shape (box, cylinder, cone, sphere, pyramid, regular prism or pyramid, an outline drawn on the map, an icon) and colour, picked in the panel.\nA picked one has handles: squares for its size, a round one above it for its turn (Shift: steps of 15°). Its height is in the panel. It can stand against a wall, not go through one.\nThe robot has to get round it: the checks show where it cannot get to."
                 },
                 "victim": {
                     "title": "Victim (V): victims and cognitive targets",

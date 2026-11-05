@@ -124,7 +124,7 @@
             "line": "Duvar çizmek için sürükleyin. Çizgi işaretçiyle birlikte döner, bu yüzden tek bir sürükleme zikzak çizebilir (bir dönüşü geri almak için geldiğiniz yoldan dönün). Tek bir düz çizgi için Shift basılıyken başlayın. Oda 1 12 cm'ye (kare kenarları), oda 2 ve 3 6 cm'ye hizalanır. Oda 4'ün içinde olmaz.",
             "eraser": "Duvarları, eğrileri ve kazazedeleri kaldırmak için üzerlerine tıklayın veya sürükleyin. Duvarlardan uzakta bir karenin zeminini (çukur, bataklık, kontrol noktası) kaldırır; bir tıklama başlangıcı kaldırır. Dış duvarlar kalır. Engel de tıklamayla kalkar.",
             "floor": "Zeminini belirlemek için bir kareye tıklayın.",
-            "obstacle": "Engel her şekilde (kutu, silindir, koni, küre, piramit, düzgün prizma ya da piramit, haritada çizilmiş bir dış çizgi, bir simge), boyutta ve dönüşte olabilir; oda 1-3'te kare başına bir tane, merkezi karesinde (kural {{rule_obstacles}}): panelde ayarlayın, haritada sürükleyin. Robot onun yanından geçmelidir: denetimler bunu hesaba katar.",
+            "obstacle": "Panelde seçilen şekil ve renkte bir engel koymak için bir kareye tıklayın (oda 1-3, kare başına bir; kural {{rule_obstacles}}). Seçmek için bir engele tıklayın: haritadaki tutamaçları boyutunu ve dönüşünü (Shift: 15°'lik adımlar), panel yüksekliğini, rengini ve şeklini değiştirir; taşımak için sürükleyin, Delete kaldırır. Çizilmiş bir dış çizginin köşeleri haritada tıklanır; simge adıyla aranır.",
             "victim": "Bir duvarın yakınına tıklayın: kazazede, tıkladığınız yerdeki duvara konur. Oda 1: bir kare kenarına (kare başına bir); oda 2 ve 3: 6 cm duvarların bir yüzüne (4 çeyrek × 4 yüz); bir eğrinin iki yeri vardır (iç ve dış). Konmuş bir kazazedeyi duvarı boyunca taşımak için sürükleyin (duvarın ucundan ve diğer kazazedelerden önce durur). Seçmek için konmuş birine tıklayın: türü, halkaları ve dönüşü sonra panelde değiştirilir ya da kaldırılır.",
             "curve": "Dört eğrisini görmek için oda 3'te bir çeyrek kareyi işaret edin; en yakın olan (mavi) bir tıklamayla konur. Kaldırmak için aynısına tekrar tıklayın.",
             "select": "Duvarları, odaları, zeminleri ve kazazedeleri birlikte seçip taşıyın, kopyalayın, yapıştırın veya temizleyin. Bir kazazedeye ya da engele tıklayınca onun aracı, o seçili olarak açılır; bir duvarı ya da eğriyi seçmek için tıklayın, silmek için Delete.",
@@ -491,7 +491,7 @@
             "steps": {
                 "intro": {
                     "title": "Örnek bir harita yaparak öğrenin",
-                    "body": "Bu derste yukarıdaki haritayı yapar ve yol boyunca düzenleyicinin özelliklerini birbiri ardına kullanırsınız (yaklaşık 15 dakika).\nSolda oda 1, üst ortada oda 2, alt ortada oda 3, sağda oda 4. Odaları geçitlerle birleştirir, duvarlar, bir eğri, zeminler ve kazazedeler koyar, oda 4'ün içini çizer ve dışa aktarılmaya hazır bir dünyayla bitirirsiniz.\nHer adımın istediğini yapın, “Tamam!” olur ve İleri devam eder. Bir şey çalışmazsa Benim için yap sizin yerinize yapar. Düzenleyici baştan sona her zamanki gibi çalışır."
+                    "body": "Bu derste yukarıdaki haritayı yapar ve yol boyunca düzenleyicinin özelliklerini birbiri ardına kullanırsınız (yaklaşık 15 dakika).\nSolda oda 1, üst ortada oda 2, alt ortada oda 3, sağda oda 4. Odaları geçitlerle birleştirir, duvarlar, bir eğri, zeminler, bir engel ve kazazedeler koyar, oda 4'ün içini çizer ve dışa aktarılmaya hazır bir dünyayla bitirirsiniz.\nHer adımın istediğini yapın, “Tamam!” olur ve İleri devam eder. Bir şey çalışmazsa Benim için yap sizin yerinize yapar. Düzenleyici baştan sona her zamanki gibi çalışır."
                 },
                 "new": {
                     "title": "Yeni bir harita yapın",
@@ -616,11 +616,21 @@
                 },
                 "erase": {
                     "title": "Silmek ve geri almak",
-                    "body": "Silgi, duvarları, eğrileri ve kazazedeleri bir tıklama veya sürüklemeyle kaldırır. Duvarlardan uzakta bir karenin zeminini (çukur, bataklık, kontrol noktası) kaldırır; başlangıç yalnızca tıklamayla gider. Dış duvarlar kalır.\nYanlış şeyi silerseniz geri al (Ctrl+Z veya üst çubuktaki ↶) geri getirir; yinele (Ctrl+Shift+Z veya ↷) yeniden ileri gider.",
+                    "body": "Silgi, duvarları, eğrileri, engelleri ve kazazedeleri bir tıklama veya sürüklemeyle kaldırır. Duvarlardan uzakta bir karenin zeminini (çukur, bataklık, kontrol noktası) kaldırır; başlangıç yalnızca tıklamayla gider. Dış duvarlar kalır.\nYanlış şeyi silerseniz geri al (Ctrl+Z veya üst çubuktaki ↶) geri getirir; yinele (Ctrl+Shift+Z veya ↷) yeniden ileri gider.",
                     "task": "Bataklığı (yeşil çerçeve) silin, sonra Ctrl+Z ile geri getirin",
                     "tasks": {
                         "undo": "Bataklık gitti. Şimdi Ctrl+Z ile (veya üst çubuktaki ↶ ile) geri getirin"
                     }
+                },
+                "obstacle": {
+                    "title": "Engel koyun",
+                    "body": "Engel aracı (O), oda 1-3'ün karelerine kare başına bir engel koyar. Şeklini (kutu, silindir, koni, küre, piramit, düzgün prizma ya da piramit, haritada çizilmiş bir dış çizgi, bir simge) ve rengini panelden seçin, sonra bir kareye tıklayın.\nEngel başlangıca, geçide, çukura, bataklığa ya da kontrol noktasına konmaz. Robot onun yanından geçmelidir; bir yolu kapatmayacak bir yere koyun: kapatırsa denetimler söyler.",
+                    "task": "Engel aracıyla yeşil çerçevedeki kareye tıklayıp bir engel koyun"
+                },
+                "obstacleEdit": {
+                    "title": "Boyutunu, dönüşünü ve rengini değiştirin",
+                    "body": "Konan engel seçili olur ve çevresinde tutamaçlar çıkar: boyutunu değiştirmek için kare bir tutamacı, döndürmek için üstteki yuvarlak olanı sürükleyin (Shift basılıyken 15°'lik adımlarla). Yüksekliği ve rengi paneldedir.\nEngeli kendisinden sürükleyerek karesinde taşıyın; bir duvarda durur, içinden geçmez. Delete onu kaldırır.",
+                    "task": "Engelin boyutunu, dönüşünü ya da rengini tutamaçlarıyla veya panelden değiştirin"
                 },
                 "victim": {
                     "title": "Bir kazazede koyun",
@@ -645,8 +655,8 @@
                 },
                 "pick": {
                     "title": "Koyduğunuz bir kazazedeyi değiştirin",
-                    "body": "Seçmek için aynı tür seçiliyken bir kazazedeye tıklayın. Panelde türünü, sahte olup olmadığını, dönüşünü (bilişsel hedefte halkalarını) değiştirin ya da kaldırın. Bitti seçimi sonlandırır.\nBaşka bir tür seçiliyken tıklamak türünü değiştirir.",
-                    "task": "Seçmek için türü seçiliyken kazazedelerinizden birine tıklayın"
+                    "body": "Seçmek için koyduğunuz bir kazazedeye tıklayın (türü aynı kalır). Seçiliyken panelde seçilen tür, gerçek ya da sahte ve dönüş (bilişsel hedefte halkalar) onu değiştirir. Panelin silme düğmesiyle ya da Delete ile kaldırın.\nBitti ya da Esc seçimi sonlandırır; panel yeniden sonraki kazazedeyi ayarlar.",
+                    "task": "Seçmek için kazazedelerinizden birine tıklayın"
                 },
                 "r4open": {
                     "title": "Oda 4'ün içini çizin",
@@ -748,11 +758,6 @@
                         "target": "Silgi “Her şey” ayarında. “Yalnızca kazazedeler” ayarına alın"
                     }
                 },
-                "r4random": {
-                    "title": "Rastgele yerleştir",
-                    "body": "“Rastgele yerleştir” bölümünde kaç tane ve hangi türden (seçili tür veya karışık türler) olacağını seçin ve “Yerleştir” düğmesine basın: kazazedeler bir kerede konur.\nRobotun yarım kare yaklaşabildiği duvarlar boyunca, birbirinden en az yarım kare uzakta konurlar.",
-                    "task": "“Rastgele yerleştir” bölümünde “Yerleştir” düğmesine basın"
-                },
                 "r4reach": {
                     "title": "Ulaşılamayan bir yer yapın ve görün",
                     "body": "Ulaşılamaz açıkken robotun (yarıçap 3,7 cm) ulaşamadığı yerler kırmızı çizgilerle gösterilir: duvarlarla kapatılmış bir yer veya robottan dar bir aralık.\nUlaşılamayan bir yer kendi başına sorun değildir (bir engelin içi öyle olmalıdır). Ama robot oraya konmuş bir kazazedeyi bulamaz, bu yüzden kazazede koyarken çizgileri kullanın. Robotun yaklaşamadığı veya duvarından ayrı kazazedeler kesikli kırmızı bir halka alır ve alt satır onları sayar.\nGirişler / CP, girişleri ve kontrol noktalarını gösterir. Ulaşılamayan bir yer yapmayı deneyin.",
@@ -774,7 +779,7 @@
                 },
                 "select": {
                     "title": "Bir bölgeyi seçin, taşıyın ve kopyalayın",
-                    "body": "Bir kare bölgesi seçmek için seç aracıyla sürükleyin; duvarları, odaları, zeminleri ve kazazedeleri birlikte alınır.\nTaşımak için içinde sürükleyin veya bir kopyayı taşımak için Alt basılıyken sürükleyin. Ok tuşları onu birer kare taşır. Ctrl+C / Ctrl+X kopyalar / keser, Ctrl+V yapıştırır (işaretçinin altındaki kare sol üst köşesidir), Ctrl+D çoğaltır ve Delete temizler. Esc onu bırakır.\nBurada yalnızca seçin; taşınırsa Ctrl+Z geri alır.",
+                    "body": "Bir kare bölgesi seçmek için seç aracıyla sürükleyin; duvarları, odaları, zeminleri, engelleri ve kazazedeleri birlikte alınır.\nTaşımak için içinde sürükleyin veya bir kopyayı taşımak için Alt basılıyken sürükleyin. Ok tuşları onu birer kare taşır. Ctrl+C / Ctrl+X kopyalar / keser, Ctrl+V yapıştırır (işaretçinin altındaki kare sol üst köşesidir), Ctrl+D çoğaltır ve Delete temizler. Esc onu bırakır.\nBurada yalnızca seçin; taşınırsa Ctrl+Z geri alır.",
                     "task": "Oda 1'i (yeşil çerçeve) seçmek için sürükleyin"
                 },
                 "view": {
@@ -813,7 +818,7 @@
                 },
                 "done": {
                     "title": "Bitti!",
-                    "body": "Tebrikler: örnek harita hazır.\nKaydedin veya .wbt'yi dışa aktarıp Erebus'ta çalıştırın. Yeni bir harita için Yeni'den başlayın.\nİyi bir çalışma sırası: boyut ve dış hat → odaları boya → geçitlerle birleştir → duvarları çiz → zeminler ve kazazedeler → oda 4'ü çiz → kontrollere bak ve dışa aktar."
+                    "body": "Tebrikler: örnek harita hazır.\nKaydedin veya .wbt'yi dışa aktarıp Erebus'ta çalıştırın. Yeni bir harita için Yeni'den başlayın.\nİyi bir çalışma sırası: boyut ve dış hat → odaları boya → geçitlerle birleştir → duvarları çiz → zeminler, engeller ve kazazedeler → oda 4'ü çiz → kontrollere bak ve dışa aktar."
                 },
                 "score": {
                     "title": "En yüksek puan",
@@ -836,6 +841,7 @@
                 "passages": "Geçitler",
                 "walls": "Duvarlar",
                 "floors": "Zeminler",
+                "obstacles": "Engeller",
                 "victims": "Kazazedeler",
                 "room4": "Oda 4",
                 "finish": "Bitir ve dışa aktar"
@@ -899,7 +905,7 @@
                 },
                 "obstacle": {
                     "title": "Engel (O): her şekil, boyut ve renk",
-                    "body": "Engel her şekilde (kutu, silindir, koni, küre, piramit, düzgün prizma ya da piramit, haritada çizilmiş bir dış çizgi, bir simge), boyutta ve dönüşte olabilir; oda 1-3'te kare başına bir tane, merkezi karesinde (kural {{rule_obstacles}}): panelde ayarlayın, haritada sürükleyin. Robot onun yanından geçmelidir: denetimler bunu hesaba katar."
+                    "body": "Oda 1-3'ün karelerine, kare başına bir ve merkezi karenin üstünde olacak şekilde engel koyun (kural {{rule_obstacles}}): her şekil (kutu, silindir, koni, küre, piramit, düzgün prizma ya da piramit, haritada çizilmiş bir dış çizgi, bir simge) ve renk, panelden seçilir.\nSeçili bir engelin tutamaçları vardır: boyutu için kareler, üstte dönüşü için yuvarlak bir tane (Shift: 15°'lik adımlar). Yüksekliği paneldedir. Duvara yaslanabilir, içinden geçemez.\nRobot onun yanından geçmelidir: denetimler gidemediği yerleri gösterir."
                 },
                 "victim": {
                     "title": "Kazazede (V): kazazedeler ve bilişsel hedefler",

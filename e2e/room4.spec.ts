@@ -150,3 +150,49 @@ test('the creator: a template, selection turned, zoom', async ({ page }) => {
     await settle(page, 800);
     await shot(page, 'r4-closed-esc');
 });
+
+// a victim walled in after it was put: the checks stop the export, and fixing them takes it off the
+// picture (the other victim stays), one step to undo
+test('the creator: a victim walled in, taken off by the checks\' fix', async ({ page }) => {
+    await openCreator(page);
+    // a wall, a victim on each side of it; then the left one boxed in
+    await r4tool(page, 'line');
+    await r4drag(page, [[0.625, 0.25], [0.625, 0.75]]);
+    await r4tool(page, 'stamp');
+    await page.locator('.r4-stamp').nth(0).click();
+    await r4click(page, 0.6, 0.5);
+    await r4click(page, 0.65, 0.5);
+    await r4tool(page, 'rect');
+    await r4drag(page, [[0.5, 0.25], [0.625, 0.75]]);
+    await page.locator('.r4-head-ok').click();
+    await settle(page, 1200);
+    const keys = () => page.evaluate(() => (window as any).__edState.problems.map((p: any) => p.raw.key));
+    const tokens = () => page.evaluate(() => {
+        const S = (window as any).__edState;
+        return new Promise<number>((done) => {
+            const img = new Image();
+            img.onload = () => {
+                const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight;
+                const g = c.getContext('2d')!; g.drawImage(img, 0, 0);
+                const d = g.getImageData(0, 0, c.width, c.height).data;
+                // red blobs, counted roughly: the picture's stamps
+                let red = 0; for (let i = 0; i < d.length; i += 4) if (d[i] > d[i + 1] + 40 && d[i] > d[i + 2] + 40) red++;
+                done(red);
+            };
+            img.src = S.map.room4CanvasSave;
+        });
+    });
+    expect(await keys()).toContain('room4Unreachable');
+    const red0 = await tokens();
+    const item = page.locator('.ed-problems li', { hasText: '部屋4にロボットが近づけない' });
+    await expect(item.locator('.ed-fix')).toBeVisible();
+    await page.locator('.ed-fix-all').click();
+    await settle(page, 1200);
+    expect(await keys()).not.toContain('room4Unreachable');
+    const red1 = await tokens();
+    expect(red1).toBeGreaterThan(0);
+    expect(red1).toBeLessThan(red0 * 0.7);
+    await page.keyboard.press('Control+z');
+    await settle(page, 1200);
+    expect(await keys()).toContain('room4Unreachable');
+});

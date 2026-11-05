@@ -20,6 +20,7 @@ import { rulesOf, rulesFor, years, upcomingYears, FIRST_YEAR, LATEST_YEAR } from
 import type { Ruleset, MaxScore, StampType, Tokens, FloorKind } from '../rules/types';
 import * as OpenCV from '../lib/opencv';
 import * as Outline from '../lib/outline';
+import * as R4 from '../lib/room4';
 import * as FaIcons from '../room4/faIcons';
 import type { MapData, Room4Token } from '../lib/types';
 import type { Problem, Region, Where, VictimInfo, Clip, Show } from '../lib/model';
@@ -347,8 +348,9 @@ export function createEditor() {
                 leave: function () { apply(function () { hover = null; say(''); }); view.redraw(); }
             }
         });
-        // for the end-to-end tests: where a point of the map is on the page
+        // for the end-to-end tests: where a point of the map is on the page, and the editor's state
         (window as any).__edView = view;
+        (window as any).__edState = S;
         listen();
         askGuideOnce();
     }
@@ -700,7 +702,7 @@ export function createEditor() {
             text = t('checks.problems.' + p.key, p.params);
         }
         return { text: text, block: !!p.block, at: p.at || null, show: p.show || null, raw: p,
-            fix: M.FIXABLE.indexOf(p.key) > -1 ? 'fix' : M.DRAW_FIX.indexOf(p.key) > -1 ? 'draw' : '' };
+            fix: M.FIXABLE.indexOf(p.key) > -1 || M.PICTURE_FIX.indexOf(p.key) > -1 ? 'fix' : M.DRAW_FIX.indexOf(p.key) > -1 ? 'draw' : '' };
     }
 
     // ---- the editor's own dialogs (in place of alert / confirm) ----
@@ -967,9 +969,44 @@ export function createEditor() {
 
     // Fixing: one problem, or all that can be fixed (one undo step); a custom room 4 picture is drawn
     // in the room 4 creator
+    // The room 4 picture's victims the robot cannot get to, taken off its pixels (the picture read
+    // again, the stamps' boxes erased, written back); then done(), the step it is part of ended
+    function fixRoom4Picture(done: () => void) {
+        const pic = map && map.room4CanvasSave, data = room4Picture();
+        const boxes = pic && data ? M.room4UnreachedBoxes(map, data) : [];
+        if (!pic || !boxes.length) { done(); return; }
+        const img = new Image();
+        img.onload = function () {
+            apply(function () {
+                if (map.room4CanvasSave === pic) {
+                    const c = document.createElement('canvas');
+                    c.width = img.naturalWidth;
+                    c.height = img.naturalHeight;
+                    const g = c.getContext('2d')!;
+                    g.drawImage(img, 0, 0);
+                    const px = g.getImageData(0, 0, c.width, c.height);
+                    R4.eraseTokens(px.data, c.width, c.height, boxes);
+                    g.putImageData(px, 0, 0);
+                    map.room4CanvasSave = c.toDataURL('image/png');
+                }
+                done();
+            });
+        };
+        img.onerror = function () { apply(done); };
+        img.src = pic;
+    }
     function fixProblem(p: ProblemItem, e?: Event) {
         if (e) e.stopPropagation();
         if (p.fix === 'draw') { openRoom4(); return; }
+        if (M.PICTURE_FIX.indexOf(p.raw.key) > -1) {
+            begin();
+            fixRoom4Picture(function () {
+                pointed = null;
+                commit();
+                if (problemsLeft(p.raw.key)) notify('fixPartly', null, 'warn'); else notify('fixed', null, 'ok');
+            });
+            return;
+        }
         begin();
         const after = M.fixProblem(map, p.raw, borders);
         if (after) borders = after;
@@ -977,12 +1014,15 @@ export function createEditor() {
         commit();
         if (problemsLeft(p.raw.key)) notify('fixPartly', null, 'warn'); else notify('fixed', null, 'ok');
     }
+    // the map's fixes, then the room 4 picture's (with the map as they leave it): one step to undo
     function fixAll() {
         begin();
         borders = M.fixAll(map, borders, room4Picture());
-        pointed = null;
-        commit();
-        notify(S.problems.length ? 'fixAllLeft' : 'fixed', { count: S.problems.length }, S.problems.length ? 'warn' : 'ok');
+        fixRoom4Picture(function () {
+            pointed = null;
+            commit();
+            notify(S.problems.length ? 'fixAllLeft' : 'fixed', { count: S.problems.length }, S.problems.length ? 'warn' : 'ok');
+        });
     }
     function canFixAll() {
         return S.problems.some(function (p) { return p.fix === 'fix'; });
@@ -2753,7 +2793,7 @@ export function createEditor() {
     function tourEnv(): TourEnv {
         return {
             M: M, W: W, L: L, map: map, ui: ui, selected: S.selected, region: S.region,
-            creator: creatorScope(), room4State: room4State(), problems: S.problems,
+            creator: creatorScope(), room4State: room4State(), problems: S.problems, obstacle: S.obstacle.at,
             sync: function () { borders = M.resyncBorderWalls(map, borders); },
             act: {
                 newMap: function () { newBlank(lessonYear()); },
@@ -2763,7 +2803,8 @@ export function createEditor() {
                 toggleLinear: function () { toggleLinear(); },
                 select: function (where) { selectWhere(where); },
                 setRegion: function (r) { S.region = r; },
-                rename: function (name) { map.name = name; renamed(); }
+                rename: function (name) { map.name = name; renamed(); },
+                pickObstacle: function (x, y) { pickObstacle({ x: x, y: y }); view.redraw(); }
             }
         };
     }
@@ -3085,6 +3126,9 @@ export function createEditor() {
             if (ui.tool === 'obstacle' && S.obstacle.at && (k === 'delete' || k === 'backspace')) { e.preventDefault(); apply(obstacleRemove); return; }
             // Esc with the obstacle tool: the picked one let go (as the select tool lets its pick go)
             if (ui.tool === 'obstacle' && S.obstacle.at && k === 'escape' && !stroke) { apply(obstacleDeselect); return; }
+            // the same for the victim selected with the victim tool: Delete takes it off, Esc lets it go
+            if (ui.tool === 'victim' && S.selected && !stroke && (k === 'delete' || k === 'backspace')) { e.preventDefault(); apply(removeSelected); return; }
+            if (ui.tool === 'victim' && S.selected && !stroke && k === 'escape') { apply(selectNone); return; }
             if (e.ctrlKey || e.metaKey || e.altKey) return;
             if (e.key === '?') { e.preventDefault(); apply(function () { openGuidePick('keys'); }); return; }
             if (k === 'escape') { apply(cancelStroke); return; }

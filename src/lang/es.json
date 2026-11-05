@@ -124,7 +124,7 @@
             "line": "Arrastra para dibujar paredes. La línea gira con el puntero, así que un solo arrastre puede dibujar un zigzag (vuelve por donde viniste para deshacer un giro). Empieza con Shift pulsado para una sola línea recta. En la sala 1 se ajusta a 12 cm (bordes de baldosa) y en las salas 2 y 3 a 6 cm. No dentro de la sala 4.",
             "eraser": "Haz clic o arrastra sobre paredes, curvas y víctimas para quitarlas. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control); un clic quita la salida. Las paredes exteriores se quedan. Un obstáculo también se quita con un clic.",
             "floor": "Haz clic en una baldosa para cambiar su suelo.",
-            "obstacle": "Un obstáculo puede tener cualquier forma (caja, cilindro, cono, esfera, pirámide, prisma o pirámide regular, un contorno dibujado en el mapa, un icono), tamaño y giro, uno por baldosa en las salas 1-3, su centro en su baldosa (regla {{rule_obstacles}}): ajústalo en el panel y arrástralo en el mapa. El robot tiene que rodearlo: las comprobaciones lo tienen en cuenta.",
+            "obstacle": "Haz clic en una baldosa para poner un obstáculo de la forma y el color elegidos en el panel (salas 1-3, uno por baldosa; regla {{rule_obstacles}}). Haz clic en uno para elegirlo: sus asas en el mapa cambian su tamaño y su giro (Mayús: de 15° en 15°), el panel su altura, color y forma; arrástralo para moverlo, Supr lo quita. Las esquinas de un contorno se marcan con clics en el mapa; un icono se busca por su nombre.",
             "victim": "Haz clic cerca de una pared: la víctima se coloca en la pared donde haces clic. Sala 1: en un lado de la baldosa (una por baldosa); salas 2 y 3: en una cara de las paredes de 6 cm (4 cuartos × 4 caras); una curva tiene dos sitios (dentro y fuera). Arrastra una víctima colocada para moverla a lo largo de su pared (se detiene antes del extremo de la pared y de otras víctimas). Haz clic en una colocada para seleccionarla: su tipo, anillos y giro se cambian entonces en el panel, o se quita.",
             "curve": "Señala un cuarto de baldosa en la sala 3 para ver sus cuatro curvas; la más cercana (azul) se coloca con un clic. Haz clic de nuevo en la misma para quitarla.",
             "select": "Selecciona paredes, salas, suelos y víctimas a la vez para moverlos, copiarlos, pegarlos o borrarlos. Haz clic en una víctima o un obstáculo para abrir su herramienta con él elegido; haz clic en una pared o una curva para elegirla y Supr para quitarla.",
@@ -491,7 +491,7 @@
             "steps": {
                 "intro": {
                     "title": "Aprender haciendo un mapa de ejemplo",
-                    "body": "En esta lección haces el mapa de arriba y usas por el camino las funciones del editor una tras otra (unos 15 minutos).\nSala 1 a la izquierda, sala 2 arriba en el centro, sala 3 abajo en el centro, sala 4 a la derecha. Unes las salas con pasajes, pones paredes, una curva, suelos y víctimas, dibujas el interior de la sala 4 y terminas con un mundo listo para exportar.\nHaz lo que pide cada paso y cambia a ¡Hecho!; Siguiente continúa. Si algo no funciona, Hazlo por mí lo hace por ti. El editor funciona como siempre todo el tiempo."
+                    "body": "En esta lección haces el mapa de arriba y usas por el camino las funciones del editor una tras otra (unos 15 minutos).\nSala 1 a la izquierda, sala 2 arriba en el centro, sala 3 abajo en el centro, sala 4 a la derecha. Unes las salas con pasajes, pones paredes, una curva, suelos, un obstáculo y víctimas, dibujas el interior de la sala 4 y terminas con un mundo listo para exportar.\nHaz lo que pide cada paso y cambia a ¡Hecho!; Siguiente continúa. Si algo no funciona, Hazlo por mí lo hace por ti. El editor funciona como siempre todo el tiempo."
                 },
                 "new": {
                     "title": "Crear un mapa nuevo",
@@ -616,11 +616,21 @@
                 },
                 "erase": {
                     "title": "Borrar y deshacer",
-                    "body": "El borrador quita paredes, curvas y víctimas con un clic o un arrastre. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control); la salida solo se quita con un clic. Las paredes exteriores se quedan.\nSi borras algo por error, deshacer (Ctrl+Z, o ↶ en la barra superior) lo recupera; rehacer (Ctrl+Shift+Z, o ↷) vuelve a avanzar.",
+                    "body": "El borrador quita paredes, curvas, obstáculos y víctimas con un clic o un arrastre. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control); la salida solo se quita con un clic. Las paredes exteriores se quedan.\nSi borras algo por error, deshacer (Ctrl+Z, o ↶ en la barra superior) lo recupera; rehacer (Ctrl+Shift+Z, o ↷) vuelve a avanzar.",
                     "task": "Borra el pantano (marco verde) y luego recupéralo con Ctrl+Z",
                     "tasks": {
                         "undo": "El pantano ha desaparecido. Ahora recupéralo con Ctrl+Z (o ↶ en la barra superior)"
                     }
+                },
+                "obstacle": {
+                    "title": "Poner un obstáculo",
+                    "body": "La herramienta de obstáculos (O) pone obstáculos en baldosas de las salas 1-3, uno por baldosa. Elige su forma (caja, cilindro, cono, esfera, pirámide, prisma o pirámide regular, un contorno dibujado en el mapa, un icono) y su color en el panel y haz clic en una baldosa.\nUn obstáculo no va en la salida, un pasaje, un agujero, un pantano ni un punto de control. El robot tiene que rodearlo, así que ponlo donde no cierre un camino: las comprobaciones te avisan si lo hace.",
+                    "task": "Con la herramienta de obstáculos, haz clic en la baldosa del marco verde para poner un obstáculo"
+                },
+                "obstacleEdit": {
+                    "title": "Cambiar su tamaño, giro y color",
+                    "body": "El obstáculo puesto queda elegido, con asas alrededor: arrastra una cuadrada para cambiar su tamaño y la redonda de arriba para girarlo (con Mayús, de 15° en 15°). Su altura y su color están en el panel.\nArrastra el obstáculo para moverlo en su baldosa; se detiene en una pared, no la atraviesa. Supr lo quita.",
+                    "task": "Cambia el tamaño, el giro o el color del obstáculo con sus asas o el panel"
                 },
                 "victim": {
                     "title": "Poner una víctima",
@@ -645,8 +655,8 @@
                 },
                 "pick": {
                     "title": "Cambiar una víctima que pusiste",
-                    "body": "Haz clic en una víctima con el mismo tipo elegido para seleccionarla. En el panel, cambia su tipo, si es falsa, su giro (en un objetivo cognitivo, sus anillos), o quítala. Listo termina la selección.\nUn clic con otro tipo elegido cambia su tipo.",
-                    "task": "Haz clic en una de tus víctimas con su tipo elegido, para seleccionarla"
+                    "body": "Haz clic en una víctima que pusiste para seleccionarla (su tipo no cambia). Mientras está seleccionada, el tipo, real o falsa, y el giro (los anillos de un objetivo cognitivo) elegidos en el panel la cambian. Quítala con el botón de borrar del panel o con Supr.\nListo o Esc termina la selección, y el panel vuelve a ajustar la próxima víctima.",
+                    "task": "Haz clic en una de tus víctimas para seleccionarla"
                 },
                 "r4open": {
                     "title": "Dibujar el interior de la sala 4",
@@ -748,11 +758,6 @@
                         "target": "El borrador está en Todo. Cámbialo a Solo víctimas"
                     }
                 },
-                "r4random": {
-                    "title": "Colocar al azar",
-                    "body": "En Colocar al azar, elige cuántas y de qué tipo (el tipo elegido o tipos mezclados) y pulsa Colocar: las víctimas se ponen todas a la vez.\nVan a lo largo de paredes a las que el robot puede acercarse a media baldosa, separadas al menos media baldosa.",
-                    "task": "Pulsa Colocar en Colocar al azar"
-                },
                 "r4reach": {
                     "title": "Crea un sitio inalcanzable y míralo",
                     "body": "Con Inalcanzable activado, donde el robot (radio 3,7 cm) no puede llegar se muestra con rayas rojas: un sitio cerrado por paredes, o un hueco más estrecho que el robot.\nUn sitio inalcanzable está bien en sí mismo (el interior de un obstáculo debe serlo). Pero el robot no puede encontrar una víctima puesta ahí, así que usa las rayas al poner víctimas. Las víctimas a las que el robot no puede acercarse, o que están fuera de su pared, llevan un anillo rojo discontinuo, y la línea de abajo las cuenta.\nEntradas / CP muestra las entradas y los puntos de control. Prueba a crear un sitio inalcanzable.",
@@ -774,7 +779,7 @@
                 },
                 "select": {
                     "title": "Seleccionar, mover y copiar una región",
-                    "body": "Arrastra con la herramienta de selección para seleccionar una región de baldosas; sus paredes, salas, suelos y víctimas se toman juntos.\nArrastra dentro de ella para moverla, o con Alt pulsado para mover una copia. Las flechas la mueven de baldosa en baldosa. Ctrl+C / Ctrl+X copian / cortan, Ctrl+V pega (la baldosa bajo el puntero es su esquina superior izquierda), Ctrl+D duplica y Supr la borra. Esc la suelta.\nAquí solo selecciónala; si se mueve, Ctrl+Z la devuelve.",
+                    "body": "Arrastra con la herramienta de selección para seleccionar una región de baldosas; sus paredes, salas, suelos, obstáculos y víctimas se toman juntos.\nArrastra dentro de ella para moverla, o con Alt pulsado para mover una copia. Las flechas la mueven de baldosa en baldosa. Ctrl+C / Ctrl+X copian / cortan, Ctrl+V pega (la baldosa bajo el puntero es su esquina superior izquierda), Ctrl+D duplica y Supr la borra. Esc la suelta.\nAquí solo selecciónala; si se mueve, Ctrl+Z la devuelve.",
                     "task": "Arrastra para seleccionar la sala 1 (marco verde)"
                 },
                 "view": {
@@ -813,7 +818,7 @@
                 },
                 "done": {
                     "title": "¡Terminado!",
-                    "body": "Bien hecho: el mapa de ejemplo está listo.\nGuárdalo, o exporta el .wbt y ejecútalo en Erebus. Para un mapa nuevo, empieza desde Nuevo.\nUn buen orden de trabajo: tamaño y contorno → pinta las salas → únelas con pasajes → dibuja paredes → suelos y víctimas → dibuja la sala 4 → mira las comprobaciones y exporta."
+                    "body": "Bien hecho: el mapa de ejemplo está listo.\nGuárdalo, o exporta el .wbt y ejecútalo en Erebus. Para un mapa nuevo, empieza desde Nuevo.\nUn buen orden de trabajo: tamaño y contorno → pinta las salas → únelas con pasajes → dibuja paredes → suelos, obstáculos y víctimas → dibuja la sala 4 → mira las comprobaciones y exporta."
                 },
                 "score": {
                     "title": "Puntuación máxima",
@@ -836,6 +841,7 @@
                 "passages": "Pasajes",
                 "walls": "Paredes",
                 "floors": "Suelos",
+                "obstacles": "Obstáculos",
                 "victims": "Víctimas",
                 "room4": "Sala 4",
                 "finish": "Terminar y exportar"
@@ -899,7 +905,7 @@
                 },
                 "obstacle": {
                     "title": "Obstáculo (O): cualquier forma, tamaño y color",
-                    "body": "Un obstáculo puede tener cualquier forma (caja, cilindro, cono, esfera, pirámide, prisma o pirámide regular, un contorno dibujado en el mapa, un icono), tamaño y giro, uno por baldosa en las salas 1-3, su centro en su baldosa (regla {{rule_obstacles}}): ajústalo en el panel y arrástralo en el mapa. El robot tiene que rodearlo: las comprobaciones lo tienen en cuenta."
+                    "body": "Pon obstáculos en baldosas de las salas 1-3, uno por baldosa, con su centro en la baldosa (regla {{rule_obstacles}}): cualquier forma (caja, cilindro, cono, esfera, pirámide, prisma o pirámide regular, un contorno dibujado en el mapa, un icono) y color, elegidos en el panel.\nUno elegido tiene asas: cuadradas para su tamaño, una redonda arriba para su giro (Mayús: de 15° en 15°). Su altura está en el panel. Puede apoyarse en una pared, no atravesarla.\nEl robot tiene que rodearlo: las comprobaciones muestran adónde no llega."
                 },
                 "victim": {
                     "title": "Víctima (V): víctimas y objetivos cognitivos",

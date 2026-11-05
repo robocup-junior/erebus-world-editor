@@ -124,7 +124,7 @@
             "line": "Ziehen, um Wände zu zeichnen. Die Linie folgt dem Zeiger, sodass ein Zug ein Zickzack zeichnen kann (geh den Weg zurück, um eine Ecke rückgängig zu machen). Beginne mit gedrückter Umschalttaste für eine einzige gerade Linie. Raum 1 rastet auf 12 cm (Kachelkanten) ein, Räume 2 und 3 auf 6 cm. Nicht in Raum 4.",
             "eraser": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen. Abseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint); ein Klick entfernt den Start. Die Außenwände bleiben. Auch ein Hindernis geht mit einem Klick weg.",
             "floor": "Klicke auf eine Kachel, um ihren Boden festzulegen.",
-            "obstacle": "Ein Hindernis kann jede Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, ein auf der Karte gezeichneter Umriss, ein Symbol), Größe und Drehung haben, eines pro Kachel in Raum 1–3, seine Mitte auf seiner Kachel (Regel {{rule_obstacles}}): im Bereich einstellen, auf der Karte ziehen. Der Roboter muss daran vorbei: die Prüfung berücksichtigt es.",
+            "obstacle": "Klicke eine Kachel, um ein Hindernis der im Bereich gewählten Form und Farbe zu setzen (Raum 1–3, eines pro Kachel; Regel {{rule_obstacles}}). Klicke eines, um es zu wählen: seine Griffe auf der Karte ändern Größe und Drehung (Umschalt: 15°-Schritte), der Bereich Höhe, Farbe und Form; ziehe es zum Verschieben, Entf entfernt es. Die Ecken eines gezeichneten Umrisses klickst du auf der Karte; ein Symbol suchst du per Name.",
             "victim": "Klicke nahe einer Wand: Das Opfer kommt an die Wand, wo du klickst. Raum 1: an eine Kachelseite (eins pro Kachel); Räume 2 und 3: an eine Fläche der 6-cm-Wände (4 Viertel × 4 Flächen); eine Kurve hat zwei Plätze (innen und außen). Ziehe ein gesetztes Opfer, um es entlang seiner Wand zu verschieben (es stoppt vor dem Wandende und vor anderen Opfern). Klicke ein gesetztes an, um es auszuwählen: Art, Ringe und Drehung änderst du dann im Bereich, oder du entfernst es.",
             "curve": "Zeige auf eine Viertelkachel in Raum 3, um ihre vier Kurven zu sehen; die nächste (blau) wird mit einem Klick gesetzt. Klicke dieselbe erneut, um sie zu entfernen.",
             "select": "Wähle Wände, Räume, Böden und Opfer zusammen aus, um sie zu verschieben, zu kopieren, einzufügen oder zu leeren. Klicke ein Opfer oder ein Hindernis, um sein Werkzeug mit ihm gewählt zu öffnen; klicke eine Wand oder eine Kurve, um sie zu wählen, und Entf, um sie zu entfernen.",
@@ -491,7 +491,7 @@
             "steps": {
                 "intro": {
                     "title": "Lernen mit einer Beispielkarte",
-                    "body": "In dieser Lektion erstellst du die Karte oben und nutzt unterwegs die Funktionen des Editors eine nach der anderen (etwa 15 Minuten).\nRaum 1 links, Raum 2 oben in der Mitte, Raum 3 unten in der Mitte, Raum 4 rechts. Du verbindest die Räume mit Durchgängen, setzt Wände, eine Kurve, Böden und Opfer, zeichnest das Innere von Raum 4 und endest mit einer exportfertigen Welt.\nTu, was jeder Schritt verlangt, dann wird er zu Geschafft!, und Weiter geht es. Klappt etwas nicht, erledigt Für mich erledigen es für dich. Der Editor funktioniert die ganze Zeit wie gewohnt."
+                    "body": "In dieser Lektion erstellst du die Karte oben und nutzt unterwegs die Funktionen des Editors eine nach der anderen (etwa 15 Minuten).\nRaum 1 links, Raum 2 oben in der Mitte, Raum 3 unten in der Mitte, Raum 4 rechts. Du verbindest die Räume mit Durchgängen, setzt Wände, eine Kurve, Böden, ein Hindernis und Opfer, zeichnest das Innere von Raum 4 und endest mit einer exportfertigen Welt.\nTu, was jeder Schritt verlangt, dann wird er zu Geschafft!, und Weiter geht es. Klappt etwas nicht, erledigt Für mich erledigen es für dich. Der Editor funktioniert die ganze Zeit wie gewohnt."
                 },
                 "new": {
                     "title": "Eine neue Karte erstellen",
@@ -616,11 +616,21 @@
                 },
                 "erase": {
                     "title": "Wegradieren und rückgängig machen",
-                    "body": "Der Radierer entfernt Wände, Kurven und Opfer mit einem Klick oder Zug. Abseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint); der Start verschwindet nur mit einem Klick. Die Außenwände bleiben.\nRadierst du das Falsche weg, holt Rückgängig (Strg+Z oder ↶ in der oberen Leiste) es zurück; Wiederholen (Strg+Umschalt+Z oder ↷) geht wieder vor.",
+                    "body": "Der Radierer entfernt Wände, Kurven, Hindernisse und Opfer mit einem Klick oder Zug. Abseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint); der Start verschwindet nur mit einem Klick. Die Außenwände bleiben.\nRadierst du das Falsche weg, holt Rückgängig (Strg+Z oder ↶ in der oberen Leiste) es zurück; Wiederholen (Strg+Umschalt+Z oder ↷) geht wieder vor.",
                     "task": "Radiere den Sumpf (grüner Rahmen) weg und hole ihn dann mit Strg+Z zurück",
                     "tasks": {
                         "undo": "Der Sumpf ist weg. Hole ihn jetzt mit Strg+Z zurück (oder ↶ in der oberen Leiste)"
                     }
+                },
+                "obstacle": {
+                    "title": "Ein Hindernis setzen",
+                    "body": "Das Hindernis-Werkzeug (O) setzt Hindernisse auf Kacheln von Raum 1–3, eines pro Kachel. Wähle Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, ein auf der Karte gezeichneter Umriss, ein Symbol) und Farbe im Bereich und klicke eine Kachel.\nEin Hindernis kommt nicht auf den Start, einen Durchgang, ein Loch, einen Sumpf oder einen Checkpoint. Der Roboter muss daran vorbei, also setze es so, dass es keinen Weg versperrt: die Prüfung sagt es dir sonst.",
+                    "task": "Klicke mit dem Hindernis-Werkzeug die Kachel im grünen Rahmen, um ein Hindernis zu setzen"
+                },
+                "obstacleEdit": {
+                    "title": "Größe, Drehung und Farbe ändern",
+                    "body": "Das gesetzte Hindernis ist gewählt und hat Griffe: Ziehe einen eckigen, um die Größe zu ändern, den runden darüber, um es zu drehen (mit Umschalt in 15°-Schritten). Höhe und Farbe stehen im Bereich.\nZiehe das Hindernis selbst, um es auf seiner Kachel zu verschieben; es hält an einer Wand an und geht nicht hindurch. Entf entfernt es.",
+                    "task": "Ändere Größe, Drehung oder Farbe des Hindernisses mit seinen Griffen oder im Bereich"
                 },
                 "victim": {
                     "title": "Ein Opfer setzen",
@@ -645,8 +655,8 @@
                 },
                 "pick": {
                     "title": "Ein gesetztes Opfer ändern",
-                    "body": "Klicke ein Opfer mit derselben gewählten Art an, um es auszuwählen. Ändere im Bereich seine Art, ob es falsch ist, seine Drehung (bei einem kognitiven Ziel seine Ringe), oder entferne es. Fertig beendet die Auswahl.\nEin Klick mit einer anderen gewählten Art ändert seine Art.",
-                    "task": "Klicke eins deiner Opfer mit seiner gewählten Art an, um es auszuwählen"
+                    "body": "Klicke ein gesetztes Opfer an, um es auszuwählen (seine Art bleibt). Solange es gewählt ist, ändern die im Bereich gewählte Art, echt oder falsch und Drehung (bei einem kognitiven Ziel die Ringe) dieses Opfer. Entferne es mit der Löschen-Schaltfläche im Bereich oder mit Entf.\nFertig oder Esc beendet die Auswahl; der Bereich stellt dann wieder das nächste Opfer ein.",
+                    "task": "Klicke eins deiner Opfer an, um es auszuwählen"
                 },
                 "r4open": {
                     "title": "Das Innere von Raum 4 zeichnen",
@@ -748,11 +758,6 @@
                         "target": "Der Radierer steht auf Alles. Stelle ihn auf Nur Opfer"
                     }
                 },
-                "r4random": {
-                    "title": "Zufällig setzen",
-                    "body": "Wähle in Zufällig setzen, wie viele und welcher Art (der gewählte Typ oder gemischte Typen), und drücke Setzen: Die Opfer kommen auf einmal.\nSie kommen an Wände, denen der Roboter bis auf eine halbe Kachel nahe kommt, mindestens eine halbe Kachel voneinander entfernt.",
-                    "task": "Drücke Setzen in Zufällig setzen"
-                },
                 "r4reach": {
                     "title": "Eine unerreichbare Stelle schaffen und sehen",
                     "body": "Ist Unerreichbar an, wird rot gestreift gezeigt, wo der Roboter (Radius 3,7 cm) nicht hinkommt: eine von Wänden eingeschlossene Stelle oder eine Lücke, die schmaler als der Roboter ist.\nEine unerreichbare Stelle ist an sich in Ordnung (das Innere eines Hindernisses soll es sein). Aber der Roboter kann ein Opfer dort nicht finden, also nutze die Streifen beim Setzen von Opfern. Opfer, an die der Roboter nicht nahe herankommt oder die nicht an ihrer Wand sind, bekommen einen gestrichelten roten Ring, und die untere Zeile zählt sie.\nEingänge / CP zeigt die Eingänge und Checkpoints. Versuche, eine unerreichbare Stelle zu schaffen.",
@@ -774,7 +779,7 @@
                 },
                 "select": {
                     "title": "Einen Bereich auswählen, verschieben und kopieren",
-                    "body": "Ziehe mit dem Auswahlwerkzeug, um einen Bereich von Kacheln auszuwählen; seine Wände, Räume, Böden und Opfer werden zusammen genommen.\nZiehe darin, um ihn zu verschieben, oder mit gedrückter Alt-Taste, um eine Kopie zu verschieben. Die Pfeiltasten verschieben ihn kachelweise. Strg+C / Strg+X kopieren / schneiden aus, Strg+V fügt ein (die Kachel unter dem Zeiger ist seine obere linke Ecke), Strg+D dupliziert und Entf leert ihn. Esc lässt ihn los.\nWähle ihn hier nur aus; bewegt er sich, nimmt Strg+Z es zurück.",
+                    "body": "Ziehe mit dem Auswahlwerkzeug, um einen Bereich von Kacheln auszuwählen; seine Wände, Räume, Böden, Hindernisse und Opfer werden zusammen genommen.\nZiehe darin, um ihn zu verschieben, oder mit gedrückter Alt-Taste, um eine Kopie zu verschieben. Die Pfeiltasten verschieben ihn kachelweise. Strg+C / Strg+X kopieren / schneiden aus, Strg+V fügt ein (die Kachel unter dem Zeiger ist seine obere linke Ecke), Strg+D dupliziert und Entf leert ihn. Esc lässt ihn los.\nWähle ihn hier nur aus; bewegt er sich, nimmt Strg+Z es zurück.",
                     "task": "Ziehe, um Raum 1 auszuwählen (grüner Rahmen)"
                 },
                 "view": {
@@ -813,7 +818,7 @@
                 },
                 "done": {
                     "title": "Geschafft!",
-                    "body": "Gut gemacht: Die Beispielkarte ist fertig.\nSpeichere sie, oder exportiere die .wbt und lass sie in Erebus laufen. Für eine neue Karte beginne mit Neu.\nEine gute Arbeitsreihenfolge: Größe und Umriss → Räume malen → mit Durchgängen verbinden → Wände zeichnen → Böden und Opfer → Raum 4 zeichnen → Prüfungen ansehen und exportieren."
+                    "body": "Gut gemacht: Die Beispielkarte ist fertig.\nSpeichere sie, oder exportiere die .wbt und lass sie in Erebus laufen. Für eine neue Karte beginne mit Neu.\nEine gute Arbeitsreihenfolge: Größe und Umriss → Räume malen → mit Durchgängen verbinden → Wände zeichnen → Böden, Hindernisse und Opfer → Raum 4 zeichnen → Prüfungen ansehen und exportieren."
                 },
                 "score": {
                     "title": "Höchstpunktzahl",
@@ -836,6 +841,7 @@
                 "passages": "Durchgänge",
                 "walls": "Wände",
                 "floors": "Böden",
+                "obstacles": "Hindernisse",
                 "victims": "Opfer",
                 "room4": "Raum 4",
                 "finish": "Fertigstellen und exportieren"
@@ -899,7 +905,7 @@
                 },
                 "obstacle": {
                     "title": "Hindernis (O): jede Form, Größe und Farbe",
-                    "body": "Ein Hindernis kann jede Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, ein auf der Karte gezeichneter Umriss, ein Symbol), Größe und Drehung haben, eines pro Kachel in Raum 1–3, seine Mitte auf seiner Kachel (Regel {{rule_obstacles}}): im Bereich einstellen, auf der Karte ziehen. Der Roboter muss daran vorbei: die Prüfung berücksichtigt es."
+                    "body": "Setze Hindernisse auf Kacheln von Raum 1–3, eines pro Kachel, die Mitte auf der Kachel (Regel {{rule_obstacles}}): jede Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, ein auf der Karte gezeichneter Umriss, ein Symbol) und Farbe, im Bereich gewählt.\nEin gewähltes hat Griffe: eckige für die Größe, einen runden darüber für die Drehung (Umschalt: 15°-Schritte). Die Höhe steht im Bereich. Es darf an einer Wand stehen, aber nicht durch sie hindurch.\nDer Roboter muss daran vorbei: die Prüfung zeigt, wohin er nicht kommt."
                 },
                 "victim": {
                     "title": "Opfer (V): Opfer und kognitive Ziele",

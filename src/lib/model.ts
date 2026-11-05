@@ -40,7 +40,8 @@ interface Reach {
 // A custom room 4 picture as the checks read it: its size, its wall pixels (summed: wallSum[(y) * (w
 // + 1) + x] counts the walls above and left of (x, y), so a box of them is counted at once) and its
 // stamps (centre as fractions of the picture, scoring type 0-10; -1: a red with no type set)
-export interface Room4Picture { w: number; h: number; wallSum: Int32Array; tokens: { fx: number; fy: number; type: number }[] }
+// and its box in pixels, [minX, minY, maxX, maxY], to take it off)
+export interface Room4Picture { w: number; h: number; wallSum: Int32Array; tokens: { fx: number; fy: number; type: number; box?: number[] }[] }
 
 function readRoom4Picture(px: ArrayLike<number>, w: number, h: number): Room4Picture {
     const sum = new Int32Array((w + 1) * (h + 1));
@@ -52,7 +53,7 @@ function readRoom4Picture(px: ArrayLike<number>, w: number, h: number): Room4Pic
             sum[(y + 1) * (w + 1) + x + 1] = sum[y * (w + 1) + x + 1] + row;
         }
     }
-    const tokens = R4.findTokens(px, w, h).map(function (t) { return { fx: t.cx / w, fy: t.cy / h, type: t.type }; });
+    const tokens = R4.findTokens(px, w, h).map(function (t) { return { fx: t.cx / w, fy: t.cy / h, type: t.type, box: [t.minX, t.minY, t.maxX, t.maxY] }; });
     return { w: w, h: h, wallSum: sum, tokens: tokens };
 }
 
@@ -1982,7 +1983,15 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
 const FIXABLE = ['noStart', 'startNotRoom1', 'tileTwoKinds', 'passageOpenSides', 'obstacleRoom', 'obstacleOverlap', 'presetNotSupported', 'room4Checkpoint', 'conn.notConnected', 'conn.passageNoRoom',
     'conn.passageMisplaced', 'conn.unmarkedGap', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable', 'wallRule'];
 // fixed by drawing in the room 4 creator
-const DRAW_FIX = ['customRoom4NoPicture', 'room4Untyped', 'room4Unreachable'];
+const DRAW_FIX = ['customRoom4NoPicture', 'room4Untyped'];
+// fixed in the room 4 picture (by the editor, which reads and writes the picture's pixels): its victims
+// the robot cannot get to taken off, as the creator's "remove them" does
+const PICTURE_FIX = ['room4Unreachable'];
+// The stamps of the room 4 picture to take off for that: their boxes (pixels), for the map as it is
+function room4UnreachedBoxes(map: MapData, picture: Room4Picture): number[][] {
+    const reach = robotReach(map, picture);
+    return reach ? room4Unreached(map, picture, reach).map(function (u) { return picture.tokens[u.index].box; }).filter(Boolean) as number[][] : [];
+}
 
 // A start tile: a plain room 1 tile, looked for from the bottom left
 function fixStart(map: MapData) {
@@ -2206,6 +2215,8 @@ export {
     floorFree,
     FIXABLE,
     DRAW_FIX,
+    PICTURE_FIX,
+    room4UnreachedBoxes,
     readRoom4Picture,
     room4Unreached,
     fixProblem,

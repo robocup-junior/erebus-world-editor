@@ -124,7 +124,7 @@
             "line": "Faites glisser pour tracer des murs. La ligne tourne avec le pointeur, donc un seul tracé peut faire un zigzag (revenez sur vos pas pour annuler un virage). Commencez avec Maj enfoncée pour une seule ligne droite. La salle 1 s’aligne sur 12 cm (bords des cases), les salles 2 et 3 sur 6 cm. Pas dans la salle 4.",
             "eraser": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint) ; un clic retire le départ. Les murs extérieurs restent. Un obstacle part aussi d’un clic.",
             "floor": "Cliquez sur une case pour choisir son sol.",
-            "obstacle": "Un obstacle peut avoir n’importe quelle forme (boîte, cylindre, cône, sphère, pyramide, prisme ou pyramide réguliers, un contour dessiné sur la carte, une icône), taille et rotation, un par case dans les salles 1-3, son centre sur sa case (règle {{rule_obstacles}}) : réglez-le dans le panneau, faites-le glisser sur la carte. Le robot doit le contourner : les vérifications en tiennent compte.",
+            "obstacle": "Cliquez une case pour poser un obstacle de la forme et de la couleur choisies dans le panneau (salles 1-3, un par case ; règle {{rule_obstacles}}). Cliquez-en un pour le choisir : ses poignées sur la carte changent sa taille et sa rotation (Maj : pas de 15°), le panneau sa hauteur, sa couleur et sa forme ; faites-le glisser pour le déplacer, Suppr le retire. Les coins d’un contour se cliquent sur la carte ; une icône se cherche par son nom.",
             "victim": "Cliquez près d’un mur : la victime se place sur le mur là où vous cliquez. Salle 1 : sur un côté de case (une par case) ; salles 2 et 3 : sur une face des murs de 6 cm (4 quarts × 4 faces) ; une courbe a deux places (intérieur et extérieur). Faites glisser une victime placée pour la déplacer le long de son mur (elle s’arrête avant le bout du mur et les autres victimes). Cliquez une victime posée pour la sélectionner : son type, ses anneaux et son orientation se changent alors dans le panneau, ou elle est retirée.",
             "curve": "Pointez un quart de case dans la salle 3 pour voir ses quatre courbes ; la plus proche (bleue) se place d’un clic. Cliquez à nouveau sur la même pour la retirer.",
             "select": "Sélectionnez ensemble murs, salles, sols et victimes pour les déplacer, copier, coller ou effacer. Cliquez une victime ou un obstacle pour ouvrir son outil avec lui choisi ; cliquez un mur ou une courbe pour le choisir et Suppr pour le retirer.",
@@ -491,7 +491,7 @@
             "steps": {
                 "intro": {
                     "title": "Apprendre en faisant une carte d’exemple",
-                    "body": "Dans cette leçon, vous faites la carte ci-dessus en utilisant au passage les fonctions de l’éditeur l’une après l’autre (environ 15 minutes).\nSalle 1 à gauche, salle 2 en haut au milieu, salle 3 en bas au milieu, salle 4 à droite. Vous reliez les salles par des passages, placez murs, une courbe, sols et victimes, dessinez l’intérieur de la salle 4 et terminez avec un monde prêt à exporter.\nFaites ce que demande chaque étape et elle passe à Fait !, puis Suivant continue. Si quelque chose ne marche pas, Le faire pour moi le fait à votre place. L’éditeur fonctionne normalement tout du long."
+                    "body": "Dans cette leçon, vous faites la carte ci-dessus en utilisant au passage les fonctions de l’éditeur l’une après l’autre (environ 15 minutes).\nSalle 1 à gauche, salle 2 en haut au milieu, salle 3 en bas au milieu, salle 4 à droite. Vous reliez les salles par des passages, placez murs, une courbe, sols, un obstacle et victimes, dessinez l’intérieur de la salle 4 et terminez avec un monde prêt à exporter.\nFaites ce que demande chaque étape et elle passe à Fait !, puis Suivant continue. Si quelque chose ne marche pas, Le faire pour moi le fait à votre place. L’éditeur fonctionne normalement tout du long."
                 },
                 "new": {
                     "title": "Créer une nouvelle carte",
@@ -616,11 +616,21 @@
                 },
                 "erase": {
                     "title": "Gommer et annuler",
-                    "body": "La gomme retire murs, courbes et victimes d’un clic ou d’un glisser. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint) ; le départ ne part que d’un clic. Les murs extérieurs restent.\nSi vous gommez la mauvaise chose, annuler (Ctrl+Z, ou ↶ dans la barre du haut) la récupère ; rétablir (Ctrl+Maj+Z, ou ↷) avance de nouveau.",
+                    "body": "La gomme retire murs, courbes, obstacles et victimes d’un clic ou d’un glisser. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint) ; le départ ne part que d’un clic. Les murs extérieurs restent.\nSi vous gommez la mauvaise chose, annuler (Ctrl+Z, ou ↶ dans la barre du haut) la récupère ; rétablir (Ctrl+Maj+Z, ou ↷) avance de nouveau.",
                     "task": "Gommez le marais (cadre vert), puis récupérez-le avec Ctrl+Z",
                     "tasks": {
                         "undo": "Le marais a disparu. Récupérez-le maintenant avec Ctrl+Z (ou ↶ dans la barre du haut)"
                     }
+                },
+                "obstacle": {
+                    "title": "Poser un obstacle",
+                    "body": "L’outil obstacles (O) pose des obstacles sur des cases des salles 1-3, un par case. Choisissez sa forme (boîte, cylindre, cône, sphère, pyramide, prisme ou pyramide réguliers, un contour dessiné sur la carte, une icône) et sa couleur dans le panneau, puis cliquez une case.\nUn obstacle ne va pas sur le départ, un passage, un trou, un marais ni un checkpoint. Le robot doit le contourner : posez-le où il ne ferme pas un chemin, les vérifications vous le signalent sinon.",
+                    "task": "Avec l’outil obstacles, cliquez la case du cadre vert pour poser un obstacle"
+                },
+                "obstacleEdit": {
+                    "title": "Changer sa taille, sa rotation et sa couleur",
+                    "body": "L’obstacle posé est choisi, avec des poignées autour : faites glisser une carrée pour changer sa taille, la ronde au-dessus pour le tourner (avec Maj, par pas de 15°). Sa hauteur et sa couleur sont dans le panneau.\nFaites glisser l’obstacle lui-même pour le déplacer sur sa case ; il s’arrête à un mur, sans le traverser. Suppr le retire.",
+                    "task": "Changez la taille, la rotation ou la couleur de l’obstacle avec ses poignées ou le panneau"
                 },
                 "victim": {
                     "title": "Placer une victime",
@@ -645,8 +655,8 @@
                 },
                 "pick": {
                     "title": "Modifier une victime placée",
-                    "body": "Cliquez sur une victime avec le même type choisi pour la sélectionner. Dans le panneau, changez son type, si elle est fausse, son orientation (pour une cible cognitive, ses anneaux), ou retirez-la. Terminé met fin à la sélection.\nCliquer dessus avec un autre type choisi change son type.",
-                    "task": "Cliquez sur une de vos victimes avec son type choisi, pour la sélectionner"
+                    "body": "Cliquez sur une victime placée pour la sélectionner (son type reste le même). Tant qu’elle est sélectionnée, le type, vraie ou fausse, et l’orientation (les anneaux d’une cible cognitive) choisis dans le panneau la changent. Retirez-la avec le bouton supprimer du panneau ou Suppr.\nTerminé ou Échap met fin à la sélection ; le panneau règle de nouveau la prochaine victime.",
+                    "task": "Cliquez sur une de vos victimes pour la sélectionner"
                 },
                 "r4open": {
                     "title": "Dessiner l’intérieur de la salle 4",
@@ -748,11 +758,6 @@
                         "target": "La gomme est sur Tout. Passez-la sur Victimes seulement"
                     }
                 },
-                "r4random": {
-                    "title": "Placer au hasard",
-                    "body": "Dans Placer au hasard, choisissez combien et de quel type (le type choisi ou des types mélangés) et appuyez sur Placer : les victimes se placent toutes d’un coup.\nElles vont le long de murs dont le robot peut s’approcher à une demi-case, à au moins une demi-case les unes des autres.",
-                    "task": "Appuyez sur Placer dans Placer au hasard"
-                },
                 "r4reach": {
                     "title": "Créer un endroit inaccessible, et le voir",
                     "body": "Avec Inaccessible activé, là où le robot (rayon 3,7 cm) ne peut pas aller s’affiche en rayures rouges : un endroit fermé par des murs, ou un espace plus étroit que le robot.\nUn endroit inaccessible n’est pas un problème en soi (l’intérieur d’un obstacle doit l’être). Mais le robot ne peut pas trouver une victime placée là, alors servez-vous des rayures en plaçant les victimes. Les victimes dont le robot ne peut pas s’approcher, ou qui ne sont pas sur leur mur, ont un anneau rouge pointillé, et la ligne du bas les compte.\nEntrées / CP montre les entrées et les checkpoints. Essayez de créer un endroit inaccessible.",
@@ -774,7 +779,7 @@
                 },
                 "select": {
                     "title": "Sélectionner, déplacer et copier une zone",
-                    "body": "Faites glisser avec l’outil sélection pour sélectionner une zone de cases ; ses murs, salles, sols et victimes sont pris ensemble.\nFaites glisser à l’intérieur pour la déplacer, ou avec Alt enfoncé pour déplacer une copie. Les flèches la déplacent case par case. Ctrl+C / Ctrl+X copient / coupent, Ctrl+V colle (la case sous le pointeur est son coin haut gauche), Ctrl+D duplique et Suppr l’efface. Échap la relâche.\nIci, sélectionnez-la seulement ; si elle bouge, Ctrl+Z la remet.",
+                    "body": "Faites glisser avec l’outil sélection pour sélectionner une zone de cases ; ses murs, salles, sols, obstacles et victimes sont pris ensemble.\nFaites glisser à l’intérieur pour la déplacer, ou avec Alt enfoncé pour déplacer une copie. Les flèches la déplacent case par case. Ctrl+C / Ctrl+X copient / coupent, Ctrl+V colle (la case sous le pointeur est son coin haut gauche), Ctrl+D duplique et Suppr l’efface. Échap la relâche.\nIci, sélectionnez-la seulement ; si elle bouge, Ctrl+Z la remet.",
                     "task": "Faites glisser pour sélectionner la salle 1 (cadre vert)"
                 },
                 "view": {
@@ -813,7 +818,7 @@
                 },
                 "done": {
                     "title": "Terminé !",
-                    "body": "Bravo : la carte d’exemple est faite.\nEnregistrez-la, ou exportez le .wbt et lancez-le dans Erebus. Pour une nouvelle carte, commencez par Nouveau.\nUn bon ordre de travail : taille et contour → peindre les salles → les relier par des passages → tracer les murs → sols et victimes → dessiner la salle 4 → regarder les vérifications et exporter."
+                    "body": "Bravo : la carte d’exemple est faite.\nEnregistrez-la, ou exportez le .wbt et lancez-le dans Erebus. Pour une nouvelle carte, commencez par Nouveau.\nUn bon ordre de travail : taille et contour → peindre les salles → les relier par des passages → tracer les murs → sols, obstacles et victimes → dessiner la salle 4 → regarder les vérifications et exporter."
                 },
                 "score": {
                     "title": "Score maximum",
@@ -836,6 +841,7 @@
                 "passages": "Passages",
                 "walls": "Murs",
                 "floors": "Sols",
+                "obstacles": "Obstacles",
                 "victims": "Victimes",
                 "room4": "Salle 4",
                 "finish": "Finir et exporter"
@@ -899,7 +905,7 @@
                 },
                 "obstacle": {
                     "title": "Obstacle (O) : toute forme, taille et couleur",
-                    "body": "Un obstacle peut avoir n’importe quelle forme (boîte, cylindre, cône, sphère, pyramide, prisme ou pyramide réguliers, un contour dessiné sur la carte, une icône), taille et rotation, un par case dans les salles 1-3, son centre sur sa case (règle {{rule_obstacles}}) : réglez-le dans le panneau, faites-le glisser sur la carte. Le robot doit le contourner : les vérifications en tiennent compte."
+                    "body": "Posez des obstacles sur des cases des salles 1-3, un par case, leur centre sur la case (règle {{rule_obstacles}}) : toute forme (boîte, cylindre, cône, sphère, pyramide, prisme ou pyramide réguliers, un contour dessiné sur la carte, une icône) et toute couleur, choisies dans le panneau.\nUn obstacle choisi a des poignées : carrées pour sa taille, une ronde au-dessus pour sa rotation (Maj : pas de 15°). Sa hauteur est dans le panneau. Il peut s’appuyer contre un mur, pas le traverser.\nLe robot doit le contourner : les vérifications montrent où il ne va pas."
                 },
                 "victim": {
                     "title": "Victime (V) : victimes et cibles cognitives",

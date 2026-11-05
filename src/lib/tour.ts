@@ -22,8 +22,9 @@
 //
 // env, given by the editor: { M, W, L (the model, the world, the lattice), map, ui, selected,
 // region, creator (the room 4 creator's scope: r4, r4api, closeRoom4; null when it is closed),
-// room4State, problems, sync() (border walls again after a change), act: { newMap(), resize(w, l),
-// openRoom4(), fixAll(), toggleLinear(), select(where), setRegion(r), rename(name) } }.
+// room4State, problems, obstacle (the obstacle tool's picked tile, cells), sync() (border walls again
+// after a change), act: { newMap(), resize(w, l), openRoom4(), fixAll(), toggleLinear(), select(where),
+// setRegion(r), rename(name), pickObstacle(x, y) } }.
 //
 // Texts are in the language files: guide.tour.steps.<id> for TOUR, guide.lesson.steps.<id> for
 // LESSON and ROOM4 (title, body - paragraphs split by line breaks - and task, what to do).
@@ -50,10 +51,12 @@ export interface TourEnv {
     creator: CreatorApi | null;
     room4State: string;
     problems: { block?: boolean }[];
+    obstacle?: { x: number; y: number } | null;
     sync(): void;
     act: {
         newMap(): void; resize(w: number, l: number): void; openRoom4(): void; fixAll(): void; toggleLinear(): void;
         select(where: Model.Where): void; setRegion(r: Model.Region): void; rename(name: string): void;
+        pickObstacle?(x: number, y: number): void;
     };
 }
 // A step's own state while it is shown
@@ -141,7 +144,7 @@ const CHAPTERS = ['start', 'screen', 'tools', 'finish'];
 // the outer wall of room 1.
 const SAMPLE: {
     width: number; length: number; outside: number[]; rooms: Record<number, number[]>; start: number[];
-    floors: Record<string, number[]>; wall1: number[][]; wall2: number[][]; curve: { tile: number[]; q: number; v: number };
+    floors: Record<string, number[]>; wall1: number[][]; wall2: number[][]; curve: { tile: number[]; q: number; v: number }; obstacle: number[];
 } = {
     width: 9, length: 6,
     outside: [0, 0],
@@ -154,7 +157,10 @@ const SAMPLE: {
     wall1: [[12, 36], [36, 36]],
     wall2: [[48, 12], [54, 12], [54, 18], [60, 18], [60, 24]],
     // a curve rounding the top right corner of room 3 (rule 3.3.2), away from the passages
-    curve: { tile: [5, 3], q: 1, v: 1 }
+    curve: { tile: [5, 3], q: 1, v: 1 },
+    // an obstacle: in room 1 below the hole, the one tile where a box keeps clear of every way the
+    // robot takes (no place it cannot get to, no passage it cannot get through)
+    obstacle: [1, 4]
 };
 
 // ---- what the steps look at ----
@@ -181,6 +187,18 @@ function victims(env: TourEnv) {
 // the kinds of floor the lesson puts: those of the map's year (with a tile of the sample)
 function floorKinds(env: TourEnv) {
     return env.M.rulesOf(env.map).floors.map(function (k) { return k.id; }).filter(function (id) { return !!SAMPLE.floors[id]; });
+}
+// the tiles with an obstacle: [tx, ty]
+function obstacleTiles(env: TourEnv) {
+    const out: number[][] = [];
+    eachTile(env.map, function (x, y) { const t = env.M.tileOf(env.map, x, y); if (t && t.obstacle) out.push([(x - 1) / 2, (y - 1) / 2]); });
+    return out;
+}
+// each obstacle's shape as it is, to tell a change
+function obstacleShapes(env: TourEnv) {
+    const out: Record<string, string> = {};
+    eachTile(env.map, function (x, y) { const t = env.M.tileOf(env.map, x, y); if (t && t.obstacle) out[x + ',' + y] = JSON.stringify(t.obstacleShape || null); });
+    return out;
 }
 function floorCount(env: TourEnv, kind: string) {
     let n = 0;
@@ -429,12 +447,6 @@ const ROOM4: TourStep[] = [
         }
     },
     {
-        id: 'r4random', chapter: 'room4', creator: true, target: '.r4-more', mark: [r4tool('stamp')], r4tool: 'stamp', openMore: true,
-        enter: function (env, st) { st.n0 = env.creator ? env.creator!.r4.tokenCount || 0 : 0; },
-        goal: function (env, st) { return !!env.creator && (env.creator!.r4.tokenCount || 0) > st.n0; },
-        auto: function (env) { env.creator!.r4api.randomStamps(3, 'mixed'); }
-    },
-    {
         // a place the robot cannot get into made on purpose (a small closed square), and seen
         id: 'r4reach', chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-topbar', '.r4-status', r4tool('rect')], r4tool: 'rect', showReach: true,
         r4guide: [R4.square],
@@ -642,6 +654,43 @@ const LESSON: TourStep[] = ([
     },
 
     {
+        // an obstacle put with the obstacle tool
+        id: 'obstacle', chapter: 'obstacles', target: PANEL, tool: 'obstacle', keys: ['O'],
+        region: function () { return [tileBox(SAMPLE.obstacle)]; },
+        enter: function (env, st) { st.n0 = obstacleTiles(env).length; },
+        goal: function (env, st) { return obstacleTiles(env).length > st.n0; },
+        // put and picked, as a click puts it: the next step's handles are round it
+        auto: function (env) {
+            const x = c(SAMPLE.obstacle[0]), y = c(SAMPLE.obstacle[1]);
+            env.M.setObstacle(env.map, x, y, env.M.OBSTACLE_DEFAULT);
+            if (env.act.pickObstacle) env.act.pickObstacle(x, y);
+        }
+    },
+    {
+        // and changed: its size, its turn (its handles), its height or colour (the panel)
+        id: 'obstacleEdit', chapter: 'obstacles', target: PANEL, tool: 'obstacle', keys: ['Shift', 'Delete'],
+        region: function (env) { const at = obstacleTiles(env); return (at.length ? at : [SAMPLE.obstacle]).map(tileBox); },
+        // one picked, for its handles to show (the one put, or the first there is)
+        enter: function (env, st) {
+            st.shapes = obstacleShapes(env);
+            const at = env.obstacle, t = at && env.M.tileOf(env.map, at.x, at.y);
+            const first = obstacleTiles(env)[0];
+            if (!(t && t.obstacle) && first && env.act.pickObstacle) env.act.pickObstacle(c(first[0]), c(first[1]));
+        },
+        goal: function (env, st) {
+            const now = obstacleShapes(env);
+            return Object.keys(now).some(function (k) { return k in st.shapes && now[k] !== st.shapes[k]; });
+        },
+        auto: function (env) {
+            const at = obstacleTiles(env)[0] || SAMPLE.obstacle;
+            const x = c(at[0]), y = c(at[1]);
+            if (!(env.M.tileOf(env.map, x, y) || {}).obstacle) env.M.setObstacle(env.map, x, y, env.M.OBSTACLE_DEFAULT);
+            env.M.changeObstacle(env.map, x, y, { color: '#dc2626', h: 8 });
+            if (env.act.pickObstacle) env.act.pickObstacle(x, y);
+        }
+    },
+
+    {
         id: 'victim', chapter: 'victims', target: PANEL, tool: 'victim', victim: 'H',
         region: function () { return [[1, 2, 1, 2]]; },
         goal: function (env) { return victims(env).some(function (v) { return !env.M.isTarget(env.map, v.type) && !v.fake; }); },
@@ -725,7 +774,7 @@ const LESSON: TourStep[] = ([
     { id: 'more', chapter: 'finish', target: '.ed-status-tools' },
     { id: 'done', chapter: 'finish', plan: true }
 ] as TourStep[]);
-const LESSON_CHAPTERS = ['start', 'shape', 'rooms', 'passages', 'walls', 'floors', 'victims', 'room4', 'finish'];
+const LESSON_CHAPTERS = ['start', 'shape', 'rooms', 'passages', 'walls', 'floors', 'obstacles', 'victims', 'room4', 'finish'];
 
 // ---- placing the card ----
 // Where a card of cw x ch goes beside the lit rect r ({ left, top, right, bottom }) in a window of
@@ -759,8 +808,10 @@ function place(r: Rect | null, cw: number, ch: number, vw: number, vh: number, p
 }
 
 // A rect grown by pad and kept inside the window
+// (one out of the window altogether: no size, never a negative one)
 function pad(r: Rect, p: number, vw: number, vh: number): Rect {
-    return { left: Math.max(2, r.left - p), top: Math.max(2, r.top - p), right: Math.min(vw - 2, r.right + p), bottom: Math.min(vh - 2, r.bottom + p) };
+    const left = Math.max(2, r.left - p), top = Math.max(2, r.top - p);
+    return { left: left, top: top, right: Math.max(left, Math.min(vw - 2, r.right + p)), bottom: Math.max(top, Math.min(vh - 2, r.bottom + p)) };
 }
 
 export {

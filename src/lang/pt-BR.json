@@ -124,7 +124,7 @@
             "line": "Arraste para desenhar paredes. A linha vira com o ponteiro, então um único arraste pode desenhar um zigue-zague (volte pelo mesmo caminho para desfazer uma curva). Comece com Shift pressionado para uma única linha reta. A sala 1 se ajusta a 12 cm (bordas dos ladrilhos) e as salas 2 e 3 a 6 cm. Não dentro da sala 4.",
             "eraser": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint); um clique remove a partida. As paredes externas ficam. Um obstáculo também sai com um clique.",
             "floor": "Clique em um ladrilho para definir seu piso.",
-            "obstacle": "Um obstáculo pode ter qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, um contorno desenhado no mapa, um ícone), tamanho e giro, um por ladrilho nas salas 1-3, com o centro no seu ladrilho (regra {{rule_obstacles}}): ajuste no painel e arraste no mapa. O robô precisa contorná-lo: as verificações levam isso em conta.",
+            "obstacle": "Clique um ladrilho para pôr um obstáculo da forma e da cor escolhidas no painel (salas 1-3, um por ladrilho; regra {{rule_obstacles}}). Clique um para escolhê-lo: as alças no mapa mudam o tamanho e o giro (Shift: de 15° em 15°), o painel a altura, a cor e a forma; arraste para mover, Delete o tira. Os cantos de um contorno são clicados no mapa; um ícone é procurado pelo nome.",
             "victim": "Clique perto de uma parede: a vítima vai para a parede onde você clica. Sala 1: em um lado do ladrilho (uma por ladrilho); salas 2 e 3: em uma face das paredes de 6 cm (4 quartos × 4 faces); uma curva tem dois lugares (dentro e fora). Arraste uma vítima colocada para movê-la ao longo da parede (ela para antes do fim da parede e de outras vítimas). Clique numa colocada para selecioná-la: o tipo, os anéis e o giro são então mudados no painel, ou ela é removida.",
             "curve": "Aponte para um quarto de ladrilho na sala 3 para ver suas quatro curvas; a mais próxima (azul) entra com um clique. Clique de novo na mesma para removê-la.",
             "select": "Selecione paredes, salas, pisos e vítimas juntos para movê-los, copiá-los, colá-los ou apagá-los. Clique uma vítima ou um obstáculo para abrir sua ferramenta com ele escolhido; clique uma parede ou uma curva para escolhê-la e Delete para tirá-la.",
@@ -491,7 +491,7 @@
             "steps": {
                 "intro": {
                     "title": "Aprender fazendo um mapa de exemplo",
-                    "body": "Nesta lição você faz o mapa acima e usa os recursos do editor um após o outro pelo caminho (cerca de 15 minutos).\nSala 1 à esquerda, sala 2 em cima no meio, sala 3 embaixo no meio, sala 4 à direita. Você liga as salas com passagens, coloca paredes, uma curva, pisos e vítimas, desenha o interior da sala 4 e termina com um mundo pronto para exportar.\nFaça o que cada passo pede e ele muda para Feito!; Próximo continua. Se algo não funcionar, Faça por mim faz por você. O editor funciona normalmente o tempo todo."
+                    "body": "Nesta lição você faz o mapa acima e usa os recursos do editor um após o outro pelo caminho (cerca de 15 minutos).\nSala 1 à esquerda, sala 2 em cima no meio, sala 3 embaixo no meio, sala 4 à direita. Você liga as salas com passagens, coloca paredes, uma curva, pisos, um obstáculo e vítimas, desenha o interior da sala 4 e termina com um mundo pronto para exportar.\nFaça o que cada passo pede e ele muda para Feito!; Próximo continua. Se algo não funcionar, Faça por mim faz por você. O editor funciona normalmente o tempo todo."
                 },
                 "new": {
                     "title": "Criar um mapa novo",
@@ -616,11 +616,21 @@
                 },
                 "erase": {
                     "title": "Apagar e desfazer",
-                    "body": "A borracha remove paredes, curvas e vítimas com um clique ou um arraste. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint); a partida só sai com um clique. As paredes externas ficam.\nSe apagar a coisa errada, desfazer (Ctrl+Z, ou ↶ na barra superior) traz de volta; refazer (Ctrl+Shift+Z, ou ↷) avança de novo.",
+                    "body": "A borracha remove paredes, curvas, obstáculos e vítimas com um clique ou um arraste. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint); a partida só sai com um clique. As paredes externas ficam.\nSe apagar a coisa errada, desfazer (Ctrl+Z, ou ↶ na barra superior) traz de volta; refazer (Ctrl+Shift+Z, ou ↷) avança de novo.",
                     "task": "Apague o pântano (moldura verde) e depois traga-o de volta com Ctrl+Z",
                     "tasks": {
                         "undo": "O pântano sumiu. Agora traga-o de volta com Ctrl+Z (ou ↶ na barra superior)"
                     }
+                },
+                "obstacle": {
+                    "title": "Pôr um obstáculo",
+                    "body": "A ferramenta de obstáculos (O) põe obstáculos em ladrilhos das salas 1-3, um por ladrilho. Escolha a forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, um contorno desenhado no mapa, um ícone) e a cor no painel e clique num ladrilho.\nUm obstáculo não vai na partida, numa passagem, num buraco, num pântano nem num checkpoint. O robô precisa contorná-lo, então ponha-o onde não feche um caminho: as verificações avisam se fechar.",
+                    "task": "Com a ferramenta de obstáculos, clique o ladrilho no quadro verde para pôr um obstáculo"
+                },
+                "obstacleEdit": {
+                    "title": "Mudar o tamanho, o giro e a cor",
+                    "body": "O obstáculo posto fica escolhido, com alças em volta: arraste uma quadrada para mudar o tamanho e a redonda de cima para girá-lo (com Shift, de 15° em 15°). A altura e a cor ficam no painel.\nArraste o próprio obstáculo para movê-lo no ladrilho; ele para numa parede, sem atravessá-la. Delete o tira.",
+                    "task": "Mude o tamanho, o giro ou a cor do obstáculo com as alças ou o painel"
                 },
                 "victim": {
                     "title": "Colocar uma vítima",
@@ -645,8 +655,8 @@
                 },
                 "pick": {
                     "title": "Mudar uma vítima que você colocou",
-                    "body": "Clique em uma vítima com o mesmo tipo escolhido para selecioná-la. No painel, mude o tipo, se é falsa, o giro (em um alvo cognitivo, os anéis), ou remova-a. Pronto encerra a seleção.\nClicar com outro tipo escolhido muda o tipo dela.",
-                    "task": "Clique em uma das suas vítimas com o tipo dela escolhido, para selecioná-la"
+                    "body": "Clique em uma vítima que você colocou para selecioná-la (o tipo continua o mesmo). Enquanto está selecionada, o tipo, real ou falsa, e o giro (os anéis de um alvo cognitivo) escolhidos no painel a mudam. Remova-a com o botão de excluir do painel ou Delete.\nPronto ou Esc encerra a seleção, e o painel volta a ajustar a próxima vítima.",
+                    "task": "Clique em uma das suas vítimas para selecioná-la"
                 },
                 "r4open": {
                     "title": "Desenhar o interior da sala 4",
@@ -748,11 +758,6 @@
                         "target": "A borracha está em Tudo. Mude para Só vítimas"
                     }
                 },
-                "r4random": {
-                    "title": "Colocar aleatoriamente",
-                    "body": "Em Colocar aleatoriamente, escolha quantas e de que tipo (o tipo escolhido ou tipos misturados) e pressione Colocar: as vítimas entram todas de uma vez.\nElas vão ao longo de paredes das quais o robô consegue chegar a meio ladrilho, a pelo menos meio ladrilho umas das outras.",
-                    "task": "Pressione Colocar em Colocar aleatoriamente"
-                },
                 "r4reach": {
                     "title": "Criar um lugar fora de alcance e vê-lo",
                     "body": "Com Fora de alcance ligado, onde o robô (raio de 3,7 cm) não consegue chegar aparece com listras vermelhas: um lugar fechado por paredes, ou uma passagem mais estreita que o robô.\nUm lugar fora de alcance não é um problema em si (o interior de um obstáculo deve ser assim). Mas o robô não consegue achar uma vítima posta ali, então use as listras ao colocar vítimas. Vítimas das quais o robô não consegue chegar perto, ou que estão fora da parede, ganham um anel vermelho tracejado, e a linha de baixo as conta.\nEntradas / CP mostra as entradas e os checkpoints. Experimente criar um lugar fora de alcance.",
@@ -774,7 +779,7 @@
                 },
                 "select": {
                     "title": "Selecionar, mover e copiar uma região",
-                    "body": "Arraste com a ferramenta de seleção para selecionar uma região de ladrilhos; suas paredes, salas, pisos e vítimas vão juntos.\nArraste dentro dela para movê-la, ou com Alt pressionado para mover uma cópia. As setas a movem um ladrilho por vez. Ctrl+C / Ctrl+X copiam / recortam, Ctrl+V cola (o ladrilho sob o ponteiro é o canto superior esquerdo), Ctrl+D duplica e Delete apaga. Esc a solta.\nAqui é só selecionar; se ela se mover, Ctrl+Z a traz de volta.",
+                    "body": "Arraste com a ferramenta de seleção para selecionar uma região de ladrilhos; suas paredes, salas, pisos, obstáculos e vítimas vão juntos.\nArraste dentro dela para movê-la, ou com Alt pressionado para mover uma cópia. As setas a movem um ladrilho por vez. Ctrl+C / Ctrl+X copiam / recortam, Ctrl+V cola (o ladrilho sob o ponteiro é o canto superior esquerdo), Ctrl+D duplica e Delete apaga. Esc a solta.\nAqui é só selecionar; se ela se mover, Ctrl+Z a traz de volta.",
                     "task": "Arraste para selecionar a sala 1 (moldura verde)"
                 },
                 "view": {
@@ -813,7 +818,7 @@
                 },
                 "done": {
                     "title": "Pronto!",
-                    "body": "Muito bem: o mapa de exemplo está feito.\nSalve-o, ou exporte o .wbt e rode-o no Erebus. Para um mapa novo, comece em Novo.\nUma boa ordem de trabalho: tamanho e contorno → pinte as salas → ligue-as com passagens → desenhe paredes → pisos e vítimas → desenhe a sala 4 → veja as verificações e exporte."
+                    "body": "Muito bem: o mapa de exemplo está feito.\nSalve-o, ou exporte o .wbt e rode-o no Erebus. Para um mapa novo, comece em Novo.\nUma boa ordem de trabalho: tamanho e contorno → pinte as salas → ligue-as com passagens → desenhe paredes → pisos, obstáculos e vítimas → desenhe a sala 4 → veja as verificações e exporte."
                 },
                 "score": {
                     "title": "Pontuação máxima",
@@ -836,6 +841,7 @@
                 "passages": "Passagens",
                 "walls": "Paredes",
                 "floors": "Pisos",
+                "obstacles": "Obstáculos",
                 "victims": "Vítimas",
                 "room4": "Sala 4",
                 "finish": "Finalizar e exportar"
@@ -899,7 +905,7 @@
                 },
                 "obstacle": {
                     "title": "Obstáculo (O): qualquer forma, tamanho e cor",
-                    "body": "Um obstáculo pode ter qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, um contorno desenhado no mapa, um ícone), tamanho e giro, um por ladrilho nas salas 1-3, com o centro no seu ladrilho (regra {{rule_obstacles}}): ajuste no painel e arraste no mapa. O robô precisa contorná-lo: as verificações levam isso em conta."
+                    "body": "Ponha obstáculos em ladrilhos das salas 1-3, um por ladrilho, com o centro no ladrilho (regra {{rule_obstacles}}): qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, um contorno desenhado no mapa, um ícone) e cor, escolhidas no painel.\nUm escolhido tem alças: quadradas para o tamanho, uma redonda em cima para o giro (Shift: de 15° em 15°). A altura fica no painel. Pode encostar numa parede, não atravessá-la.\nO robô precisa contorná-lo: as verificações mostram aonde ele não chega."
                 },
                 "victim": {
                     "title": "Vítima (V): vítimas e alvos cognitivos",

@@ -124,7 +124,7 @@
             "line": "Seret untuk menggambar dinding. Garis berbelok mengikuti penunjuk, jadi satu seretan bisa menggambar zigzag (kembali ke jalan semula untuk membatalkan belokan). Mulai dengan menahan Shift untuk satu garis lurus. Ruang 1 menempel ke 12 cm (tepi petak), ruang 2 dan 3 ke 6 cm. Tidak di dalam ruang 4.",
             "eraser": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya. Jauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint); satu klik menghapus start. Dinding luar tetap ada. Rintangan juga hilang dengan satu klik.",
             "floor": "Klik petak untuk mengatur lantainya.",
-            "obstacle": "Rintangan boleh berbentuk apa saja (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, garis tepi yang digambar di peta, ikon), ukuran dan putaran bebas, satu per petak di ruang 1–3, pusatnya di petaknya (aturan {{rule_obstacles}}): atur di panel, seret di peta. Robot harus memutarinya: pemeriksaan memperhitungkannya.",
+            "obstacle": "Klik petak untuk memasang rintangan dengan bentuk dan warna yang dipilih di panel (ruang 1–3, satu per petak; aturan {{rule_obstacles}}). Klik rintangan untuk memilihnya: pegangannya di peta mengubah ukuran dan putaran (Shift: per 15°), panel mengubah tinggi, warna, dan bentuk; seret untuk memindahkan, Delete menghapusnya. Sudut garis tepi diklik di peta; ikon dicari dengan namanya.",
             "victim": "Klik di dekat dinding: korban ditempatkan di dinding tempat Anda klik. Ruang 1: di sisi petak (satu per petak); ruang 2 dan 3: di muka dinding 6 cm (4 seperempat × 4 muka); lengkung punya dua tempat (dalam dan luar). Seret korban yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya (berhenti sebelum ujung dinding dan korban lain). Klik korban yang sudah dipasang untuk memilihnya: jenis, cincin, dan putarannya lalu diubah di panel, atau dihapus.",
             "curve": "Arahkan ke seperempat petak di ruang 3 untuk melihat empat lengkungnya; yang terdekat (biru) dipasang dengan satu klik. Klik yang sama lagi untuk menghapusnya.",
             "select": "Pilih dinding, ruang, lantai, dan korban bersama untuk dipindahkan, disalin, ditempel, atau dikosongkan. Klik korban atau rintangan untuk membuka alatnya dengan benda itu terpilih; klik dinding atau lengkungan untuk memilihnya dan Delete untuk menghapusnya.",
@@ -491,7 +491,7 @@
             "steps": {
                 "intro": {
                     "title": "Belajar dengan membuat peta contoh",
-                    "body": "Dalam pelajaran ini Anda membuat peta di atas dan memakai fitur editor satu per satu sepanjang jalan (sekitar 15 menit).\nRuang 1 di kiri, ruang 2 di tengah atas, ruang 3 di tengah bawah, ruang 4 di kanan. Anda menghubungkan ruang dengan lorong, memasang dinding, sebuah lengkung, lantai, dan korban, menggambar bagian dalam ruang 4, dan berakhir dengan dunia yang siap diekspor.\nLakukan yang diminta setiap langkah, maka ia berubah menjadi Selesai!, dan Berikutnya melanjutkan. Jika ada yang tidak berhasil, Kerjakan untuk saya mengerjakannya untuk Anda. Editor berfungsi seperti biasa sepanjang waktu."
+                    "body": "Dalam pelajaran ini Anda membuat peta di atas dan memakai fitur editor satu per satu sepanjang jalan (sekitar 15 menit).\nRuang 1 di kiri, ruang 2 di tengah atas, ruang 3 di tengah bawah, ruang 4 di kanan. Anda menghubungkan ruang dengan lorong, memasang dinding, sebuah lengkung, lantai, rintangan, dan korban, menggambar bagian dalam ruang 4, dan berakhir dengan dunia yang siap diekspor.\nLakukan yang diminta setiap langkah, maka ia berubah menjadi Selesai!, dan Berikutnya melanjutkan. Jika ada yang tidak berhasil, Kerjakan untuk saya mengerjakannya untuk Anda. Editor berfungsi seperti biasa sepanjang waktu."
                 },
                 "new": {
                     "title": "Buat peta baru",
@@ -616,11 +616,21 @@
                 },
                 "erase": {
                     "title": "Menghapus dan mengurungkan",
-                    "body": "Penghapus menghapus dinding, lengkung, dan korban dengan klik atau seretan. Jauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint); start hanya terhapus dengan klik. Dinding luar tetap ada.\nJika Anda menghapus yang salah, urungkan (Ctrl+Z, atau ↶ di bilah atas) mengembalikannya; ulangi (Ctrl+Shift+Z, atau ↷) maju lagi.",
+                    "body": "Penghapus menghapus dinding, lengkung, rintangan, dan korban dengan klik atau seretan. Jauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint); start hanya terhapus dengan klik. Dinding luar tetap ada.\nJika Anda menghapus yang salah, urungkan (Ctrl+Z, atau ↶ di bilah atas) mengembalikannya; ulangi (Ctrl+Shift+Z, atau ↷) maju lagi.",
                     "task": "Hapus rawa (bingkai hijau), lalu kembalikan dengan Ctrl+Z",
                     "tasks": {
                         "undo": "Rawa sudah hilang. Sekarang kembalikan dengan Ctrl+Z (atau ↶ di bilah atas)"
                     }
+                },
+                "obstacle": {
+                    "title": "Pasang rintangan",
+                    "body": "Alat rintangan (O) memasang rintangan di petak ruang 1–3, satu per petak. Pilih bentuknya (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, garis tepi yang digambar di peta, ikon) dan warnanya di panel, lalu klik petak.\nRintangan tidak dipasang di start, lorong, lubang, rawa, atau checkpoint. Robot harus memutarinya, jadi pasang di tempat yang tidak menutup jalan: pemeriksaan memberi tahu jika menutup.",
+                    "task": "Dengan alat rintangan, klik petak berbingkai hijau untuk memasang rintangan"
+                },
+                "obstacleEdit": {
+                    "title": "Ubah ukuran, putaran, dan warnanya",
+                    "body": "Rintangan yang dipasang langsung terpilih, dengan pegangan di sekitarnya: seret pegangan persegi untuk mengubah ukurannya, yang bulat di atasnya untuk memutarnya (dengan Shift, per 15°). Tinggi dan warnanya ada di panel.\nSeret rintangannya untuk memindahkannya di petaknya; ia berhenti di dinding dan tidak menembusnya. Delete menghapusnya.",
+                    "task": "Ubah ukuran, putaran, atau warna rintangan dengan pegangannya atau panel"
                 },
                 "victim": {
                     "title": "Tempatkan korban",
@@ -645,8 +655,8 @@
                 },
                 "pick": {
                     "title": "Ubah korban yang sudah ditempatkan",
-                    "body": "Klik korban dengan jenis yang sama terpilih untuk memilihnya. Di panel, ubah jenisnya, palsu atau tidak, putarannya (untuk target kognitif, cincinnya), atau hapus. Selesai mengakhiri pilihan.\nKlik dengan jenis lain terpilih mengubah jenisnya.",
-                    "task": "Klik salah satu korban Anda dengan jenisnya terpilih, untuk memilihnya"
+                    "body": "Klik korban yang sudah ditempatkan untuk memilihnya (jenisnya tetap). Selama terpilih, jenis, asli atau palsu, dan putaran (cincin target kognitif) yang dipilih di panel mengubahnya. Hapus dengan tombol hapus di panel atau Delete.\nSelesai atau Esc mengakhiri pilihan, dan panel kembali mengatur korban berikutnya.",
+                    "task": "Klik salah satu korban Anda untuk memilihnya"
                 },
                 "r4open": {
                     "title": "Gambar bagian dalam ruang 4",
@@ -748,11 +758,6 @@
                         "target": "Penghapus diatur ke Semua. Ganti ke Korban saja"
                     }
                 },
-                "r4random": {
-                    "title": "Tempatkan secara acak",
-                    "body": "Di Penempatan acak, pilih berapa banyak dan jenis apa (jenis terpilih atau campuran) lalu tekan Pasang: korban ditempatkan sekaligus.\nMereka ditempatkan di sepanjang dinding yang bisa didekati robot hingga setengah petak, berjarak setidaknya setengah petak satu sama lain.",
-                    "task": "Tekan Pasang di Penempatan acak"
-                },
                 "r4reach": {
                     "title": "Buat tempat yang tidak terjangkau, dan lihat",
                     "body": "Dengan Tidak terjangkau aktif, tempat yang tidak bisa dicapai robot (jari-jari 3,7 cm) ditampilkan dengan garis-garis merah: tempat yang tertutup dinding, atau celah yang lebih sempit dari robot.\nTempat yang tidak terjangkau tidak masalah dengan sendirinya (bagian dalam rintangan memang begitu). Tetapi robot tidak bisa menemukan korban yang ditempatkan di sana, jadi gunakan garis-garis itu saat menempatkan korban. Korban yang tidak bisa didekati robot, atau yang lepas dari dindingnya, mendapat cincin merah putus-putus, dan baris bawah menghitungnya.\nPintu masuk / CP menampilkan pintu masuk dan checkpoint. Coba buat tempat yang tidak terjangkau.",
@@ -774,7 +779,7 @@
                 },
                 "select": {
                     "title": "Pilih, pindahkan, dan salin area",
-                    "body": "Seret dengan alat pilih untuk memilih area petak; dinding, ruang, lantai, dan korbannya ikut terpilih.\nSeret di dalamnya untuk memindahkannya, atau sambil menahan Alt untuk memindahkan salinan. Tombol panah memindahkannya satu petak setiap kali. Ctrl+C / Ctrl+X menyalin / memotong, Ctrl+V menempel (petak di bawah penunjuk menjadi sudut kiri atasnya), Ctrl+D menggandakan, dan Delete mengosongkannya. Esc melepaskannya.\nDi sini cukup pilih saja; jika berpindah, Ctrl+Z mengembalikannya.",
+                    "body": "Seret dengan alat pilih untuk memilih area petak; dinding, ruang, lantai, rintangan, dan korbannya ikut terpilih.\nSeret di dalamnya untuk memindahkannya, atau sambil menahan Alt untuk memindahkan salinan. Tombol panah memindahkannya satu petak setiap kali. Ctrl+C / Ctrl+X menyalin / memotong, Ctrl+V menempel (petak di bawah penunjuk menjadi sudut kiri atasnya), Ctrl+D menggandakan, dan Delete mengosongkannya. Esc melepaskannya.\nDi sini cukup pilih saja; jika berpindah, Ctrl+Z mengembalikannya.",
                     "task": "Seret untuk memilih ruang 1 (bingkai hijau)"
                 },
                 "view": {
@@ -813,7 +818,7 @@
                 },
                 "done": {
                     "title": "Selesai!",
-                    "body": "Kerja bagus: peta contoh sudah jadi.\nSimpan, atau ekspor .wbt dan jalankan di Erebus. Untuk peta baru, mulai dari Baru.\nUrutan kerja yang baik: ukuran dan garis luar → cat ruang → hubungkan dengan lorong → gambar dinding → lantai dan korban → gambar ruang 4 → lihat pemeriksaan dan ekspor."
+                    "body": "Kerja bagus: peta contoh sudah jadi.\nSimpan, atau ekspor .wbt dan jalankan di Erebus. Untuk peta baru, mulai dari Baru.\nUrutan kerja yang baik: ukuran dan garis luar → cat ruang → hubungkan dengan lorong → gambar dinding → lantai, rintangan, dan korban → gambar ruang 4 → lihat pemeriksaan dan ekspor."
                 },
                 "score": {
                     "title": "Skor maksimum",
@@ -836,6 +841,7 @@
                 "passages": "Lorong",
                 "walls": "Dinding",
                 "floors": "Lantai",
+                "obstacles": "Rintangan",
                 "victims": "Korban",
                 "room4": "Ruang 4",
                 "finish": "Selesaikan dan ekspor"
@@ -899,7 +905,7 @@
                 },
                 "obstacle": {
                     "title": "Rintangan (O): bentuk, ukuran, dan warna apa saja",
-                    "body": "Rintangan boleh berbentuk apa saja (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, garis tepi yang digambar di peta, ikon), ukuran dan putaran bebas, satu per petak di ruang 1–3, pusatnya di petaknya (aturan {{rule_obstacles}}): atur di panel, seret di peta. Robot harus memutarinya: pemeriksaan memperhitungkannya."
+                    "body": "Pasang rintangan di petak ruang 1–3, satu per petak, pusatnya di petak (aturan {{rule_obstacles}}): bentuk (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, garis tepi yang digambar di peta, ikon) dan warna apa saja, dipilih di panel.\nRintangan terpilih punya pegangan: persegi untuk ukurannya, satu bulat di atasnya untuk putarannya (Shift: per 15°). Tingginya ada di panel. Boleh menempel dinding, tidak menembusnya.\nRobot harus memutarinya: pemeriksaan menunjukkan tempat yang tidak bisa ia capai."
                 },
                 "victim": {
                     "title": "Korban (V): korban dan target kognitif",

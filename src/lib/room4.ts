@@ -117,7 +117,21 @@ function findTokens(px: ArrayLike<number>, w: number, h: number): FoundToken[] {
     return tokens;
 }
 
+// Stamps taken off a picture's pixels (rgba, changed in place), as the creator's eraser on victims only
+// takes them: the reds in each box (pixels, a 2 px margin round it) made white
+function eraseTokens(px: Uint8ClampedArray | number[], w: number, h: number, boxes: number[][]) {
+    boxes.forEach(function (b) {
+        for (let y = Math.max(0, b[1] - 2); y <= Math.min(h - 1, b[3] + 2); y++) {
+            for (let x = Math.max(0, b[0] - 2); x <= Math.min(w - 1, b[2] + 2); x++) {
+                const i = (y * w + x) * 4;
+                if (px[i] > px[i + 1] + 40 && px[i] > px[i + 2] + 40) px[i] = px[i + 1] = px[i + 2] = px[i + 3] = 255;
+            }
+        }
+    });
+}
+
 export {
+    eraseTokens,
     isWall,
     isToken,
     stampRGB,
