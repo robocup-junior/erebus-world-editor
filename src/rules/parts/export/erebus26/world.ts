@@ -4,7 +4,7 @@
 // (lib/field: recalculate). Erebus 27 (../erebus27) writes the same file with what it adds (Flavor).
 import type { MapData, Tile, Pt } from '../../../../lib/types';
 import type { WorldHooks } from '../../../types';
-import { noRandom, getRandomAngle, checkRoomNumber, obstacleRingsLocal, obstaclePointed } from '../../../../lib/field';
+import { noRandom, getRandomAngle, checkRoomNumber, obstacleRingsLocal, obstaclePointed, linearColor } from '../../../../lib/field';
 import { triangulate } from '../../../../lib/outline';
 import type { ObstacleShape } from '../../../../lib/field';
 import { randomCognitiveCode } from '../../tokens/cognitive';
@@ -12,17 +12,27 @@ import { randomCognitiveCode } from '../../tokens/cognitive';
 // An obstacle of the editor (lib/field: ObstacleShape, cm) as a Webots geometry and the height of its
 // origin above the floor (the floor's top is at -0.03 m): a box and a sphere as they are, centred;
 // the others as a mesh from the floor up (so no primitive's axis comes into it): a prism of each of
-// their outlines (cylinder, prism, star, a drawn one, an icon; top and bottom in triangles) or a cone
-// of it to an apex over its middle (cone, pyramid, regular pyramid)
+// their outlines (cylinder, prism, a drawn one, an icon; top and bottom in triangles) or a cone of it
+// to an apex over its middle (cone, pyramid, regular pyramid). Webots draws a face from its front
+// only (its IndexedFaceSet has no `solid` to say otherwise): each face's corners go round
+// anticlockwise seen from outside, so that its front is outside.
 const FLOOR_TOP = -0.03;
 function obstacleGeometry(sh: ObstacleShape): { geometry: string; y: number } {
     const m = function (v: number) { return Math.round(v * 100000) / 10000000; };    // cm to m, to 0.1 um
     if (sh.shape === 'box') return { geometry: `Box {\n\t\t\t\t\t\tsize ${m(sh.w)} ${m(sh.h)} ${m(sh.d)}\n\t\t\t\t\t}`, y: FLOOR_TOP + m(sh.h) / 2 };
     if (sh.shape === 'sphere') return { geometry: `Sphere {\n\t\t\t\t\t\tradius ${m(sh.w / 2)}\n\t\t\t\t\t\tsubdivision 3\n\t\t\t\t\t}`, y: FLOOR_TOP + m(sh.w / 2) };
-    // the outlines: x along the world's x, their y along the world's z
+    // the outlines: x along the world's x, their y along the world's z (y is up)
     const pts: number[][] = [], faces: number[][] = [];
-    obstacleRingsLocal(sh).forEach(function (ring) {
+    // (b - a) x (c - a) seen from above (x, z): below 0 when a, b, c go clockwise in x and z, which
+    // seen from above (y up, x right, z towards the eye's bottom) is anticlockwise: a face up
+    const turn = function (a: number[], b: number[], c: number[]) { return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]); };
+    obstacleRingsLocal(sh).forEach(function (r0) {
+        // the outline one way round: a side from corner i to i + 1 then faces out
+        let area = 0;
+        for (let i = 0, j = r0.length - 1; i < r0.length; j = i++) area += r0[j][0] * r0[i][1] - r0[i][0] * r0[j][1];
+        const ring = area > 0 ? r0.slice().reverse() : r0;
         const n = ring.length, base = pts.length;
+        const tris = triangulate(ring).map(function (t) { return turn(ring[t[0]], ring[t[1]], ring[t[2]]) < 0 ? t : [t[0], t[2], t[1]]; });
         ring.forEach(function (q) { pts.push([q[0], 0, q[1]]); });                     // base + i
         if (obstaclePointed(sh.shape)) {
             pts.push([0, sh.h, 0]);                                                      // base + n: the apex
@@ -33,13 +43,13 @@ function obstacleGeometry(sh: ObstacleShape): { geometry: string; y: number } {
                 const j = (i + 1) % n;
                 faces.push([base + i, base + j, base + n + j, base + n + i]);           // a side
             }
-            triangulate(ring).forEach(function (t) { faces.push([base + n + t[0], base + n + t[1], base + n + t[2]]); });   // the top
+            tris.forEach(function (t) { faces.push([base + n + t[0], base + n + t[1], base + n + t[2]]); });   // the top, up
         }
-        triangulate(ring).forEach(function (t) { faces.push([base + t[2], base + t[1], base + t[0]]); });                    // the base
+        tris.forEach(function (t) { faces.push([base + t[0], base + t[2], base + t[1]]); });                    // the base, down
     });
     const coords = pts.map(function (q) { return m(q[0]) + ' ' + m(q[1]) + ' ' + m(q[2]); }).join(', ');
     const index = faces.map(function (f) { return f.join(', ') + ', -1'; }).join(' ');
-    return { geometry: `IndexedFaceSet {\n\t\t\t\t\t\tsolid FALSE\n\t\t\t\t\t\tcoord Coordinate { point [ ${coords} ] }\n\t\t\t\t\t\tcoordIndex [ ${index} ]\n\t\t\t\t\t}`, y: FLOOR_TOP };
+    return { geometry: `IndexedFaceSet {\n\t\t\t\t\t\tcoord Coordinate { point [ ${coords} ] }\n\t\t\t\t\t\tcoordIndex [ ${index} ]\n\t\t\t\t\t}`, y: FLOOR_TOP };
 }
 
 // Rotations in the world file
@@ -648,7 +658,8 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
             `;
     }
 
-    const obstaclePart = ({id, xSize, ySize, zSize, x, y, z, rot, geometry}: any) => `
+    // its colour: the one it was given (seen, made linear as Webots takes it), else the grey it had
+    const obstaclePart = ({id, xSize, ySize, zSize, x, y, z, rot, geometry, color}: any) => `
         DEF OBSTACLE${id} Solid {
             translation ${x} ${y} ${z}
 			rotation 0 1 0 ${rot}
@@ -656,7 +667,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
                 Shape {
                     appearance Appearance {
 						material Material {
-						diffuseColor 0.45 0.45 0.45
+						diffuseColor ${color ? linearColor(color).join(' ') : '0.45 0.45 0.45'}
 						}
                     }
                     geometry DEF OBSTACLEBOX${id} ${geometry || `Box {
@@ -667,7 +678,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
             name "obstacle${id}"
             boundingObject USE OBSTACLEBOX${id}
 	    recognitionColors [
-			0.45 0.45 0.45
+			${color ? linearColor(color).join(' ') : '0.45 0.45 0.45'}
 		]
         }
         `;
@@ -1344,7 +1355,7 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
                 allObstacles += obstaclePart({
                     id: obstacleId, geometry: g.geometry,
                     x: orgRound(tPos[0] + sh.dx / 100, 0.00001), y: orgRound(g.y, 0.00001), z: orgRound(tPos[1] + sh.dy / 100, 0.00001),
-                    rot: sh.rot
+                    rot: sh.rot, color: sh.color
                 })
                 obstacleId = obstacleId + 1
             }

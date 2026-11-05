@@ -111,6 +111,7 @@
             "line": "Linha",
             "eraser": "Borracha",
             "floor": "Piso",
+            "obstacle": "Obstáculo",
             "victim": "Vítimas",
             "curve": "Curva",
             "select": "Selecionar",
@@ -122,10 +123,11 @@
             "passage": "Clique perto da divisa entre salas: o ladrilho do lado em que você clica vira a passagem (clique de novo para fechá-la; no outro lado, para movê-la para lá). Clique no meio de um ladrilho de passagem para removê-la. Uma passagem que já não combina com suas salas some sozinha. Uma passagem recebe paredes nos outros dois lados sozinha, para ter uma entrada (do lado oposto à fronteira) e uma saída (regra {{rule_passageWalls}}); elas saem junto com a passagem.",
             "line": "Arraste para desenhar paredes. A linha vira com o ponteiro, então um único arraste pode desenhar um zigue-zague (volte pelo mesmo caminho para desfazer uma curva). Comece com Shift pressionado para uma única linha reta. A sala 1 se ajusta a 12 cm (bordas dos ladrilhos) e as salas 2 e 3 a 6 cm. Não dentro da sala 4.",
             "eraser": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint); um clique remove a partida. As paredes externas ficam. Um obstáculo também sai com um clique.",
-            "floor": "Clique em um ladrilho para definir seu piso. Um obstáculo pode ter qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, estrela, um contorno desenhado no mapa, um ícone), tamanho e giro, um por ladrilho nas salas 1-3, com o centro no seu ladrilho (regra {{rule_obstacles}}): ajuste no painel e arraste no mapa. O robô precisa contorná-lo: as verificações levam isso em conta.",
-            "victim": "Clique perto de uma parede: a vítima vai para a parede onde você clica. Sala 1: em um lado do ladrilho (uma por ladrilho); salas 2 e 3: em uma face das paredes de 6 cm (4 quartos × 4 faces); uma curva tem dois lugares (dentro e fora). Arraste uma vítima colocada para movê-la ao longo da parede (ela para antes do fim da parede e de outras vítimas). Clique nela com o tipo escolhido para selecioná-la e mudar seu giro, anéis ou posição, ou removê-la; com outro tipo escolhido, ela assume esse tipo.",
+            "floor": "Clique em um ladrilho para definir seu piso.",
+            "obstacle": "Um obstáculo pode ter qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, um contorno desenhado no mapa, um ícone), tamanho e giro, um por ladrilho nas salas 1-3, com o centro no seu ladrilho (regra {{rule_obstacles}}): ajuste no painel e arraste no mapa. O robô precisa contorná-lo: as verificações levam isso em conta.",
+            "victim": "Clique perto de uma parede: a vítima vai para a parede onde você clica. Sala 1: em um lado do ladrilho (uma por ladrilho); salas 2 e 3: em uma face das paredes de 6 cm (4 quartos × 4 faces); uma curva tem dois lugares (dentro e fora). Arraste uma vítima colocada para movê-la ao longo da parede (ela para antes do fim da parede e de outras vítimas). Clique numa colocada para selecioná-la: o tipo, os anéis e o giro são então mudados no painel, ou ela é removida.",
             "curve": "Aponte para um quarto de ladrilho na sala 3 para ver suas quatro curvas; a mais próxima (azul) entra com um clique. Clique de novo na mesma para removê-la.",
-            "select": "Selecione paredes, salas, pisos e vítimas juntos para movê-los, copiá-los, colá-los ou apagá-los.",
+            "select": "Selecione paredes, salas, pisos e vítimas juntos para movê-los, copiá-los, colá-los ou apagá-los. Clique uma vítima ou um obstáculo para abrir sua ferramenta com ele escolhido; clique uma parede ou uma curva para escolhê-la e Delete para tirá-la.",
             "shape": "Mude o tamanho e a forma do mapa; as paredes externas acompanham sozinhas. Contorno: clique ou arraste sobre ladrilhos para tirá-los do mapa ou devolvê-los. Inserir / remover: coloca ou tira uma linha ou coluna onde você clica."
         },
         "hints": {
@@ -143,6 +145,7 @@
             "curve": "Aponte para um quarto de ladrilho na sala 3 e clique na curva azul",
             "eraser": "Aponte para uma parede, curva, vítima ou piso e clique (arraste para continuar)",
             "floor": "Clique em um ladrilho para torná-lo: {{floor}} (de novo para remover)",
+            "obstacle": "Clique um ladrilho para pôr um obstáculo como no painel; clique um para escolhê-lo",
             "victim": "Clique perto de uma parede para colocar “{{name}}” onde você clica (depois arraste-a ao longo da parede). Escolha o tipo no painel esquerdo",
             "victim_selected": "Arraste a vítima selecionada para movê-la ao longo da parede. Mude o giro, os anéis ou a posição, ou remova-a, no painel esquerdo"
         }
@@ -194,16 +197,17 @@
             "pyramid": "Pirâmide",
             "prism": "Prisma",
             "npyramid": "Pirâmide regular",
-            "star": "Estrela",
             "polygon": "Desenhado",
             "icon": "Ícone"
         },
         "fields": {
             "width": "Largura",
+            "size": "Tamanho (o lado maior)",
             "depth": "Profundidade",
             "diameter": "Diâmetro",
             "height": "Altura",
             "turn": "Giro",
+            "color": "Cor",
             "sides": "Lados"
         },
         "random": "Aleatório",
@@ -211,7 +215,9 @@
         "draw": "Desenhar o contorno",
         "drawDone": "Fechar e pôr",
         "drawHow": "Clique os cantos no mapa; clique o primeiro ou tecle Enter para fechar, Esc para parar. O centro do retângulo em volta fica num ladrilho, longe das bordas.",
-        "onTile": "Seu centro fica no seu ladrilho, longe das bordas (regra {{rule_obstacles}}). Pode encostar numa parede, não atravessá-la: ao mover ou aumentar, ele para onde encontra uma. Arraste no mapa para movê-lo."
+        "onTile": "Seu centro fica no seu ladrilho, longe das bordas (regra {{rule_obstacles}}). Pode encostar numa parede, não atravessá-la: ao mover ou aumentar, ele para onde encontra uma. Arraste no mapa para movê-lo.",
+        "colorNote": "Qualquer cor (regra {{rule_obstacles}}). Uma parecida com a de um piso (prata, preto, marrom, ciano), de uma passagem ou de uma vítima é mais difícil de o robô distinguir.",
+        "moreColors": "Outras cores"
     },
     "victims": {
         "types": {
@@ -225,6 +231,7 @@
         "kind": "Tipo",
         "fake": "Vítima falsa",
         "selected": "Vítima selecionada",
+        "selectedNote": "Os tipos, anéis e giro abaixo agora mudam esta vítima",
         "turn": {
             "title": "Giro (graus)",
             "fixed": "Giro fixo",
@@ -233,11 +240,6 @@
             "help": "Gira no sentido horário visto do robô. 0° é em pé. Arraste o dial ou use os botões.",
             "dialHint": "Arraste para girar (segure Shift para passos de 1°). As setas também funcionam.",
             "dialRandom": "Ângulo aleatório"
-        },
-        "along": {
-            "title": "Posição ao longo da parede",
-            "note": "Arraste no mapa para movê-la (em passos de 0,1 cm)",
-            "middle": "Para o meio"
         }
     },
     "targets": {
@@ -254,14 +256,17 @@
         "hint": "Clique em um anel do alvo e depois em uma cor abaixo (agora o anel {{n}} de fora para dentro)"
     },
     "select": {
-        "none": "Arraste sobre ladrilhos para selecioná-los. Arraste a seleção para movê-la (com Alt, uma cópia); as setas a movem um ladrilho por vez.",
+        "none": "Arraste sobre ladrilhos para selecioná-los. Arraste a seleção para movê-la (com Alt, uma cópia); as setas a movem um ladrilho por vez. Clique uma vítima ou um obstáculo para abrir sua ferramenta com ele escolhido; clique uma parede ou uma curva para escolhê-la e Delete para tirá-la.",
         "size": "{{size}} ladrilhos selecionados",
         "help": "Arraste dentro da seleção para movê-la, Alt+arrastar para mover uma cópia. Colar põe o canto superior esquerdo no ladrilho sob o ponteiro. Esc desfaz a seleção.",
         "copy": "Copiar",
         "cut": "Recortar",
         "duplicate": "Duplicar",
         "paste": "Colar",
-        "clear": "Apagar"
+        "clear": "Apagar",
+        "wall": "Parede escolhida",
+        "curve": "Curva escolhida",
+        "length": "{{cm}} cm de comprimento"
     },
     "linear": {
         "label": "Linear",
@@ -364,6 +369,10 @@
         "passageRoom4": "Uma passagem para a sala 4 vai no ladrilho fora da sala 4 (como esperam o criador da sala 4 e a regra de checkpoints {{rule_room4Checkpoint}})",
         "regionPick": "Arraste para selecionar",
         "regionDrag": "Arraste para mover, Alt+arrastar para copiar. As setas movem um ladrilho; Ctrl+C / X / V e Delete também funcionam",
+        "select_victim": "Clique para abrir a ferramenta de vítimas com esta vítima escolhida (arraste-a ao longo da parede)",
+        "select_obstacle": "Clique para abrir a ferramenta de piso com este obstáculo escolhido (arraste-o no seu ladrilho)",
+        "select_curve": "Clique para escolher esta curva",
+        "select_wall": "Clique para escolher esta parede (um trecho reto)",
         "regionCopied": "Copiado. Ctrl+V cola no ladrilho sob o ponteiro",
         "regionNoRoom": "Não há espaço ao lado nem abaixo para uma cópia",
         "line_addRow": "Clique para adicionar uma linha na linha verde",
@@ -423,9 +432,9 @@
         "obstacle_drawSize": "Um contorno de {{min}}-{{max}} cm de largura e profundidade, por favor",
         "obstacle_drawCentre": "O centro ficaria na borda de um ladrilho: o centro de um obstáculo fica num ladrilho (regra {{rule_obstacles}})",
         "obstacle_iconFailed": "Não foi possível contornar esse ícone",
+        "obstacle_pickIcon": "Escolha primeiro um ícone no painel",
         "victim_place": "Clique para colocar “{{name}}”",
         "victim_move": "Clique para colocar “{{name}}” aqui (a vítima do ladrilho vem para cá: uma por ladrilho)",
-        "victim_replace": "Clique para mudá-la para “{{name}}”",
         "victim_unreachable": "O robô não consegue chegar perto daqui, então nenhuma vítima vai aqui (regra {{rule_reach}})",
         "victim_selectDrag": "Clique para selecioná-la, arraste para movê-la ao longo da parede",
         "victim_moveSlot": "Clique para colocar “{{name}}” aqui (a vítima desta face vem para cá)",
@@ -884,7 +893,11 @@
                 },
                 "floor": {
                     "title": "Piso (F): checkpoints, buracos, pântanos, a partida",
-                    "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso. Um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}}). Um obstáculo pode ter qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, estrela, um contorno desenhado no mapa, um ícone), tamanho e giro, um por ladrilho nas salas 1-3, com o centro no seu ladrilho (regra {{rule_obstacles}}): ajuste no painel e arraste no mapa. O robô precisa contorná-lo: as verificações levam isso em conta.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho."
+                    "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso. Um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}}).\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho."
+                },
+                "obstacle": {
+                    "title": "Obstáculo (O): qualquer forma, tamanho e cor",
+                    "body": "Um obstáculo pode ter qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, um contorno desenhado no mapa, um ícone), tamanho e giro, um por ladrilho nas salas 1-3, com o centro no seu ladrilho (regra {{rule_obstacles}}): ajuste no painel e arraste no mapa. O robô precisa contorná-lo: as verificações levam isso em conta."
                 },
                 "victim": {
                     "title": "Vítima (V): vítimas e alvos cognitivos",
@@ -896,7 +909,7 @@
                 },
                 "select": {
                     "title": "Selecionar (S): mover e copiar uma região",
-                    "body": "Arraste para selecionar uma região de ladrilhos; suas paredes, salas, pisos e vítimas vão juntos.\nArraste dentro dela para movê-la, ou com Alt pressionado para mover uma cópia. As setas a movem um ladrilho por vez.\nCtrl+C copia, Ctrl+X recorta, Ctrl+V cola (o ladrilho sob o ponteiro é o canto superior esquerdo), Ctrl+D duplica e Delete apaga. Esc solta a região."
+                    "body": "Arraste para selecionar uma região de ladrilhos; suas paredes, salas, pisos e vítimas vão juntos.\nArraste dentro dela para movê-la, ou com Alt pressionado para mover uma cópia. As setas a movem um ladrilho por vez.\nCtrl+C copia, Ctrl+X recorta, Ctrl+V cola (o ladrilho sob o ponteiro é o canto superior esquerdo), Ctrl+D duplica e Delete apaga. Esc solta a região.\nClique uma vítima ou um obstáculo para abrir sua ferramenta com ele escolhido; clique uma parede ou uma curva para escolhê-la e Delete para tirá-la."
                 },
                 "linear": {
                     "title": "Linear",
@@ -1175,7 +1188,7 @@
                     "steps": {
                         "floor": {
                             "title": "Piso (F): checkpoints, buracos, pântanos, ladrilhos de contato, a partida",
-                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso. Um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}}). Um obstáculo pode ter qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, estrela, um contorno desenhado no mapa, um ícone), tamanho e giro, um por ladrilho nas salas 1-3, com o centro no seu ladrilho (regra {{rule_obstacles}}): ajuste no painel e arraste no mapa. O robô precisa contorná-lo: as verificações levam isso em conta.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos."
+                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso. Um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}}).\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos."
                         },
                         "victim": {
                             "body": "Escolha um tipo no painel (vítimas sorridentes - ferida um rosto triste, estável um rosto neutro, ilesa um rosto feliz - e suas falsas, alvos cognitivos de quatro tipos - gás inflamável, veneno, corrosivo, peróxido orgânico - e um falso) e clique perto de uma parede: ela vai para a parede onde você clica.\nElas vão nos lados dos ladrilhos na sala 1 (uma por ladrilho), nas faces das paredes de 6 cm nas salas 2 e 3, e em dois lugares de uma curva (dentro e fora). Arraste uma colocada para movê-la ao longo da parede. Onde não dá para colocar, a linha de status diz por quê.\nGire o dial (Giro fixo) para a rotação, ou escolha Aleatório para uma nova a cada vez. Para um alvo cognitivo, clique em um anel do alvo e depois em uma cor abaixo; a soma dos anéis dá o tipo.\nClique em uma vítima com o mesmo tipo para selecioná-la e depois mude o giro, os anéis ou a posição ao longo da parede, ou remova-a. Clicar com outro tipo muda o tipo dela."

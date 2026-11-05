@@ -211,6 +211,11 @@ function normalize(map: MapData) {
     // a map file from before maps kept their year
     if (!map.rules) map.rules = FIRST_YEAR;
     ensureTiles(map);
+    // its obstacles' shapes as this editor has them (a star of before: the outline it was)
+    Object.keys(map.cells).forEach(function (k) {
+        const t = map.cells[k].tile;
+        if (t && t.obstacle && t.obstacleShape) t.obstacleShape = clampObstacle(t.obstacleShape);
+    });
     return map;
 }
 
@@ -743,6 +748,8 @@ const OBSTACLE_DEFAULT: W.ObstacleShape = { shape: 'box', w: 4, d: 4, h: 6, dx: 
 function clampObstacle(sh: Partial<W.ObstacleShape>): W.ObstacleShape {
     const lim = W.OBSTACLE_LIMITS, r1 = function (v: number) { return Math.round(v * 10) / 10; };
     const within = function (v: unknown, lo: number, hi: number, dflt: number) { const n = Number(v); return r1(isFinite(n) ? Math.max(lo, Math.min(hi, n)) : dflt); };
+    // a star (a shape of its own once: now an icon's) as the outline it was: a drawn one
+    if ((sh.shape as string) === 'star') sh = Object.assign({}, sh, starOutline(Number(sh.w) || OBSTACLE_DEFAULT.w));
     let shape = W.OBSTACLE_KINDS.indexOf(sh.shape as W.ObstacleKind) > -1 ? sh.shape as W.ObstacleKind : 'box';
     // a drawn one's and an icon's rings: each of 3 points or more, in the unit box
     const outline = Array.isArray(sh.outline) ? sh.outline.filter(function (r) {
@@ -761,9 +768,31 @@ function clampObstacle(sh: Partial<W.ObstacleShape>): W.ObstacleShape {
     // what each kind has of its own, kept with it (so going back to it brings it back)
     if (sh.n !== undefined || shape === 'prism' || shape === 'npyramid') out.n = Math.round(within(sh.n, lim.sides[0], lim.sides[1], 6));
     if (outline.length) out.outline = outline;
+    // a drawn one's and an icon's proportions: kept, its w for its d
+    const aspect = Number(sh.aspect) > 0 ? Number(sh.aspect) : outline.length && Number(sh.d) > 0 ? Number(sh.w) / Number(sh.d) : 0;
+    if (outline.length && aspect) out.aspect = Math.round(aspect * 10000) / 10000;
     if (sh.icon) out.icon = String(sh.icon);
+    if (typeof sh.color === 'string' && /^#[0-9a-f]{6}$/i.test(sh.color)) out.color = sh.color.toLowerCase();
     return out;
 }
+// A five-pointed star w cm across its points (its inner points at 0.45 of its outer radius, a point
+// to the front) as a drawn outline: in its unit box, w x d
+function starOutline(w: number): Partial<W.ObstacleShape> {
+    const ring: number[][] = [];
+    for (let i = 0; i < 10; i++) {
+        const a = -Math.PI / 2 + i * Math.PI / 5, q = i % 2 ? 0.45 : 1;
+        ring.push([q * Math.cos(a), q * Math.sin(a)]);
+    }
+    const xs = ring.map(function (p) { return p[0]; }), ys = ring.map(function (p) { return p[1]; });
+    const bw = Math.max.apply(null, xs) - Math.min.apply(null, xs), bh = Math.max.apply(null, ys) - Math.min.apply(null, ys);
+    const cy = (Math.max.apply(null, ys) + Math.min.apply(null, ys)) / 2;
+    return {
+        shape: 'polygon',
+        outline: [ring.map(function (p) { return [Math.round(p[0] / bw * 10000) / 10000, Math.round((p[1] - cy) / bh * 10000) / 10000]; })],
+        w: w * bw / 2, d: w * bh / 2, aspect: bw / bh
+    };
+}
+
 // One drawn at random: a shape of its own (not a drawn one or an icon), 2-8 cm across, 3-10 cm high,
 // any turn, near the tile's middle
 function randomObstacle(): W.ObstacleShape {
@@ -1172,13 +1201,15 @@ function victimAt(map: MapData, where: Where): VictimInfo | null {
 
 // Changes what is given of type (a letter kind for a letter victim), fake and rot; a target keeps
 // its kind and changes only its code
+// A victim changed where it is (its place along its wall kept): its type - a letter or smiley one and
+// a cognitive target either way (a target's fakeness is in its rings: its code) -, its turn, its rings
 function changeVictim(map: MapData, where: Where, change: { type?: string; fake?: boolean; rot?: number; code?: string }) {
     const v = victimAt(map, where);
     if (!v) return false;
-    const type = change.type && !isTarget(map, v.type) ? change.type : v.type;
-    const fake = change.fake === undefined ? v.fake : change.fake;
+    const type = change.type || v.type, target = isTarget(map, type);
+    const fake = target ? false : change.fake === undefined ? (isTarget(map, v.type) ? false : v.fake) : change.fake;
     const rot = change.rot === undefined ? v.rot : ((Number(change.rot) % 360) + 360) % 360;
-    const opts = { code: change.code || v.code, rot: rot };
+    const opts = { code: change.code || v.code, rot: rot, offset: victimOffset(map, where) };
     if (where.kind === 'edge') return setVictim(map, where.x, where.y, where.dir, type, fake, opts);
     return setSlotVictim(map, where.x, where.y, where.i, type, fake, opts);
 }
@@ -2155,6 +2186,7 @@ export {
     normalize,
     resize,
     isOuterEdge,
+    isOuterSeg,
     roomOf,
     roomLookup,
     setRoom,

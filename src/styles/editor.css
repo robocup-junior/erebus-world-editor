@@ -1388,8 +1388,6 @@
 .ed-along-row { display: flex; align-items: center; gap: 0.6rem; }
 .ed-along-range { flex: 1 1 auto; min-width: 0; accent-color: #2563eb; }
 .ed-along-value { flex: none; min-width: 4.2rem; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ed-text); }
-.ed-along-foot { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-top: 0.2rem; font-size: 0.72rem; color: #94a3b8; }
-.ed-along-foot .btn-link { flex: none; font-size: 0.75rem; white-space: nowrap; }
 
 /* the language button's list (components/LangMenu.vue) */
 .ed-lang-wrap { position: relative; display: inline-flex; }
@@ -1499,5 +1497,8 @@
 .ed-obstacle-field { margin-bottom: 0.35rem; }
 .ed-obstacle-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
 
-/* a victim's place along its wall, shown (it is dragged on the map) */
-.ed-along > .ed-along-row .ed-along-value { min-width: 0; text-align: left; }
+/* an obstacle's colour: the ones to pick at once, and any other */
+.ed-obstacle-colors { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; margin-bottom: 0.3rem; }
+.ed-obstacle-color { width: 1.35rem; height: 1.35rem; border-radius: 50%; border: 1.5px solid #cbd5e1; padding: 0; cursor: pointer; }
+.ed-obstacle-color.active { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb; }
+.ed-obstacle-color.more { background: conic-gradient(#f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); }

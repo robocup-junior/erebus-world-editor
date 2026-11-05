@@ -111,6 +111,7 @@
             "line": "Garis",
             "eraser": "Penghapus",
             "floor": "Lantai",
+            "obstacle": "Rintangan",
             "victim": "Korban",
             "curve": "Lengkung",
             "select": "Pilih",
@@ -122,10 +123,11 @@
             "passage": "Klik di dekat batas ruang: petak di sisi yang Anda klik menjadi lorong (klik lagi untuk menutupnya, di sisi lain untuk memindahkannya ke sana). Klik bagian tengah petak lorong untuk menghapusnya. Lorong yang tidak lagi cocok dengan ruangnya hilang sendiri. Lorong otomatis mendapat dinding di dua sisi lainnya, sehingga ada satu jalan masuk (di seberang batas) dan satu jalan keluar (aturan {{rule_passageWalls}}); dinding itu hilang bersama lorongnya.",
             "line": "Seret untuk menggambar dinding. Garis berbelok mengikuti penunjuk, jadi satu seretan bisa menggambar zigzag (kembali ke jalan semula untuk membatalkan belokan). Mulai dengan menahan Shift untuk satu garis lurus. Ruang 1 menempel ke 12 cm (tepi petak), ruang 2 dan 3 ke 6 cm. Tidak di dalam ruang 4.",
             "eraser": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya. Jauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint); satu klik menghapus start. Dinding luar tetap ada. Rintangan juga hilang dengan satu klik.",
-            "floor": "Klik petak untuk mengatur lantainya. Rintangan boleh berbentuk apa saja (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, bintang, garis tepi yang digambar di peta, ikon), ukuran dan putaran bebas, satu per petak di ruang 1–3, pusatnya di petaknya (aturan {{rule_obstacles}}): atur di panel, seret di peta. Robot harus memutarinya: pemeriksaan memperhitungkannya.",
-            "victim": "Klik di dekat dinding: korban ditempatkan di dinding tempat Anda klik. Ruang 1: di sisi petak (satu per petak); ruang 2 dan 3: di muka dinding 6 cm (4 seperempat × 4 muka); lengkung punya dua tempat (dalam dan luar). Seret korban yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya (berhenti sebelum ujung dinding dan korban lain). Klik dengan jenisnya terpilih untuk memilihnya dan mengubah putaran, cincin, atau posisinya, atau menghapusnya; dengan jenis lain terpilih, ia berubah ke jenis itu.",
+            "floor": "Klik petak untuk mengatur lantainya.",
+            "obstacle": "Rintangan boleh berbentuk apa saja (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, garis tepi yang digambar di peta, ikon), ukuran dan putaran bebas, satu per petak di ruang 1–3, pusatnya di petaknya (aturan {{rule_obstacles}}): atur di panel, seret di peta. Robot harus memutarinya: pemeriksaan memperhitungkannya.",
+            "victim": "Klik di dekat dinding: korban ditempatkan di dinding tempat Anda klik. Ruang 1: di sisi petak (satu per petak); ruang 2 dan 3: di muka dinding 6 cm (4 seperempat × 4 muka); lengkung punya dua tempat (dalam dan luar). Seret korban yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya (berhenti sebelum ujung dinding dan korban lain). Klik korban yang sudah dipasang untuk memilihnya: jenis, cincin, dan putarannya lalu diubah di panel, atau dihapus.",
             "curve": "Arahkan ke seperempat petak di ruang 3 untuk melihat empat lengkungnya; yang terdekat (biru) dipasang dengan satu klik. Klik yang sama lagi untuk menghapusnya.",
-            "select": "Pilih dinding, ruang, lantai, dan korban bersama untuk dipindahkan, disalin, ditempel, atau dikosongkan.",
+            "select": "Pilih dinding, ruang, lantai, dan korban bersama untuk dipindahkan, disalin, ditempel, atau dikosongkan. Klik korban atau rintangan untuk membuka alatnya dengan benda itu terpilih; klik dinding atau lengkungan untuk memilihnya dan Delete untuk menghapusnya.",
             "shape": "Ubah ukuran dan bentuk peta; dinding luar mengikuti sendiri. Bentuk: klik atau seret petak untuk mengeluarkannya dari peta atau mengembalikannya. Sisipkan / hapus: tambah atau ambil satu baris atau kolom di tempat Anda klik."
         },
         "hints": {
@@ -143,6 +145,7 @@
             "curve": "Arahkan ke seperempat petak di ruang 3 lalu klik lengkung biru",
             "eraser": "Arahkan ke dinding, lengkung, korban, atau lantai lalu klik (seret untuk lanjut)",
             "floor": "Klik petak untuk menjadikan: {{floor}} (sekali lagi untuk menghapus)",
+            "obstacle": "Klik petak untuk memasang rintangan seperti diatur di panel; klik rintangan untuk memilihnya",
             "victim": "Klik di dekat dinding untuk menempatkan “{{name}}” di tempat Anda klik (seret di sepanjang dindingnya setelah itu). Pilih jenis di panel kiri",
             "victim_selected": "Seret korban terpilih untuk memindahkannya di sepanjang dindingnya. Ubah putaran, cincin, atau posisinya, atau hapus, di panel kiri"
         }
@@ -194,16 +197,17 @@
             "pyramid": "Piramida",
             "prism": "Prisma",
             "npyramid": "Limas beraturan",
-            "star": "Bintang",
             "polygon": "Digambar",
             "icon": "Ikon"
         },
         "fields": {
             "width": "Lebar",
+            "size": "Ukuran (sisi terpanjang)",
             "depth": "Kedalaman",
             "diameter": "Diameter",
             "height": "Tinggi",
             "turn": "Putaran",
+            "color": "Warna",
             "sides": "Sisi"
         },
         "random": "Acak",
@@ -211,7 +215,9 @@
         "draw": "Gambar garis tepinya",
         "drawDone": "Tutup dan pasang",
         "drawHow": "Klik sudut-sudutnya di peta; klik sudut pertama atau tekan Enter untuk menutup, Esc untuk berhenti. Tengah kotak yang melingkupinya ada di petak, jauh dari tepinya.",
-        "onTile": "Pusatnya tetap di petaknya, jauh dari tepinya (aturan {{rule_obstacles}}). Boleh menempel pada dinding, tidak menembusnya: saat dipindah atau diperbesar, berhenti ketika menyentuh dinding. Seret di peta untuk memindahkannya."
+        "onTile": "Pusatnya tetap di petaknya, jauh dari tepinya (aturan {{rule_obstacles}}). Boleh menempel pada dinding, tidak menembusnya: saat dipindah atau diperbesar, berhenti ketika menyentuh dinding. Seret di peta untuk memindahkannya.",
+        "colorNote": "Warna apa saja (aturan {{rule_obstacles}}). Warna yang mirip lantai (perak, hitam, cokelat, sian), lorong, atau korban lebih sulit dibedakan oleh robot.",
+        "moreColors": "Warna lain"
     },
     "victims": {
         "types": {
@@ -225,6 +231,7 @@
         "kind": "Jenis",
         "fake": "Korban palsu",
         "selected": "Korban terpilih",
+        "selectedNote": "Jenis, cincin, dan putaran di bawah kini mengubah korban ini",
         "turn": {
             "title": "Putaran (derajat)",
             "fixed": "Putaran tetap",
@@ -233,11 +240,6 @@
             "help": "Berputar searah jarum jam dilihat dari robot. 0° adalah tegak. Seret dial, atau gunakan tombol.",
             "dialHint": "Seret untuk memutar (tahan Shift untuk langkah 1°). Tombol panah juga bisa.",
             "dialRandom": "Sudut acak"
-        },
-        "along": {
-            "title": "Posisi di sepanjang dindingnya",
-            "note": "Seret di peta untuk memindahkannya (per 0,1 cm)",
-            "middle": "Ke tengah"
         }
     },
     "targets": {
@@ -254,14 +256,17 @@
         "hint": "Klik sebuah cincin pada target, lalu sebuah warna di bawah (sekarang cincin {{n}} dari luar)"
     },
     "select": {
-        "none": "Seret di atas petak untuk memilihnya. Seret pilihan untuk memindahkannya (dengan Alt, sebuah salinan); tombol panah memindahkannya satu petak setiap kali.",
+        "none": "Seret di atas petak untuk memilihnya. Seret pilihan untuk memindahkannya (dengan Alt, sebuah salinan); tombol panah memindahkannya satu petak setiap kali. Klik korban atau rintangan untuk membuka alatnya dengan benda itu terpilih; klik dinding atau lengkungan untuk memilihnya dan Delete untuk menghapusnya.",
         "size": "{{size}} petak dipilih",
         "help": "Seret di dalam pilihan untuk memindahkannya, Alt+seret untuk memindahkan salinan. Tempel menaruh sudut kiri atas di petak di bawah penunjuk. Esc membatalkan pilihan.",
         "copy": "Salin",
         "cut": "Potong",
         "duplicate": "Gandakan",
         "paste": "Tempel",
-        "clear": "Kosongkan"
+        "clear": "Kosongkan",
+        "wall": "Dinding terpilih",
+        "curve": "Lengkungan terpilih",
+        "length": "Panjang {{cm}} cm"
     },
     "linear": {
         "label": "Linear",
@@ -364,6 +369,10 @@
         "passageRoom4": "Lorong menuju ruang 4 dipasang di petak di luar ruang 4 (seperti yang diharapkan pembuat ruang 4 dan aturan checkpoint {{rule_room4Checkpoint}})",
         "regionPick": "Seret untuk memilih",
         "regionDrag": "Seret untuk memindahkan, Alt+seret untuk menyalin. Tombol panah memindahkan satu petak; Ctrl+C / X / V dan Delete juga berfungsi",
+        "select_victim": "Klik untuk membuka alat korban dengan korban ini terpilih (seret di sepanjang dindingnya)",
+        "select_obstacle": "Klik untuk membuka alat lantai dengan rintangan ini terpilih (seret di petaknya)",
+        "select_curve": "Klik untuk memilih lengkungan ini",
+        "select_wall": "Klik untuk memilih dinding ini (bagian lurusnya)",
         "regionCopied": "Disalin. Ctrl+V menempel di petak di bawah penunjuk",
         "regionNoRoom": "Tidak ada tempat di samping atau di bawah untuk salinan",
         "line_addRow": "Klik untuk menambah baris di garis hijau",
@@ -423,9 +432,9 @@
         "obstacle_drawSize": "Garis tepi selebar dan sedalam {{min}}–{{max}} cm",
         "obstacle_drawCentre": "Tengahnya akan berada di tepi petak: tengah rintangan ada di petak (aturan {{rule_obstacles}})",
         "obstacle_iconFailed": "Ikon itu tidak bisa ditelusuri",
+        "obstacle_pickIcon": "Pilih ikon di panel terlebih dahulu",
         "victim_place": "Klik untuk menempatkan “{{name}}”",
         "victim_move": "Klik untuk menempatkan “{{name}}” di sini (korban petak pindah ke sini: satu per petak)",
-        "victim_replace": "Klik untuk mengubahnya menjadi “{{name}}”",
         "victim_unreachable": "Robot tidak bisa mendekat ke sini, jadi tidak ada korban di sini (aturan {{rule_reach}})",
         "victim_selectDrag": "Klik untuk memilihnya, seret untuk memindahkannya di sepanjang dindingnya",
         "victim_moveSlot": "Klik untuk menempatkan “{{name}}” di sini (korban di muka ini pindah ke sini)",
@@ -884,7 +893,11 @@
                 },
                 "floor": {
                     "title": "Lantai (F): checkpoint, lubang, rawa, start",
-                    "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah salah satu petak ruang 1: robot memulai run dari sana. Tidak ada menghapus lantai. Satu petak hanya salah satu dari lubang, rawa, checkpoint, rintangan, start, dan lorong (aturan {{rule_oneKind}}). Rintangan boleh berbentuk apa saja (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, bintang, garis tepi yang digambar di peta, ikon), ukuran dan putaran bebas, satu per petak di ruang 1–3, pusatnya di petaknya (aturan {{rule_obstacles}}): atur di panel, seret di peta. Robot harus memutarinya: pemeriksaan memperhitungkannya.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya."
+                    "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah salah satu petak ruang 1: robot memulai run dari sana. Tidak ada menghapus lantai. Satu petak hanya salah satu dari lubang, rawa, checkpoint, rintangan, start, dan lorong (aturan {{rule_oneKind}}).\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya."
+                },
+                "obstacle": {
+                    "title": "Rintangan (O): bentuk, ukuran, dan warna apa saja",
+                    "body": "Rintangan boleh berbentuk apa saja (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, garis tepi yang digambar di peta, ikon), ukuran dan putaran bebas, satu per petak di ruang 1–3, pusatnya di petaknya (aturan {{rule_obstacles}}): atur di panel, seret di peta. Robot harus memutarinya: pemeriksaan memperhitungkannya."
                 },
                 "victim": {
                     "title": "Korban (V): korban dan target kognitif",
@@ -896,7 +909,7 @@
                 },
                 "select": {
                     "title": "Pilih (S): memindahkan dan menyalin area",
-                    "body": "Seret untuk memilih area petak; dinding, ruang, lantai, dan korbannya ikut terpilih.\nSeret di dalamnya untuk memindahkannya, atau sambil menahan Alt untuk memindahkan salinan. Tombol panah memindahkannya satu petak setiap kali.\nCtrl+C menyalin, Ctrl+X memotong, Ctrl+V menempel (petak di bawah penunjuk menjadi sudut kiri atasnya), Ctrl+D menggandakan, dan Delete mengosongkannya. Esc melepaskan area."
+                    "body": "Seret untuk memilih area petak; dinding, ruang, lantai, dan korbannya ikut terpilih.\nSeret di dalamnya untuk memindahkannya, atau sambil menahan Alt untuk memindahkan salinan. Tombol panah memindahkannya satu petak setiap kali.\nCtrl+C menyalin, Ctrl+X memotong, Ctrl+V menempel (petak di bawah penunjuk menjadi sudut kiri atasnya), Ctrl+D menggandakan, dan Delete mengosongkannya. Esc melepaskan area.\nKlik korban atau rintangan untuk membuka alatnya dengan benda itu terpilih; klik dinding atau lengkungan untuk memilihnya dan Delete untuk menghapusnya."
                 },
                 "linear": {
                     "title": "Linear",
@@ -1175,7 +1188,7 @@
                     "steps": {
                         "floor": {
                             "title": "Lantai (F): checkpoint, lubang, rawa, petak kontak, start",
-                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah salah satu petak ruang 1: robot memulai run dari sana. Tidak ada menghapus lantai. Satu petak hanya salah satu dari lubang, rawa, checkpoint, rintangan, start, dan lorong (aturan {{rule_oneKind}}). Rintangan boleh berbentuk apa saja (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, bintang, garis tepi yang digambar di peta, ikon), ukuran dan putaran bebas, satu per petak di ruang 1–3, pusatnya di petaknya (aturan {{rule_obstacles}}): atur di panel, seret di peta. Robot harus memutarinya: pemeriksaan memperhitungkannya.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik."
+                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah salah satu petak ruang 1: robot memulai run dari sana. Tidak ada menghapus lantai. Satu petak hanya salah satu dari lubang, rawa, checkpoint, rintangan, start, dan lorong (aturan {{rule_oneKind}}).\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik."
                         },
                         "victim": {
                             "body": "Pilih jenis di panel (korban smiley - terluka wajah sedih, stabil wajah datar, tidak terluka wajah senang - dan yang palsu, target kognitif empat jenis - gas mudah terbakar, racun, korosif, peroksida organik - dan yang palsu) lalu klik di dekat dinding: ia ditempatkan di dinding tempat Anda klik.\nDi ruang 1 di sisi petak (satu per petak), di ruang 2 dan 3 di muka dinding 6 cm, dan di dua tempat pada lengkung (dalam dan luar). Seret yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya. Jika tidak bisa ditempatkan, baris status memberi tahu alasannya.\nPutar dial (Putaran tetap) untuk rotasinya, atau pilih Acak untuk putaran baru setiap kali. Untuk target kognitif, klik cincin target lalu warna di bawah; jumlah cincin menentukan jenisnya.\nKlik korban dengan jenis yang sama untuk memilihnya, lalu ubah putaran, cincin, atau posisinya di sepanjang dinding, atau hapus. Klik dengan jenis lain mengubah jenisnya."

@@ -111,6 +111,7 @@
             "line": "Çizgi",
             "eraser": "Silgi",
             "floor": "Zemin",
+            "obstacle": "Engel",
             "victim": "Kazazedeler",
             "curve": "Eğri",
             "select": "Seç",
@@ -122,10 +123,11 @@
             "passage": "Bir oda sınırının yakınına tıklayın: tıkladığınız taraftaki kare geçit olur (kapatmak için tekrar, oraya taşımak için diğer tarafa tıklayın). Kaldırmak için bir geçit karesinin ortasına tıklayın. Odalarına artık uymayan bir geçit kendiliğinden kaybolur. Geçidin diğer iki kenarına kendiliğinden duvar konur; böylece bir girişi (sınırın karşısında) ve bir çıkışı olur (kural {{rule_passageWalls}}). Geçit kalkınca duvarlar da kalkar.",
             "line": "Duvar çizmek için sürükleyin. Çizgi işaretçiyle birlikte döner, bu yüzden tek bir sürükleme zikzak çizebilir (bir dönüşü geri almak için geldiğiniz yoldan dönün). Tek bir düz çizgi için Shift basılıyken başlayın. Oda 1 12 cm'ye (kare kenarları), oda 2 ve 3 6 cm'ye hizalanır. Oda 4'ün içinde olmaz.",
             "eraser": "Duvarları, eğrileri ve kazazedeleri kaldırmak için üzerlerine tıklayın veya sürükleyin. Duvarlardan uzakta bir karenin zeminini (çukur, bataklık, kontrol noktası) kaldırır; bir tıklama başlangıcı kaldırır. Dış duvarlar kalır. Engel de tıklamayla kalkar.",
-            "floor": "Zeminini belirlemek için bir kareye tıklayın. Engel her şekilde (kutu, silindir, koni, küre, piramit, düzgün prizma ya da piramit, yıldız, haritada çizilmiş bir dış çizgi, bir simge), boyutta ve dönüşte olabilir; oda 1-3'te kare başına bir tane, merkezi karesinde (kural {{rule_obstacles}}): panelde ayarlayın, haritada sürükleyin. Robot onun yanından geçmelidir: denetimler bunu hesaba katar.",
-            "victim": "Bir duvarın yakınına tıklayın: kazazede, tıkladığınız yerdeki duvara konur. Oda 1: bir kare kenarına (kare başına bir); oda 2 ve 3: 6 cm duvarların bir yüzüne (4 çeyrek × 4 yüz); bir eğrinin iki yeri vardır (iç ve dış). Konmuş bir kazazedeyi duvarı boyunca taşımak için sürükleyin (duvarın ucundan ve diğer kazazedelerden önce durur). Türü seçiliyken üzerine tıklayarak seçin ve dönüşünü, halkalarını veya yerini değiştirin ya da kaldırın; başka bir tür seçiliyse o türe dönüşür.",
+            "floor": "Zeminini belirlemek için bir kareye tıklayın.",
+            "obstacle": "Engel her şekilde (kutu, silindir, koni, küre, piramit, düzgün prizma ya da piramit, haritada çizilmiş bir dış çizgi, bir simge), boyutta ve dönüşte olabilir; oda 1-3'te kare başına bir tane, merkezi karesinde (kural {{rule_obstacles}}): panelde ayarlayın, haritada sürükleyin. Robot onun yanından geçmelidir: denetimler bunu hesaba katar.",
+            "victim": "Bir duvarın yakınına tıklayın: kazazede, tıkladığınız yerdeki duvara konur. Oda 1: bir kare kenarına (kare başına bir); oda 2 ve 3: 6 cm duvarların bir yüzüne (4 çeyrek × 4 yüz); bir eğrinin iki yeri vardır (iç ve dış). Konmuş bir kazazedeyi duvarı boyunca taşımak için sürükleyin (duvarın ucundan ve diğer kazazedelerden önce durur). Seçmek için konmuş birine tıklayın: türü, halkaları ve dönüşü sonra panelde değiştirilir ya da kaldırılır.",
             "curve": "Dört eğrisini görmek için oda 3'te bir çeyrek kareyi işaret edin; en yakın olan (mavi) bir tıklamayla konur. Kaldırmak için aynısına tekrar tıklayın.",
-            "select": "Duvarları, odaları, zeminleri ve kazazedeleri birlikte seçip taşıyın, kopyalayın, yapıştırın veya temizleyin.",
+            "select": "Duvarları, odaları, zeminleri ve kazazedeleri birlikte seçip taşıyın, kopyalayın, yapıştırın veya temizleyin. Bir kazazedeye ya da engele tıklayınca onun aracı, o seçili olarak açılır; bir duvarı ya da eğriyi seçmek için tıklayın, silmek için Delete.",
             "shape": "Haritanın boyutunu ve şeklini değiştirin; dış duvarlar kendiliğinden izler. Dış hat: kareleri haritadan çıkarmak ya da geri koymak için tıklayın veya sürükleyin. Ekle / kaldır: tıkladığınız yere bir satır ya da sütun ekler veya çıkarır."
         },
         "hints": {
@@ -143,6 +145,7 @@
             "curve": "Oda 3'te bir çeyrek kareyi işaret edip mavi eğriye tıklayın",
             "eraser": "Bir duvarı, eğriyi, kazazedeyi veya zemini işaret edip tıklayın (devam etmek için sürükleyin)",
             "floor": "Yapmak için bir kareye tıklayın: {{floor}} (kaldırmak için tekrar)",
+            "obstacle": "Panelde ayarlandığı gibi bir engel koymak için bir kareye tıklayın; seçmek için bir engele tıklayın",
             "victim": "“{{name}}” öğesini tıkladığınız yere koymak için bir duvarın yakınına tıklayın (sonra duvarı boyunca sürükleyin). Türü sol panelden seçin",
             "victim_selected": "Seçili kazazedeyi duvarı boyunca taşımak için sürükleyin. Dönüşünü, halkalarını veya yerini sol panelden değiştirin ya da kaldırın"
         }
@@ -194,16 +197,17 @@
             "pyramid": "Piramit",
             "prism": "Düzgün prizma",
             "npyramid": "Düzgün piramit",
-            "star": "Yıldız",
             "polygon": "Çizilmiş",
             "icon": "Simge"
         },
         "fields": {
             "width": "Genişlik",
+            "size": "Boyut (uzun kenarı)",
             "depth": "Derinlik",
             "diameter": "Çap",
             "height": "Yükseklik",
             "turn": "Dönüş",
+            "color": "Renk",
             "sides": "Kenar"
         },
         "random": "Rastgele",
@@ -211,7 +215,9 @@
         "draw": "Dış çizgisini çiz",
         "drawDone": "Kapat ve koy",
         "drawHow": "Haritada köşelerine tıklayın; kapatmak için ilkine tıklayın ya da Enter'a basın, durmak için Esc. Çevresindeki dikdörtgenin ortası bir karenin üstünde, kenarlarından uzakta olur.",
-        "onTile": "Merkezi karesinin üstünde, kenarlarından uzakta kalır (kural {{rule_obstacles}}). Duvara yaslanabilir, içinden geçemez: taşındığında ya da büyütüldüğünde duvara değdiği yerde durur. Taşımak için haritada sürükleyin."
+        "onTile": "Merkezi karesinin üstünde, kenarlarından uzakta kalır (kural {{rule_obstacles}}). Duvara yaslanabilir, içinden geçemez: taşındığında ya da büyütüldüğünde duvara değdiği yerde durur. Taşımak için haritada sürükleyin.",
+        "colorNote": "Her renk olabilir (kural {{rule_obstacles}}). Bir zeminin (gümüş, siyah, kahverengi, camgöbeği), geçidin ya da kazazedenin rengine yakın bir rengi robot daha zor ayırt eder.",
+        "moreColors": "Diğer renkler"
     },
     "victims": {
         "types": {
@@ -225,6 +231,7 @@
         "kind": "Tür",
         "fake": "Sahte kazazede",
         "selected": "Seçili kazazede",
+        "selectedNote": "Aşağıdaki türler, halkalar ve dönüş artık bu kazazedeyi değiştirir",
         "turn": {
             "title": "Dönüş (derece)",
             "fixed": "Sabit dönüş",
@@ -233,11 +240,6 @@
             "help": "Robottan bakıldığında saat yönünde döner. 0° diktir. Kadranı sürükleyin veya düğmeleri kullanın.",
             "dialHint": "Döndürmek için sürükleyin (1° adımlar için Shift'i basılı tutun). Ok tuşları da çalışır.",
             "dialRandom": "Rastgele açı"
-        },
-        "along": {
-            "title": "Duvar boyunca yeri",
-            "note": "Taşımak için haritada sürükleyin (0,1 cm adımlarla)",
-            "middle": "Ortaya"
         }
     },
     "targets": {
@@ -254,14 +256,17 @@
         "hint": "Hedefin bir halkasına, sonra aşağıdaki bir renge tıklayın (şu an dıştan {{n}}. halka)"
     },
     "select": {
-        "none": "Seçmek için karelerin üzerinde sürükleyin. Taşımak için seçimi sürükleyin (Alt ile bir kopya); ok tuşları onu birer kare taşır.",
+        "none": "Seçmek için karelerin üzerinde sürükleyin. Taşımak için seçimi sürükleyin (Alt ile bir kopya); ok tuşları onu birer kare taşır. Bir kazazedeye ya da engele tıklayınca onun aracı, o seçili olarak açılır; bir duvarı ya da eğriyi seçmek için tıklayın, silmek için Delete.",
         "size": "{{size}} kare seçildi",
         "help": "Taşımak için seçimin içinde sürükleyin, bir kopyayı taşımak için Alt+sürükleyin. Yapıştır, sol üst köşeyi işaretçinin altındaki kareye koyar. Esc seçimi kaldırır.",
         "copy": "Kopyala",
         "cut": "Kes",
         "duplicate": "Çoğalt",
         "paste": "Yapıştır",
-        "clear": "Temizle"
+        "clear": "Temizle",
+        "wall": "Seçilen duvar",
+        "curve": "Seçilen eğri",
+        "length": "{{cm}} cm uzunluğunda"
     },
     "linear": {
         "label": "Doğrusal",
@@ -364,6 +369,10 @@
         "passageRoom4": "Oda 4'e giden geçit, oda 4'ün dışındaki kareye konur (oda 4 oluşturucusunun ve kontrol noktası kuralı {{rule_room4Checkpoint}}'ün beklediği gibi)",
         "regionPick": "Seçmek için sürükleyin",
         "regionDrag": "Taşımak için sürükleyin, kopyalamak için Alt+sürükleyin. Ok tuşları bir kare taşır; Ctrl+C / X / V ve Delete de çalışır",
+        "select_victim": "Bu kazazede seçili olarak kazazede aracını açmak için tıklayın (duvarı boyunca sürükleyin)",
+        "select_obstacle": "Bu engel seçili olarak zemin aracını açmak için tıklayın (karesinde sürükleyin)",
+        "select_curve": "Bu eğriyi seçmek için tıklayın",
+        "select_wall": "Bu duvarı (düz bir parçasını) seçmek için tıklayın",
         "regionCopied": "Kopyalandı. Ctrl+V işaretçinin altındaki kareye yapıştırır",
         "regionNoRoom": "Yanda veya altta kopya için yer yok",
         "line_addRow": "Yeşil çizgiye satır eklemek için tıklayın",
@@ -423,9 +432,9 @@
         "obstacle_drawSize": "Lütfen {{min}}-{{max}} cm genişlik ve derinlikte bir dış çizgi",
         "obstacle_drawCentre": "Ortası bir karenin kenarına düşer: engelin merkezi bir karenin üstündedir (kural {{rule_obstacles}})",
         "obstacle_iconFailed": "Bu simgenin şekli okunamadı",
+        "obstacle_pickIcon": "Önce panelden bir simge seçin",
         "victim_place": "“{{name}}” koymak için tıklayın",
         "victim_move": "“{{name}}” buraya koymak için tıklayın (karenin kazazedesi buraya gelir: kare başına bir)",
-        "victim_replace": "“{{name}}” olarak değiştirmek için tıklayın",
         "victim_unreachable": "Robot buraya yaklaşamaz, bu yüzden buraya kazazede konmaz (kural {{rule_reach}})",
         "victim_selectDrag": "Seçmek için tıklayın, duvarı boyunca taşımak için sürükleyin",
         "victim_moveSlot": "“{{name}}” buraya koymak için tıklayın (bu yüzdeki kazazede buraya gelir)",
@@ -884,7 +893,11 @@
                 },
                 "floor": {
                     "title": "Zemin (F): kontrol noktaları, çukurlar, bataklıklar, başlangıç",
-                    "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. Yok zemini kaldırır. Bir kare çukur, bataklık, kontrol noktası, engel, başlangıç ve geçitten yalnızca biridir (kural {{rule_oneKind}}). Engel her şekilde (kutu, silindir, koni, küre, piramit, düzgün prizma ya da piramit, yıldız, haritada çizilmiş bir dış çizgi, bir simge), boyutta ve dönüşte olabilir; oda 1-3'te kare başına bir tane, merkezi karesinde (kural {{rule_obstacles}}): panelde ayarlayın, haritada sürükleyin. Robot onun yanından geçmelidir: denetimler bunu hesaba katar.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur."
+                    "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. Yok zemini kaldırır. Bir kare çukur, bataklık, kontrol noktası, engel, başlangıç ve geçitten yalnızca biridir (kural {{rule_oneKind}}).\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur."
+                },
+                "obstacle": {
+                    "title": "Engel (O): her şekil, boyut ve renk",
+                    "body": "Engel her şekilde (kutu, silindir, koni, küre, piramit, düzgün prizma ya da piramit, haritada çizilmiş bir dış çizgi, bir simge), boyutta ve dönüşte olabilir; oda 1-3'te kare başına bir tane, merkezi karesinde (kural {{rule_obstacles}}): panelde ayarlayın, haritada sürükleyin. Robot onun yanından geçmelidir: denetimler bunu hesaba katar."
                 },
                 "victim": {
                     "title": "Kazazede (V): kazazedeler ve bilişsel hedefler",
@@ -896,7 +909,7 @@
                 },
                 "select": {
                     "title": "Seç (S): bir bölgeyi taşımak ve kopyalamak",
-                    "body": "Bir kare bölgesi seçmek için sürükleyin; duvarları, odaları, zeminleri ve kazazedeleri birlikte alınır.\nTaşımak için içinde sürükleyin veya bir kopyayı taşımak için Alt basılıyken sürükleyin. Ok tuşları onu birer kare taşır.\nCtrl+C kopyalar, Ctrl+X keser, Ctrl+V yapıştırır (işaretçinin altındaki kare sol üst köşesidir), Ctrl+D çoğaltır ve Delete temizler. Esc bölgeyi bırakır."
+                    "body": "Bir kare bölgesi seçmek için sürükleyin; duvarları, odaları, zeminleri ve kazazedeleri birlikte alınır.\nTaşımak için içinde sürükleyin veya bir kopyayı taşımak için Alt basılıyken sürükleyin. Ok tuşları onu birer kare taşır.\nCtrl+C kopyalar, Ctrl+X keser, Ctrl+V yapıştırır (işaretçinin altındaki kare sol üst köşesidir), Ctrl+D çoğaltır ve Delete temizler. Esc bölgeyi bırakır.\nBir kazazedeye ya da engele tıklayınca onun aracı, o seçili olarak açılır; bir duvarı ya da eğriyi seçmek için tıklayın, silmek için Delete."
                 },
                 "linear": {
                     "title": "Doğrusal",
@@ -1175,7 +1188,7 @@
                     "steps": {
                         "floor": {
                             "title": "Zemin (F): kontrol noktaları, çukurlar, bataklıklar, temas kareleri, başlangıç",
-                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. Yok zemini kaldırır. Bir kare çukur, bataklık, kontrol noktası, engel, başlangıç ve geçitten yalnızca biridir (kural {{rule_oneKind}}). Engel her şekilde (kutu, silindir, koni, küre, piramit, düzgün prizma ya da piramit, yıldız, haritada çizilmiş bir dış çizgi, bir simge), boyutta ve dönüşte olabilir; oda 1-3'te kare başına bir tane, merkezi karesinde (kural {{rule_obstacles}}): panelde ayarlayın, haritada sürükleyin. Robot onun yanından geçmelidir: denetimler bunu hesaba katar.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir."
+                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. Yok zemini kaldırır. Bir kare çukur, bataklık, kontrol noktası, engel, başlangıç ve geçitten yalnızca biridir (kural {{rule_oneKind}}).\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir."
                         },
                         "victim": {
                             "body": "Panelden bir tür seçin (gülen yüz kazazedeler - yaralı üzgün yüz, stabil nötr yüz, yaralanmamış mutlu yüz - ve sahteleri, dört türde bilişsel hedef - yanıcı gaz, zehir, aşındırıcı, organik peroksit - ve bir sahte) ve bir duvarın yakınına tıklayın: tıkladığınız yerdeki duvara konur.\nOda 1'de kare kenarlarına (kare başına bir), oda 2 ve 3'te 6 cm duvarların yüzlerine, bir eğride iki yere (iç ve dış) konur. Konmuş birini duvarı boyunca taşımak için sürükleyin. Konamayacağı yerde durum satırı nedenini söyler.\nDönüşü için kadranı çevirin (Sabit dönüş) veya her seferinde yenisi için “Rastgele” seçeneğini seçin. Bilişsel hedef için hedefin bir halkasına, sonra aşağıdaki bir renge tıklayın; halkaların toplamı türünü verir.\nSeçmek için aynı türle bir kazazedeye tıklayın, sonra dönüşünü, halkalarını veya duvar boyunca yerini değiştirin ya da kaldırın. Başka bir türle tıklamak türünü değiştirir."

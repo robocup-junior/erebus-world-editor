@@ -264,28 +264,41 @@ function shapeDistance(s: WallShape, x: number, y: number): number {
 // on its tile and off the tile's edges, one to a tile), kept in tile.obstacleShape: shape, w (its
 // width along x, or its diameter), d (its depth along y), h (its height; a sphere's is its
 // diameter), all cm; n (a regular prism's or pyramid's sides); outline (a drawn one's or an icon's
-// rings, in a unit box: -0.5..0.5 across and down, made w x d) and icon (the icon's name); dx, dy its
+// rings, in a unit box: -0.5..0.5 across and down, made w x d), aspect (its w for its d, kept as it
+// is made larger or smaller) and icon (the icon's name); color its colour as it is seen (#rrggbb; any:
+// rule 3.6.3.c; none: the grey of the classic export); dx, dy its
 // centre from the tile's (cm); rot its turn about the vertical (radians, as the world file has it).
 // A map of the classic editor has an obstacle with no shape: its export draws a box at random within
 // the middle 8 x 8 cm, which stands for it here.
-export type ObstacleKind = 'box' | 'cylinder' | 'cone' | 'sphere' | 'pyramid' | 'prism' | 'npyramid' | 'star' | 'polygon' | 'icon';
+export type ObstacleKind = 'box' | 'cylinder' | 'cone' | 'sphere' | 'pyramid' | 'prism' | 'npyramid' | 'polygon' | 'icon';
 export interface ObstacleShape {
     shape: ObstacleKind; w: number; d: number; h: number; dx: number; dy: number; rot: number;
-    n?: number; outline?: number[][][]; icon?: string;
+    n?: number; outline?: number[][][]; aspect?: number; icon?: string; color?: string;
 }
-const OBSTACLE_KINDS: ObstacleKind[] = ['box', 'cylinder', 'cone', 'sphere', 'pyramid', 'prism', 'npyramid', 'star', 'polygon', 'icon'];
+const OBSTACLE_KINDS: ObstacleKind[] = ['box', 'cylinder', 'cone', 'sphere', 'pyramid', 'prism', 'npyramid', 'polygon', 'icon'];
 // what the editor lets them be (cm): the centre half a wall in from the tile's edges
 const OBSTACLE_LIMITS = { size: [1, 12], height: [1, 15], offset: 5.5, sides: [3, 8] };
 const OBSTACLE_ZONE: ObstacleShape = { shape: 'box', w: 8, d: 8, h: 6, dx: 0, dy: 0, rot: 0 };
-const STAR_INNER = 0.45;      // a star's inner points, of its outer radius
 
 function obstacleShape(t: Tile | undefined | null): ObstacleShape | null {
     if (!t || !t.obstacle) return null;
     return t.obstacleShape || OBSTACLE_ZONE;
 }
+// The grey of an obstacle with no colour of its own: what the classic export's diffuseColor 0.45 (a
+// linear colour) is on the screen
+const OBSTACLE_GREY = '#b3b3b3';
+// A colour as it is seen (#rrggbb) as Webots takes it: linear (sRGB undone), to 3 places
+function linearColor(hex: string): number[] {
+    return [1, 3, 5].map(function (i) {
+        const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+        const l = c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        return Math.round(l * 1000) / 1000;
+    });
+}
+
 // round ones (and regular ones) have one size across; a box, a pyramid, a drawn one and an icon two
 function obstacleRound(shape: ObstacleKind) {
-    return shape === 'cylinder' || shape === 'cone' || shape === 'sphere' || shape === 'star' || shape === 'prism' || shape === 'npyramid';
+    return shape === 'cylinder' || shape === 'cone' || shape === 'sphere' || shape === 'prism' || shape === 'npyramid';
 }
 // those that go up to an apex over their middle, from their outline on the floor
 function obstaclePointed(shape: ObstacleKind) { return shape === 'cone' || shape === 'pyramid' || shape === 'npyramid'; }
@@ -303,13 +316,6 @@ function obstacleRingsLocal(sh: ObstacleShape, inset?: number): number[][][] {
         return [[[-hw, -hd], [hw, -hd], [hw, hd], [-hw, hd]]];
     }
     const r = Math.max(0.01, sh.w / 2 - k), out: number[][] = [];
-    if (sh.shape === 'star') {
-        for (let i = 0; i < 10; i++) {
-            const a = -Math.PI / 2 + i * Math.PI / 5, q = i % 2 ? Math.max(0.01, STAR_INNER * sh.w / 2 - k) : r;
-            out.push([q * Math.cos(a), q * Math.sin(a)]);
-        }
-        return [out];
-    }
     // a regular one: a corner to the front (up on the map); round ones as 24 sides
     const n = sh.shape === 'prism' || sh.shape === 'npyramid' ? Math.round(sh.n || 6) : 24;
     for (let i = 0; i < n; i++) {
@@ -1232,6 +1238,8 @@ export {
     OBSTACLE_KINDS,
     OBSTACLE_LIMITS,
     obstacleShape,
+    OBSTACLE_GREY,
+    linearColor,
     obstacleRound,
     obstaclePointed,
     obstacleRingsLocal,

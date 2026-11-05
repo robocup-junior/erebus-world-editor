@@ -161,14 +161,18 @@ export function iconOutline(unicode: string, solid: boolean): Promise<{ rings: R
         if (!faces.length) return null;
         const m = document.createElement('canvas').getContext('2d')!;
         m.font = font;
-        const metrics = m.measureText(glyph);
-        const asc = metrics.fontBoundingBoxAscent, w = Math.ceil(metrics.width) + 4, h = Math.ceil(asc + metrics.fontBoundingBoxDescent) + 4;
+        // the glyph as it is drawn, not the font's box: some reach out of it (the star's top points
+        // are above its em box), and would be cut off
+        const metrics = m.measureText(glyph), pad = 4;
+        const left = Math.ceil(metrics.actualBoundingBoxLeft), right = Math.ceil(metrics.actualBoundingBoxRight);
+        const up = Math.ceil(metrics.actualBoundingBoxAscent), down = Math.ceil(metrics.actualBoundingBoxDescent);
+        const w = left + right + 2 * pad, h = up + down + 2 * pad;
         const c = document.createElement('canvas');
         c.width = w; c.height = h;
         const g = c.getContext('2d', { willReadFrequently: true })!;
         g.font = font;
         g.fillStyle = '#000';
-        g.fillText(glyph, 2, asc + 2);
+        g.fillText(glyph, left + pad, up + pad);
         const px = g.getImageData(0, 0, w, h).data, mask = new Uint8Array(w * h);
         for (let i = 0; i < w * h; i++) mask[i] = px[4 * i + 3] > 127 ? 1 : 0;
         return normalize(traceMask(mask, w, h, 30, 1.2));

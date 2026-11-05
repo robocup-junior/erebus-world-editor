@@ -1307,9 +1307,9 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     }
 
     scope.r4api.useIcon = function (icon) {
-        // drawn black on transparent from Font Awesome's font (the page's icons), as its SVG is: the
-        // glyph's advance across, the font's ascent and descent (512 units) down; large, so the edges
-        // stay smooth when scaled
+        // drawn black on transparent from Font Awesome's font (the page's icons): the glyph as it is
+        // drawn, not the font's box (some reach out of it - the star's top points are above its em box -
+        // and would be cut off); large, so the edges stay smooth when scaled
         const styles = (icon.styles || ['solid']).filter(function (s: string) { return s !== 'brands'; });
         const font = (styles.indexOf('solid') > -1 || !styles.length ? '900' : '400') + ' 512px "Font Awesome 7 Free"';
         const glyph = String.fromCodePoint(parseInt(icon.unicode, 16));
@@ -1318,7 +1318,8 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
             const m = document.createElement('canvas').getContext('2d')!;
             m.font = font;
             const metrics = m.measureText(glyph);
-            const asc = metrics.fontBoundingBoxAscent, gw = metrics.width, gh = asc + metrics.fontBoundingBoxDescent;
+            const left = metrics.actualBoundingBoxLeft, up = metrics.actualBoundingBoxAscent;
+            const gw = left + metrics.actualBoundingBoxRight, gh = up + metrics.actualBoundingBoxDescent;
             const k = 512 / Math.max(gw, gh);
             const c = document.createElement('canvas');
             c.width = Math.round(gw * k);
@@ -1327,7 +1328,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
             g.font = font;
             g.fillStyle = '#000';
             g.setTransform(k, 0, 0, k, 0, 0);
-            g.fillText(glyph, 0, asc);
+            g.fillText(glyph, left, up);
             setSilhouette(c, false);
         }).catch(function () {
             scope.$applyAsync(function () { r4.message = 'iconFailed'; });

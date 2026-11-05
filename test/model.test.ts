@@ -158,7 +158,7 @@ test('an obstacle may stand against a wall, not go through it, nor into another 
   const map = M.newMap(3, 1, 2026);
   M.setFloor(map, 1, 1, 'start');
   M.setObstacle(map, 3, 1, { shape: 'box', w: 4, d: 4, h: 6 });
-  M.setObstacle(map, 5, 1, { shape: 'star', w: 8, h: 6 });
+  M.setObstacle(map, 5, 1, { shape: 'star' as any, w: 8, h: 6 });   // a star of the past: the outline it was
   assert.ok(!M.problems(map).some((p) => p.key === 'obstacleOverlap'));
   // dragged up to the outer wall (its face 0.5 cm in from y = 0): it stops against it
   assert.ok(M.changeObstacle(map, 3, 1, { dy: -5.5 }));
@@ -213,7 +213,7 @@ test('the world file has the obstacles put in the editor, each of its shape', ()
   M.setFloor(map, 1, 1, 'start');
   M.setObstacle(map, 3, 1, { shape: 'box', w: 4, d: 3, h: 5, dx: 1, dy: -0.5, rot: 0.25 });
   M.setObstacle(map, 5, 1, { shape: 'sphere', w: 4 });
-  M.setObstacle(map, 3, 3, { shape: 'star', w: 6, h: 8 });
+  M.setObstacle(map, 3, 3, { shape: 'star' as any, w: 6, h: 8 });   // a star of the past: the outline it was
   M.setObstacle(map, 5, 3, { shape: 'pyramid', w: 6, d: 4, h: 8 });
   const world = quietly(() => M.world(map));
   const m = world.match(/DEF OBSTACLE0 Solid \{\s*translation (\S+) (\S+) (\S+)\s*rotation 0 1 0 (\S+)[\s\S]*?Box \{\s*size (\S+) (\S+) (\S+)/);
@@ -253,6 +253,144 @@ test('regular prisms and pyramids, a drawn outline and the outlines of an icon a
   M.setObstacle(map, 5, 1, { shape: 'icon', icon: 'x', outline: [[[-0.5, -0.5], [-0.1, -0.5], [-0.1, 0.5], [-0.5, 0.5]], [[0.1, -0.5], [0.5, -0.5], [0.5, 0.5], [0.1, 0.5]]], w: 6, d: 6, h: 6 });
   assert.strictEqual(W.obstacleRings(map.cells['5,1,0'].tile!.obstacleShape, 5, 1).length, 2);
   assert.strictEqual(quietly(() => M.world(map)).match(/IndexedFaceSet/g)!.length, 2);
+});
+
+test('a star of the past is the outline it was (a drawn one); a drawn one and an icon keep their proportions', () => {
+  const star = M.clampObstacle({ shape: 'star' as any, w: 8, h: 6 });
+  assert.strictEqual(star.shape, 'polygon');
+  assert.strictEqual(star.outline![0].length, 10, 'its ten points');
+  assert.ok(Math.abs(star.w - 8 * Math.cos(Math.PI / 10)) < 0.1, 'as wide as its points: ' + star.w);
+  assert.ok(star.aspect! > 1, 'wider than high');
+  assert.ok(!W.OBSTACLE_KINDS.includes('star' as any), 'no star of its own: an icon has one');
+  // made larger by its longer side, the other in proportion (what the panel's size does)
+  const L4 = [[-0.5, -0.5], [0.5, -0.5], [0.5, 0], [0, 0], [0, 0.5], [-0.5, 0.5]];
+  const drawn = M.clampObstacle({ shape: 'polygon', outline: [L4], w: 6, d: 3, h: 6 });
+  assert.strictEqual(drawn.aspect, 2);
+  const bigger = M.clampObstacle(Object.assign({}, drawn, { w: 10, d: 10 / drawn.aspect! }));
+  assert.deepStrictEqual([bigger.w, bigger.d, bigger.aspect], [10, 5, 2]);
+});
+
+test('the meshes of obstacles face out: Webots draws a face from its front only', () => {
+  // each face's corners anticlockwise seen from outside: with the right hand, their normal points out,
+  // so the volume summed over the faces is the shape's own (none counted inwards), the top faces up
+  // and the base down; and no VRML `solid` field, which Webots's IndexedFaceSet has not
+  const L4 = [[-0.5, -0.5], [0.5, -0.5], [0.5, 0], [0, 0], [0, 0.5], [-0.5, 0.5]];
+  const shapes: [object, number][] = [
+    [{ shape: 'cylinder', w: 6, h: 5 }, 0.5 * 24 * 9 * Math.sin(2 * Math.PI / 24) * 5],     // a 24-sided prism
+    [{ shape: 'prism', w: 6, h: 4, n: 5 }, 0],
+    [{ shape: 'cone', w: 6, h: 6 }, 0],
+    [{ shape: 'pyramid', w: 6, d: 4, h: 6 }, 6 * 4 * 6 / 3],
+    [{ shape: 'npyramid', w: 6, h: 6, n: 3 }, 0],
+    [{ shape: 'polygon', outline: [L4], w: 8, d: 8, h: 5 }, (64 - 16) * 5],
+    [{ shape: 'polygon', outline: [L4.slice().reverse()], w: 8, d: 8, h: 5 }, (64 - 16) * 5],
+    [{ shape: 'icon', icon: 'x', outline: [[[-0.5, -0.5], [-0.1, -0.5], [-0.1, 0.5], [-0.5, 0.5]], [[0.1, 0.5], [0.5, 0.5], [0.5, -0.5], [0.1, -0.5]]], w: 10, d: 10, h: 3 }, 2 * 4 * 10 * 3]
+  ];
+  for (const [sh, volume] of shapes) {
+    const map = M.newMap(1, 1, 2026);
+    M.setFloor(map, 1, 1, 'start');
+    M.setObstacle(map, 1, 1, sh as any);
+    const world = quietly(() => M.world(map));
+    assert.ok(!/\bsolid\b/.test(world.slice(world.indexOf('OBSTACLE0'))), 'no solid field');
+    const g = world.match(/point \[ ([^\]]*) \] \}\s*coordIndex \[ ([^\]]*) \]/)!;
+    const pts = g[1].split(',').map((q) => q.trim().split(' ').map(Number));
+    const faces = g[2].split('-1').map((f) => f.split(',').map((i) => i.trim()).filter((i) => i).map(Number)).filter((f) => f.length);
+    let vol = 0;
+    const h = Math.max(...pts.map((p) => p[1]));
+    for (const f of faces) {
+      // the face in triangles from its first corner; its normal (right hand) and its share of the volume
+      let n = [0, 0, 0];
+      for (let k = 1; k < f.length - 1; k++) {
+        const [a, b, c] = [pts[f[0]], pts[f[k]], pts[f[k + 1]]];
+        const u = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], v = [c[0] - a[0], c[1] - a[1], c[2] - a[2]];
+        const x = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+        n = [n[0] + x[0], n[1] + x[1], n[2] + x[2]];
+        vol += (a[0] * (b[1] * c[2] - b[2] * c[1]) - a[1] * (b[0] * c[2] - b[2] * c[0]) + a[2] * (b[0] * c[1] - b[1] * c[0])) / 6;
+      }
+      const ys = f.map((i) => pts[i][1]);
+      if (ys.every((y) => y === 0)) assert.ok(n[1] < 0, 'a base faces down');
+      else if (ys.every((y) => y === h) && f.length === 3 && !(sh as any).shape.match(/cone|pyramid/)) assert.ok(n[1] > 0, 'a top faces up');
+    }
+    assert.ok(vol > 0, (sh as any).shape + ': outward, its volume ' + vol);
+    if (volume) assert.ok(Math.abs(vol * 1e6 - volume) / volume < 0.01, (sh as any).shape + ': ' + vol * 1e6 + ' cm3, not ' + volume);
+  }
+});
+
+for (const year of [2026, 2027]) test(`${year}: what is new in the editor is saved as JSON and opened again the same: obstacles, passage walls, victims changed`, () => {
+  // a map with all of it: room 2 on the right, a passage, obstacles of every kind, victims changed
+  const map = M.newMap(5, 3, year);
+  let borders = paint(map, 2, [[3, 0], [4, 0], [3, 1], [4, 1], [3, 2], [4, 2]], new Set());
+  M.setFloor(map, 1, 5, 'start');
+  assert.strictEqual(M.togglePassage(map, 6, 3, [5, 3]), 'open');
+  borders = M.syncBorderWalls(map, borders);
+  const L4 = [[-0.5, -0.5], [0.5, -0.5], [0.5, 0], [0, 0], [0, 0.5], [-0.5, 0.5]];
+  const kinds: object[] = [
+    { shape: 'box', w: 3, d: 2, h: 4, rot: 0.3, color: '#dc2626' }, { shape: 'cylinder', w: 3, h: 5 }, { shape: 'cone', w: 3, h: 5 },
+    { shape: 'sphere', w: 3 }, { shape: 'pyramid', w: 3, d: 2, h: 4 }, { shape: 'prism', w: 3, h: 4, n: 5 },
+    { shape: 'npyramid', w: 3, h: 4, n: 3, dx: 1, dy: -1 }, { shape: 'polygon', outline: [L4], w: 4, d: 2, h: 3, aspect: 2 },
+    { shape: 'icon', icon: 'car', outline: [L4], w: 4, d: 4, h: 3, aspect: 1 }
+  ];
+  const tiles = [[1, 1], [3, 1], [1, 3], [3, 3], [7, 1], [9, 1], [7, 3], [9, 3], [7, 5]];
+  kinds.forEach((sh, i) => M.setObstacle(map, tiles[i][0], tiles[i][1], sh));
+  M.setVictim(map, 1, 5, 'left', 'H', false, { rot: 30 });
+  M.changeVictim(map, { kind: 'edge', x: 1, y: 5, dir: 'left' }, { type: 'S', fake: true, rot: 120 });
+  const slot = [...Array(16).keys()].find((i) => M.slotHasWall(map, 9, 5, i))!;
+  M.setSlotVictim(map, 9, 5, slot, 'H', false, { rot: 0 });
+  M.changeVictim(map, { kind: 'slot', x: 9, y: 5, i: slot }, { type: 'CT', code: 'BBRRY' });
+  if (year === 2027) M.setFloor(map, 3, 5, 'contact');
+  // saved as the editor saves it, and opened again as it opens a file
+  const text = JSON.stringify(M.saved(map));
+  const back = M.normalize(JSON.parse(text));
+  assert.strictEqual(JSON.stringify(M.saved(back)), text, 'the same file again');
+  tiles.forEach(([x, y], i) => assert.deepStrictEqual(back.cells[`${x},${y},0`].tile!.obstacleShape, map.cells[`${x},${y},0`].tile!.obstacleShape, JSON.stringify(kinds[i])));
+  assert.deepStrictEqual(back.cells['5,3,0'].tile!.passageWalls, map.cells['5,3,0'].tile!.passageWalls);
+  assert.ok(back.cells['5,3,0'].tile!.passageWalls.length, 'the passage has its walls');
+  assert.deepStrictEqual(M.victimAt(back, { kind: 'edge', x: 1, y: 5, dir: 'left' }), M.victimAt(map, { kind: 'edge', x: 1, y: 5, dir: 'left' }));
+  assert.strictEqual(M.victimAt(back, { kind: 'slot', x: 9, y: 5, i: slot })!.code, 'BBRRY');
+  assert.deepStrictEqual(M.problems(back).map((p) => p.key), M.problems(map).map((p) => p.key));
+  // the same world from it
+  const seeded = () => { let a = 3; Math.random = () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; };
+  const random = Math.random;
+  try {
+    seeded(); const one = quietly(() => M.world(map));
+    seeded(); const two = quietly(() => M.world(back));
+    assert.strictEqual(two, one);
+    assert.strictEqual(one.match(/DEF OBSTACLE\d+ Solid/g)!.length, kinds.length, 'every obstacle in the world');
+  } finally { Math.random = random; }
+  // what the file keeps still works: the passage closed, its walls go with it
+  M.togglePassage(back, 6, 3, [5, 3]);
+  M.syncBorderWalls(back, M.borderEdges(back));
+  assert.ok(!back.cells['5,3,0'].tile!.passageWalls);
+  assert.ok(!wall(back, 5, 2) && !wall(back, 5, 4), 'its walls gone');
+});
+
+test('a file with a star obstacle of before opens as the outline it was', () => {
+  const map = M.newMap(2, 1, 2026);
+  M.setFloor(map, 1, 1, 'start');
+  const file = JSON.parse(JSON.stringify(M.saved(map)));
+  file.cells['3,1,0'].tile.obstacle = true;
+  file.cells['3,1,0'].tile.obstacleShape = { shape: 'star', w: 6, d: 6, h: 5, dx: 0, dy: 0, rot: 0 };
+  const back = M.normalize(file);
+  const sh = back.cells['3,1,0'].tile!.obstacleShape;
+  assert.deepStrictEqual([sh.shape, sh.outline[0].length], ['polygon', 10]);
+  assert.ok(quietly(() => M.world(back)).includes('OBSTACLE0'));
+});
+
+test('an obstacle of any colour: as it is seen, in the world as Webots takes it (linear); none: the grey of before', () => {
+  assert.strictEqual(M.clampObstacle({ shape: 'box', color: '#FF8800' }).color, '#ff8800');
+  assert.strictEqual(M.clampObstacle({ shape: 'box', color: 'red' }).color, undefined, 'only #rrggbb');
+  assert.deepStrictEqual(W.linearColor('#ffffff'), [1, 1, 1]);
+  assert.deepStrictEqual(W.linearColor('#808080'), [0.216, 0.216, 0.216]);
+  assert.deepStrictEqual(W.linearColor(W.OBSTACLE_GREY), [0.451, 0.451, 0.451], 'the grey of before, as it is seen');
+  const map = M.newMap(2, 1, 2026);
+  M.setFloor(map, 1, 1, 'start');
+  M.setObstacle(map, 3, 1, { shape: 'cylinder', w: 4, h: 5, color: '#ff0000' });
+  let world = quietly(() => M.world(map));
+  const part = world.slice(world.indexOf('DEF OBSTACLE0'));
+  assert.match(part, /diffuseColor 1 0 0/);
+  assert.match(part, /recognitionColors \[\s*1 0 0\s*\]/);
+  M.setObstacle(map, 3, 1, { shape: 'cylinder', w: 4, h: 5 });
+  world = quietly(() => M.world(map));
+  assert.match(world.slice(world.indexOf('DEF OBSTACLE0')), /diffuseColor 0\.45 0\.45 0\.45/);
 });
 
 test('resizing keeps what fits and moves the outer walls', () => {
@@ -525,8 +663,16 @@ test('a placed victim can be looked at, changed and removed', () => {
   paint(map, 3, [[1, 0]], new Set());
   M.setSlotVictim(map, 3, 1, 4, 'CT', false, { code: 'GYYKG', rot: 10 });
   const slot: M.Where = { kind: 'slot', x: 3, y: 1, i: 4 };
-  M.changeVictim(map, slot, { type: 'H', rot: 20 });            // a cognitive target keeps its code
+  M.changeVictim(map, slot, { rot: 20 });                        // a cognitive target keeps its code
   assert.deepStrictEqual(M.victimAt(map, slot), { type: 'CT', value: 5, code: 'GYYKG', fake: false, rot: 20 });
+  // a target made a letter victim and back, where it is (its place along the wall kept)
+  M.changeVictim(map, slot, { type: 'H', fake: true });
+  assert.deepStrictEqual([M.victimAt(map, slot)!.type, M.victimAt(map, slot)!.fake], ['H', true]);
+  assert.ok(M.moveVictim(map, slot, 1.5));
+  M.changeVictim(map, slot, { fake: false, rot: 90 });
+  assert.strictEqual(M.victimOffset(map, slot), 1.5);
+  M.changeVictim(map, slot, { type: 'CT', code: 'BBRRY' });
+  assert.deepStrictEqual([M.victimAt(map, slot)!.type, M.victimAt(map, slot)!.code, M.victimAt(map, slot)!.fake], ['CT', 'BBRRY', false]);
   assert.ok(M.removeVictim(map, slot));
   assert.strictEqual(M.victimAt(map, slot), null);
 });

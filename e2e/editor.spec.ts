@@ -177,7 +177,7 @@ test('a map opened: every tool and its panel', async ({ page }) => {
     await boot(page);
     await openMap(page, 'mapA.json');
     await shot(page, 'mapA-open');
-    for (const id of ['select', 'hand', 'shape', 'room', 'passage', 'line', 'curve', 'eraser', 'floor', 'victim']) {
+    for (const id of ['select', 'hand', 'shape', 'room', 'passage', 'line', 'curve', 'eraser', 'floor', 'obstacle', 'victim']) {
         await tool(page, id);
         await hover(page, 30, 30);
         await shot(page, 'tool-' + id);
@@ -265,11 +265,15 @@ test('victims: placed, selected, turned, changed; a cognitive target', async ({ 
     await click(page, 30, 2);
     await click(page, 6, 2);
     await shot(page, 'victim-selected');
-    await page.locator('.ed-selected .rot-presets button').nth(1).click();
-    await page.locator('.ed-selected .ed-choice.letter').nth(2).click();
-    await page.locator('.ed-selected .ed-check input').click();
+    // the selected one changed from the panel below: turned (the dial), made a fake U (the kind's button)
+    await page.locator('.ed-dial .rot-presets button').nth(1).click();
+    await page.locator('.r4-stamp').nth(5).click();
     await settle(page);
+    await expect(page.locator('.r4-stamp').nth(5)).toHaveClass(/active/);
     await shot(page, 'victim-changed');
+    const changed = JSON.parse((await download(page, () => page.locator('.ed-file button').nth(2).click())).text);
+    const tile = changed.cells['1,1,0'].tile;
+    expect([tile.victims.top, tile.victim_is_fake, tile.single_victim_rotation]).toEqual(['U', true, 90]);
     await page.locator('.ed-selected-head .btn-link').click();
     await page.locator('.r4-stamp').nth(4).click();
     await click(page, 2, 30);
@@ -284,42 +288,37 @@ test('victims: placed, selected, turned, changed; a cognitive target', async ({ 
     keep('victims.json', saved.text);
 });
 
-test('victims: put where clicked along the wall, dragged along it, moved in the panel', async ({ page }) => {
+test('victims: put where clicked along the wall, dragged along it', async ({ page }) => {
     await boot(page);
     await openMap(page, 'mapA.json');
     await tool(page, 'victim');
     await page.locator('.ed-seg button').nth(0).click();
-    // the top wall of tile (5, 1) (room 1, 24-36 cm): a click 3 cm right of its middle
+    // where tile (2, 0)'s victim is along its wall (cm from its middle), as saved
+    const offset = async () => JSON.parse((await download(page, () => page.locator('.ed-file button').nth(2).click())).text).cells['5,1,0'].tile.victim_offset;
+    const status = page.locator('.ed-status');
+    // the top wall of tile (2, 0) (room 1, 24-36 cm): a click 3 cm right of its middle
     await hover(page, 33, 2);
     await shot(page, 'victim-along-hover');
     await click(page, 33, 2);
-    await click(page, 33, 4);
-    await expect(page.locator('.ed-along-value')).toHaveText('+3.0 cm');
+    expect(await offset()).toBe(3);
     // dragged to the left: it stops short of the wall at the tile's left end (24 cm) - none there,
     // so at the tile's corner less its half width
     await drag(page, [[33, 4], [20, 4]]);
-    await expect(page.locator('.ed-along-value')).toHaveText('−5.0 cm');
+    await expect(status).toContainText('−5.0 cm');
     await shot(page, 'victim-dragged');
-    // back to the middle, then 2 cm along by dragging; undo goes back one step at a time
-    await page.locator('.ed-along-foot .btn-link').click();
-    await expect(page.locator('.ed-along-value')).toHaveText('0.0 cm');
-    await expect(page.locator('.ed-along-range')).toHaveCount(0);
-    await drag(page, [[30, 4], [32, 4]]);
-    await expect(page.locator('.ed-along-value')).toHaveText('+2.0 cm');
+    // dragged back to 2 cm right of the middle; undo goes back one step at a time
+    await drag(page, [[25, 4], [32, 4]]);
+    await expect(status).toContainText('+2.0 cm');
     await settle(page);
     await shot(page, 'victim-slid');
     await page.keyboard.press('Control+z');
     await settle(page);
-    await click(page, 30, 4);
-    await expect(page.locator('.ed-along-value')).toHaveText('0.0 cm');
+    expect(await offset()).toBe(-5);
     await page.keyboard.press('Control+Shift+z');
     await settle(page);
-    await click(page, 32, 4);
-    await expect(page.locator('.ed-along-value')).toHaveText('+2.0 cm');
+    expect(await offset()).toBe(2);
     // a click on the face away from it moves the tile's victim there
     await click(page, 26, 2);
-    await click(page, 26, 4);
-    await expect(page.locator('.ed-along-value')).toHaveText('−4.0 cm');
     const saved = await download(page, () => page.locator('.ed-file button').nth(2).click());
     keep('victims-along.json', saved.text);
     expect(JSON.parse(saved.text).cells['5,1,0'].tile.victim_offset).toBe(-4);
@@ -347,6 +346,98 @@ test('select: a region copied, pasted, moved and cleared', async ({ page }) => {
     await shot(page, 'region-cleared');
     const saved = await download(page, () => page.locator('.ed-file button').nth(2).click());
     keep('region.json', saved.text);
+});
+
+test('select: a victim or an obstacle clicked opens its tool with it picked; a wall is picked and taken off', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    await tool(page, 'victim');
+    await page.locator('.ed-seg button').nth(0).click();
+    await click(page, 33, 2);
+    await tool(page, 'obstacle');
+    await click(page, 6, 30);
+    const head = page.locator('.ed-tool-panel .ed-selected-head');
+    // a victim: the victim tool, it picked, and dragged along its wall in the same press
+    await tool(page, 'select');
+    await drag(page, [[33, 4], [35, 4]]);
+    await expect(page.locator('.ed-rail [data-tool="victim"]')).toHaveClass(/active/);
+    await expect(head).toContainText('選択中の被災者');
+    await expect(page.locator('.ed-status')).toContainText('+5.0 cm');
+    // the drag is one step to undo, as in the victim tool
+    await page.keyboard.press('Control+z');
+    await settle(page, 300);
+    const saved = await download(page, () => page.locator('.ed-file button').nth(2).click());
+    expect(JSON.parse(saved.text).cells['5,1,0'].tile.victim_offset).toBe(3);
+    // an obstacle: the floor tool's obstacle, it picked
+    await tool(page, 'select');
+    await click(page, 6, 30);
+    await expect(page.locator('.ed-rail [data-tool="obstacle"]')).toHaveClass(/active/);
+    await expect(head).toContainText('選んだ障害物');
+    // a wall: picked here (no tool picks walls), a straight run of it, taken off with Delete
+    await tool(page, 'select');
+    await hover(page, 12.3, 20);
+    await click(page, 12.3, 20);
+    await expect(head).toContainText('選んだ壁');
+    await expect(page.locator('.ed-tool-panel .ed-selected .ed-muted').first()).toHaveText('長さ 12 cm');
+    await settle(page, 4200);
+    await shot(page, 'select-wall');
+    await page.keyboard.press('Delete');
+    await expect(head).toHaveCount(0);
+    // the floor: a region of tiles, as before
+    await click(page, 66, 66);
+    await expect(page.locator('.ed-region-size')).toContainText('1 × 1');
+});
+
+test('JSON: obstacles of each kind saved, the file opened again, and saved the same', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    await tool(page, 'obstacle');
+    // a box turned, a regular prism, an outline drawn, an icon (each put, then let go: the panel
+    // changes the one picked)
+    const letGo = () => page.locator('.ed-selected-head .btn-link').click();
+    await page.locator('.ed-obstacle-field input[data-field=rot]').fill('30');
+    await page.locator('.ed-obstacle-color[data-color="#dc2626"]').click();
+    await click(page, 6, 30);
+    await letGo();
+    await page.locator('.ed-obstacle-shapes [data-shape=prism]').click();
+    await page.locator('.ed-obstacle-field input[data-field=n]').fill('5');
+    // a colour of its own: the editor's colour picker, its code typed
+    await page.locator('.ed-obstacle-color.more').click();
+    await page.locator('.ed-color-hex').fill('#1e90ff');
+    await page.locator('.ed-color-hex').press('Enter');
+    await click(page, 18, 54);
+    await letGo();
+    await page.locator('.ed-obstacle-shapes [data-shape=polygon]').click();
+    await expect(page.locator('.ed-obstacle-shapes [data-shape=polygon]')).toHaveClass(/active/);   // drawing one: chosen
+    await expect(page.locator('.ed-obstacle-shapes [data-shape=prism]')).not.toHaveClass(/active/);
+    for (const [x, y] of [[13.5, 61], [22, 61], [22, 64.5], [17, 64.5], [17, 70], [13.5, 70]]) await click(page, x, y);
+    await page.keyboard.press('Enter');
+    await letGo();
+    await page.locator('.ed-obstacle-shapes [data-shape=icon]').click();
+    await expect(page.locator('.ed-obstacle-shapes [data-shape=icon]')).toHaveClass(/active/);      // looking for one: chosen
+    await page.locator('.ed-obstacle-icons input[type=search]').fill('car');
+    await page.locator('.ed-obstacle-icons .r4-icon-grid button[title="Car"]').click();
+    await expect(page.locator('.ed-obstacle-shapes [data-shape=icon]')).toHaveClass(/active/);
+    await click(page, 42, 6);
+    await settle(page, 300);
+    const first = await download(page, () => page.locator('.ed-file button').nth(2).click());
+    const tiles = JSON.parse(first.text).cells;
+    const shapes = ['1,5,0', '3,9,0', '3,11,0', '7,1,0'].map((k) => tiles[k].tile.obstacleShape && tiles[k].tile.obstacleShape.shape);
+    expect(shapes).toEqual(['box', 'prism', 'polygon', 'icon']);
+    expect(tiles['1,5,0'].tile.obstacleShape.rot).toBeCloseTo(30 * Math.PI / 180, 2);
+    expect([tiles['1,5,0'].tile.obstacleShape.color, tiles['3,9,0'].tile.obstacleShape.color]).toEqual(['#dc2626', '#1e90ff']);
+    // opened again (the work kept is let go) and saved: the same file
+    await page.locator('#edFile').setInputFiles({ name: 'mapA-obstacles.json', mimeType: 'application/json', buffer: Buffer.from(first.text) });
+    await settle(page, 400);
+    if (await page.locator('.ed-dialog').count()) { await page.locator('.ed-dialog-btn.danger').click(); await settle(page, 400); }
+    await expect(page.locator('.ed-name-input')).toBeVisible();
+    await settle(page, 300);
+    // nothing of the map before picked: the panel is for the next obstacle to put
+    await expect(page.locator('.ed-obstacle .ed-selected-head')).toContainText('次に置く障害物');
+    await shot(page, 'json-reopened');
+    const second = await download(page, () => page.locator('.ed-file button').nth(2).click());
+    expect(second.text).toBe(first.text);
+    keep('obstacles.json', second.text);
 });
 
 test('shape: rows and columns added and taken out', async ({ page }) => {

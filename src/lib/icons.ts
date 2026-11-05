@@ -148,6 +148,15 @@ function targetBackground(code: string | null | undefined, color: string) {
     return 'radial-gradient(circle closest-side, ' + stops.join(', ') + ')';
 }
 
+// A target's five rings alone, filling the round (as the ring picker draws them): code K R Y G B,
+// outside in
+function ringsBackground(code: string | null | undefined) {
+    const rings = code && /^[KRYGB]{5}$/.test(code) ? code.split('').map(function (c) { return RING[c]; }) : ['#fff', '#fff', '#fff', '#fff', '#fff'];
+    const stops: string[] = [];
+    for (let i = 4; i >= 0; i--) stops.push(rings[i] + ' ' + (4 - i) * 20 + '% ' + (5 - i) * 20 + '%');
+    return 'radial-gradient(circle closest-side, ' + stops.join(', ') + ', transparent 100%)';
+}
+
 // The type letter (F P C O) of a ring code, or X when it is not a valid one
 function ringSum(rings: string[]) {
     const v: Record<string, number> = { K: -2, R: -1, Y: 0, G: 1, B: 2 };
@@ -172,6 +181,7 @@ export {
     targetMark,
     markBackground,
     targetBackground,
+    ringsBackground,
     typeOf
 
 };

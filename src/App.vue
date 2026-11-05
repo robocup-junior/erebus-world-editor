@@ -11,6 +11,7 @@ import type { AreaScore } from './rules/types';
 import RotationDial from './components/RotationDial.vue';
 import VictimGlyph from './components/VictimGlyph.vue';
 import CtRings from './components/CtRings.vue';
+import ColorPicker from './components/ColorPicker.vue';
 import Modal from './components/Modal.vue';
 import BuildInfo from './components/BuildInfo.vue';
 import LangMenu from './components/LangMenu.vue';
@@ -42,6 +43,8 @@ function keyName(k: string) { return k.charAt(0) === '@' ? t('guide.keys.keys.' 
 const fileEl = ref<HTMLInputElement | null>(null);
 const canvasEl = ref<HTMLCanvasElement | null>(null);
 const stageEl = ref<HTMLElement | null>(null);
+// the obstacle panel's own colour picker, open or not
+const colorOpen = ref(false);
 
 // points as the score shows them (at most two decimals)
 function pts(n: number) { return String(Math.round(n * 100) / 100); }
@@ -175,7 +178,17 @@ onMounted(function () {
         <aside class="ed-tool-panel" v-if="S.map">
           <div class="ed-tool-head"><span>{{ t('tools.names.' + S.ui.tool) }}</span><kbd>{{ E.toolKey(S.ui.tool) }}</kbd></div>
           <p class="ed-help">{{ keys(t('tools.help.' + S.ui.tool)) }}</p>
-          <div v-if="S.ui.tool === 'select'">
+          <div class="ed-selected" v-if="S.ui.tool === 'select' && S.wallSel">
+            <div class="ed-selected-head">
+              <span><i class="fas fa-mouse-pointer mr-1"></i>{{ t(S.wallSel.arc ? 'select.curve' : 'select.wall') }}</span>
+              <button class="btn btn-sm btn-link p-0" type="button" @click="E.wallDeselect()">{{ t('common.done') }}</button>
+            </div>
+            <p class="ed-muted mb-2" v-if="!S.wallSel.arc">{{ t('select.length', { cm: S.wallSel.cm }) }}</p>
+            <button class="btn btn-sm btn-outline-danger btn-block" type="button" @click="E.removeWallSel()" title="Delete">
+              <i class="fas fa-trash-alt mr-1"></i>{{ t('common.remove') }}
+            </button>
+          </div>
+          <div v-if="S.ui.tool === 'select' && !S.wallSel">
             <p class="ed-muted" v-if="!S.region">{{ keys(t('select.none')) }}</p>
             <div v-if="S.region">
               <div class="ed-region-size"><i class="far fa-object-group mr-1"></i>{{ t('select.size', { size: E.regionSize() }) }}</div>
@@ -261,13 +274,13 @@ onMounted(function () {
               <i class="fas fa-fw" :class="f.icon"></i>{{ t('floors.' + f.id) }}
             </button>
           </div>
-          <div class="ed-obstacle" v-if="S.ui.tool === 'floor' && S.ui.floor === 'obstacle'">
+          <div class="ed-obstacle" v-if="S.ui.tool === 'obstacle'">
             <div class="ed-selected-head">
               <span><i class="fas fa-cube mr-1"></i>{{ t(S.obstacle.at ? 'obstacles.picked' : 'obstacles.next') }}</span>
               <button class="btn btn-sm btn-link p-0" type="button" v-if="S.obstacle.at" @click="E.obstacleDeselect()">{{ t('common.done') }}</button>
             </div>
             <div class="ed-obstacle-shapes">
-              <button class="ed-choice" type="button" v-for="k in S.obstacleKinds" :key="k" :class="{ active: S.obstacle.shape.shape === k }" :data-shape="k" @click="E.obstacleChange({ shape: k })">
+              <button class="ed-choice" type="button" v-for="k in S.obstacleKinds" :key="k" :class="{ active: E.obstacleKindActive(k) }" :data-shape="k" @click="E.obstacleChange({ shape: k })">
                 <i class="fas fa-fw" :class="E.obstacleIcon(k)"></i>{{ t('obstacles.shapes.' + k) }}
               </button>
             </div>
@@ -296,14 +309,26 @@ onMounted(function () {
                 <span class="ed-along-value">{{ f.unit === '°' ? f.value + '°' : f.unit ? f.value.toFixed(1) + ' cm' : f.value }}</span>
               </div>
             </div>
+            <!-- its colour: any (rule 3.6.3.c), as it is seen -->
+            <div class="ed-obstacle-field">
+              <div class="ed-label">{{ t('obstacles.fields.color') }}</div>
+              <div class="ed-obstacle-colors">
+                <button type="button" class="ed-obstacle-color" v-for="c in S.obstacleColors" :key="c" :data-color="c" :style="{ background: c }" :title="c"
+                  :class="{ active: (S.obstacle.shape.color || S.obstacleGrey) === c }" @click="E.obstacleChange({ color: c })"></button>
+                <button type="button" class="ed-obstacle-color more" :class="{ active: colorOpen }" :title="t('obstacles.moreColors')" :aria-label="t('obstacles.moreColors')"
+                  :aria-expanded="colorOpen" @click="colorOpen = !colorOpen"></button>
+              </div>
+              <ColorPicker v-if="colorOpen" :model-value="S.obstacle.shape.color || S.obstacleGrey"
+                @input="(c: string) => E.obstacleSet({ color: c })" @change="E.obstacleDone()"></ColorPicker>
+              <p class="ed-muted mb-1">{{ t('obstacles.colorNote') }}</p>
+            </div>
             <p class="ed-muted" v-if="S.obstacle.at">{{ t('obstacles.onTile') }}</p>
             <div class="ed-obstacle-actions">
               <button class="btn btn-sm btn-outline-primary" type="button" @click="E.obstacleRandom()"><i class="fas fa-dice mr-1"></i>{{ t('obstacles.random') }}</button>
               <button class="btn btn-sm btn-outline-danger" type="button" v-if="S.obstacle.at" @click="E.obstacleRemove()"><i class="fas fa-trash-alt mr-1"></i>{{ t('obstacles.remove') }}</button>
             </div>
           </div>
-          <div v-if="S.ui.tool === 'victim'">
-            <div class="ed-selected" v-if="S.selected">
+            <div class="ed-selected" v-if="S.selected && S.ui.tool === 'victim'">
               <div class="ed-selected-head">
                 <span><i class="fas fa-mouse-pointer mr-1"></i>{{ t('victims.selected') }}</span>
                 <button class="btn btn-sm btn-link p-0" type="button" @click="E.selectNone()">{{ t('common.done') }}</button>
@@ -314,33 +339,12 @@ onMounted(function () {
                 <span v-if="E.isTarget(S.selected.victim.type)">{{ t('targets.types.' + S.selected.letter) }}</span>
                 <span v-if="!E.isTarget(S.selected.victim.type) && S.selected.victim.fake">{{ t('victims.fake') }}</span>
               </div>
-              <div class="ed-label" v-if="!E.isTarget(S.selected.victim.type)">{{ t('victims.kind') }}</div>
-              <div class="ed-choices" v-if="!E.isTarget(S.selected.victim.type)">
-                <button class="ed-choice letter" type="button" v-for="v in S.victimChoices.slice(0, 3)" :key="v.id" :class="{ active: S.selected.victim.type === v.id }" @click="E.changeSelected({ type: v.id })" :style="{ color: E.colorOf(v.id) || undefined }"><VictimGlyph :symbol="v.symbol" :face="v.face"></VictimGlyph></button>
-              </div>
-              <label class="ed-check" v-if="!E.isTarget(S.selected.victim.type)">
-                <input type="checkbox" :checked="S.selected.victim.fake" @click="E.changeSelected({ fake: !S.selected.victim.fake })">{{ t('victims.fake') }}</label>
-              <div v-if="!E.isTarget(S.selected.victim.type)">
-                <div class="ed-label">{{ t('victims.turn.title') }}</div>
-                <RotationDial class="ed-dial" :model-value="S.selected.rot" @update:model-value="(v: number) => S.selected!.rot = v" @change="E.changeSelected({ rot: S.selected!.rot })" :symbol="E.symbolOf(S.selected.victim.type)" :face="E.faceOf(S.selected.victim.type)"></RotationDial>
-              </div>
-              <!-- where along its wall: dragged on the map -->
-              <div class="ed-along" v-for="r in [E.selectedRange()]" :key="'along'">
-                <template v-if="r">
-                  <div class="ed-label">{{ t('victims.along.title') }}</div>
-                  <div class="ed-along-row">
-                    <span class="ed-along-value">{{ E.offsetText(S.selected.offset) }} cm</span>
-                  </div>
-                  <div class="ed-along-foot">
-                    <span>{{ t('victims.along.note') }}</span>
-                    <button class="btn btn-sm btn-link p-0" type="button" :disabled="!S.selected.offset" @click="E.moveSelected(0)">{{ t('victims.along.middle') }}</button>
-                  </div>
-                </template>
-              </div>
-              <button class="btn btn-sm btn-outline-danger btn-block mt-3" type="button" @click="E.removeSelected()">
+              <p class="ed-muted mb-2">{{ t('victims.selectedNote') }}</p>
+              <button class="btn btn-sm btn-outline-danger btn-block" type="button" @click="E.removeSelected()">
                 <i class="fas fa-trash-alt mr-1"></i>{{ t('common.remove') }}
               </button>
             </div>
+          <div v-if="S.ui.tool === 'victim'">
             <div class="r4-panel ed-stamps">
               <div class="r4-stamps">
                 <div class="r4-stamp-group">
@@ -363,6 +367,11 @@ onMounted(function () {
               </div>
             </div>
             <CtRings v-if="S.selected ? E.isTarget(S.selected.victim.type) : E.isTarget(S.ui.victim)" :rings="E.pickerRings()" :ring="S.ui.ring" :colors="S.ringColors" :letter="E.ctLetter()" :sum="E.ctSum()" @pick-ring="(i: number) => S.ui.ring = i" @pick-color="E.pickColor"></CtRings>
+            <!-- the selected one's turn (a target's rings are the same any way round) -->
+            <div v-if="S.selected && !E.isTarget(S.selected.victim.type)">
+              <div class="ed-label">{{ t('victims.turn.title') }}</div>
+              <RotationDial class="ed-dial" :model-value="S.selected.rot" @update:model-value="(v: number) => S.selected!.rot = v" @change="E.changeSelected({ rot: S.selected!.rot })" :symbol="E.symbolOf(S.selected.victim.type)" :face="E.faceOf(S.selected.victim.type)"></RotationDial>
+            </div>
             <div v-if="!S.selected && !E.isTarget(S.ui.victim)">
               <div class="ed-label">{{ t('victims.turn.title') }}</div>
               <div class="ed-seg">

@@ -111,6 +111,7 @@
             "line": "Linie",
             "eraser": "Radierer",
             "floor": "Boden",
+            "obstacle": "Hindernis",
             "victim": "Opfer",
             "curve": "Kurve",
             "select": "Auswählen",
@@ -122,10 +123,11 @@
             "passage": "Klicke nahe einer Raumgrenze: Die Kachel auf der Seite, auf die du klickst, wird zum Durchgang (erneut klicken schließt ihn, auf der anderen Seite klicken verschiebt ihn dorthin). Klicke in die Mitte einer Durchgangskachel, um ihn zu entfernen. Ein Durchgang, der nicht mehr zu seinen Räumen passt, verschwindet von selbst. Ein Durchgang bekommt an seinen beiden anderen Seiten von selbst Wände, damit er einen Eingang (gegenüber der Grenze) und einen Ausgang hat (Regel {{rule_passageWalls}}); sie verschwinden mit dem Durchgang.",
             "line": "Ziehen, um Wände zu zeichnen. Die Linie folgt dem Zeiger, sodass ein Zug ein Zickzack zeichnen kann (geh den Weg zurück, um eine Ecke rückgängig zu machen). Beginne mit gedrückter Umschalttaste für eine einzige gerade Linie. Raum 1 rastet auf 12 cm (Kachelkanten) ein, Räume 2 und 3 auf 6 cm. Nicht in Raum 4.",
             "eraser": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen. Abseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint); ein Klick entfernt den Start. Die Außenwände bleiben. Auch ein Hindernis geht mit einem Klick weg.",
-            "floor": "Klicke auf eine Kachel, um ihren Boden festzulegen. Ein Hindernis kann jede Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, Stern, ein auf der Karte gezeichneter Umriss, ein Symbol), Größe und Drehung haben, eines pro Kachel in Raum 1–3, seine Mitte auf seiner Kachel (Regel {{rule_obstacles}}): im Bereich einstellen, auf der Karte ziehen. Der Roboter muss daran vorbei: die Prüfung berücksichtigt es.",
-            "victim": "Klicke nahe einer Wand: Das Opfer kommt an die Wand, wo du klickst. Raum 1: an eine Kachelseite (eins pro Kachel); Räume 2 und 3: an eine Fläche der 6-cm-Wände (4 Viertel × 4 Flächen); eine Kurve hat zwei Plätze (innen und außen). Ziehe ein gesetztes Opfer, um es entlang seiner Wand zu verschieben (es stoppt vor dem Wandende und vor anderen Opfern). Klicke es mit seiner Art gewählt an, um es auszuwählen und Drehung, Ringe oder Position zu ändern oder es zu entfernen; mit einer anderen Art gewählt nimmt es diese Art an.",
+            "floor": "Klicke auf eine Kachel, um ihren Boden festzulegen.",
+            "obstacle": "Ein Hindernis kann jede Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, ein auf der Karte gezeichneter Umriss, ein Symbol), Größe und Drehung haben, eines pro Kachel in Raum 1–3, seine Mitte auf seiner Kachel (Regel {{rule_obstacles}}): im Bereich einstellen, auf der Karte ziehen. Der Roboter muss daran vorbei: die Prüfung berücksichtigt es.",
+            "victim": "Klicke nahe einer Wand: Das Opfer kommt an die Wand, wo du klickst. Raum 1: an eine Kachelseite (eins pro Kachel); Räume 2 und 3: an eine Fläche der 6-cm-Wände (4 Viertel × 4 Flächen); eine Kurve hat zwei Plätze (innen und außen). Ziehe ein gesetztes Opfer, um es entlang seiner Wand zu verschieben (es stoppt vor dem Wandende und vor anderen Opfern). Klicke ein gesetztes an, um es auszuwählen: Art, Ringe und Drehung änderst du dann im Bereich, oder du entfernst es.",
             "curve": "Zeige auf eine Viertelkachel in Raum 3, um ihre vier Kurven zu sehen; die nächste (blau) wird mit einem Klick gesetzt. Klicke dieselbe erneut, um sie zu entfernen.",
-            "select": "Wähle Wände, Räume, Böden und Opfer zusammen aus, um sie zu verschieben, zu kopieren, einzufügen oder zu leeren.",
+            "select": "Wähle Wände, Räume, Böden und Opfer zusammen aus, um sie zu verschieben, zu kopieren, einzufügen oder zu leeren. Klicke ein Opfer oder ein Hindernis, um sein Werkzeug mit ihm gewählt zu öffnen; klicke eine Wand oder eine Kurve, um sie zu wählen, und Entf, um sie zu entfernen.",
             "shape": "Ändere Größe und Form der Karte; die Außenwände folgen von selbst. Umriss: klicke oder ziehe über Kacheln, um sie aus der Karte zu nehmen oder zurückzuholen. Einfügen / Entfernen: füge eine Zeile oder Spalte dort ein, wo du klickst, oder nimm sie heraus."
         },
         "hints": {
@@ -143,6 +145,7 @@
             "curve": "Zeige auf eine Viertelkachel in Raum 3 und klicke die blaue Kurve",
             "eraser": "Zeige auf eine Wand, Kurve, ein Opfer oder einen Boden und klicke (ziehen zum Weitermachen)",
             "floor": "Klicke auf eine Kachel zum Setzen: {{floor}} (erneut zum Entfernen)",
+            "obstacle": "Klicke eine Kachel, um ein Hindernis wie im Bereich eingestellt zu setzen; klicke eines, um es zu wählen",
             "victim": "Klicke nahe einer Wand, um „{{name}}“ dort zu setzen, wo du klickst (danach entlang der Wand ziehen). Wähle die Art im linken Bereich",
             "victim_selected": "Ziehe das ausgewählte Opfer, um es entlang seiner Wand zu verschieben. Ändere Drehung, Ringe oder Position im linken Bereich oder entferne es"
         }
@@ -194,16 +197,17 @@
             "pyramid": "Pyramide",
             "prism": "Prisma",
             "npyramid": "Regelm. Pyramide",
-            "star": "Stern",
             "polygon": "Gezeichnet",
             "icon": "Symbol"
         },
         "fields": {
             "width": "Breite",
+            "size": "Größe (längere Seite)",
             "depth": "Tiefe",
             "diameter": "Durchmesser",
             "height": "Höhe",
             "turn": "Drehung",
+            "color": "Farbe",
             "sides": "Ecken"
         },
         "random": "Zufällig",
@@ -211,7 +215,9 @@
         "draw": "Umriss zeichnen",
         "drawDone": "Schließen und setzen",
         "drawHow": "Klicke seine Ecken auf der Karte; klicke die erste oder drücke Enter zum Schließen, Esc zum Abbrechen. Die Mitte des umgebenden Rechtecks liegt auf einer Kachel, weg von deren Rändern.",
-        "onTile": "Seine Mitte bleibt auf seiner Kachel, weg von deren Rändern (Regel {{rule_obstacles}}). Es darf an einer Wand stehen, aber nicht durch sie hindurch: verschoben oder vergrößert, hält es an, wo es eine trifft. Ziehe es auf der Karte, um es zu verschieben."
+        "onTile": "Seine Mitte bleibt auf seiner Kachel, weg von deren Rändern (Regel {{rule_obstacles}}). Es darf an einer Wand stehen, aber nicht durch sie hindurch: verschoben oder vergrößert, hält es an, wo es eine trifft. Ziehe es auf der Karte, um es zu verschieben.",
+        "colorNote": "Jede Farbe (Regel {{rule_obstacles}}). Eine, die der eines Bodens (Silber, Schwarz, Braun, Cyan), eines Durchgangs oder eines Opfers ähnelt, kann der Roboter schwerer unterscheiden.",
+        "moreColors": "Andere Farben"
     },
     "victims": {
         "types": {
@@ -225,6 +231,7 @@
         "kind": "Art",
         "fake": "Falsches Opfer",
         "selected": "Ausgewähltes Opfer",
+        "selectedNote": "Die Arten, Ringe und die Drehung unten ändern jetzt dieses Opfer",
         "turn": {
             "title": "Drehung (Grad)",
             "fixed": "Feste Drehung",
@@ -233,11 +240,6 @@
             "help": "Dreht sich im Uhrzeigersinn, vom Roboter aus gesehen. 0° ist aufrecht. Ziehe am Drehregler oder nutze die Schaltflächen.",
             "dialHint": "Ziehen zum Drehen (Umschalttaste für 1°-Schritte). Pfeiltasten gehen auch.",
             "dialRandom": "Zufälliger Winkel"
-        },
-        "along": {
-            "title": "Position entlang der Wand",
-            "note": "Ziehe es auf der Karte, um es zu verschieben (in 0,1-cm-Schritten)",
-            "middle": "In die Mitte"
         }
     },
     "targets": {
@@ -254,14 +256,17 @@
         "hint": "Klicke einen Ring des Ziels an, dann unten eine Farbe (jetzt Ring {{n}} von außen)"
     },
     "select": {
-        "none": "Ziehe über Kacheln, um sie auszuwählen. Ziehe die Auswahl, um sie zu verschieben (mit Alt eine Kopie); die Pfeiltasten verschieben sie kachelweise.",
+        "none": "Ziehe über Kacheln, um sie auszuwählen. Ziehe die Auswahl, um sie zu verschieben (mit Alt eine Kopie); die Pfeiltasten verschieben sie kachelweise. Klicke ein Opfer oder ein Hindernis, um sein Werkzeug mit ihm gewählt zu öffnen; klicke eine Wand oder eine Kurve, um sie zu wählen, und Entf, um sie zu entfernen.",
         "size": "{{size}} Kacheln ausgewählt",
         "help": "Ziehe innerhalb der Auswahl, um sie zu verschieben, Alt+Ziehen verschiebt eine Kopie. Einfügen setzt die obere linke Ecke auf die Kachel unter dem Zeiger. Esc hebt die Auswahl auf.",
         "copy": "Kopieren",
         "cut": "Ausschneiden",
         "duplicate": "Duplizieren",
         "paste": "Einfügen",
-        "clear": "Leeren"
+        "clear": "Leeren",
+        "wall": "Gewählte Wand",
+        "curve": "Gewählte Kurve",
+        "length": "{{cm}} cm lang"
     },
     "linear": {
         "label": "Linear",
@@ -364,6 +369,10 @@
         "passageRoom4": "Ein Durchgang in Raum 4 kommt auf die Kachel außerhalb von Raum 4 (wie es der Raum-4-Editor und die Checkpoint-Regel {{rule_room4Checkpoint}} erwarten)",
         "regionPick": "Ziehen zum Auswählen",
         "regionDrag": "Ziehen zum Verschieben, Alt+Ziehen zum Kopieren. Pfeiltasten verschieben um eine Kachel; auch Strg+C / X / V und Entf funktionieren",
+        "select_victim": "Klicke, um das Opfer-Werkzeug mit diesem Opfer gewählt zu öffnen (ziehe es an seiner Wand entlang)",
+        "select_obstacle": "Klicke, um das Boden-Werkzeug mit diesem Hindernis gewählt zu öffnen (ziehe es auf seiner Kachel)",
+        "select_curve": "Klicke, um diese Kurve zu wählen",
+        "select_wall": "Klicke, um diese Wand (ein gerades Stück) zu wählen",
         "regionCopied": "Kopiert. Strg+V fügt an der Kachel unter dem Zeiger ein",
         "regionNoRoom": "Daneben oder darunter ist kein Platz für eine Kopie",
         "line_addRow": "Klicke, um an der grünen Linie eine Zeile hinzuzufügen",
@@ -423,9 +432,9 @@
         "obstacle_drawSize": "Bitte einen Umriss von {{min}}–{{max}} cm Breite und Tiefe",
         "obstacle_drawCentre": "Seine Mitte läge auf einem Kachelrand: Die Mitte eines Hindernisses liegt auf einer Kachel (Regel {{rule_obstacles}})",
         "obstacle_iconFailed": "Dieses Symbol konnte nicht nachgezeichnet werden",
+        "obstacle_pickIcon": "Wähle zuerst ein Symbol im Bereich",
         "victim_place": "Klicke, um „{{name}}“ zu setzen",
         "victim_move": "Klicke, um „{{name}}“ hierher zu setzen (das Opfer der Kachel wandert hierher: eins pro Kachel)",
-        "victim_replace": "Klicke, um es in „{{name}}“ zu ändern",
         "victim_unreachable": "Der Roboter kommt hier nicht nahe heran, also kommt hier kein Opfer hin (Regel {{rule_reach}})",
         "victim_selectDrag": "Klicke zum Auswählen, ziehe, um es entlang seiner Wand zu verschieben",
         "victim_moveSlot": "Klicke, um „{{name}}“ hierher zu setzen (das Opfer auf dieser Fläche wandert hierher)",
@@ -884,7 +893,11 @@
                 },
                 "floor": {
                     "title": "Boden (F): Checkpoints, Löcher, Sümpfe, der Start",
-                    "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Keiner entfernt den Boden. Eine Kachel ist nur eines von Loch, Sumpf, Checkpoint, Hindernis, Start und Durchgang (Regel {{rule_oneKind}}). Ein Hindernis kann jede Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, Stern, ein auf der Karte gezeichneter Umriss, ein Symbol), Größe und Drehung haben, eines pro Kachel in Raum 1–3, seine Mitte auf seiner Kachel (Regel {{rule_obstacles}}): im Bereich einstellen, auf der Karte ziehen. Der Roboter muss daran vorbei: die Prüfung berücksichtigt es.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt."
+                    "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Keiner entfernt den Boden. Eine Kachel ist nur eines von Loch, Sumpf, Checkpoint, Hindernis, Start und Durchgang (Regel {{rule_oneKind}}).\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt."
+                },
+                "obstacle": {
+                    "title": "Hindernis (O): jede Form, Größe und Farbe",
+                    "body": "Ein Hindernis kann jede Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, ein auf der Karte gezeichneter Umriss, ein Symbol), Größe und Drehung haben, eines pro Kachel in Raum 1–3, seine Mitte auf seiner Kachel (Regel {{rule_obstacles}}): im Bereich einstellen, auf der Karte ziehen. Der Roboter muss daran vorbei: die Prüfung berücksichtigt es."
                 },
                 "victim": {
                     "title": "Opfer (V): Opfer und kognitive Ziele",
@@ -896,7 +909,7 @@
                 },
                 "select": {
                     "title": "Auswählen (S): einen Bereich verschieben und kopieren",
-                    "body": "Ziehe, um einen Bereich von Kacheln auszuwählen; seine Wände, Räume, Böden und Opfer werden zusammen genommen.\nZiehe darin, um ihn zu verschieben, oder mit gedrückter Alt-Taste, um eine Kopie zu verschieben. Die Pfeiltasten verschieben ihn kachelweise.\nStrg+C kopiert, Strg+X schneidet aus, Strg+V fügt ein (die Kachel unter dem Zeiger ist seine obere linke Ecke), Strg+D dupliziert und Entf leert ihn. Esc lässt den Bereich los."
+                    "body": "Ziehe, um einen Bereich von Kacheln auszuwählen; seine Wände, Räume, Böden und Opfer werden zusammen genommen.\nZiehe darin, um ihn zu verschieben, oder mit gedrückter Alt-Taste, um eine Kopie zu verschieben. Die Pfeiltasten verschieben ihn kachelweise.\nStrg+C kopiert, Strg+X schneidet aus, Strg+V fügt ein (die Kachel unter dem Zeiger ist seine obere linke Ecke), Strg+D dupliziert und Entf leert ihn. Esc lässt den Bereich los.\nKlicke ein Opfer oder ein Hindernis, um sein Werkzeug mit ihm gewählt zu öffnen; klicke eine Wand oder eine Kurve, um sie zu wählen, und Entf, um sie zu entfernen."
                 },
                 "linear": {
                     "title": "Linear",
@@ -1175,7 +1188,7 @@
                     "steps": {
                         "floor": {
                             "title": "Boden (F): Checkpoints, Löcher, Sümpfe, Kontaktkacheln, der Start",
-                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Keiner entfernt den Boden. Eine Kachel ist nur eines von Loch, Sumpf, Checkpoint, Hindernis, Start und Durchgang (Regel {{rule_oneKind}}). Ein Hindernis kann jede Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, Stern, ein auf der Karte gezeichneter Umriss, ein Symbol), Größe und Drehung haben, eines pro Kachel in Raum 1–3, seine Mitte auf seiner Kachel (Regel {{rule_obstacles}}): im Bereich einstellen, auf der Karte ziehen. Der Roboter muss daran vorbei: die Prüfung berücksichtigt es.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand."
+                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Keiner entfernt den Boden. Eine Kachel ist nur eines von Loch, Sumpf, Checkpoint, Hindernis, Start und Durchgang (Regel {{rule_oneKind}}).\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand."
                         },
                         "victim": {
                             "body": "Wähle im Bereich eine Art (Smiley-Opfer – verletzt ein trauriges Gesicht, stabil ein neutrales, unverletzt ein fröhliches – und falsche, kognitive Ziele von vier Typen – entzündliches Gas, Gift, ätzend, organisches Peroxid – und ein falsches) und klicke nahe einer Wand: Es kommt an die Wand, wo du klickst.\nSie kommen an Kachelseiten in Raum 1 (eins pro Kachel), an die Flächen der 6-cm-Wände in den Räumen 2 und 3 und an zwei Plätze an einer Kurve (innen und außen). Ziehe ein gesetztes, um es entlang seiner Wand zu verschieben. Wo eins nicht hinkann, sagt die Statuszeile warum.\nDrehe am Drehregler (Feste Drehung) für seine Drehung, oder wähle Zufällig für jedes Mal eine neue. Für ein kognitives Ziel klicke einen Ring des Ziels an, dann unten eine Farbe; die Summe der Ringe ergibt den Typ.\nKlicke ein Opfer mit derselben Art an, um es auszuwählen, und ändere dann Drehung, Ringe oder Position entlang der Wand, oder entferne es. Ein Klick mit einer anderen Art ändert seine Art."

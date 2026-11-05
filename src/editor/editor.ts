@@ -101,6 +101,7 @@ export function createEditor() {
         { id: 'curve', icon: 'ed-icon-arc', key: 'A' },
         { id: 'eraser', icon: 'fas fa-eraser', key: 'E' },
         { id: 'floor', icon: 'fas fa-fill-drip', key: 'F' },
+        { id: 'obstacle', icon: 'fas fa-cube', key: 'O' },
         { id: 'victim', icon: 'fas fa-user-injured', key: 'V' }
     ];
     // the rail shows them in groups: look / rooms / walls / floors and victims
@@ -133,18 +134,17 @@ export function createEditor() {
         };
     }
     const firstPanel = victimPanel(rulesFor(LATEST_YEAR)!);
-    // The floor tool's choices: the kinds of floor of the map's year (rules: floors), an obstacle
-    // (rule 3.6.3: a tile that is one only - not a floor of the rules, but put and taken off as one),
-    // the start tile and none
+    // The floor tool's choices: the kinds of floor of the map's year (rules: floors), the start tile
+    // and none
     function floorPanel(rules: Ruleset) {
         return rules.floors.map(function (k) { return { id: k.id, icon: k.icon }; })
-            .concat([{ id: 'obstacle', icon: 'fa-cube' }, { id: 'start', icon: 'fa-play' }, { id: 'clear', icon: 'fa-times' }]);
+            .concat([{ id: 'start', icon: 'fa-play' }, { id: 'clear', icon: 'fa-times' }]);
     }
     let panelYear = LATEST_YEAR;
 
     const S = reactive({
         tools: tools,
-        toolGroups: [['select', 'hand'], ['shape', 'room', 'passage'], ['line', 'curve', 'eraser'], ['floor', 'victim']]
+        toolGroups: [['select', 'hand'], ['shape', 'room', 'passage'], ['line', 'curve', 'eraser'], ['floor', 'obstacle', 'victim']]
             .map(function (g) { return g.map(byId); }),
         roomChoices: [1, 2, 3, 4],
         shapeModes: [
@@ -171,10 +171,15 @@ export function createEditor() {
         ],
         ctTypes: ['F', 'P', 'C', 'O', 'X'],
         selected: null as Selected | null,
+        // a wall (a straight run of it) or a curve picked with the select tool
+        wallSel: null as { segs: string[]; arc: L.Arc | null; cm: number } | null,
         // the floor tool's obstacle: the one picked on the map (at: its tile cell), or the one to put
         // next; its shape as the panel shows it
         obstacle: { at: null as { x: number; y: number } | null, shape: Object.assign({}, M.OBSTACLE_DEFAULT) as W.ObstacleShape },
         obstacleKinds: W.OBSTACLE_KINDS,
+        // colours to pick at once (any other in the colour picker): the grey of before first
+        obstacleColors: [W.OBSTACLE_GREY, '#ffffff', '#3f3f46', '#dc2626', '#f97316', '#facc15', '#16a34a', '#2563eb', '#7c3aed', '#92400e'],
+        obstacleGrey: W.OBSTACLE_GREY,
         // drawing an obstacle's outline on the map (its corners so far), or picking an icon for one
         obstacleMode: '' as '' | 'draw' | 'icon',
         obstacleDraw: [] as number[][],
@@ -240,13 +245,26 @@ export function createEditor() {
         return k && k.face ? k.face : '';
     }
 
-    function pickVictim(v: StampChoice) { ui.victim = v.id!; ui.fake = !!v.fake; }
+    // A kind picked in the panel: the selected victim takes it (where it is), else the next one put is
+    // of it. A type of cognitive target: rings of that type at random (kept if it is of it already).
+    function pickVictim(v: StampChoice) {
+        if (S.selected) { changeSelected({ type: v.id!, fake: !!v.fake }); return; }
+        ui.victim = v.id!;
+        ui.fake = !!v.fake;
+    }
     function pickCt(letter: string) {
+        const sel = S.selected;
+        if (sel) {
+            if (isTarget(sel.victim.type) && sel.letter === letter) return;
+            changeSelected({ type: S.targetId, code: rules().tokens.target.randomCode(letter) });
+            return;
+        }
         ui.victim = S.targetId;
         if (ctLetter() !== letter) randomCode(letter);
     }
+    // a target's rings alone, as the ring picker shows them
     function targetStyle(code: string) {
-        return { background: Icons.targetBackground(code, Icons.TYPE[Icons.typeOf(code)]) };
+        return { background: Icons.ringsBackground(code) };
     }
 
     function ctLetter() {
@@ -296,11 +314,6 @@ export function createEditor() {
     function victimOpts() {
         const rot = ui.randomRot ? Math.floor(Math.random() * 360) : (Number(ui.rot) || 0) % 360;
         return { code: ui.rings.join(''), rot: rot };
-    }
-
-    function sameVictim(cur: VictimInfo | null) {
-        if (!cur || cur.type !== ui.victim) return false;
-        return isTarget(ui.victim) ? cur.code === ui.rings.join('') : cur.fake === !!ui.fake;
     }
 
     let map: MapData = null as unknown as MapData, borders = new Set<string>(), past: string[] = [], future: string[] = [], before: string | null = null, dirty = false;
@@ -361,6 +374,12 @@ export function createEditor() {
         dirty = false;
         S.map = map;
         S.fileName = name || '';
+        // nothing picked on the map before is picked on this one
+        S.selected = null;
+        S.region = null;
+        S.wallSel = null;
+        S.obstacle.at = null;
+        S.obstacleMode = '';
         view.setMap(map);
         changed(true);
         // fit again once the side panel is there
@@ -396,7 +415,6 @@ export function createEditor() {
     }
 
     function undo() {
-        slideDone();
         if (!past.length) return;
         future.push(JSON.stringify(map));
         restore(past.pop()!);
@@ -404,7 +422,6 @@ export function createEditor() {
     }
 
     function redo() {
-        slideDone();
         if (!future.length) return;
         past.push(JSON.stringify(map));
         restore(future.pop()!);
@@ -607,6 +624,8 @@ export function createEditor() {
         pointed = null;
         if (S.selected && !M.victimAt(map, S.selected.where)) S.selected = null;
         syncObstacle();
+        if (S.wallSel && !(S.wallSel.arc ? Number((M.tileOf(map, S.wallSel.arc.x, S.wallSel.arc.y) || {} as any).curve?.[S.wallSel.arc.q]) === S.wallSel.arc.v
+            : S.wallSel.segs.every(function (g) { return L.hasSeg(map, g); }))) S.wallSel = null;
         S.canUndo = past.length > 0;
         S.canRedo = future.length > 0;
         const had = S.problems.length;
@@ -1052,7 +1071,7 @@ export function createEditor() {
 
     function setTool(id: string) {
         cancelStroke();
-        if (id !== ui.tool) { S.selected = null; ui.freshMap = false; }
+        if (id !== ui.tool) { S.selected = null; S.wallSel = null; ui.freshMap = false; }
         ui.tool = id;
         hover = null;
         S.hint = '';
@@ -1145,9 +1164,8 @@ export function createEditor() {
 
     function toolDown(p: P, e: PointerEvent) {
         const tool = ui.tool;
-        slideDone();
         begin();
-        if (tool === 'select') { regionDown(p, e); view.redraw(); return; }
+        if (tool === 'select') { selectDown(p, e); view.redraw(); return; }
         if (tool === 'line') {
             const step = stepAt(p);
             stroke = { step: step, from: L.snap(p.x, p.y, step, map.width, map.length), straight: !!(e && e.shiftKey) };
@@ -1169,9 +1187,9 @@ export function createEditor() {
             // on a placed one: dragged, it goes along its wall
             const hit = victimUnder(p);
             stroke = hit ? { grab: hit, down: p } : {};
-        } else if (tool === 'floor' && ui.floor === 'obstacle' && S.obstacleMode === 'draw') {
+        } else if (tool === 'obstacle' && S.obstacleMode === 'draw') {
             stroke = { drawCorner: true };
-        } else if (tool === 'floor' && ui.floor === 'obstacle') {
+        } else if (tool === 'obstacle') {
             // on an obstacle: picked, and dragged it moves on its tile
             const tl = tileAt(p);
             const t = tl && M.tileOf(map, tl.x, tl.y);
@@ -1193,11 +1211,11 @@ export function createEditor() {
                 stroke.to = L.snap(p.x, p.y, stroke.step, map.width, map.length);
                 planStroke();
             } else if (tool === 'room') paintRoom(p);
-            else if (tool === 'select') regionMove(p);
+            else if (tool === 'select' && !stroke.picked) regionMove(p);
             else if (tool === 'shape' && ui.shapeMode === 'outline') paintShape(p);
             else if (tool === 'eraser') erase(p, stroke.floors, false);
             else if (tool === 'victim') dragVictim(p);
-            else if (tool === 'floor' && stroke.obstacle) {
+            else if (tool === 'obstacle' && stroke.obstacle) {
                 M.changeObstacle(map, stroke.obstacle.x, stroke.obstacle.y, { dx: stroke.from.dx + p.x - stroke.down.x, dy: stroke.from.dy + p.y - stroke.down.y });
                 syncObstacle();
             }
@@ -1233,19 +1251,33 @@ export function createEditor() {
             const tl = tileAt(p);
             const refused = tl && !M.isOutside(map, tl.x, tl.y) && floorRefused(tl, ui.floor);
             if (refused) notify(refused.key, refused.params, 'warn');
-            else if (stroke.drawCorner) obstacleDrawAt(p);
+            else if (tl) M.setFloor(map, tl.x, tl.y, ui.floor);
+        } else if (tool === 'obstacle') {
+            const tl = tileAt(p);
+            const refused = tl && !stroke.drawCorner && !M.isOutside(map, tl.x, tl.y) && floorRefused(tl, 'obstacle');
+            if (stroke.drawCorner) obstacleDrawAt(p);
             else if (stroke.obstacle) { /* picked (and moved) */ }
-            else if (tl && ui.floor === 'obstacle') {
+            else if (refused) notify(refused.key, refused.params, 'warn');
+            else if (tl && S.obstacleMode === 'icon' && S.obstacle.shape.shape !== 'icon') notify('obstacle_pickIcon', null, 'warn');
+            else if (tl && !M.isOutside(map, tl.x, tl.y)) {
                 // put with the panel's shape, in the middle of its tile, and picked; not where it would
                 // go into a wall or another obstacle
                 const sh = Object.assign({}, S.obstacle.shape, { dx: 0, dy: 0 });
                 if (!M.obstacleFits(map, tl.x, tl.y, sh)) notify('obstacle_blocked', null, 'warn');
                 else { M.setObstacle(map, tl.x, tl.y, sh); pickObstacle(tl); }
-            } else if (tl) M.setFloor(map, tl.x, tl.y, ui.floor);
+            }
         } else if (tool === 'victim' && stroke.victim) {
             dropVictim();
-        } else if (tool === 'victim') {
+        } else if (tool === 'victim' && !stroke.picked) {
             placeVictim(p);
+        } else if (tool === 'select' && stroke.picked) {
+            // a wall or a curve picked
+        } else if (tool === 'select' && stroke.move && !stroke.dx && !stroke.dy && objectAt(p)) {
+            // a click on a thing inside the region: that thing
+            pickObject(p);
+            stroke = null;
+            commit();
+            return;
         } else if (tool === 'select') {
             regionUp();
         } else if (tool === 'shape' && ui.shapeMode !== 'outline') {
@@ -1474,6 +1506,112 @@ export function createEditor() {
         return !!r && tl[0] >= r.x0 && tl[0] <= r.x1 && tl[1] >= r.y0 && tl[1] <= r.y1;
     }
 
+    // ---- select: a thing picked with a click - a victim, an obstacle, a curve, a wall - or else a
+    // region of tiles. A victim and an obstacle picked are changed in the panel and dragged on the map.
+    function deselectAll() {
+        S.region = null;
+        S.selected = null;
+        S.obstacle.at = null;
+        S.wallSel = null;
+    }
+    // the obstacle whose outline is at p (on its tile or the next: one may reach over its tile's edge)
+    function obstacleUnder(p: P): { x: number; y: number } | null {
+        const tx = 2 * Math.floor(p.x / TILE) + 1, ty = 2 * Math.floor(p.y / TILE) + 1;
+        for (let x = tx - 2; x <= tx + 2; x += 2) {
+            for (let y = ty - 2; y <= ty + 2; y += 2) {
+                const sh = W.obstacleShape(M.tileOf(map, x, y));
+                if (sh && W.obstacleRings(sh, x, y).some(function (r) { return W.insideRing(p.x, p.y, r); })) return { x: x, y: y };
+            }
+        }
+        return null;
+    }
+    // a straight run of wall through segment s: its unit segments on the same line, one after the
+    // other, outer walls left out
+    function wallRun(s: string): string[] {
+        const g = L.parseSeg(s), run = [s];
+        const at = function (k: number) { return g.dir === 'h' ? 'h,' + (g.i + k) + ',' + g.j : 'v,' + g.i + ',' + (g.j + k); };
+        for (const step of [-1, 1]) {
+            for (let k = step; ; k += step) {
+                const n = at(k);
+                if (!L.hasSeg(map, n) || M.isOuterSeg(map, n)) break;
+                if (step < 0) run.unshift(n); else run.push(n);
+            }
+        }
+        return run;
+    }
+    // what a click of the select tool at p would pick
+    function objectAt(p: P): { kind: string; where?: Where; tile?: { x: number; y: number }; arc?: L.Arc; segs?: string[] } | null {
+        const w = victimUnder(p);
+        if (w) return { kind: 'victim', where: w };
+        const ob = obstacleUnder(p);
+        if (ob) return { kind: 'obstacle', tile: ob };
+        const a = M.arcNear(map, p.x, p.y, reach());
+        if (a) return { kind: 'curve', arc: a };
+        const sg = M.segNear(map, p.x, p.y, reach());
+        if (sg) return { kind: 'wall', segs: wallRun(sg) };
+        return null;
+    }
+    // A victim or an obstacle picked opens its tool with it picked there (dragged, it moves on as it
+    // would in that tool); a wall or a curve - no tool picks them - stays picked here, to take off
+    function pickObject(p: P) {
+        const o = objectAt(p);
+        if (!o) return false;
+        deselectAll();
+        if (o.kind === 'victim') {
+            openTool('victim');
+            const v = M.victimAt(map, o.where!)!;
+            ui.victim = v.type;
+            ui.fake = !!v.fake;
+            selectWhere(o.where!);
+            stroke = { grab: o.where, down: p, picked: true };
+        } else if (o.kind === 'obstacle') {
+            openTool('obstacle');
+            S.obstacleMode = '';
+            pickObstacle(o.tile!);
+            stroke = { obstacle: o.tile, down: p, from: { dx: S.obstacle.shape.dx, dy: S.obstacle.shape.dy } };
+        } else {
+            S.wallSel = o.arc ? { segs: [], arc: o.arc, cm: 0 } : { segs: o.segs!, arc: null, cm: 6 * o.segs!.length };
+            stroke = { picked: true };
+        }
+        return true;
+    }
+    // another tool, keeping the press going on (setTool would end it)
+    function openTool(id: string) {
+        ui.tool = id;
+        ui.freshMap = false;
+        hover = null;
+        S.hint = '';
+    }
+    function selectDown(p: P, e: PointerEvent) {
+        // inside the region: it is dragged (a click without a drag picks the thing there)
+        if (S.region && inRegion(tileIndex(p, true))) { regionDown(p, e); return; }
+        if (pickObject(p)) return;
+        deselectAll();
+        regionDown(p, e);
+    }
+    // the picked wall or curve taken off
+    function removeWallSel() {
+        const sel = S.wallSel;
+        if (!sel) return;
+        begin();
+        if (sel.arc) M.setCurve(map, sel.arc.x, sel.arc.y, sel.arc.q, 0);
+        else {
+            const rooms = M.roomLookup(map), segs: string[] = [];
+            sel.segs.forEach(function (g) {
+                segs.push(g);
+                if (L.segRule(g, rooms, rulesOf(map).rooms).whole) segs.push(L.otherHalf(g)!);
+            });
+            M.setWalls(map, segs, false);
+        }
+        S.wallSel = null;
+        commit();
+    }
+    // Delete with the select tool: the wall or curve picked, else the region's content
+    function selectDelete() {
+        if (S.wallSel) removeWallSel();
+        else clearRegion();
+    }
+
     function regionDown(p: P, e: PointerEvent) {
         const tl = tileIndex(p, true);
         if (inRegion(tl)) stroke = { move: true, start: tl, dx: 0, dy: 0, copy: !!(e && e.altKey) };
@@ -1564,50 +1702,34 @@ export function createEditor() {
     function selectWhere(where: Where | null) {
         const v = where && M.victimAt(map, where);
         S.selected = v ? { where: where!, victim: v, rot: v.rot!, letter: isTarget(v.type) ? (rules().tokens.target.typeOf(v.code) || 'X') : '', offset: M.victimOffset(map, where!) } : null;
+        // the panel shows what it is: its kind, its rings, its turn
+        if (v) {
+            ui.victim = v.type;
+            ui.fake = !!v.fake;
+            if (isTarget(v.type) && v.code) ui.rings = v.code.split('');
+            else ui.rot = v.rot || 0;
+        }
     }
 
     function selectNone() { S.selected = null; view.redraw(); }
 
+    // The selected victim changed in the panel: one change; a kind that does not fit there (a target is
+    // wider than a letter) moves along its wall as far as it has to, or is not taken
     function changeSelected(change: { type?: string; fake?: boolean; rot?: number; code?: string }) {
         const sel = S.selected;
         if (!sel) return;
         begin();
+        const keep = JSON.stringify(map.cells), o = M.victimOffset(map, sel.where);
         M.changeVictim(map, sel.where, change);
-        commit();
-        selectWhere(sel.where);
-    }
-
-    // The selected victim moved along its wall from the panel (its middle button): to `offset`, as far
-    // as it fits, one change (slideSelected as it goes, slideDone once there)
-    let sliding: { from: number } | null = null;
-    function slideSelected(offset: number) {
-        const sel = S.selected;
-        if (!sel) return;
-        if (!sliding) { begin(); sliding = { from: M.victimOffset(map, sel.where) }; }
-        M.moveVictim(map, sel.where, Number(offset) || 0);
-        selectWhere(sel.where);
-        view.redraw();
-    }
-    function slideDone() {
-        const sel = S.selected;
-        if (!sliding || !sel) { sliding = null; return; }
-        if (M.victimOffset(map, sel.where) !== sliding.from && newlyLost()) {
-            M.moveVictim(map, sel.where, sliding.from);
-            notify('victim_unreachable', null, 'warn');
+        if (!M.victimFits(map, sel.where, o)) {
+            M.moveVictim(map, sel.where, o);
+            if (!M.victimFits(map, sel.where, M.victimOffset(map, sel.where))) {
+                map.cells = JSON.parse(keep);
+                notify('victim_noRoom', null, 'warn');
+            }
         }
-        sliding = null;
         commit();
         selectWhere(sel.where);
-    }
-    function moveSelected(offset: number) {
-        slideSelected(offset);
-        slideDone();
-    }
-    // how far it goes, for the panel's slider
-    function selectedRange() {
-        const sel = S.selected;
-        if (!sel) return null;
-        return M.victimRange(map, sel.where);
     }
 
     function removeSelected() {
@@ -1676,14 +1798,9 @@ export function createEditor() {
         return !!r && r.victims.some(function (q) { return !was.has(q[0] + ',' + q[1]); });
     }
     function put(p: P) {
-        // a placed one clicked on: selected, or given the chosen kind (it stays where it is)
+        // a placed one clicked on: selected (its kind, rings and turn are changed in the panel)
         const hit = victimUnder(p);
-        if (hit) {
-            if (sameVictim(M.victimAt(map, hit))) { selectWhere(hit); return; }
-            replaceKind(hit);
-            selectWhere(null);
-            return;
-        }
+        if (hit) { selectWhere(hit); return; }
         const where = placementAt(p);
         if (!where) return;
         const rule = where.kind === 'slot' ? M.slotRule(map, where.x, where.y, where.i) : M.victimRule(map, where.x, where.y, where.dir);
@@ -1699,19 +1816,6 @@ export function createEditor() {
             return;
         }
         selectWhere(null);
-    }
-    // a placed victim given the chosen kind (with the turn and rings chosen), where it is - or, a
-    // cognitive target being wider, the nearest place it fits; none: left as it was
-    function replaceKind(w: Where) {
-        const keep = JSON.stringify(map.cells);
-        const o = M.victimOffset(map, w), opts = Object.assign(victimOpts(), { offset: o });
-        if (w.kind === 'slot') M.setSlotVictim(map, w.x, w.y, w.i, ui.victim, ui.fake, opts);
-        else M.setVictim(map, w.x, w.y, w.dir, ui.victim, ui.fake, opts);
-        if (M.victimFits(map, w, o)) return;
-        M.moveVictim(map, w, o);
-        if (M.victimFits(map, w, M.victimOffset(map, w))) return;
-        map.cells = JSON.parse(keep);
-        notify('victim_noRoom', null, 'warn');
     }
     // The spot of a new victim at p: the face of the wall nearest to it, of its quarter (rooms 2, 3)
     // or its tile - one with a wall, when one is within half the face; else the side p is on
@@ -1741,11 +1845,8 @@ export function createEditor() {
         return best;
     }
 
-    // What a click of the victim tool does on the placed victim cur
-    function victimSay(cur: VictimInfo | null) {
-        if (cur && sameVictim(cur)) say('victim_selectDrag');
-        else say('victim_replace', { name: victimName() });
-    }
+    // What a click of the victim tool does on a placed victim: select it
+    function victimSay() { say('victim_selectDrag'); }
 
     // The walls a passage put at border edge (ex, ey) would get, kept for the edge the pointer is at
     function passageWalls(ex: number, ey: number, side: [number, number]) {
@@ -1757,6 +1858,8 @@ export function createEditor() {
     // ---- obstacles (the floor tool's obstacle): picked on the map, changed in the panel ----
     function pickObstacle(tl: { x: number; y: number }) {
         S.obstacle.at = { x: tl.x, y: tl.y };
+        // an outline being drawn or an icon being looked for is left: the panel is this one's
+        S.obstacleMode = '';
         syncObstacle();
     }
     // the panel's shape: the picked obstacle's (none once it is gone), else the one to put next
@@ -1804,6 +1907,12 @@ export function createEditor() {
 
     // ---- an obstacle drawn: its corners clicked on the map (snapped to 0.5 cm), closed on its first
     // corner or with Enter; its middle (of the box round it) on a tile of rooms 1-3, off its edges
+    // the shape button shown chosen: drawing an outline or picking an icon is that kind already
+    function obstacleKindActive(k: string) {
+        if (S.obstacleMode === 'draw') return k === 'polygon';
+        if (S.obstacleMode === 'icon') return k === 'icon';
+        return S.obstacle.shape.shape === k;
+    }
     function obstacleDrawStart() { S.obstacleMode = 'draw'; S.obstacleDraw = []; view.redraw(); }
     function obstacleDrawCancel() { S.obstacleMode = ''; S.obstacleDraw = []; view.redraw(); }
     function obstacleDrawAt(p: P) {
@@ -1834,7 +1943,7 @@ export function createEditor() {
             return;
         }
         const norm = Outline.normalize([pts])!;
-        const sh: Partial<W.ObstacleShape> = { shape: 'polygon', outline: norm.rings, w: x1 - x0, d: y1 - y0, h: S.obstacle.shape.h, dx: dx, dy: dy, rot: 0 };
+        const sh: Partial<W.ObstacleShape> = { shape: 'polygon', outline: norm.rings, w: x1 - x0, d: y1 - y0, aspect: norm.aspect, h: S.obstacle.shape.h, dx: dx, dy: dy, rot: 0 };
         // one to a tile: it takes the place of the tile's obstacle
         const keep = t0 && t0.obstacle ? { obstacle: t0.obstacle, obstacleShape: t0.obstacleShape } : null;
         if (keep) M.setObstacle(map, tile.x, tile.y, null);
@@ -1847,7 +1956,7 @@ export function createEditor() {
         if (keep) Object.assign(M.tileOf(map, tile.x, tile.y)!, keep);
         M.setObstacle(map, tile.x, tile.y, sh);
         commit();
-        lastDrawn = { outline: norm.rings, w: sh.w, d: sh.d };
+        lastDrawn = { outline: norm.rings, w: sh.w, d: sh.d, aspect: norm.aspect };
         S.obstacleMode = '';
         S.obstacleDraw = [];
         pickObstacle(tile);
@@ -1870,9 +1979,9 @@ export function createEditor() {
         Outline.iconOutline(i.unicode, i.styles.indexOf('solid') > -1).then(function (res) {
             apply(function () {
                 if (!res) { notify('obstacle_iconFailed', null, 'warn'); return; }
-                // as wide as the shape now is, as deep as the icon is for that
-                const w = S.obstacle.shape.w, d = Math.max(W.OBSTACLE_LIMITS.size[0], Math.min(W.OBSTACLE_LIMITS.size[1], w / res.aspect));
-                lastIcon = { outline: res.rings, icon: i.name, w: w, d: d };
+                // its longer side as long as the shape's now is, its proportions its own
+                const v = Math.max(S.obstacle.shape.w, S.obstacle.shape.d), a = res.aspect;
+                lastIcon = { outline: res.rings, icon: i.name, aspect: a, w: a >= 1 ? v : v * a, d: a >= 1 ? v / a : v };
                 obstacleChange({ shape: 'icon' });
             });
         }, function () { apply(function () { notify('obstacle_iconFailed', null, 'warn'); }); });
@@ -1884,11 +1993,15 @@ export function createEditor() {
     // the panel's sliders for the shape: its sizes (round ones one across), its sides, its height (not
     // a sphere's) and its turn (degrees); where it stands on its tile is dragged on the map
     const OBSTACLE_ICONS: Record<string, string> = { box: 'fa-cube', cylinder: 'fa-database', cone: 'fa-caret-up', sphere: 'fa-circle', pyramid: 'fa-mountain',
-        prism: 'fa-dice-d6', npyramid: 'fa-play', star: 'fa-star', polygon: 'fa-draw-polygon', icon: 'fa-icons' };
+        prism: 'fa-dice-d6', npyramid: 'fa-play', polygon: 'fa-draw-polygon', icon: 'fa-icons' };
     function obstacleFields() {
         const sh = S.obstacle.shape, lim = W.OBSTACLE_LIMITS, round = W.obstacleRound(sh.shape);
-        const out = [{ id: 'w', label: round ? 'diameter' : 'width', min: lim.size[0], max: lim.size[1], step: 0.5, value: sh.w, unit: 'cm' }];
-        if (!round) out.push({ id: 'd', label: 'depth', min: lim.size[0], max: lim.size[1], step: 0.5, value: sh.d, unit: 'cm' });
+        // a drawn one and an icon keep their outline's proportions: one size, their longer side
+        const kept = sh.shape === 'polygon' || sh.shape === 'icon';
+        const stretch = Math.max(sh.aspect || 1, 1 / (sh.aspect || 1));
+        const out = kept ? [{ id: 'size', label: 'size', min: Math.min(lim.size[1], Math.ceil(lim.size[0] * stretch * 2) / 2), max: lim.size[1], step: 0.5, value: Math.max(sh.w, sh.d), unit: 'cm' }]
+            : [{ id: 'w', label: round ? 'diameter' : 'width', min: lim.size[0], max: lim.size[1], step: 0.5, value: sh.w, unit: 'cm' }];
+        if (!round && !kept) out.push({ id: 'd', label: 'depth', min: lim.size[0], max: lim.size[1], step: 0.5, value: sh.d, unit: 'cm' });
         if (sh.shape === 'prism' || sh.shape === 'npyramid') out.push({ id: 'n', label: 'sides', min: lim.sides[0], max: lim.sides[1], step: 1, value: sh.n || 6, unit: '' });
         if (sh.shape !== 'sphere') out.push({ id: 'h', label: 'height', min: lim.height[0], max: lim.height[1], step: 0.5, value: sh.h, unit: 'cm' });
         if (sh.shape !== 'sphere' && sh.shape !== 'cylinder' && sh.shape !== 'cone') out.push({ id: 'rot', label: 'turn', min: 0, max: 359, step: 1, value: Math.round(sh.rot * 180 / Math.PI) % 360, unit: '°' });
@@ -1896,7 +2009,12 @@ export function createEditor() {
     }
     function obstacleInput(id: string, value: number) {
         const change: Record<string, number> = {};
-        change[id] = id === 'rot' ? Number(value) * Math.PI / 180 : Number(value);
+        if (id === 'size') {
+            // its longer side to `value`, the other as its proportions have it
+            const a = S.obstacle.shape.aspect || S.obstacle.shape.w / S.obstacle.shape.d, v = Number(value);
+            change.w = a >= 1 ? v : v * a;
+            change.d = a >= 1 ? v / a : v;
+        } else change[id] = id === 'rot' ? Number(value) * Math.PI / 180 : Number(value);
         obstacleSet(change);
     }
     function obstacleRemove() {
@@ -1978,17 +2096,33 @@ export function createEditor() {
             else if (kind === 'start' && st && st.x === tl.x && st.y === tl.y) say('floor_isStart');
             else if (refused) say(refused.key, refused.params);
             else if (kind === 'start') say('floor_start');
-            else if (kind === 'obstacle' && S.obstacleMode === 'draw') say(S.obstacleDraw.length >= 3 ? 'obstacle_drawClose' : 'obstacle_drawCorner');
-            else if (kind === 'obstacle') say(tile && tile.obstacle ? 'floor_obstacleSelect' : 'floor_obstacleOn', { shape: t('obstacles.shapes.' + S.obstacle.shape.shape) });
             else if (kind === 'clear') say('floor_clear');
             else if (tile && tile[kind]) say('floor_off', { floor: name });
             else say('floor_on', { floor: name });
             return { kind: 'tile', tile: tl, color: refused ? '#dc2626' : undefined };
         }
+        if (tool === 'obstacle') {
+            const tl = tileAt(p);
+            if (!tl) return null;
+            const tile = M.tileOf(map, tl.x, tl.y);
+            if (S.obstacleMode === 'draw') { say(S.obstacleDraw.length >= 3 ? 'obstacle_drawClose' : 'obstacle_drawCorner'); return null; }
+            const refused = !(tile && tile.obstacle) && floorRefused(tl, 'obstacle');
+            if (M.isOutside(map, tl.x, tl.y)) say('floor_outside');
+            else if (refused) say(refused.key, refused.params);
+            else say(tile && tile.obstacle ? 'floor_obstacleSelect' : 'floor_obstacleOn', { shape: t('obstacles.shapes.' + S.obstacle.shape.shape) });
+            return { kind: 'tile', tile: tl, color: refused ? '#dc2626' : undefined };
+        }
         if (tool === 'select') {
             const tl = tileIndex(p, false);
-            say(inRegion(tl) ? 'regionDrag' : 'regionPick');
-            return null;
+            if (S.region && inRegion(tl)) { say('regionDrag'); return null; }
+            // a thing a click would pick, shown
+            const o = objectAt(p);
+            if (!o) { say('regionPick'); return null; }
+            say('select_' + o.kind);
+            if (o.kind === 'victim') return { kind: 'pickVictim', at: M.victimPlace(map, o.where!).at };
+            if (o.kind === 'obstacle') return { kind: 'pickObstacle', tile: o.tile };
+            if (o.kind === 'curve') return { kind: 'arc', arc: o.arc, color: '#2563eb' };
+            return { kind: 'segs', segs: o.segs, color: '#2563eb' };
         }
         if (tool === 'curve') {
             const c = M.arcChoice(map, p.x, p.y);
@@ -2042,7 +2176,7 @@ export function createEditor() {
             // on a placed one: select it (and drag it along its wall), or give it the chosen kind
             const hit = victimUnder(p);
             if (hit) {
-                victimSay(M.victimAt(map, hit));
+                victimSay();
                 return { kind: 'spot', at: M.victimPlace(map, hit).at, color: '#16a34a', small: hit.kind === 'slot' };
             }
             const where = placementAt(p);
@@ -2130,7 +2264,7 @@ export function createEditor() {
         }
         const sp = selectedPos();
         if (sp) { ring(ctx, sp[0], sp[1], 2.4, '#f59e0b', px * 1.4); }
-        if (ui.tool === 'floor' && ui.floor === 'obstacle' && S.obstacleMode === 'draw' && S.obstacleDraw.length) {
+        if (ui.tool === 'obstacle' && S.obstacleMode === 'draw' && S.obstacleDraw.length) {
             // the outline being drawn, on to the pointer
             const pts = S.obstacleDraw;
             ctx.beginPath();
@@ -2143,7 +2277,12 @@ export function createEditor() {
             ctx.setLineDash([]);
             pts.forEach(function (q, i) { dot(ctx, q[0], q[1], (i ? 1.4 : 2.2) * px, '#2563eb'); });
         }
-        const ob = ui.tool === 'floor' && ui.floor === 'obstacle' && S.obstacle.at;
+        // the picked wall or curve
+        if (ui.tool === 'select' && S.wallSel) {
+            if (S.wallSel.arc) arcPath(ctx, S.wallSel.arc.x, S.wallSel.arc.y, S.wallSel.arc.q, S.wallSel.arc.v, '#f59e0b', 1.8);
+            else drawSegs(ctx, S.wallSel.segs, '#f59e0b', 1.8);
+        }
+        const ob = ui.tool === 'obstacle' && S.obstacle.at;
         const obShape = ob && W.obstacleShape(M.tileOf(map, ob.x, ob.y));
         if (ob && obShape) {
             ctx.beginPath();
@@ -2210,6 +2349,22 @@ export function createEditor() {
             ctx.strokeRect(6 * (hover.tile.x - 1) + px, 6 * (hover.tile.y - 1) + px, TILE - 2 * px, TILE - 2 * px);
         } else if (hover.kind === 'segs') {
             drawSegs(ctx, hover.segs, hover.color, 1.4);
+        } else if (hover.kind === 'pickVictim') {
+            ring(ctx, hover.at[0], hover.at[1], 2.6, '#2563eb', px);
+        } else if (hover.kind === 'pickObstacle') {
+            const sh = W.obstacleShape(M.tileOf(map, hover.tile.x, hover.tile.y));
+            if (sh) {
+                ctx.beginPath();
+                W.obstacleRings(sh, hover.tile.x, hover.tile.y).forEach(function (c) {
+                    c.forEach(function (q, i) { if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
+                    ctx.closePath();
+                });
+                ctx.strokeStyle = '#2563eb';
+                ctx.lineWidth = 1.4 * px;
+                ctx.setLineDash([2 * px, 2 * px]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
         } else if (hover.kind === 'border') {
             const s = hover.side;
             if (hover.taken) {
@@ -2845,16 +3000,16 @@ export function createEditor() {
             if ((e.ctrlKey || e.metaKey) && k === 'y') { e.preventDefault(); apply(redo); return; }
             if (ui.tool === 'select') {
                 const act = (e.ctrlKey || e.metaKey) ? ({ c: copyRegion, x: cutRegion, v: pasteRegion, d: duplicateRegion } as Record<string, () => void>)[k]
-                    : ({ delete: clearRegion, backspace: clearRegion } as Record<string, () => void>)[k];
+                    : ({ delete: selectDelete, backspace: selectDelete } as Record<string, () => void>)[k];
                 if (act) { e.preventDefault(); apply(act); return; }
                 const arrow = ({ arrowleft: [-1, 0], arrowright: [1, 0], arrowup: [0, -1], arrowdown: [0, 1] } as Record<string, number[]>)[k];
                 if (arrow && S.region && !e.ctrlKey && !e.metaKey) { e.preventDefault(); apply(function () { nudgeRegion(arrow[0], arrow[1]); }); return; }
-                if (k === 'escape') { apply(function () { S.region = null; view.redraw(); }); return; }
+                if (k === 'escape') { apply(function () { deselectAll(); view.redraw(); }); return; }
             }
-            if (ui.tool === 'floor' && ui.floor === 'obstacle' && S.obstacleMode === 'draw' && (k === 'enter' || k === 'escape')) {
+            if (ui.tool === 'obstacle' && S.obstacleMode === 'draw' && (k === 'enter' || k === 'escape')) {
                 e.preventDefault(); apply(k === 'enter' ? obstacleDrawDone : obstacleDrawCancel); return;
             }
-            if (ui.tool === 'floor' && ui.floor === 'obstacle' && S.obstacle.at && (k === 'delete' || k === 'backspace')) { e.preventDefault(); apply(obstacleRemove); return; }
+            if (ui.tool === 'obstacle' && S.obstacle.at && (k === 'delete' || k === 'backspace')) { e.preventDefault(); apply(obstacleRemove); return; }
             if (e.ctrlKey || e.metaKey || e.altKey) return;
             if (e.key === '?') { e.preventDefault(); apply(function () { openGuidePick('keys'); }); return; }
             if (k === 'escape') { apply(cancelStroke); return; }
@@ -2895,11 +3050,13 @@ export function createEditor() {
         pointProblem: act(pointProblem), restoreKept: act(restoreKept), keptOtherYear: keptOtherYear, resize: act(resize), setSize: act(setSize), toCustomRoom4: act(toCustomRoom4),
         renamed: act(renamed), zoomIn: act(zoomIn), zoomOut: act(zoomOut), fit: act(fit), setTool: act(setTool),
         copyRegion: act(copyRegion), cutRegion: act(cutRegion), clearRegion: act(clearRegion), pasteRegion: act(pasteRegion),
-        duplicateRegion: act(duplicateRegion), selectNone: act(selectNone), changeSelected: act(changeSelected), moveSelected: act(moveSelected), selectedRange: selectedRange, offsetText: offsetText,
+        duplicateRegion: act(duplicateRegion), selectNone: act(selectNone), changeSelected: act(changeSelected), offsetText: offsetText,
         removeSelected: act(removeSelected),
         obstacleSet: act(obstacleSet), obstacleDone: act(obstacleDone), obstacleChange: act(obstacleChange), obstacleRandom: act(obstacleRandom),
-        obstacleRemove: act(obstacleRemove), obstacleDeselect: act(obstacleDeselect), obstacleFields: obstacleFields, obstacleInput: act(obstacleInput),
+        obstacleRemove: act(obstacleRemove), obstacleDeselect: act(obstacleDeselect), removeWallSel: act(removeWallSel),
+        wallDeselect: act(function () { S.wallSel = null; view.redraw(); }), obstacleFields: obstacleFields, obstacleInput: act(obstacleInput),
         obstacleIcon: function (k: string) { return OBSTACLE_ICONS[k]; },
+        obstacleKindActive: obstacleKindActive,
         obstacleDrawStart: act(obstacleDrawStart), obstacleDrawCancel: act(obstacleDrawCancel), obstacleDrawDone: act(obstacleDrawDone),
         obstacleIconResults: obstacleIconResults, obstacleIconClass: obstacleIconClass, obstaclePickIcon: act(obstaclePickIcon), switchLang: act(switchLang), openGuidePick: act(openGuidePick),
         closeGuidePick: act(closeGuidePick), pickGuide: act(pickGuide), startTour: act(startTour), startRoom4Tour: act(startRoom4Tour),

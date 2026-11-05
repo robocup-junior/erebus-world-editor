@@ -271,6 +271,13 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
         });
     }
 
+    // a colour (#rrggbb) lighter (k > 0, towards white) or darker (k < 0, towards black)
+    function shade(hex: string, k: number) {
+        const c = [1, 3, 5].map(function (i) { return parseInt(hex.slice(i, i + 2), 16); });
+        const to = k > 0 ? 255 : 0, a = Math.abs(k);
+        return 'rgb(' + c.map(function (v) { return Math.round(v + (to - v) * a); }).join(', ') + ')';
+    }
+
     // an obstacle seen from above: its outline grey as Erebus shows it, a pyramid's edges and a cone's
     // and a sphere's shading to tell them apart; one of the classic editor (no shape: a box drawn at
     // random in the export) as the place it may be, dashed
@@ -283,8 +290,10 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
             c.forEach(function (q, i) { if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
             ctx.closePath();
         });
+        // its colour (none of its own: the grey Webots shows it in), its outline darker
+        const color = sh.color || F.OBSTACLE_GREY;
         ctx.lineWidth = 1.2 / view.scale;
-        ctx.strokeStyle = '#3f3f46';
+        ctx.strokeStyle = shade(color, -0.45);
         if (!t.obstacleShape) {
             ctx.fillStyle = 'rgba(115, 115, 115, 0.25)'; ctx.fill();
             ctx.setLineDash([2 / view.scale, 2 / view.scale]); ctx.stroke(); ctx.setLineDash([]);
@@ -292,9 +301,9 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
         }
         if (sh.shape === 'sphere' || sh.shape === 'cone') {
             const g = ctx.createRadialGradient(mx - sh.w / 6, my - sh.w / 6, 0, mx, my, sh.w / 2);
-            g.addColorStop(0, sh.shape === 'sphere' ? '#c4c4c4' : '#a3a3a3'); g.addColorStop(1, '#5c5c5c');
+            g.addColorStop(0, shade(color, sh.shape === 'sphere' ? 0.4 : 0.2)); g.addColorStop(1, shade(color, -0.3));
             ctx.fillStyle = g;
-        } else ctx.fillStyle = '#737373';
+        } else ctx.fillStyle = color;
         ctx.fill();
         ctx.stroke();
         if (F.obstaclePointed(sh.shape)) {

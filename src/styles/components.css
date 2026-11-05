@@ -1408,3 +1408,6 @@
     white-space: nowrap;
     pointer-events: none;
 }
+
+/* a stamp clicked keeps no focus ring (what is chosen shows as active); the keyboard's shows */
+.r4-stamp:focus:not(:focus-visible) { outline: none; box-shadow: none; }

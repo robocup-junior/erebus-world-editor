@@ -119,6 +119,7 @@ const STEPS: TourStep[] = [
     { id: 'curve', chapter: 'tools', target: PANEL, mark: [tool('curve')], tool: 'curve', keys: ['A'] },
     { id: 'eraser', chapter: 'tools', target: PANEL, mark: [tool('eraser')], tool: 'eraser', keys: ['E'] },
     { id: 'floor', chapter: 'tools', target: PANEL, mark: [tool('floor')], tool: 'floor', keys: ['F'] },
+    { id: 'obstacle', chapter: 'tools', target: PANEL, mark: [tool('obstacle')], tool: 'obstacle', keys: ['O'] },
     { id: 'victim', chapter: 'tools', target: PANEL, mark: [tool('victim')], tool: 'victim', keys: ['V'] },
     { id: 'room4', chapter: 'tools', target: '.ed-room4-block', mark: [tool('room')], tool: 'room' },
     { id: 'select', chapter: 'tools', target: PANEL, mark: [tool('select')], tool: 'select', keys: ['S', 'Alt', 'Ctrl+C', 'Ctrl+V', 'Ctrl+D', 'Delete'] },
