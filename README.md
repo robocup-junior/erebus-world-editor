@@ -88,7 +88,7 @@ One editor, one build, every year's rules in it - 2026, and 2027 (draft) - : a m
 | --- | --- |
 | `geometry` | tile, wall thickness, the robot's size, how near it comes to identify a token |
 | `rooms` | for each room, the kinds of wall it takes (whole or half tile edges, walls inside a tile, curves, a picture) and where its victims go |
-| `floors` | the kinds of floor (each: its flag in the map file, its icon and colour, whether it is a hole - no floor, the robot keeps off it -, a checkpoint, or only for a tile beside the outer wall - 2027's contact tiles) |
+| `floors` | the kinds of floor (each: its flag in the map file, its icon and colour, whether it is a hole - no floor, the robot keeps off it -, a checkpoint, and whether it keeps its tile to itself - a tile is no more than one of a swamp, a hole, a checkpoint, the start and a passage, rule 5.6.10.b.iii; 2027's contact tiles are not in that list) |
 | `passages` | the colour of the passage between each pair of rooms, and whether a checkpoint is wanted right behind each passage into room 4 |
 | `tokens` | the kinds of victim (each: family - a victim of a symbol, a letter or a smiley face, or a ring target -, symbol, face, width, whether it can be fake, its codes in the map file), the room between them, whether they may go in passages, the ring target types, the room 4 stamps |
 | `scoring` | the most a map can score |

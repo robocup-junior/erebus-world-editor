@@ -1117,6 +1117,8 @@ export {
     inMap,
     tileRooms,
     tileAt,
+    robotFits,
+    edgePassable,
     wallShapes,
     connectionStatus,
     mapGeometry

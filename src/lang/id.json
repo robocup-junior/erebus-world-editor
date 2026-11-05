@@ -119,7 +119,7 @@
         "help": {
             "hand": "Seret untuk memindahkan peta.",
             "room": "Cat petak menjadi sebuah ruang (ruang 1 mengembalikannya). Dinding muncul sendiri di tempat ruang-ruang bertemu dan di sekeliling peta. Ruang 4 digambar sebagai gambar dengan tombol di bawah.",
-            "passage": "Klik di dekat batas ruang: petak di sisi yang Anda klik menjadi lorong (klik lagi untuk menutupnya, di sisi lain untuk memindahkannya ke sana). Klik bagian tengah petak lorong untuk menghapusnya. Lorong yang tidak lagi cocok dengan ruangnya hilang sendiri.",
+            "passage": "Klik di dekat batas ruang: petak di sisi yang Anda klik menjadi lorong (klik lagi untuk menutupnya, di sisi lain untuk memindahkannya ke sana). Klik bagian tengah petak lorong untuk menghapusnya. Lorong yang tidak lagi cocok dengan ruangnya hilang sendiri. Lorong otomatis mendapat dinding di dua sisi lainnya, sehingga ada satu jalan masuk (di seberang batas) dan satu jalan keluar (aturan {{rule_passageWalls}}); dinding itu hilang bersama lorongnya.",
             "line": "Seret untuk menggambar dinding. Garis berbelok mengikuti penunjuk, jadi satu seretan bisa menggambar zigzag (kembali ke jalan semula untuk membatalkan belokan). Mulai dengan menahan Shift untuk satu garis lurus. Ruang 1 menempel ke 12 cm (tepi petak), ruang 2 dan 3 ke 6 cm. Tidak di dalam ruang 4.",
             "eraser": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya. Jauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint); satu klik menghapus start. Dinding luar tetap ada.",
             "floor": "Klik petak untuk mengatur lantainya.",
@@ -258,7 +258,9 @@
         },
         "problems": {
             "noStart": "Tidak ada petak start",
-            "startNotRoom1": "Petak start tidak berada di ruang 1. Start adalah salah satu petak ruang 1",
+            "startNotRoom1": "Petak start tidak berada di ruang 1. Start adalah salah satu petak ruang 1 (aturan {{rule_start}})",
+            "tileTwoKinds": "Ada petak yang menjadi dua atau lebih dari lubang, rawa, checkpoint, start, dan lorong ({{count}}). Satu petak hanya salah satunya (aturan {{rule_oneKind}})",
+            "passageOpenSides": "Ada lorong yang terbuka di lebih dari dua sisi ({{count}}). Lorong berdinding di dua sisi: satu jalan masuk, satu jalan keluar (aturan {{rule_passageWalls}})",
             "victimNoWall": "Beberapa korban kehilangan dindingnya ({{count}})",
             "victimInPassage": "Beberapa korban berada di lorong antar-area ({{count}}): di lorong tidak ada korban (aturan {{rule_passageTokens}})",
             "victimUnreachable": "Beberapa korban berada di tempat yang tidak bisa dicapai robot ({{count}}): tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}})",
@@ -314,9 +316,14 @@
         "victim_notQuarterTile": "Tidak di sini",
         "room4NoTiles": "Cat dulu area ruang 4 dengan kuas ruang",
         "passage_open": "Lorong dipasang",
+        "passage_openWalls": "Lorong dipasang, dengan dinding di sisinya: satu jalan masuk, satu jalan keluar",
         "passage_moved": "Lorong dipindahkan ke sisi ini",
+        "passage_movedWalls": "Lorong dipindahkan ke sisi ini, dengan dinding di sisinya: satu jalan masuk, satu jalan keluar",
         "passage_closed": "Lorong dihapus",
+        "passage_taken": "Petak itu adalah start atau lubang, rawa, atau checkpoint, jadi tidak bisa menjadi lorong",
         "passageOpen": "Klik untuk memasang lorong di sisi berwarna",
+        "passageOpenWalls": "Klik untuk memasang lorong di sisi berwarna; dinding berdiri di sisi biru, agar ada satu jalan masuk dan satu jalan keluar (aturan {{rule_passageWalls}})",
+        "passageTaken": "Petak ini adalah start atau lubang, rawa, atau checkpoint, jadi tidak bisa menjadi lorong (aturan {{rule_oneKind}})",
         "passageClose": "Klik untuk menghapus lorong",
         "passageRemove": "Klik untuk menghapus lorong ini",
         "shapeOut": "Klik atau seret untuk mengeluarkan petak dari peta",
@@ -355,6 +362,9 @@
         "floor_isStart": "Ini petak start (penghapus menghapusnya)",
         "floor_start": "Klik untuk memindahkan start ke sini (hanya ada satu start)",
         "floor_startRoom": "Start adalah salah satu petak ruang 1 (petak ini ruang {{room}})",
+        "floor_startTaken": "Start tidak bisa di lubang, rawa, checkpoint, atau lorong: satu petak hanya salah satunya (aturan {{rule_oneKind}})",
+        "floor_onStart": "{{floor}} tidak bisa di petak start: satu petak hanya salah satu dari lubang, rawa, checkpoint, start, dan lorong (aturan {{rule_oneKind}})",
+        "floor_onPassage": "{{floor}} tidak bisa di petak lorong: satu petak hanya salah satu dari lubang, rawa, checkpoint, start, dan lorong (aturan {{rule_oneKind}})",
         "floor_clear": "Klik untuk menghapus lantai (lubang, rawa, checkpoint)",
         "floor_off": "Klik untuk menghapus: {{floor}}",
         "floor_on": "Klik untuk menjadikan: {{floor}}",
@@ -497,7 +507,7 @@
                 },
                 "pass12": {
                     "title": "Hubungkan ruang dengan lorong",
-                    "body": "Ada dinding di setiap batas ruang, jadi robot belum bisa masuk ke ruang 2. Dengan alat lorong, klik di dekat batas: petak di sisi yang Anda klik menjadi lorong, dan dindingnya terbuka.\nKlik lagi untuk menutupnya; klik sisi lain dan lorong pindah ke petak itu. Klik bagian tengah petak lorong untuk menghapusnya.",
+                    "body": "Ada dinding di setiap batas ruang, jadi robot belum bisa masuk ke ruang 2. Dengan alat lorong, klik di dekat batas: petak di sisi yang Anda klik menjadi lorong, dan dindingnya terbuka.\nKlik lagi untuk menutupnya; klik sisi lain dan lorong pindah ke petak itu. Klik bagian tengah petak lorong untuk menghapusnya.\nLorong otomatis mendapat dinding di dua sisi lainnya, sehingga ada satu jalan masuk (di seberang batas) dan satu jalan keluar (aturan {{rule_passageWalls}}); dinding itu hilang bersama lorongnya.",
                     "task": "Klik di dekat batas ruang 1 dan 2, di sisi ruang 1 (petak kiri di bingkai hijau)"
                 },
                 "pass34": {
@@ -532,7 +542,7 @@
                 },
                 "start": {
                     "title": "Pasang start",
-                    "body": "Alat lantai mengatur lantai petak. Start adalah salah satu petak ruang 1: robot memulai run dari sana. Tanpa start, dunia tidak bisa diekspor.",
+                    "body": "Alat lantai mengatur lantai petak. Start adalah salah satu petak ruang 1: robot memulai run dari sana. Tanpa start, dunia tidak bisa diekspor. Satu petak hanya salah satu dari lubang, rawa, checkpoint, start, dan lorong (aturan {{rule_oneKind}}).",
                     "task": "Pilih Start dan klik petak kiri bawah (bingkai hijau)",
                     "tasks": {
                         "room": "Start berada di luar ruang 1. Klik petak ruang 1 (bingkai hijau) untuk memasangnya di sana"
@@ -810,7 +820,7 @@
                 },
                 "passage": {
                     "title": "Lorong (P): menghubungkan ruang",
-                    "body": "Klik di dekat batas ruang: petak di sisi yang Anda klik menjadi lorong, dan dinding di batas terbuka.\nKlik lagi untuk menutupnya. Klik sisi lain dan lorong pindah ke petak itu. Klik bagian tengah petak lorong untuk menghapusnya.\nLorong menuju ruang 4 dipasang di petak di luar ruang 4. Lorong yang tidak lagi cocok setelah ruang dicat ulang dihapus sendiri."
+                    "body": "Klik di dekat batas ruang: petak di sisi yang Anda klik menjadi lorong, dan dinding di batas terbuka.\nLorong otomatis mendapat dinding di dua sisi lainnya, sehingga ada satu jalan masuk (di seberang batas) dan satu jalan keluar (aturan {{rule_passageWalls}}); dinding itu hilang bersama lorongnya.\nKlik lagi untuk menutupnya. Klik sisi lain dan lorong pindah ke petak itu. Klik bagian tengah petak lorong untuk menghapusnya.\nLorong menuju ruang 4 dipasang di petak di luar ruang 4. Lorong yang tidak lagi cocok setelah ruang dicat ulang dihapus sendiri."
                 },
                 "line": {
                     "title": "Garis (L): menggambar dinding",
@@ -826,7 +836,7 @@
                 },
                 "floor": {
                     "title": "Lantai (F): checkpoint, lubang, rawa, start",
-                    "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah salah satu petak ruang 1: robot memulai run dari sana. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya."
+                    "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah salah satu petak ruang 1: robot memulai run dari sana. Tidak ada menghapus lantai. Satu petak hanya salah satu dari lubang, rawa, checkpoint, start, dan lorong (aturan {{rule_oneKind}}).\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya."
                 },
                 "victim": {
                     "title": "Korban (V): korban dan target kognitif",
@@ -1117,7 +1127,7 @@
                     "steps": {
                         "floor": {
                             "title": "Lantai (F): checkpoint, lubang, rawa, petak kontak, start",
-                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah salah satu petak ruang 1: robot memulai run dari sana. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik."
+                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah salah satu petak ruang 1: robot memulai run dari sana. Tidak ada menghapus lantai. Satu petak hanya salah satu dari lubang, rawa, checkpoint, start, dan lorong (aturan {{rule_oneKind}}).\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik."
                         },
                         "victim": {
                             "body": "Pilih jenis di panel (korban smiley - terluka wajah sedih, stabil wajah datar, tidak terluka wajah senang - dan yang palsu, target kognitif empat jenis - gas mudah terbakar, racun, korosif, peroksida organik - dan yang palsu) lalu klik di dekat dinding: ia ditempatkan di dinding tempat Anda klik.\nDi ruang 1 di sisi petak (satu per petak), di ruang 2 dan 3 di muka dinding 6 cm, dan di dua tempat pada lengkung (dalam dan luar). Seret yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya. Jika tidak bisa ditempatkan, baris status memberi tahu alasannya.\nPutar dial (Putaran tetap) untuk rotasinya, atau pilih Acak untuk putaran baru setiap kali. Untuk target kognitif, klik cincin target lalu warna di bawah; jumlah cincin menentukan jenisnya.\nKlik korban dengan jenis yang sama untuk memilihnya, lalu ubah putaran, cincin, atau posisinya di sepanjang dinding, atau hapus. Klik dengan jenis lain mengubah jenisnya."

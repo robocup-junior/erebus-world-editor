@@ -119,7 +119,7 @@
         "help": {
             "hand": "Drag to move the map.",
             "room": "Paint tiles into a room (room 1 takes them out again). Walls go up by themselves where rooms meet and round the map. Room 4 is drawn as a picture with the button below.",
-            "passage": "Click near a room border: the tile on the side you click becomes the passage (click again to close it, on the other side to move it there). Click the middle of a passage tile to remove it. A passage that no longer fits its rooms goes by itself.",
+            "passage": "Click near a room border: the tile on the side you click becomes the passage (click again to close it, on the other side to move it there). Click the middle of a passage tile to remove it. A passage that no longer fits its rooms goes by itself. A passage gets walls on its two other sides by itself, so it has one way in (across from the border) and one way out (rule {{rule_passageWalls}}); they go when the passage does.",
             "line": "Drag to draw walls. The line turns with the pointer, so one drag can draw a zigzag (go back the way you came to undo a turn). Start with Shift held for one straight line. Room 1 snaps to 12 cm (tile edges), rooms 2 and 3 to 6 cm. Not inside room 4.",
             "eraser": "Click or drag over walls, curves and victims to remove them. Away from walls it takes a tile's floor off (hole, swamp, checkpoint); a click takes the start off. The outer walls stay.",
             "floor": "Click a tile to set its floor.",
@@ -258,7 +258,9 @@
         },
         "problems": {
             "noStart": "There is no start tile",
-            "startNotRoom1": "The start tile is not in room 1. The start is one of the room 1 tiles",
+            "startNotRoom1": "The start tile is not in room 1. The start is one of the room 1 tiles (rule {{rule_start}})",
+            "tileTwoKinds": "Some tiles are two or more of a hole, swamp, checkpoint, the start and a passage ({{count}}). A tile is only one of them (rule {{rule_oneKind}})",
+            "passageOpenSides": "Some passages are open on more than two sides ({{count}}). A passage has walls on two sides: one way in, one way out (rule {{rule_passageWalls}})",
             "victimNoWall": "Some victims have lost their wall ({{count}})",
             "victimInPassage": "Some victims are in a passage between areas ({{count}}): there are none in the passages (rule {{rule_passageTokens}})",
             "victimUnreachable": "Some victims are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule {{rule_reach}})",
@@ -314,9 +316,14 @@
         "victim_notQuarterTile": "Not here",
         "room4NoTiles": "Paint the room 4 area with the room brush first",
         "passage_open": "Passage placed",
+        "passage_openWalls": "Passage placed, with walls on its sides: one way in, one way out",
         "passage_moved": "Passage moved to this side",
+        "passage_movedWalls": "Passage moved to this side, with walls on its sides: one way in, one way out",
         "passage_closed": "Passage removed",
+        "passage_taken": "That tile is the start or a hole, swamp or checkpoint, so it cannot be a passage",
         "passageOpen": "Click to put the passage on the coloured side",
+        "passageOpenWalls": "Click to put the passage on the coloured side; walls go up on its sides in blue, for one way in and one way out (rule {{rule_passageWalls}})",
+        "passageTaken": "This tile is the start or a hole, swamp or checkpoint, so it cannot be a passage (rule {{rule_oneKind}})",
         "passageClose": "Click to remove the passage",
         "passageRemove": "Click to remove this passage",
         "shapeOut": "Click or drag to take tiles out of the map",
@@ -355,6 +362,9 @@
         "floor_isStart": "This is the start tile (the eraser takes it off)",
         "floor_start": "Click to move the start here (there is one start)",
         "floor_startRoom": "The start is one of the room 1 tiles (this tile is room {{room}})",
+        "floor_startTaken": "The start cannot go on a hole, swamp, checkpoint or passage: a tile is only one of them (rule {{rule_oneKind}})",
+        "floor_onStart": "{{floor}} cannot go on the start tile: a tile is only one of a hole, swamp, checkpoint, the start and a passage (rule {{rule_oneKind}})",
+        "floor_onPassage": "{{floor}} cannot go on a passage tile: a tile is only one of a hole, swamp, checkpoint, the start and a passage (rule {{rule_oneKind}})",
         "floor_clear": "Click to take the floor off (hole, swamp, checkpoint)",
         "floor_off": "Click to take the {{floor}} off",
         "floor_on": "Click to make it a {{floor}}",
@@ -497,7 +507,7 @@
                 },
                 "pass12": {
                     "title": "Join rooms with a passage",
-                    "body": "A wall stands on each room border, so the robot cannot get into room 2 yet. With the passage tool, click near a border: the tile on the side you clicked becomes a passage, and the wall opens.\nClick again to close it; click the other side and the passage moves to that tile. Click the middle of a passage tile to remove it.",
+                    "body": "A wall stands on each room border, so the robot cannot get into room 2 yet. With the passage tool, click near a border: the tile on the side you clicked becomes a passage, and the wall opens.\nClick again to close it; click the other side and the passage moves to that tile. Click the middle of a passage tile to remove it.\nA passage gets walls on its two other sides by itself, so it has one way in (across from the border) and one way out (rule {{rule_passageWalls}}); they go when the passage does.",
                     "task": "Click near the border of rooms 1 and 2, on the room 1 side (the left tile in the green frame)"
                 },
                 "pass34": {
@@ -532,7 +542,7 @@
                 },
                 "start": {
                     "title": "Put the start",
-                    "body": "The floor tool sets a tile's floor. Start is one of the room 1 tiles: the robot starts its run there. Without it the world cannot be exported.",
+                    "body": "The floor tool sets a tile's floor. Start is one of the room 1 tiles: the robot starts its run there. Without it the world cannot be exported. A tile is only one of a hole, swamp, checkpoint, the start and a passage (rule {{rule_oneKind}}).",
                     "task": "Pick Start and click the bottom left tile (green frame)",
                     "tasks": {
                         "room": "The start is outside room 1. Click a room 1 tile (green frame) to put it there"
@@ -810,7 +820,7 @@
                 },
                 "passage": {
                     "title": "Passage (P): joining the rooms",
-                    "body": "Click near a room border: the tile on the side you clicked becomes a passage, and the wall on the border opens.\nClick again to close it. Click the other side and the passage moves to that tile. Click the middle of a passage tile to remove it.\nA passage into room 4 is put on the tile outside room 4. Passages that no longer fit after the rooms are painted again are removed by themselves."
+                    "body": "Click near a room border: the tile on the side you clicked becomes a passage, and the wall on the border opens.\nA passage gets walls on its two other sides by itself, so it has one way in (across from the border) and one way out (rule {{rule_passageWalls}}); they go when the passage does.\nClick again to close it. Click the other side and the passage moves to that tile. Click the middle of a passage tile to remove it.\nA passage into room 4 is put on the tile outside room 4. Passages that no longer fit after the rooms are painted again are removed by themselves."
                 },
                 "line": {
                     "title": "Line (L): drawing walls",
@@ -826,7 +836,7 @@
                 },
                 "floor": {
                     "title": "Floor (F): checkpoints, holes, swamps, the start",
-                    "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is one of the room 1 tiles: the robot starts its run there. None takes the floor off.\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself."
+                    "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is one of the room 1 tiles: the robot starts its run there. None takes the floor off. A tile is only one of a hole, swamp, checkpoint, the start and a passage (rule {{rule_oneKind}}).\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself."
                 },
                 "victim": {
                     "title": "Victim (V): victims and cognitive targets",
@@ -1117,7 +1127,7 @@
                     "steps": {
                         "floor": {
                             "title": "Floor (F): checkpoints, holes, swamps, contact tiles, the start",
-                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is one of the room 1 tiles: the robot starts its run there. None takes the floor off.\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds."
+                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is one of the room 1 tiles: the robot starts its run there. None takes the floor off. A tile is only one of a hole, swamp, checkpoint, the start and a passage (rule {{rule_oneKind}}).\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds."
                         },
                         "victim": {
                             "body": "Pick a kind in the panel (smiley victims - harmed a sad face, stable a neutral face, unharmed a happy face - and fake ones, cognitive targets of four types - flammable gas, poison, corrosive, organic peroxide - and a fake one) and click near a wall: it goes on the wall where you click.\nThey go on tile sides in room 1 (one per tile), on the faces of the 6 cm walls in rooms 2 and 3, and on two places on a curve (inside and outside). Drag a placed one to move it along its wall. Where one cannot go, the status line says why.\nTurn the dial (Set the turn) for its rotation, or choose Random for a new one each time. For a cognitive target, click a ring of the target and then a colour below; the sum of the rings gives its type.\nClick a victim with the same kind to select it, then change its turn, rings or place along its wall, or remove it. Clicking it with another kind changes its kind."

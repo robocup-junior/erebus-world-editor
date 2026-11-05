@@ -101,6 +101,23 @@ function checkpointFloor(map: MapData): string {
 function clearFloors(map: MapData, t: Tile) {
     floorIds(map).forEach(function (f) { t[f] = false; });
 }
+// The floors on tile t that keep it to themselves (rules: floors, alone): with one, the tile is not
+// the start or a passage as well (2026: rule 5.6.10.b.iii)
+function aloneFloors(map: MapData, t: Tile | undefined): string[] {
+    if (!t) return [];
+    return rulesOf(map).floors.filter(function (k) { return k.alone && t[k.id]; }).map(function (k) { return k.id; });
+}
+function isStart(map: MapData, x: number, y: number) {
+    const st = map.startTile;
+    return !!st && st.x === x && st.y === y;
+}
+// What tile (x, y) is of those a tile is only one of: its alone floors, 'start', 'passage'
+function tileKinds(map: MapData, x: number, y: number): string[] {
+    const out = aloneFloors(map, tileOf(map, x, y));
+    if (isStart(map, x, y)) out.push('start');
+    if (isPassage(map, x, y)) out.push('passage');
+    return out;
+}
 
 function key(x: number, y: number) {
     return x + ',' + y + ',0';
@@ -394,6 +411,7 @@ function syncBorderWalls(map: MapData, before: Set<string>): Set<string> {
         const p = e.split(',').map(Number);
         if (p[0] <= 2 * map.width && p[1] <= 2 * map.length) setEdge(map, p[0], p[1], false);
     });
+    settlePassageWalls(map, after);
     room4Checkpoints(map);
     return after;
 }
@@ -413,6 +431,7 @@ function resyncBorderWalls(map: MapData, before: Set<string>): Set<string> {
         const p = e.split(',').map(Number);
         if (p[0] <= 2 * map.width && p[1] <= 2 * map.length) setEdge(map, p[0], p[1], false);
     });
+    settlePassageWalls(map, after);
     room4Checkpoints(map);
     return after;
 }
@@ -437,6 +456,9 @@ function passageSide(map: MapData, b: Border, side?: Pt | null): Pt {
 // At a border edge: opens a passage with its colour on the side asked for (by default the
 // lower room number), moves it there from the other side, or closes it when it is there already.
 // Returns 'open', 'moved', 'closed' or '' (not a border).
+// A new passage gets walls on the two sides that are neither its way out nor its way in (see
+// Passage walls below). Returns 'open', 'moved', 'closed', 'taken' (the tile is the start or has a
+// floor that keeps it to itself) or '' (not a border).
 function togglePassage(map: MapData, ex: number, ey: number, side?: Pt | null): string {
     const b = borderAt(map, ex, ey);
     if (!b) return '';
@@ -444,10 +466,135 @@ function togglePassage(map: MapData, ex: number, ey: number, side?: Pt | null): 
     const ta = ensureTile(map, b.a[0], b.a[1]), tb = ensureTile(map, b.b[0], b.b[1]);
     const target = want === b.a ? ta : tb, other = want === b.a ? tb : ta;
     if (target.color === b.pass.color) { target.color = ''; return 'closed'; }
+    if (!passageFree(map, want[0], want[1])) return 'taken';
     const moved = other.color === b.pass.color;
     if (moved) other.color = '';
     target.color = b.pass.color;
+    // its way out: the side of the border edge, walled round when the borders are next synced
+    target.passageExit = sideOf(want, ex, ey);
+    delete target.passageWalls;
     return moved ? 'moved' : 'open';
+}
+
+// Whether tile (x, y) can be a passage: not the start, no floor that keeps the tile to itself
+function passageFree(map: MapData, x: number, y: number) {
+    return !isStart(map, x, y) && !aloneFloors(map, tileOf(map, x, y)).length;
+}
+
+// The side ('top', ...) of tile (x, y) that edge (ex, ey) is
+function sideOf(tile: Pt, ex: number, ey: number) {
+    return Object.keys(SIDES).find(function (d) { return tile[0] + SIDES[d][0] === ex && tile[1] + SIDES[d][1] === ey; })!;
+}
+
+// ---- Passage walls ------------------------------------------------------------------------------
+// A passage is one tile with walls on two sides, so that it has one way in and one way out (2026:
+// rule 3.3.4). A passage put with the passage tool gets them: its way out is the border clicked,
+// its way in the side across from it (else another side open to its own room), and the other sides
+// the robot could go through get a wall. The tile keeps the walls it got (tile.passageWalls, unit
+// segments), which go again with the passage.
+
+const OPPOSITE: Record<string, string> = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' };
+
+// The two unit segments of side d of tile (x, y)
+function sideSegs(x: number, y: number, d: string): string[] {
+    if (d === 'left' || d === 'right') {
+        const i = d === 'left' ? x - 1 : x + 1;
+        return ['v,' + i + ',' + (y - 1), 'v,' + i + ',' + y];
+    }
+    const j = d === 'top' ? y - 1 : y + 1;
+    return ['h,' + (x - 1) + ',' + j, 'h,' + x + ',' + j];
+}
+
+// The passage of tile (x, y) and the room it leads out to, or null when it is not a passage
+function passageOf(map: MapData, x: number, y: number) {
+    const t = tileOf(map, x, y);
+    const pass = t && t.color && W.passagesOf(map).find(function (p: RoomPassage) { return p.color === t.color; });
+    if (!pass) return null;
+    const own = roomOf(map, x, y);
+    return { pass: pass, own: own, other: own === pass.from ? pass.to : own === pass.to ? pass.from : 0 };
+}
+
+// The sides of tile (x, y) the robot can go through to the next tile, each with that tile's room
+function openSides(map: MapData, x: number, y: number, fits?: (x: number, y: number) => boolean) {
+    const f = fits || W.robotFits(map);
+    const k = ((x - 1) / 2) + ',' + ((y - 1) / 2);
+    return Object.keys(SIDES).map(function (d) {
+        const nx = x + 2 * SIDES[d][0], ny = y + 2 * SIDES[d][1];
+        const open = isInside(map, nx, ny) && W.edgePassable(map, k, ((nx - 1) / 2) + ',' + ((ny - 1) / 2), f);
+        return { side: d, open: open, room: roomOf(map, nx, ny) };
+    }).filter(function (s) { return s.open; });
+}
+
+// Walls the sides of passage tile (x, y) the robot could go through but its way out and its way in,
+// so that it has one of each: the way out is `exit` (else a side open to the other room), the way
+// in the side across from it (else another side open to its own room). A wall can close a side
+// next to it as well (where a side is open only near its ends), so each choice is tried and kept
+// only if both ways stay open; with none, nothing is walled. The tile keeps the walls it got.
+function wallPassage(map: MapData, x: number, y: number, exit?: string | null) {
+    const p = passageOf(map, x, y);
+    if (!p) return 0;
+    const open = openSides(map, x, y);
+    if (open.length <= 2) return 0;
+    const outs = exit && open.some(function (s) { return s.side === exit; }) ? [exit]
+        : open.filter(function (s) { return s.room === p.other; }).map(function (s) { return s.side; });
+    const t = ensureTile(map, x, y);
+    for (let i = 0; i < outs.length; i++) {
+        const out = outs[i];
+        const ins = open.filter(function (s) { return s.side !== out && s.room === p.own; }).map(function (s) { return s.side; })
+            .sort(function (a, b) { return (a === OPPOSITE[out] ? 0 : 1) - (b === OPPOSITE[out] ? 0 : 1); });
+        for (let j = 0; j < ins.length; j++) {
+            const added: string[] = [];
+            open.forEach(function (s) {
+                if (s.side === out || s.side === ins[j]) return;
+                sideSegs(x, y, s.side).forEach(function (g) { if (!L.hasSeg(map, g)) { L.setSeg(map, g, true); added.push(g); } });
+            });
+            const now = openSides(map, x, y).map(function (s) { return s.side; });
+            if (now.length === 2 && now.indexOf(out) > -1 && now.indexOf(ins[j]) > -1) {
+                t.passageWalls = (t.passageWalls || []).concat(added);
+                return added.length;
+            }
+            added.forEach(function (g) { L.setSeg(map, g, false); });
+        }
+    }
+    if (!t.passageWalls) t.passageWalls = [];
+    return 0;
+}
+
+// The walls a click of the passage tool at border edge (ex, ey) would put up (unit segments): tried
+// on a copy of the map, borders and all
+function passageWallsPreview(map: MapData, borders: Set<string>, ex: number, ey: number, side?: Pt | null): string[] {
+    const copy: MapData = JSON.parse(JSON.stringify(map));
+    const b = borderAt(copy, ex, ey);
+    if (!b) return [];
+    const at = passageSide(copy, b, side);
+    if (togglePassage(copy, ex, ey, side) === 'closed') return [];
+    syncBorderWalls(copy, new Set(borders));
+    const t = tileOf(copy, at[0], at[1]);
+    return t && t.passageWalls ? t.passageWalls.slice() : [];
+}
+
+// After the borders change: a passage just put gets its walls, and the walls of a passage that has
+// gone come off (not where a border has its wall)
+function settlePassageWalls(map: MapData, borders: Set<string>) {
+    for (let x = 1; x < 2 * map.width; x += 2) {
+        for (let y = 1; y < 2 * map.length; y += 2) {
+            const t = tileOf(map, x, y);
+            if (!t) continue;
+            if (t.passageWalls && !isPassage(map, x, y)) {
+                (t.passageWalls as string[]).forEach(function (s) {
+                    const at = L.place(s);
+                    if (at.kind === 'edge' && borders.has(at.cell.split(',').slice(0, 2).join(','))) return;
+                    L.setSeg(map, s, false);
+                });
+                delete t.passageWalls;
+            }
+            if (t.passageExit && !isPassage(map, x, y)) delete t.passageExit;
+            if (t.passageExit) {
+                wallPassage(map, x, y, t.passageExit);
+                delete t.passageExit;
+            }
+        }
+    }
 }
 
 // Takes the passage colour off the tile at (x, y)
@@ -511,17 +658,29 @@ function segNear(map: MapData, x: number, y: number, reach: number): string | nu
 function setFloor(map: MapData, x: number, y: number, kind: string) {
     if (!isInside(map, x, y)) return false;
     if (kind === 'start') {
-        // the start tile is in room 1 (area 1) only
-        if (roomOf(map, x, y) !== 1) return false;
+        // the start tile is in room 1 (area 1) only, on a tile that is nothing else
+        if (roomOf(map, x, y) !== 1 || !startFree(map, x, y)) return false;
         map.startTile = { x: x, y: y, z: 0 };
         return true;
     }
+    if (!floorFree(map, x, y, kind)) return false;
     const was = !!(tileOf(map, x, y) || {})[kind];
     const t = ensureTile(map, x, y);
     clearFloors(map, t);
     if (kind !== 'clear') t[kind] = !was;
     delete t.cpAuto;
     return true;
+}
+
+// Whether the start can go on tile (x, y): no floor that keeps the tile to itself, not a passage
+function startFree(map: MapData, x: number, y: number) {
+    return !aloneFloors(map, tileOf(map, x, y)).length && !isPassage(map, x, y);
+}
+// Whether floor `kind` can go on tile (x, y): one that keeps its tile to itself goes on no start
+// and no passage ('clear' and the other floors go anywhere)
+function floorFree(map: MapData, x: number, y: number, kind: string) {
+    const k = rulesOf(map).floors.find(function (f) { return f.id === kind; });
+    return !(k && k.alone) || (!isStart(map, x, y) && !isPassage(map, x, y));
 }
 
 // The floor of tile (x, y) as `kind` ('black', 'swamp', 'checkpoint', or '' for none): set, not
@@ -1480,6 +1639,18 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
         }
     }
     if (type >= 2) out.push({ key: 'presetNotSupported', block: true, at: regionAt, show: { tiles: tilesOf(4) } });
+    // tiles that are two or more of a swamp, a hole, a checkpoint, the start and a passage (5.6.10.b.iii),
+    // and passage tiles open on more than two sides: one way in and one way out (3.3.4)
+    const twoKinds: number[][] = [], openPassages: number[][] = [];
+    const fits = W.robotFits(map);
+    for (let x = 1; x < 2 * map.width; x += 2) {
+        for (let y = 1; y < 2 * map.length; y += 2) {
+            if (tileKinds(map, x, y).length > 1) twoKinds.push([(x - 1) / 2, (y - 1) / 2]);
+            if (isPassage(map, x, y) && openSides(map, x, y, fits).length > 2) openPassages.push([(x - 1) / 2, (y - 1) / 2]);
+        }
+    }
+    if (twoKinds.length) out.push({ key: 'tileTwoKinds', params: { count: twoKinds.length }, block: true, at: [12 * twoKinds[0][0] + 6, 12 * twoKinds[0][1] + 6], show: { tiles: twoKinds } });
+    if (openPassages.length) out.push({ key: 'passageOpenSides', params: { count: openPassages.length }, block: true, at: [12 * openPassages[0][0] + 6, 12 * openPassages[0][1] + 6], show: { tiles: openPassages } });
     // the rooms' connections are always checked here (the classic editor's switch, connCheckOff,
     // is kept in the map as it is, for that editor)
     const conn = W.connectionStatus(map);
@@ -1557,7 +1728,7 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
 // walls set (as syncBorderWalls), or null when it cannot be fixed here (the custom room 4 picture
 // has to be drawn). FIXABLE: the problems it handles.
 
-const FIXABLE = ['noStart', 'startNotRoom1', 'presetNotSupported', 'room4Checkpoint', 'conn.notConnected', 'conn.passageNoRoom',
+const FIXABLE = ['noStart', 'startNotRoom1', 'tileTwoKinds', 'passageOpenSides', 'presetNotSupported', 'room4Checkpoint', 'conn.notConnected', 'conn.passageNoRoom',
     'conn.passageMisplaced', 'conn.unmarkedGap', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable', 'wallRule'];
 // fixed by drawing in the room 4 creator
 const DRAW_FIX = ['customRoom4NoPicture', 'room4Untyped', 'room4Unreachable'];
@@ -1567,7 +1738,7 @@ function fixStart(map: MapData) {
     for (let y = 2 * map.length - 1; y > 0; y -= 2) {
         for (let x = 1; x < 2 * map.width; x += 2) {
             const t = tileOf(map, x, y);
-            if (roomOf(map, x, y) !== 1 || !t || W.floorKindOf(map, t) || t.color) continue;
+            if (roomOf(map, x, y) !== 1 || !t || W.floorKindOf(map, t) || t.color || isStart(map, x, y)) continue;
             map.startTile = { x: x, y: y, z: 0 };
             return true;
         }
@@ -1617,6 +1788,21 @@ function connectRoom(map: MapData, room: number, borders: Set<string>): Set<stri
 function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string> | null {
     const key = p.key;
     if (key === 'noStart' || key === 'startNotRoom1') { fixStart(map); return borders; }
+    if (key === 'tileTwoKinds') {
+        // the passage and the start stay (the start moves off a passage); floors go, but one
+        (p.show && p.show.tiles || []).forEach(function (q) {
+            const x = 2 * q[0] + 1, y = 2 * q[1] + 1, t = tileOf(map, x, y)!;
+            const floors = aloneFloors(map, t);
+            const start = isStart(map, x, y), passage = isPassage(map, x, y);
+            floors.forEach(function (f, i) { if (start || passage || i > 0) t[f] = false; });
+            if (start && passage) fixStart(map);
+        });
+        return borders;
+    }
+    if (key === 'passageOpenSides') {
+        (p.show && p.show.tiles || []).forEach(function (q) { wallPassage(map, 2 * q[0] + 1, 2 * q[1] + 1); });
+        return borders;
+    }
     if (key === 'presetNotSupported') {
         map.area4Room = W.area4Presets()[(map.roomTiles[2] || []).length ? 1 : 0];
         return resyncBorderWalls(map, borders);
@@ -1680,7 +1866,8 @@ function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string>
 // Every problem that can be fixed, in an order where one fix does not undo another
 function fixAll(map: MapData, borders: Set<string>, picture?: Room4Picture | null): Set<string> {
     const order = ['presetNotSupported', 'conn.passageNoRoom', 'conn.passageMisplaced', 'conn.unmarkedGap', 'wallRule',
-        'conn.notConnected', 'room4Checkpoint', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable', 'noStart'];
+        'conn.notConnected', 'passageOpenSides', 'room4Checkpoint', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable',
+        'tileTwoKinds', 'noStart', 'startNotRoom1'];
     order.forEach(function (key) {
         problems(map, picture).filter(function (p) { return p.key === key; }).forEach(function (p) {
             const after = fixProblem(map, p, borders);
@@ -1745,6 +1932,10 @@ export {
     syncBorderWalls,
     borderAt,
     togglePassage,
+    passageFree,
+    passageWallsPreview,
+    startFree,
+    floorFree,
     FIXABLE,
     DRAW_FIX,
     readRoom4Picture,

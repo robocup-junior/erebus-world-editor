@@ -45,6 +45,84 @@ test('the start goes in room 1 only, and a start the room was painted over is a 
   assert.ok(!M.problems(map).some((q) => q.key === 'startNotRoom1'));
 });
 
+test('a tile is one of a swamp, a hole, a checkpoint, the start and a passage, no more', () => {
+  const map = M.newMap(4, 3, 2026);
+  let borders = paint(map, 2, [[2, 0], [3, 0], [2, 1], [3, 1], [2, 2], [3, 2]], new Set());
+  M.setFloor(map, 1, 1, 'checkpoint');
+  assert.strictEqual(M.setFloor(map, 1, 1, 'start'), false, 'no start on a checkpoint');
+  assert.ok(M.setFloor(map, 1, 3, 'start'));
+  assert.strictEqual(M.setFloor(map, 1, 3, 'swamp'), false, 'no swamp on the start');
+  assert.strictEqual(M.togglePassage(map, 4, 1, [3, 1]), 'open');
+  borders = M.syncBorderWalls(map, borders);
+  assert.strictEqual(M.setFloor(map, 3, 1, 'black'), false, 'no hole on a passage');
+  assert.strictEqual(M.togglePassage(map, 4, 3, [3, 3]), 'open', 'a passage further down');
+  borders = M.syncBorderWalls(map, borders);
+  M.setFloor(map, 3, 5, 'swamp');
+  assert.strictEqual(M.togglePassage(map, 4, 5, [3, 5]), 'taken', 'no passage on a swamp');
+  assert.ok(!M.problems(map).some((p) => p.key === 'tileTwoKinds'));
+  // two at once, as a map from elsewhere may have them: a problem that blocks, fixed
+  map.cells['1,3,0'].tile!.checkpoint = true;
+  const p = M.problems(map).find((q) => q.key === 'tileTwoKinds');
+  assert.ok(p && p.block);
+  assert.deepStrictEqual(p!.show!.tiles, [[0, 1]]);
+  M.fixProblem(map, p!, borders);
+  assert.ok(!map.cells['1,3,0'].tile!.checkpoint && map.startTile.x === 1 && map.startTile.y === 3, 'the floor goes, the start stays');
+});
+
+test('contact tiles (2027) are not in that list: the start can be one', () => {
+  const map = M.newMap(3, 3, 2027);
+  M.setFloor(map, 1, 1, 'contact');
+  assert.ok(M.setFloor(map, 1, 1, 'start'));
+  assert.ok(!M.problems(map).some((p) => p.key === 'tileTwoKinds'));
+});
+
+test('a passage gets walls on two sides, one way in and one way out, and they go with it', () => {
+  const map = M.newMap(4, 3, 2026);
+  M.setFloor(map, 1, 5, 'start');
+  let borders = paint(map, 2, [[2, 0], [3, 0], [2, 1], [3, 1], [2, 2], [3, 2]], new Set());
+  const preview = M.passageWallsPreview(map, borders, 4, 3, [3, 3]);
+  assert.strictEqual(M.togglePassage(map, 4, 3, [3, 3]), 'open');
+  borders = M.syncBorderWalls(map, borders);
+  // the way out is the border (right), the way in across from it (left): top and bottom are walled
+  assert.ok(wall(map, 3, 2) && wall(map, 3, 4), 'top and bottom');
+  assert.ok(!wall(map, 4, 3) && !wall(map, 2, 3), 'right and left open');
+  assert.deepStrictEqual([...preview].sort(), [...map.cells['3,3,0'].tile!.passageWalls].sort(), 'the preview shows them');
+  assert.ok(!M.problems(map).some((p) => p.key === 'passageOpenSides'));
+  // a wall taken off: open on three sides, a problem that blocks, fixed
+  M.setWalls(map, ['h,2,4', 'h,3,4'], false);
+  const p = M.problems(map).find((q) => q.key === 'passageOpenSides');
+  assert.ok(p && p.block);
+  M.fixProblem(map, p!, borders);
+  assert.ok(wall(map, 3, 4) && !M.problems(map).some((q) => q.key === 'passageOpenSides'));
+  // the passage closed: its walls go
+  assert.strictEqual(M.togglePassage(map, 4, 3, [3, 3]), 'closed');
+  borders = M.syncBorderWalls(map, borders);
+  assert.ok(!wall(map, 3, 2) && !wall(map, 3, 4) && wall(map, 4, 3), 'its walls gone, the border walled again');
+  assert.ok(!map.cells['3,3,0'].tile!.passageWalls);
+});
+
+test('a passage against a wall across from its way out is walled where it is still open', () => {
+  const map = M.newMap(4, 3, 2026);
+  M.setFloor(map, 1, 5, 'start');
+  let borders = paint(map, 2, [[2, 0], [3, 0], [2, 1], [3, 1], [2, 2], [3, 2]], new Set());
+  M.setWalls(map, ['v,2,2', 'v,2,3'], true);    // the left side of tile (1, 1)
+  M.togglePassage(map, 4, 3, [3, 3]);
+  borders = M.syncBorderWalls(map, borders);
+  const open = ['3,2', '3,4'].filter((k) => !wall(map, Number(k.split(',')[0]), Number(k.split(',')[1])));
+  assert.strictEqual(open.length, 1, 'one of top and bottom is its way in');
+  assert.ok(!M.problems(map).some((p) => p.key === 'passageOpenSides' || p.key.startsWith('conn.')));
+});
+
+test('fix all walls the passages of the sample maps, also where a side is open only near its ends', () => {
+  for (const name of ['mapA', 'mapB', 'mapC', 'mapD']) {
+    const map = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'maps2026', name + '.json'), 'utf8'));
+    let borders = M.syncBorderWalls(map, new Set());
+    borders = M.fixAll(map, borders);
+    const left = M.problems(map).filter((p) => p.block && p.key !== 'customRoom4NoPicture').map((p) => p.key);
+    assert.deepStrictEqual(left, [], name);
+  }
+});
+
 test('resizing keeps what fits and moves the outer walls', () => {
   const map = M.newMap(3, 3, 2026);
   M.setFloor(map, 5, 5, 'start');

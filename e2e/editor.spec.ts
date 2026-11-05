@@ -235,7 +235,7 @@ test('rooms, passages, floors, curves and the eraser', async ({ page }) => {
     // the passage clicks' notices gone (they stay 4 s), so the floors' shot is the same at any pace
     await settle(page, 4200);
     await tool(page, 'floor');
-    for (const [i, x, y] of [[3, 6, 6], [0, 18, 54], [1, 30, 54], [2, 42, 54]] as [number, number, number][]) {
+    for (const [i, x, y] of [[3, 6, 6], [0, 18, 54], [1, 30, 54], [2, 42, 66]] as [number, number, number][]) {
         await page.locator('.ed-choice').nth(i).click();
         await click(page, x, y);
     }
@@ -247,7 +247,7 @@ test('rooms, passages, floors, curves and the eraser', async ({ page }) => {
     await shot(page, 'curve-hover');
     await click(page, 57, 9);
     await tool(page, 'eraser');
-    await click(page, 42, 54);
+    await click(page, 42, 66);
     await hover(page, 12, 30);
     await shot(page, 'eraser');
     const saved = await download(page, () => page.locator('.ed-file button').nth(2).click());

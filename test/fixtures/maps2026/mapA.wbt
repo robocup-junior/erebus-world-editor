@@ -461,7 +461,7 @@
             zPos 4
             floor TRUE
             topWall 0
-            rightWall 1
+            rightWall 3
             bottomWall 0
             leftWall 0
             topExternal FALSE
@@ -513,8 +513,8 @@
             zPos 0
             floor TRUE
             topWall 3
-            rightWall 2
-            bottomWall 0
+            rightWall 6
+            bottomWall 3
             leftWall 0
             topExternal TRUE
             rightExternal FALSE
@@ -540,7 +540,7 @@
             floor TRUE
             topWall 0
             rightWall 0
-            bottomWall 0
+            bottomWall 3
             leftWall 0
             topExternal FALSE
             rightExternal FALSE
@@ -565,7 +565,7 @@
             zPos 2
             floor TRUE
             topWall 0
-            rightWall 3
+            rightWall 6
             bottomWall 0
             leftWall 0
             topExternal FALSE
@@ -618,7 +618,7 @@
             floor TRUE
             topWall 0
             rightWall 0
-            bottomWall 0
+            bottomWall 15
             leftWall 0
             topExternal FALSE
             rightExternal FALSE
@@ -643,7 +643,7 @@
             zPos 5
             floor TRUE
             topWall 0
-            rightWall 3
+            rightWall 6
             bottomWall 3
             leftWall 0
             topExternal FALSE
@@ -731,8 +731,8 @@
             zPos 2
             floor TRUE
             topWall 0
-            rightWall 0
-            bottomWall 5
+            rightWall 3
+            bottomWall 15
             leftWall 0
             tile1Walls [ 0, 0, 0, 0 ]
             tile2Walls [ 0, 0, 0, 0 ]
@@ -917,7 +917,7 @@
             zPos 2
             floor TRUE
             topWall 0
-            rightWall 0
+            rightWall 3
             bottomWall 0
             leftWall 0
             tile1Walls [ 0, 0, 0, 0 ]
@@ -939,7 +939,7 @@
             xScale 0.4
             yScale 0.4
             zScale 0.4
-            tileColor 0.635 0.635 0.635
+            tileColor 0.30196078431372547 0.10196078431372549 0.6 
             room 2
           }
         
@@ -970,7 +970,7 @@
             xScale 0.4
             yScale 0.4
             zScale 0.4
-            tileColor 0.30196078431372547 0.10196078431372549 0.6 
+            tileColor 0.635 0.635 0.635
             room 3
           }
         
@@ -1104,7 +1104,7 @@
             floor TRUE
             topWall 0
             rightWall 0
-            bottomWall 1
+            bottomWall 5
             leftWall 0
             tile1Walls [ 0, 0, 0, 0 ]
             tile2Walls [ 0, 0, 0, 0 ]
@@ -1575,7 +1575,7 @@
                 rotation 0 1.0000000000000002 0 1.57
                 name "Hazard1"
                 type "GGBYR"
-                scoreWorth 30
+                scoreWorth 10
             }
             
             ]

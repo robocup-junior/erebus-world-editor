@@ -119,7 +119,7 @@
         "help": {
             "hand": "Ziehen, um die Karte zu verschieben.",
             "room": "Male Kacheln in einen Raum (Raum 1 nimmt sie wieder zurück). Wände entstehen von selbst, wo Räume aneinandergrenzen, und rund um die Karte. Raum 4 wird mit der Schaltfläche unten als Bild gezeichnet.",
-            "passage": "Klicke nahe einer Raumgrenze: Die Kachel auf der Seite, auf die du klickst, wird zum Durchgang (erneut klicken schließt ihn, auf der anderen Seite klicken verschiebt ihn dorthin). Klicke in die Mitte einer Durchgangskachel, um ihn zu entfernen. Ein Durchgang, der nicht mehr zu seinen Räumen passt, verschwindet von selbst.",
+            "passage": "Klicke nahe einer Raumgrenze: Die Kachel auf der Seite, auf die du klickst, wird zum Durchgang (erneut klicken schließt ihn, auf der anderen Seite klicken verschiebt ihn dorthin). Klicke in die Mitte einer Durchgangskachel, um ihn zu entfernen. Ein Durchgang, der nicht mehr zu seinen Räumen passt, verschwindet von selbst. Ein Durchgang bekommt an seinen beiden anderen Seiten von selbst Wände, damit er einen Eingang (gegenüber der Grenze) und einen Ausgang hat (Regel {{rule_passageWalls}}); sie verschwinden mit dem Durchgang.",
             "line": "Ziehen, um Wände zu zeichnen. Die Linie folgt dem Zeiger, sodass ein Zug ein Zickzack zeichnen kann (geh den Weg zurück, um eine Ecke rückgängig zu machen). Beginne mit gedrückter Umschalttaste für eine einzige gerade Linie. Raum 1 rastet auf 12 cm (Kachelkanten) ein, Räume 2 und 3 auf 6 cm. Nicht in Raum 4.",
             "eraser": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen. Abseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint); ein Klick entfernt den Start. Die Außenwände bleiben.",
             "floor": "Klicke auf eine Kachel, um ihren Boden festzulegen.",
@@ -258,7 +258,9 @@
         },
         "problems": {
             "noStart": "Es gibt keine Startkachel",
-            "startNotRoom1": "Die Startkachel liegt nicht in Raum 1. Der Start ist eine der Kacheln von Raum 1",
+            "startNotRoom1": "Die Startkachel liegt nicht in Raum 1. Der Start ist eine der Kacheln von Raum 1 (Regel {{rule_start}})",
+            "tileTwoKinds": "Einige Kacheln sind zwei oder mehr von Loch, Sumpf, Checkpoint, Start und Durchgang ({{count}}). Eine Kachel ist nur eines davon (Regel {{rule_oneKind}})",
+            "passageOpenSides": "Einige Durchgänge sind an mehr als zwei Seiten offen ({{count}}). Ein Durchgang hat an zwei Seiten Wände: ein Eingang, ein Ausgang (Regel {{rule_passageWalls}})",
             "victimNoWall": "Einige Opfer haben ihre Wand verloren ({{count}})",
             "victimInPassage": "Einige Opfer liegen in einem Durchgang zwischen Bereichen ({{count}}): In Durchgängen gibt es keine (Regel {{rule_passageTokens}})",
             "victimUnreachable": "Einige Opfer liegen dort, wo der Roboter nicht hinkommt ({{count}}): Wo der Roboter nicht hinkann, gibt es keine (Regel {{rule_reach}})",
@@ -314,9 +316,14 @@
         "victim_notQuarterTile": "Nicht hier",
         "room4NoTiles": "Male zuerst den Bereich von Raum 4 mit dem Raumpinsel",
         "passage_open": "Durchgang gesetzt",
+        "passage_openWalls": "Durchgang gesetzt, mit Wänden an den Seiten: ein Eingang, ein Ausgang",
         "passage_moved": "Durchgang auf diese Seite verschoben",
+        "passage_movedWalls": "Durchgang auf diese Seite verschoben, mit Wänden an den Seiten: ein Eingang, ein Ausgang",
         "passage_closed": "Durchgang entfernt",
+        "passage_taken": "Diese Kachel ist der Start oder ein Loch, Sumpf oder Checkpoint und kann kein Durchgang sein",
         "passageOpen": "Klicke, um den Durchgang auf die farbige Seite zu setzen",
+        "passageOpenWalls": "Klicke, um den Durchgang auf die farbige Seite zu setzen; an den blauen Seiten entstehen Wände, für einen Eingang und einen Ausgang (Regel {{rule_passageWalls}})",
+        "passageTaken": "Diese Kachel ist der Start oder ein Loch, Sumpf oder Checkpoint und kann kein Durchgang sein (Regel {{rule_oneKind}})",
         "passageClose": "Klicke, um den Durchgang zu entfernen",
         "passageRemove": "Klicke, um diesen Durchgang zu entfernen",
         "shapeOut": "Klicke oder ziehe, um Kacheln aus der Karte zu nehmen",
@@ -355,6 +362,9 @@
         "floor_isStart": "Das ist die Startkachel (der Radierer entfernt sie)",
         "floor_start": "Klicke, um den Start hierher zu verschieben (es gibt einen Start)",
         "floor_startRoom": "Der Start ist eine der Kacheln von Raum 1 (diese Kachel ist Raum {{room}})",
+        "floor_startTaken": "Der Start kann nicht auf ein Loch, einen Sumpf, einen Checkpoint oder einen Durchgang: eine Kachel ist nur eines davon (Regel {{rule_oneKind}})",
+        "floor_onStart": "{{floor}} kann nicht auf die Startkachel: eine Kachel ist nur eines von Loch, Sumpf, Checkpoint, Start und Durchgang (Regel {{rule_oneKind}})",
+        "floor_onPassage": "{{floor}} kann nicht auf eine Durchgangskachel: eine Kachel ist nur eines von Loch, Sumpf, Checkpoint, Start und Durchgang (Regel {{rule_oneKind}})",
         "floor_clear": "Klicke, um den Boden zu entfernen (Loch, Sumpf, Checkpoint)",
         "floor_off": "Klicke zum Entfernen: {{floor}}",
         "floor_on": "Klicke zum Setzen: {{floor}}",
@@ -497,7 +507,7 @@
                 },
                 "pass12": {
                     "title": "Räume mit einem Durchgang verbinden",
-                    "body": "An jeder Raumgrenze steht eine Wand, also kommt der Roboter noch nicht in Raum 2. Klicke mit dem Durchgang-Werkzeug nahe einer Grenze: Die Kachel auf der angeklickten Seite wird zum Durchgang, und die Wand öffnet sich.\nErneut klicken schließt ihn; ein Klick auf die andere Seite verschiebt den Durchgang auf diese Kachel. Klicke in die Mitte einer Durchgangskachel, um ihn zu entfernen.",
+                    "body": "An jeder Raumgrenze steht eine Wand, also kommt der Roboter noch nicht in Raum 2. Klicke mit dem Durchgang-Werkzeug nahe einer Grenze: Die Kachel auf der angeklickten Seite wird zum Durchgang, und die Wand öffnet sich.\nErneut klicken schließt ihn; ein Klick auf die andere Seite verschiebt den Durchgang auf diese Kachel. Klicke in die Mitte einer Durchgangskachel, um ihn zu entfernen.\nEin Durchgang bekommt an seinen beiden anderen Seiten von selbst Wände, damit er einen Eingang (gegenüber der Grenze) und einen Ausgang hat (Regel {{rule_passageWalls}}); sie verschwinden mit dem Durchgang.",
                     "task": "Klicke nahe der Grenze von Raum 1 und 2, auf der Seite von Raum 1 (die linke Kachel im grünen Rahmen)"
                 },
                 "pass34": {
@@ -532,7 +542,7 @@
                 },
                 "start": {
                     "title": "Den Start setzen",
-                    "body": "Das Bodenwerkzeug legt den Boden einer Kachel fest. Start ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Ohne ihn kann die Welt nicht exportiert werden.",
+                    "body": "Das Bodenwerkzeug legt den Boden einer Kachel fest. Start ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Ohne ihn kann die Welt nicht exportiert werden. Eine Kachel ist nur eines von Loch, Sumpf, Checkpoint, Start und Durchgang (Regel {{rule_oneKind}}).",
                     "task": "Wähle Start und klicke auf die Kachel unten links (grüner Rahmen)",
                     "tasks": {
                         "room": "Der Start liegt außerhalb von Raum 1. Klicke auf eine Kachel von Raum 1 (grüner Rahmen), um ihn dorthin zu setzen"
@@ -810,7 +820,7 @@
                 },
                 "passage": {
                     "title": "Durchgang (P): die Räume verbinden",
-                    "body": "Klicke nahe einer Raumgrenze: Die Kachel auf der angeklickten Seite wird zum Durchgang, und die Wand an der Grenze öffnet sich.\nErneut klicken schließt ihn. Klicke auf die andere Seite, und der Durchgang wandert auf diese Kachel. Klicke in die Mitte einer Durchgangskachel, um ihn zu entfernen.\nEin Durchgang in Raum 4 kommt auf die Kachel außerhalb von Raum 4. Durchgänge, die nach dem Neumalen der Räume nicht mehr passen, werden von selbst entfernt."
+                    "body": "Klicke nahe einer Raumgrenze: Die Kachel auf der angeklickten Seite wird zum Durchgang, und die Wand an der Grenze öffnet sich.\nEin Durchgang bekommt an seinen beiden anderen Seiten von selbst Wände, damit er einen Eingang (gegenüber der Grenze) und einen Ausgang hat (Regel {{rule_passageWalls}}); sie verschwinden mit dem Durchgang.\nErneut klicken schließt ihn. Klicke auf die andere Seite, und der Durchgang wandert auf diese Kachel. Klicke in die Mitte einer Durchgangskachel, um ihn zu entfernen.\nEin Durchgang in Raum 4 kommt auf die Kachel außerhalb von Raum 4. Durchgänge, die nach dem Neumalen der Räume nicht mehr passen, werden von selbst entfernt."
                 },
                 "line": {
                     "title": "Linie (L): Wände zeichnen",
@@ -826,7 +836,7 @@
                 },
                 "floor": {
                     "title": "Boden (F): Checkpoints, Löcher, Sümpfe, der Start",
-                    "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt."
+                    "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Keiner entfernt den Boden. Eine Kachel ist nur eines von Loch, Sumpf, Checkpoint, Start und Durchgang (Regel {{rule_oneKind}}).\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt."
                 },
                 "victim": {
                     "title": "Opfer (V): Opfer und kognitive Ziele",
@@ -1117,7 +1127,7 @@
                     "steps": {
                         "floor": {
                             "title": "Boden (F): Checkpoints, Löcher, Sümpfe, Kontaktkacheln, der Start",
-                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand."
+                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Keiner entfernt den Boden. Eine Kachel ist nur eines von Loch, Sumpf, Checkpoint, Start und Durchgang (Regel {{rule_oneKind}}).\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand."
                         },
                         "victim": {
                             "body": "Wähle im Bereich eine Art (Smiley-Opfer – verletzt ein trauriges Gesicht, stabil ein neutrales, unverletzt ein fröhliches – und falsche, kognitive Ziele von vier Typen – entzündliches Gas, Gift, ätzend, organisches Peroxid – und ein falsches) und klicke nahe einer Wand: Es kommt an die Wand, wo du klickst.\nSie kommen an Kachelseiten in Raum 1 (eins pro Kachel), an die Flächen der 6-cm-Wände in den Räumen 2 und 3 und an zwei Plätze an einer Kurve (innen und außen). Ziehe ein gesetztes, um es entlang seiner Wand zu verschieben. Wo eins nicht hinkann, sagt die Statuszeile warum.\nDrehe am Drehregler (Feste Drehung) für seine Drehung, oder wähle Zufällig für jedes Mal eine neue. Für ein kognitives Ziel klicke einen Ring des Ziels an, dann unten eine Farbe; die Summe der Ringe ergibt den Typ.\nKlicke ein Opfer mit derselben Art an, um es auszuwählen, und ändere dann Drehung, Ringe oder Position entlang der Wand, oder entferne es. Ein Klick mit einer anderen Art ändert seine Art."

@@ -3,7 +3,9 @@
 // browser: the .wbt with DISABLE_RANDOMNESS and Math.random seeded as below, the .checks.json from
 // the editor's own connection check, room 4 preset check, tile dialog info and room 4 geometry.
 // Since, the fakes are named by their own count (Fake0, Fake1, ...; the editor named each after the
-// next victim, the same for fakes in a row): mapA.wbt has those names.
+// next victim, the same for fakes in a row): mapA.wbt has those names. Then mapA and mapD got walls
+// on their passages' sides (a passage has one way in and one way out, rule 3.3.4), mapA's room 2 -> 3
+// passage a tile up: their expected files and saved flags (reachable, linear) are this editor's.
 import { test } from 'vitest';
 import assert from 'node:assert';
 import type { MapData } from '../src/lib/types';

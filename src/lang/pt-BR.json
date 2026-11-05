@@ -119,7 +119,7 @@
         "help": {
             "hand": "Arraste para mover o mapa.",
             "room": "Pinte ladrilhos com uma sala (a sala 1 os devolve). As paredes surgem sozinhas onde as salas se encontram e ao redor do mapa. A sala 4 é desenhada como uma imagem com o botão abaixo.",
-            "passage": "Clique perto da divisa entre salas: o ladrilho do lado em que você clica vira a passagem (clique de novo para fechá-la; no outro lado, para movê-la para lá). Clique no meio de um ladrilho de passagem para removê-la. Uma passagem que já não combina com suas salas some sozinha.",
+            "passage": "Clique perto da divisa entre salas: o ladrilho do lado em que você clica vira a passagem (clique de novo para fechá-la; no outro lado, para movê-la para lá). Clique no meio de um ladrilho de passagem para removê-la. Uma passagem que já não combina com suas salas some sozinha. Uma passagem recebe paredes nos outros dois lados sozinha, para ter uma entrada (do lado oposto à fronteira) e uma saída (regra {{rule_passageWalls}}); elas saem junto com a passagem.",
             "line": "Arraste para desenhar paredes. A linha vira com o ponteiro, então um único arraste pode desenhar um zigue-zague (volte pelo mesmo caminho para desfazer uma curva). Comece com Shift pressionado para uma única linha reta. A sala 1 se ajusta a 12 cm (bordas dos ladrilhos) e as salas 2 e 3 a 6 cm. Não dentro da sala 4.",
             "eraser": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint); um clique remove a partida. As paredes externas ficam.",
             "floor": "Clique em um ladrilho para definir seu piso.",
@@ -258,7 +258,9 @@
         },
         "problems": {
             "noStart": "Não há ladrilho de partida",
-            "startNotRoom1": "O ladrilho de partida não está na sala 1. A partida é um dos ladrilhos da sala 1",
+            "startNotRoom1": "O ladrilho de partida não está na sala 1. A partida é um dos ladrilhos da sala 1 (regra {{rule_start}})",
+            "tileTwoKinds": "Alguns ladrilhos são dois ou mais de buraco, pântano, checkpoint, partida e passagem ({{count}}). Um ladrilho é só uma dessas coisas (regra {{rule_oneKind}})",
+            "passageOpenSides": "Algumas passagens estão abertas em mais de dois lados ({{count}}). Uma passagem tem paredes em dois lados: uma entrada, uma saída (regra {{rule_passageWalls}})",
             "victimNoWall": "Algumas vítimas perderam a parede ({{count}})",
             "victimInPassage": "Algumas vítimas estão em uma passagem entre áreas ({{count}}): não há vítimas nas passagens (regra {{rule_passageTokens}})",
             "victimUnreachable": "Algumas vítimas estão onde o robô não consegue chegar ({{count}}): não há vítimas onde o robô não pode ir (regra {{rule_reach}})",
@@ -314,9 +316,14 @@
         "victim_notQuarterTile": "Aqui não",
         "room4NoTiles": "Primeiro pinte a área da sala 4 com o pincel de salas",
         "passage_open": "Passagem colocada",
+        "passage_openWalls": "Passagem colocada, com paredes nos lados: uma entrada, uma saída",
         "passage_moved": "Passagem movida para este lado",
+        "passage_movedWalls": "Passagem movida para este lado, com paredes nos lados: uma entrada, uma saída",
         "passage_closed": "Passagem removida",
+        "passage_taken": "Esse ladrilho é a partida ou um buraco, pântano ou checkpoint, então não pode ser uma passagem",
         "passageOpen": "Clique para pôr a passagem no lado colorido",
+        "passageOpenWalls": "Clique para pôr a passagem no lado colorido; paredes sobem nos lados em azul, para uma entrada e uma saída (regra {{rule_passageWalls}})",
+        "passageTaken": "Este ladrilho é a partida ou um buraco, pântano ou checkpoint, então não pode ser uma passagem (regra {{rule_oneKind}})",
         "passageClose": "Clique para remover a passagem",
         "passageRemove": "Clique para remover esta passagem",
         "shapeOut": "Clique ou arraste para tirar ladrilhos do mapa",
@@ -355,6 +362,9 @@
         "floor_isStart": "Este é o ladrilho de partida (a borracha o remove)",
         "floor_start": "Clique para mover a partida para cá (há uma só partida)",
         "floor_startRoom": "A partida é um dos ladrilhos da sala 1 (este ladrilho é da sala {{room}})",
+        "floor_startTaken": "A partida não pode ficar em um buraco, pântano, checkpoint ou passagem: um ladrilho é só uma dessas coisas (regra {{rule_oneKind}})",
+        "floor_onStart": "{{floor}} não pode ficar no ladrilho de partida: um ladrilho é só um de buraco, pântano, checkpoint, partida e passagem (regra {{rule_oneKind}})",
+        "floor_onPassage": "{{floor}} não pode ficar em um ladrilho de passagem: um ladrilho é só um de buraco, pântano, checkpoint, partida e passagem (regra {{rule_oneKind}})",
         "floor_clear": "Clique para remover o piso (buraco, pântano, checkpoint)",
         "floor_off": "Clique para remover: {{floor}}",
         "floor_on": "Clique para torná-lo: {{floor}}",
@@ -497,7 +507,7 @@
                 },
                 "pass12": {
                     "title": "Ligar salas com uma passagem",
-                    "body": "Há uma parede em cada divisa entre salas, então o robô ainda não consegue entrar na sala 2. Com a ferramenta de passagem, clique perto de uma divisa: o ladrilho do lado em que você clicou vira passagem, e a parede se abre.\nClique de novo para fechá-la; clique no outro lado e a passagem vai para aquele ladrilho. Clique no meio de um ladrilho de passagem para removê-la.",
+                    "body": "Há uma parede em cada divisa entre salas, então o robô ainda não consegue entrar na sala 2. Com a ferramenta de passagem, clique perto de uma divisa: o ladrilho do lado em que você clicou vira passagem, e a parede se abre.\nClique de novo para fechá-la; clique no outro lado e a passagem vai para aquele ladrilho. Clique no meio de um ladrilho de passagem para removê-la.\nUma passagem recebe paredes nos outros dois lados sozinha, para ter uma entrada (do lado oposto à fronteira) e uma saída (regra {{rule_passageWalls}}); elas saem junto com a passagem.",
                     "task": "Clique perto da divisa entre as salas 1 e 2, do lado da sala 1 (o ladrilho da esquerda na moldura verde)"
                 },
                 "pass34": {
@@ -532,7 +542,7 @@
                 },
                 "start": {
                     "title": "Colocar a partida",
-                    "body": "A ferramenta de piso define o piso de um ladrilho. Partida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Sem ela o mundo não pode ser exportado.",
+                    "body": "A ferramenta de piso define o piso de um ladrilho. Partida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Sem ela o mundo não pode ser exportado. Um ladrilho é só um de buraco, pântano, checkpoint, partida e passagem (regra {{rule_oneKind}}).",
                     "task": "Escolha Partida e clique no ladrilho de baixo à esquerda (moldura verde)",
                     "tasks": {
                         "room": "A partida está fora da sala 1. Clique em um ladrilho da sala 1 (moldura verde) para colocá-la ali"
@@ -810,7 +820,7 @@
                 },
                 "passage": {
                     "title": "Passagem (P): ligar as salas",
-                    "body": "Clique perto da divisa entre salas: o ladrilho do lado em que você clicou vira uma passagem, e a parede da divisa se abre.\nClique de novo para fechá-la. Clique no outro lado e a passagem vai para aquele ladrilho. Clique no meio de um ladrilho de passagem para removê-la.\nUma passagem para a sala 4 vai no ladrilho fora da sala 4. Passagens que deixam de caber depois de pintar as salas de novo são removidas sozinhas."
+                    "body": "Clique perto da divisa entre salas: o ladrilho do lado em que você clicou vira uma passagem, e a parede da divisa se abre.\nUma passagem recebe paredes nos outros dois lados sozinha, para ter uma entrada (do lado oposto à fronteira) e uma saída (regra {{rule_passageWalls}}); elas saem junto com a passagem.\nClique de novo para fechá-la. Clique no outro lado e a passagem vai para aquele ladrilho. Clique no meio de um ladrilho de passagem para removê-la.\nUma passagem para a sala 4 vai no ladrilho fora da sala 4. Passagens que deixam de caber depois de pintar as salas de novo são removidas sozinhas."
                 },
                 "line": {
                     "title": "Linha (L): desenhar paredes",
@@ -826,7 +836,7 @@
                 },
                 "floor": {
                     "title": "Piso (F): checkpoints, buracos, pântanos, a partida",
-                    "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho."
+                    "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso. Um ladrilho é só um de buraco, pântano, checkpoint, partida e passagem (regra {{rule_oneKind}}).\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho."
                 },
                 "victim": {
                     "title": "Vítima (V): vítimas e alvos cognitivos",
@@ -1117,7 +1127,7 @@
                     "steps": {
                         "floor": {
                             "title": "Piso (F): checkpoints, buracos, pântanos, ladrilhos de contato, a partida",
-                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos."
+                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso. Um ladrilho é só um de buraco, pântano, checkpoint, partida e passagem (regra {{rule_oneKind}}).\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos."
                         },
                         "victim": {
                             "body": "Escolha um tipo no painel (vítimas sorridentes - ferida um rosto triste, estável um rosto neutro, ilesa um rosto feliz - e suas falsas, alvos cognitivos de quatro tipos - gás inflamável, veneno, corrosivo, peróxido orgânico - e um falso) e clique perto de uma parede: ela vai para a parede onde você clica.\nElas vão nos lados dos ladrilhos na sala 1 (uma por ladrilho), nas faces das paredes de 6 cm nas salas 2 e 3, e em dois lugares de uma curva (dentro e fora). Arraste uma colocada para movê-la ao longo da parede. Onde não dá para colocar, a linha de status diz por quê.\nGire o dial (Giro fixo) para a rotação, ou escolha Aleatório para uma nova a cada vez. Para um alvo cognitivo, clique em um anel do alvo e depois em uma cor abaixo; a soma dos anéis dá o tipo.\nClique em uma vítima com o mesmo tipo para selecioná-la e depois mude o giro, os anéis ou a posição ao longo da parede, ou remova-a. Clicar com outro tipo muda o tipo dela."

@@ -403,6 +403,8 @@ export function createEditor() {
     // As the world export works it out (W.recalculate, as the classic editor): from the start tile
     // along the walls joined to it; the walls reached and the tiles beside them are linear, and a
     // victim on a linear tile is worth less. Worked out on a copy of the map, when it is shown.
+    // the walls a passage would get where the passage tool points (worked out again after a change)
+    let passageWallsAt: { key: string; segs: string[] } | null = null;
     let linear: { noStart?: boolean; tiles?: Record<string, string>; floating?: { segs: string[]; arcs: L.Arc[] }; unreached?: boolean } | null = null;
     function computeLinear() {
         linear = null;
@@ -583,6 +585,7 @@ export function createEditor() {
 
     // opened: a map just opened, whose checks card starts closed when there is nothing to show
     function changed(opened?: boolean) {
+        passageWallsAt = null;
         followRules();
         computeLinear();
         computePockets();
@@ -1186,15 +1189,19 @@ export function createEditor() {
                 const at = M.passageSide(map, b, [s.tile.x, s.tile.y]);
                 const r = M.togglePassage(map, s.ex, s.ey, [s.tile.x, s.tile.y]);
                 borders = M.syncBorderWalls(map, borders);
-                if (at[0] !== s.tile.x || at[1] !== s.tile.y) notify('passageRoom4', null, 'info', 7000);
-                else notify('passage_' + r, null, 'ok');
+                const walled = r === 'open' || r === 'moved' ? (M.tileOf(map, at[0], at[1])!.passageWalls || []).length : 0;
+                if (r === 'taken') notify('passage_taken', null, 'warn');
+                else if (at[0] !== s.tile.x || at[1] !== s.tile.y) notify('passageRoom4', null, 'info', 7000);
+                else notify(walled ? 'passage_' + r + 'Walls' : 'passage_' + r, null, 'ok');
             } else if (s && M.clearPassage(map, s.tile.x, s.tile.y)) {
                 borders = M.syncBorderWalls(map, borders);
                 notify('passage_closed', null, 'ok');
             } else notify('noBorder', null, 'warn');
         } else if (tool === 'floor') {
             const tl = tileAt(p);
-            if (tl) M.setFloor(map, tl.x, tl.y, ui.floor);
+            const refused = tl && !M.isOutside(map, tl.x, tl.y) && floorRefused(tl, ui.floor);
+            if (refused) notify(refused.key, refused.params, 'warn');
+            else if (tl) M.setFloor(map, tl.x, tl.y, ui.floor);
         } else if (tool === 'victim' && stroke.victim) {
             dropVictim();
         } else if (tool === 'victim') {
@@ -1700,6 +1707,23 @@ export function createEditor() {
         else say('victim_replace', { name: victimName() });
     }
 
+    // The walls a passage put at border edge (ex, ey) would get, kept for the edge the pointer is at
+    function passageWalls(ex: number, ey: number, side: [number, number]) {
+        const k = ex + ',' + ey + ',' + side.join(',');
+        if (!passageWallsAt || passageWallsAt.key !== k) passageWallsAt = { key: k, segs: M.passageWallsPreview(map, borders, ex, ey, side) };
+        return passageWallsAt.segs;
+    }
+
+    // Why floor `kind` (or the start) cannot go on tile tl by the rules: the status line's text, or null
+    function floorRefused(tl: { x: number; y: number }, kind: string): { key: string; params: Record<string, unknown> } | null {
+        const st = map.startTile, onStart = !!st && st.x === tl.x && st.y === tl.y;
+        if (kind === 'start' && onStart) return null;
+        if (kind === 'start' && M.roomOf(map, tl.x, tl.y) !== 1) return { key: 'floor_startRoom', params: { room: M.roomOf(map, tl.x, tl.y) } };
+        if (kind === 'start') return M.startFree(map, tl.x, tl.y) ? null : { key: 'floor_startTaken', params: {} };
+        if (M.floorFree(map, tl.x, tl.y, kind)) return null;
+        return { key: onStart ? 'floor_onStart' : 'floor_onPassage', params: { floor: t('floors.' + kind) } };
+    }
+
     // What the tool would do at p, for the preview
     function hoverAt(p: P) {
         const ti = tileIndex(p, false);
@@ -1749,13 +1773,15 @@ export function createEditor() {
             const kind = ui.floor, tile = M.tileOf(map, tl.x, tl.y);
             const st = map.startTile;
             const name = t('floors.' + kind);
+            const refused = floorRefused(tl, kind);
             if (M.isOutside(map, tl.x, tl.y)) say('floor_outside');
             else if (kind === 'start' && st && st.x === tl.x && st.y === tl.y) say('floor_isStart');
-            else if (kind === 'start') say(M.roomOf(map, tl.x, tl.y) === 1 ? 'floor_start' : 'floor_startRoom', { room: M.roomOf(map, tl.x, tl.y) });
+            else if (refused) say(refused.key, refused.params);
+            else if (kind === 'start') say('floor_start');
             else if (kind === 'clear') say('floor_clear');
             else if (tile && tile[kind]) say('floor_off', { floor: name });
             else say('floor_on', { floor: name });
-            return { kind: 'tile', tile: tl };
+            return { kind: 'tile', tile: tl, color: refused ? '#dc2626' : undefined };
         }
         if (tool === 'select') {
             const tl = tileIndex(p, false);
@@ -1793,8 +1819,12 @@ export function createEditor() {
                 const at = M.passageSide(map, b, [s.tile.x, s.tile.y]);
                 const here = M.tileOf(map, at[0], at[1]);
                 const moved = at[0] !== s.tile.x || at[1] !== s.tile.y;
-                say(moved ? 'passageRoom4' : here && here.color === b.pass.color ? 'passageClose' : 'passageOpen');
-                return { kind: 'border', side: s, border: b, at: at };
+                const closing = !!(here && here.color === b.pass.color);
+                const taken = !closing && !M.passageFree(map, at[0], at[1]);
+                // the walls the passage would get on its sides (one way in, one way out)
+                const walls = closing || taken ? [] : passageWalls(s.ex, s.ey, [s.tile.x, s.tile.y]);
+                say(taken ? 'passageTaken' : moved ? 'passageRoom4' : closing ? 'passageClose' : walls.length ? 'passageOpenWalls' : 'passageOpen');
+                return { kind: 'border', side: s, border: b, at: at, taken: taken, walls: walls };
             }
             const tl = M.tileOf(map, s.tile.x, s.tile.y);
             const isPass = tl && tl.color && W.passagesOf(map).some(function (q: W.RoomPassage) { return q.color === tl.color; });
@@ -1954,6 +1984,13 @@ export function createEditor() {
             drawSegs(ctx, hover.segs, hover.color, 1.4);
         } else if (hover.kind === 'border') {
             const s = hover.side;
+            if (hover.taken) {
+                ctx.strokeStyle = '#dc2626';
+                ctx.lineWidth = 2.5 * px;
+                ctx.strokeRect(6 * (hover.at[0] - 1) + px, 6 * (hover.at[1] - 1) + px, TILE - 2 * px, TILE - 2 * px);
+                return;
+            }
+            drawSegs(ctx, hover.walls || [], 'rgba(37, 99, 235, 0.75)', 1.4);
             ctx.fillStyle = hover.border.pass.color;
             ctx.globalAlpha = 0.45;
             ctx.fillRect(6 * (hover.at[0] - 1), 6 * (hover.at[1] - 1), TILE, TILE);

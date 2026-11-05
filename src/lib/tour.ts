@@ -147,10 +147,13 @@ const SAMPLE: {
     rooms: { 2: [3, 0, 5, 2], 3: [3, 3, 5, 5], 4: [6, 0, 8, 5] },
     start: [0, 5],
     floors: { checkpoint: [5, 0], black: [1, 3], swamp: [4, 5], contact: [0, 2] },
-    // a wall along a tile edge in room 1, and a staircase on the 6 cm grid in room 2 (cm)
-    wall1: [[12, 24], [36, 24]],
+    // a wall along a tile edge in room 1, and a staircase on the 6 cm grid in room 2 (cm), away from
+    // the passages, their ways in and out and the walls they get on their sides: (2, 1) walled above
+    // and below, (3, 2) on its right
+    wall1: [[12, 36], [36, 36]],
     wall2: [[48, 12], [54, 12], [54, 18], [60, 18], [60, 24]],
-    curve: { tile: [4, 4], q: 0, v: 1 }
+    // a curve rounding the top right corner of room 3 (rule 3.3.2), away from the passages
+    curve: { tile: [5, 3], q: 1, v: 1 }
 };
 
 // ---- what the steps look at ----
@@ -207,7 +210,11 @@ function victimTiles(env: TourEnv) {
 }
 // walls drawn inside a room (not on its borders): unit segments with that room on both sides
 function innerSegs(env: TourEnv, room: number) {
-    const segs = env.L.fromCells(env.map, 0).segs, M = env.M, map = env.map;
+    const M = env.M, map = env.map;
+    // the walls the passages put up on their sides are not drawn by the learner
+    const own = new Set<string>();
+    eachTile(map, function (x, y) { const t = M.tileOf(map, x, y); (t && t.passageWalls || []).forEach(function (s: string) { own.add(s); }); });
+    const segs = Array.from(env.L.fromCells(map, 0).segs).filter(function (s: string) { return !own.has(s); });
     const roomAt = function (x: number, y: number) { return M.roomOf(map, 2 * Math.floor(x / 12) + 1, 2 * Math.floor(y / 12) + 1); };
     let n = 0;
     segs.forEach(function (s) {
@@ -529,10 +536,10 @@ const LESSON: TourStep[] = ([
     },
     {
         id: 'pass34', chapter: 'passages', target: PANEL, tool: 'passage',
-        region: function () { return [[4, 2, 4, 3], [5, 4, 6, 4]]; },
+        region: function () { return [[3, 2, 3, 3], [5, 4, 6, 4]]; },
         goal: function (env) { return reached(env, 3) && reached(env, 4); },
         auto: function (env) {
-            if (!reached(env, 3)) { env.M.togglePassage(env.map, 9, 6, [9, 5]); env.sync(); }
+            if (!reached(env, 3)) { env.M.togglePassage(env.map, 7, 6, [7, 5]); env.sync(); }
             if (!reached(env, 4)) { env.M.togglePassage(env.map, 12, 9, [11, 9]); env.sync(); }
         },
         state: function (env) {
@@ -545,7 +552,7 @@ const LESSON: TourStep[] = ([
 
     {
         id: 'wall1', chapter: 'walls', target: PANEL, tool: 'line', keys: ['Shift'],
-        region: function () { return [[1, 1, 2, 2]]; },
+        region: function () { return [[1, 2, 2, 3]]; },
         guide: function () { return [SAMPLE.wall1]; },
         goal: function (env) { return innerSegs(env, 1) >= 2; },
         auto: function (env) { env.M.setWalls(env.map, segsAlong(env.L, SAMPLE.wall1), true); env.sync(); },
@@ -553,7 +560,7 @@ const LESSON: TourStep[] = ([
     },
     {
         id: 'wall2', chapter: 'walls', target: PANEL, tool: 'line',
-        region: function () { return [[4, 1, 5, 2]]; },
+        region: function () { return [[4, 1, 4, 1]]; },
         guide: function () { return [SAMPLE.wall2]; },
         goal: function (env) { return innerSegs(env, 2) >= 3; },
         auto: function (env) { env.M.setWalls(env.map, segsAlong(env.L, SAMPLE.wall2), true); env.sync(); },
@@ -621,9 +628,9 @@ const LESSON: TourStep[] = ([
 
     {
         id: 'victim', chapter: 'victims', target: PANEL, tool: 'victim', victim: 'H',
-        region: function () { return [[1, 1, 1, 1]]; },
+        region: function () { return [[1, 2, 1, 2]]; },
         goal: function (env) { return victims(env).some(function (v) { return !env.M.isTarget(env.map, v.type) && !v.fake; }); },
-        auto: function (env) { env.M.setVictim(env.map, 3, 3, 'bottom', 'H', false, { rot: 0 }); },
+        auto: function (env) { env.M.setVictim(env.map, 3, 5, 'bottom', 'H', false, { rot: 0 }); },
         state: function (env) { return victims(env).length ? { key: 'notReal' } : null; }
     },
     {
@@ -645,7 +652,7 @@ const LESSON: TourStep[] = ([
         // the victims put in this chapter, where they are: the card keeps clear of them
         region: function (env) {
             const at = victimTiles(env);
-            return at.length ? at.map(tileBox) : [[1, 1, 1, 1], [4, 0, 4, 0], [3, 5, 3, 5]];
+            return at.length ? at.map(tileBox) : [[1, 2, 1, 2], [4, 0, 4, 0], [3, 5, 3, 5]];
         },
         goal: function (env) { return !!env.selected; },
         auto: function (env) {

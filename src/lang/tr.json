@@ -119,7 +119,7 @@
         "help": {
             "hand": "Haritayı taşımak için sürükleyin.",
             "room": "Kareleri bir odaya boyayın (oda 1 onları geri alır). Odaların birleştiği yerlerde ve haritanın çevresinde duvarlar kendiliğinden oluşur. Oda 4, aşağıdaki düğmeyle resim olarak çizilir.",
-            "passage": "Bir oda sınırının yakınına tıklayın: tıkladığınız taraftaki kare geçit olur (kapatmak için tekrar, oraya taşımak için diğer tarafa tıklayın). Kaldırmak için bir geçit karesinin ortasına tıklayın. Odalarına artık uymayan bir geçit kendiliğinden kaybolur.",
+            "passage": "Bir oda sınırının yakınına tıklayın: tıkladığınız taraftaki kare geçit olur (kapatmak için tekrar, oraya taşımak için diğer tarafa tıklayın). Kaldırmak için bir geçit karesinin ortasına tıklayın. Odalarına artık uymayan bir geçit kendiliğinden kaybolur. Geçidin diğer iki kenarına kendiliğinden duvar konur; böylece bir girişi (sınırın karşısında) ve bir çıkışı olur (kural {{rule_passageWalls}}). Geçit kalkınca duvarlar da kalkar.",
             "line": "Duvar çizmek için sürükleyin. Çizgi işaretçiyle birlikte döner, bu yüzden tek bir sürükleme zikzak çizebilir (bir dönüşü geri almak için geldiğiniz yoldan dönün). Tek bir düz çizgi için Shift basılıyken başlayın. Oda 1 12 cm'ye (kare kenarları), oda 2 ve 3 6 cm'ye hizalanır. Oda 4'ün içinde olmaz.",
             "eraser": "Duvarları, eğrileri ve kazazedeleri kaldırmak için üzerlerine tıklayın veya sürükleyin. Duvarlardan uzakta bir karenin zeminini (çukur, bataklık, kontrol noktası) kaldırır; bir tıklama başlangıcı kaldırır. Dış duvarlar kalır.",
             "floor": "Zeminini belirlemek için bir kareye tıklayın.",
@@ -258,7 +258,9 @@
         },
         "problems": {
             "noStart": "Başlangıç karesi yok",
-            "startNotRoom1": "Başlangıç karesi oda 1'de değil. Başlangıç, oda 1'in karelerinden biridir",
+            "startNotRoom1": "Başlangıç karesi oda 1'de değil. Başlangıç, oda 1'in karelerinden biridir (kural {{rule_start}})",
+            "tileTwoKinds": "Bazı kareler çukur, bataklık, kontrol noktası, başlangıç ve geçitten iki veya daha fazlası ({{count}}). Bir kare bunlardan yalnızca biridir (kural {{rule_oneKind}})",
+            "passageOpenSides": "Bazı geçitler ikiden fazla kenarda açık ({{count}}). Geçidin iki kenarında duvar vardır: bir giriş, bir çıkış (kural {{rule_passageWalls}})",
             "victimNoWall": "Bazı kazazedeler duvarını kaybetti ({{count}})",
             "victimInPassage": "Bazı kazazedeler alanlar arasındaki bir geçitte ({{count}}): geçitlerde kazazede olmaz (kural {{rule_passageTokens}})",
             "victimUnreachable": "Bazı kazazedeler robotun ulaşamadığı yerde ({{count}}): robotun gidemediği yerde kazazede olmaz (kural {{rule_reach}})",
@@ -314,9 +316,14 @@
         "victim_notQuarterTile": "Burada olmaz",
         "room4NoTiles": "Önce oda fırçasıyla oda 4 alanını boyayın",
         "passage_open": "Geçit kondu",
+        "passage_openWalls": "Geçit kondu, kenarlarına duvar kondu: bir giriş, bir çıkış",
         "passage_moved": "Geçit bu tarafa taşındı",
+        "passage_movedWalls": "Geçit bu tarafa taşındı, kenarlarına duvar kondu: bir giriş, bir çıkış",
         "passage_closed": "Geçit kaldırıldı",
+        "passage_taken": "O kare başlangıç ya da çukur, bataklık veya kontrol noktası; geçit olamaz",
         "passageOpen": "Geçidi renkli tarafa koymak için tıklayın",
+        "passageOpenWalls": "Geçidi renkli tarafa koymak için tıklayın; bir giriş ve bir çıkış olsun diye mavi kenarlara duvar konur (kural {{rule_passageWalls}})",
+        "passageTaken": "Bu kare başlangıç ya da çukur, bataklık veya kontrol noktası; geçit olamaz (kural {{rule_oneKind}})",
         "passageClose": "Geçidi kaldırmak için tıklayın",
         "passageRemove": "Bu geçidi kaldırmak için tıklayın",
         "shapeOut": "Kareleri haritadan çıkarmak için tıklayın veya sürükleyin",
@@ -355,6 +362,9 @@
         "floor_isStart": "Bu başlangıç karesi (silgi kaldırır)",
         "floor_start": "Başlangıcı buraya taşımak için tıklayın (tek bir başlangıç vardır)",
         "floor_startRoom": "Başlangıç, oda 1'in karelerinden biridir (bu kare oda {{room}})",
+        "floor_startTaken": "Başlangıç çukur, bataklık, kontrol noktası veya geçit karesine konamaz: bir kare bunlardan yalnızca biridir (kural {{rule_oneKind}})",
+        "floor_onStart": "{{floor}} başlangıç karesine konamaz: bir kare çukur, bataklık, kontrol noktası, başlangıç ve geçitten yalnızca biridir (kural {{rule_oneKind}})",
+        "floor_onPassage": "{{floor}} geçit karesine konamaz: bir kare çukur, bataklık, kontrol noktası, başlangıç ve geçitten yalnızca biridir (kural {{rule_oneKind}})",
         "floor_clear": "Zemini kaldırmak için tıklayın (çukur, bataklık, kontrol noktası)",
         "floor_off": "Kaldırmak için tıklayın: {{floor}}",
         "floor_on": "Yapmak için tıklayın: {{floor}}",
@@ -497,7 +507,7 @@
                 },
                 "pass12": {
                     "title": "Odaları bir geçitle birleştirin",
-                    "body": "Her oda sınırında bir duvar vardır, bu yüzden robot henüz oda 2'ye giremez. Geçit aracıyla bir sınırın yakınına tıklayın: tıkladığınız taraftaki kare geçit olur ve duvar açılır.\nKapatmak için tekrar tıklayın; diğer tarafa tıklayın, geçit o kareye geçer. Kaldırmak için bir geçit karesinin ortasına tıklayın.",
+                    "body": "Her oda sınırında bir duvar vardır, bu yüzden robot henüz oda 2'ye giremez. Geçit aracıyla bir sınırın yakınına tıklayın: tıkladığınız taraftaki kare geçit olur ve duvar açılır.\nKapatmak için tekrar tıklayın; diğer tarafa tıklayın, geçit o kareye geçer. Kaldırmak için bir geçit karesinin ortasına tıklayın.\nGeçidin diğer iki kenarına kendiliğinden duvar konur; böylece bir girişi (sınırın karşısında) ve bir çıkışı olur (kural {{rule_passageWalls}}). Geçit kalkınca duvarlar da kalkar.",
                     "task": "Oda 1 ve 2'nin sınırının yakınına, oda 1 tarafına (yeşil çerçevedeki soldaki kare) tıklayın"
                 },
                 "pass34": {
@@ -532,7 +542,7 @@
                 },
                 "start": {
                     "title": "Başlangıcı koyun",
-                    "body": "Zemin aracı bir karenin zeminini belirler. Başlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. O olmadan dünya dışa aktarılamaz.",
+                    "body": "Zemin aracı bir karenin zeminini belirler. Başlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. O olmadan dünya dışa aktarılamaz. Bir kare çukur, bataklık, kontrol noktası, başlangıç ve geçitten yalnızca biridir (kural {{rule_oneKind}}).",
                     "task": "“Başlangıç” seçeneğini seçin ve sol alttaki kareye (yeşil çerçeve) tıklayın",
                     "tasks": {
                         "room": "Başlangıç oda 1'in dışında. Oraya koymak için bir oda 1 karesine (yeşil çerçeve) tıklayın"
@@ -810,7 +820,7 @@
                 },
                 "passage": {
                     "title": "Geçit (P): odaları birleştirmek",
-                    "body": "Bir oda sınırının yakınına tıklayın: tıkladığınız taraftaki kare geçit olur ve sınırdaki duvar açılır.\nKapatmak için tekrar tıklayın. Diğer tarafa tıklayın, geçit o kareye geçer. Kaldırmak için bir geçit karesinin ortasına tıklayın.\nOda 4'e giden geçit, oda 4'ün dışındaki kareye konur. Odalar yeniden boyandıktan sonra artık uymayan geçitler kendiliğinden kaldırılır."
+                    "body": "Bir oda sınırının yakınına tıklayın: tıkladığınız taraftaki kare geçit olur ve sınırdaki duvar açılır.\nGeçidin diğer iki kenarına kendiliğinden duvar konur; böylece bir girişi (sınırın karşısında) ve bir çıkışı olur (kural {{rule_passageWalls}}). Geçit kalkınca duvarlar da kalkar.\nKapatmak için tekrar tıklayın. Diğer tarafa tıklayın, geçit o kareye geçer. Kaldırmak için bir geçit karesinin ortasına tıklayın.\nOda 4'e giden geçit, oda 4'ün dışındaki kareye konur. Odalar yeniden boyandıktan sonra artık uymayan geçitler kendiliğinden kaldırılır."
                 },
                 "line": {
                     "title": "Çizgi (L): duvar çizmek",
@@ -826,7 +836,7 @@
                 },
                 "floor": {
                     "title": "Zemin (F): kontrol noktaları, çukurlar, bataklıklar, başlangıç",
-                    "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. Yok zemini kaldırır.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur."
+                    "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. Yok zemini kaldırır. Bir kare çukur, bataklık, kontrol noktası, başlangıç ve geçitten yalnızca biridir (kural {{rule_oneKind}}).\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur."
                 },
                 "victim": {
                     "title": "Kazazede (V): kazazedeler ve bilişsel hedefler",
@@ -1117,7 +1127,7 @@
                     "steps": {
                         "floor": {
                             "title": "Zemin (F): kontrol noktaları, çukurlar, bataklıklar, temas kareleri, başlangıç",
-                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. Yok zemini kaldırır.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir."
+                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. Yok zemini kaldırır. Bir kare çukur, bataklık, kontrol noktası, başlangıç ve geçitten yalnızca biridir (kural {{rule_oneKind}}).\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir."
                         },
                         "victim": {
                             "body": "Panelden bir tür seçin (gülen yüz kazazedeler - yaralı üzgün yüz, stabil nötr yüz, yaralanmamış mutlu yüz - ve sahteleri, dört türde bilişsel hedef - yanıcı gaz, zehir, aşındırıcı, organik peroksit - ve bir sahte) ve bir duvarın yakınına tıklayın: tıkladığınız yerdeki duvara konur.\nOda 1'de kare kenarlarına (kare başına bir), oda 2 ve 3'te 6 cm duvarların yüzlerine, bir eğride iki yere (iç ve dış) konur. Konmuş birini duvarı boyunca taşımak için sürükleyin. Konamayacağı yerde durum satırı nedenini söyler.\nDönüşü için kadranı çevirin (Sabit dönüş) veya her seferinde yenisi için “Rastgele” seçeneğini seçin. Bilişsel hedef için hedefin bir halkasına, sonra aşağıdaki bir renge tıklayın; halkaların toplamı türünü verir.\nSeçmek için aynı türle bir kazazedeye tıklayın, sonra dönüşünü, halkalarını veya duvar boyunca yerini değiştirin ya da kaldırın. Başka bir türle tıklamak türünü değiştirir."

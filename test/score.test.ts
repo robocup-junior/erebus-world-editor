@@ -12,13 +12,14 @@ const load = (name: string): MapData => JSON.parse(fs.readFileSync(path.join(__d
 test('mapA: each area times its multiplier, the bonuses on top', () => {
   const s = Score.maxScore(load('mapA'), null);
   // room 1: a victim on a linear tile (5 + 10), a target on a linear tile (10 + 20), a checkpoint (10)
-  // room 2: a victim on a 6 cm wall of a linear tile (5 + 10), a target on a floating tile (30 + 20)
+  // room 2: a victim on a 6 cm wall of a linear tile (5 + 10), a target on a linear tile (10 + 20) -
+  // its walls joined to the start by the walls of the passage beside it
   // room 3: a victim on a 6 cm wall of a floating tile (15 + 10); fakes score nothing
-  assert.deepStrictEqual(s.areas.map((a) => a.points), [55, 65 * 1.25, 25 * 1.5, 0]);
+  assert.deepStrictEqual(s.areas.map((a) => a.points), [55, 45 * 1.25, 25 * 1.5, 0]);
   assert.deepStrictEqual(s.areas.map((a) => [a.victims, a.targets, a.checkpoints]), [[1, 1, 1], [1, 1, 0], [1, 0, 0], [0, 0, 0]]);
-  assert.strictEqual(s.field, 173.75);
-  assert.ok(Math.abs(s.withExit - 173.75 * 1.1) < 1e-9);
-  assert.ok(Math.abs(s.withMap - 173.75 * 1.1 * 2.2) < 1e-9);
+  assert.strictEqual(s.field, 148.75);
+  assert.ok(Math.abs(s.withExit - 148.75 * 1.1) < 1e-9);
+  assert.ok(Math.abs(s.withMap - 148.75 * 1.1 * 2.2) < 1e-9);
 });
 
 test('nothing to work out without a start tile', () => {

@@ -2,10 +2,11 @@
 // faster, 3.6.2) and contact tiles (cyan, 3.7), where the robot has its battery replaced. One goes
 // on any tile: "in contact with the outside" (4.3) means a person can reach the robot there, through
 // the roof as well, so not only beside the outer wall. Its cyan is as Erebus
-// shows it: worldTile's diffuseColor 0 0.635 0.635, a linear colour, is #00d1d1 on the screen
+// shows it: worldTile's diffuseColor 0 0.635 0.635, a linear colour, is #00d1d1 on the screen. It is not
+// in the list of what a tile can be only one of (5.6.10.b.iii), so the start or a passage can be one too
 import type { FloorKind } from '../../types';
 import { floors as v1 } from './v1';
 
 export const floors: FloorKind[] = v1.concat([
-    { id: 'contact', icon: 'fa-battery-full', color: '#00d1d1', hole: false, checkpoint: false }
+    { id: 'contact', icon: 'fa-battery-full', color: '#00d1d1', hole: false, checkpoint: false, alone: false }
 ]);

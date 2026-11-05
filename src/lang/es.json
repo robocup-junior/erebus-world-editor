@@ -119,7 +119,7 @@
         "help": {
             "hand": "Arrastra para mover el mapa.",
             "room": "Pinta baldosas con una sala (la sala 1 las devuelve). Las paredes aparecen solas donde se unen las salas y alrededor del mapa. La sala 4 se dibuja como una imagen con el botón de abajo.",
-            "passage": "Haz clic cerca del borde entre salas: la baldosa del lado en que haces clic se convierte en el pasaje (otro clic lo cierra; un clic en el otro lado lo mueve allí). Haz clic en el centro de una baldosa de pasaje para quitarlo. Un pasaje que ya no encaja con sus salas desaparece solo.",
+            "passage": "Haz clic cerca del borde entre salas: la baldosa del lado en que haces clic se convierte en el pasaje (otro clic lo cierra; un clic en el otro lado lo mueve allí). Haz clic en el centro de una baldosa de pasaje para quitarlo. Un pasaje que ya no encaja con sus salas desaparece solo. Un pasaje recibe paredes en sus otros dos lados por sí solo, para tener una entrada (frente al borde) y una salida (regla {{rule_passageWalls}}); se van con el pasaje.",
             "line": "Arrastra para dibujar paredes. La línea gira con el puntero, así que un solo arrastre puede dibujar un zigzag (vuelve por donde viniste para deshacer un giro). Empieza con Shift pulsado para una sola línea recta. En la sala 1 se ajusta a 12 cm (bordes de baldosa) y en las salas 2 y 3 a 6 cm. No dentro de la sala 4.",
             "eraser": "Haz clic o arrastra sobre paredes, curvas y víctimas para quitarlas. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control); un clic quita la salida. Las paredes exteriores se quedan.",
             "floor": "Haz clic en una baldosa para cambiar su suelo.",
@@ -258,7 +258,9 @@
         },
         "problems": {
             "noStart": "No hay baldosa de salida",
-            "startNotRoom1": "La baldosa de salida no está en la sala 1. La salida es una de las baldosas de la sala 1",
+            "startNotRoom1": "La baldosa de salida no está en la sala 1. La salida es una de las baldosas de la sala 1 (regla {{rule_start}})",
+            "tileTwoKinds": "Algunas baldosas son dos o más de agujero, pantano, punto de control, salida y pasaje ({{count}}). Una baldosa es solo una de esas cosas (regla {{rule_oneKind}})",
+            "passageOpenSides": "Algunos pasajes están abiertos por más de dos lados ({{count}}). Un pasaje tiene paredes en dos lados: una entrada, una salida (regla {{rule_passageWalls}})",
             "victimNoWall": "Algunas víctimas han perdido su pared ({{count}})",
             "victimInPassage": "Algunas víctimas están en un pasaje entre áreas ({{count}}): en los pasajes no hay víctimas (regla {{rule_passageTokens}})",
             "victimUnreachable": "Algunas víctimas están donde el robot no puede llegar ({{count}}): no hay víctimas donde el robot no puede ir (regla {{rule_reach}})",
@@ -314,9 +316,14 @@
         "victim_notQuarterTile": "Aquí no se puede",
         "room4NoTiles": "Primero pinta el área de la sala 4 con el pincel de salas",
         "passage_open": "Pasaje colocado",
+        "passage_openWalls": "Pasaje colocado, con paredes en sus lados: una entrada, una salida",
         "passage_moved": "Pasaje movido a este lado",
+        "passage_movedWalls": "Pasaje movido a este lado, con paredes en sus lados: una entrada, una salida",
         "passage_closed": "Pasaje quitado",
+        "passage_taken": "Esa baldosa es la salida o un agujero, pantano o punto de control, así que no puede ser un pasaje",
         "passageOpen": "Haz clic para poner el pasaje en el lado coloreado",
+        "passageOpenWalls": "Haz clic para poner el pasaje en el lado coloreado; se levantan paredes en los lados azules, para una entrada y una salida (regla {{rule_passageWalls}})",
+        "passageTaken": "Esta baldosa es la salida o un agujero, pantano o punto de control, así que no puede ser un pasaje (regla {{rule_oneKind}})",
         "passageClose": "Haz clic para quitar el pasaje",
         "passageRemove": "Haz clic para quitar este pasaje",
         "shapeOut": "Haz clic o arrastra para sacar baldosas del mapa",
@@ -355,6 +362,9 @@
         "floor_isStart": "Esta es la baldosa de salida (el borrador la quita)",
         "floor_start": "Haz clic para mover la salida aquí (hay una sola salida)",
         "floor_startRoom": "La salida es una de las baldosas de la sala 1 (esta baldosa es de la sala {{room}})",
+        "floor_startTaken": "La salida no puede ir en un agujero, pantano, punto de control o pasaje: una baldosa es solo una de esas cosas (regla {{rule_oneKind}})",
+        "floor_onStart": "{{floor}} no puede ir en la baldosa de salida: una baldosa es solo uno de agujero, pantano, punto de control, salida y pasaje (regla {{rule_oneKind}})",
+        "floor_onPassage": "{{floor}} no puede ir en una baldosa de pasaje: una baldosa es solo uno de agujero, pantano, punto de control, salida y pasaje (regla {{rule_oneKind}})",
         "floor_clear": "Haz clic para quitar el suelo (agujero, pantano, punto de control)",
         "floor_off": "Haz clic para quitar: {{floor}}",
         "floor_on": "Haz clic para convertirla en: {{floor}}",
@@ -497,7 +507,7 @@
                 },
                 "pass12": {
                     "title": "Unir salas con un pasaje",
-                    "body": "Hay una pared en cada borde entre salas, así que el robot todavía no puede entrar en la sala 2. Con la herramienta de pasaje, haz clic cerca de un borde: la baldosa del lado en que hiciste clic se convierte en pasaje, y la pared se abre.\nOtro clic lo cierra; un clic en el otro lado mueve el pasaje a esa baldosa. Haz clic en el centro de una baldosa de pasaje para quitarlo.",
+                    "body": "Hay una pared en cada borde entre salas, así que el robot todavía no puede entrar en la sala 2. Con la herramienta de pasaje, haz clic cerca de un borde: la baldosa del lado en que hiciste clic se convierte en pasaje, y la pared se abre.\nOtro clic lo cierra; un clic en el otro lado mueve el pasaje a esa baldosa. Haz clic en el centro de una baldosa de pasaje para quitarlo.\nUn pasaje recibe paredes en sus otros dos lados por sí solo, para tener una entrada (frente al borde) y una salida (regla {{rule_passageWalls}}); se van con el pasaje.",
                     "task": "Haz clic cerca del borde entre las salas 1 y 2, en el lado de la sala 1 (la baldosa izquierda del marco verde)"
                 },
                 "pass34": {
@@ -532,7 +542,7 @@
                 },
                 "start": {
                     "title": "Poner la salida",
-                    "body": "La herramienta de suelo fija el suelo de una baldosa. Salida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Sin ella no se puede exportar el mundo.",
+                    "body": "La herramienta de suelo fija el suelo de una baldosa. Salida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Sin ella no se puede exportar el mundo. Una baldosa es solo uno de agujero, pantano, punto de control, salida y pasaje (regla {{rule_oneKind}}).",
                     "task": "Elige Salida y haz clic en la baldosa de abajo a la izquierda (marco verde)",
                     "tasks": {
                         "room": "La salida está fuera de la sala 1. Haz clic en una baldosa de la sala 1 (marco verde) para ponerla ahí"
@@ -810,7 +820,7 @@
                 },
                 "passage": {
                     "title": "Pasaje (P): unir las salas",
-                    "body": "Haz clic cerca del borde entre salas: la baldosa del lado en que hiciste clic se convierte en pasaje, y la pared del borde se abre.\nOtro clic lo cierra. Haz clic en el otro lado y el pasaje pasa a esa baldosa. Haz clic en el centro de una baldosa de pasaje para quitarlo.\nUn pasaje hacia la sala 4 se pone en la baldosa fuera de la sala 4. Los pasajes que ya no encajan después de volver a pintar las salas se quitan solos."
+                    "body": "Haz clic cerca del borde entre salas: la baldosa del lado en que hiciste clic se convierte en pasaje, y la pared del borde se abre.\nUn pasaje recibe paredes en sus otros dos lados por sí solo, para tener una entrada (frente al borde) y una salida (regla {{rule_passageWalls}}); se van con el pasaje.\nOtro clic lo cierra. Haz clic en el otro lado y el pasaje pasa a esa baldosa. Haz clic en el centro de una baldosa de pasaje para quitarlo.\nUn pasaje hacia la sala 4 se pone en la baldosa fuera de la sala 4. Los pasajes que ya no encajan después de volver a pintar las salas se quitan solos."
                 },
                 "line": {
                     "title": "Línea (L): dibujar paredes",
@@ -826,7 +836,7 @@
                 },
                 "floor": {
                     "title": "Suelo (F): puntos de control, agujeros, pantanos, la salida",
-                    "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo."
+                    "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Ninguno quita el suelo. Una baldosa es solo uno de agujero, pantano, punto de control, salida y pasaje (regla {{rule_oneKind}}).\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo."
                 },
                 "victim": {
                     "title": "Víctima (V): víctimas y objetivos cognitivos",
@@ -1117,7 +1127,7 @@
                     "steps": {
                         "floor": {
                             "title": "Suelo (F): puntos de control, agujeros, pantanos, baldosas de contacto, la salida",
-                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos."
+                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Ninguno quita el suelo. Una baldosa es solo uno de agujero, pantano, punto de control, salida y pasaje (regla {{rule_oneKind}}).\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos."
                         },
                         "victim": {
                             "body": "Elige un tipo en el panel (víctimas sonrientes - herido una cara triste, estable una cara neutra, ileso una cara feliz - y sus falsas, objetivos cognitivos de cuatro tipos - gas inflamable, veneno, corrosivo, peróxido orgánico - y uno falso) y haz clic cerca de una pared: se coloca en la pared donde haces clic.\nVan en los lados de baldosa en la sala 1 (una por baldosa), en las caras de las paredes de 6 cm en las salas 2 y 3, y en dos sitios de una curva (dentro y fuera). Arrastra una colocada para moverla a lo largo de su pared. Donde no se puede poner, la línea de estado dice por qué.\nGira el dial (Giro fijo) para su rotación, o elige Aleatorio para una nueva cada vez. Para un objetivo cognitivo, haz clic en un anillo del objetivo y luego en un color abajo; la suma de los anillos da su tipo.\nHaz clic en una víctima con el mismo tipo para seleccionarla, y luego cambia su giro, anillos o posición a lo largo de su pared, o quítala. Un clic con otro tipo cambia su tipo."
