@@ -701,7 +701,8 @@
                     "task": "Dengan alat persegi panjang, gambar persegi kecil jauh dari dinding dan lihat bagian dalamnya berubah menjadi garis-garis merah (Kerjakan untuk saya menggambar persegi kecil dengan pena)",
                     "tasks": {
                         "off": "Tidak ada start, jadi tempat yang tidak bisa dicapai robot tidak dapat dihitung. Pasang start di peta dulu (langkah ini bisa dilewati)",
-                        "allBlocked": "Robot hampir tidak bisa masuk ke ruang 4: ada yang menutup pintu masuknya. Hapus dinding di depannya, atau pasang templat lagi dengan Hapus dulu aktif"
+                        "allBlocked": "Robot hampir tidak bisa masuk ke ruang 4: ada yang menutup pintu masuknya. Hapus dinding di depannya, atau pasang templat lagi dengan Hapus dulu aktif",
+                        "victimsIn": "{{n}} korban yang sudah dipasang kini berada di tempat yang tidak bisa dicapai robot: pemeriksaan akan menghentikan ekspor karenanya. Batalkan (Ctrl+Z) dan gambar persegi di tempat lain, atau hapus dengan Penghapus pada \"Korban saja\" (\"Kerjakan untuk saya\" menghapusnya)"
                     }
                 },
                 "r4file": {

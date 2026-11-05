@@ -39,7 +39,8 @@ function makeEnv(year = R.LATEST_YEAR) {
           applyTemplate(id: string, clear: boolean) { drew(); if (clear) r4.tokenCount = 0; },
           randomStamps(n: number) { r4.tokenCount += n; drew(); },
           selectToken() { r4.sel = {}; },
-          eraseToken() { if (r4.tokenCount) { r4.tokenCount--; drew(); } }
+          eraseToken() { if (r4.tokenCount) { r4.tokenCount--; drew(); } },
+          eraseUnreachable() { r4.tokenCount -= r4.unreachCount || 0; r4.unreachCount = 0; drew(); }
         },
         closeRoom4() { env.map.room4CanvasSave = 'data:image/png;base64,AAAA'; env.creator = null; }
       };
@@ -178,4 +179,26 @@ test('the step to pick a victim lights up the victims where they were put', () =
   // on the outer wall above the top left tile
   assert.ok(M.setVictim(env.map, 1, 1, 'top', 'H', false, { rot: 0 }));
   assert.deepStrictEqual(step.region(env, {}), [[0, 0, 0, 0]]);
+});
+
+test('the step that makes a place out of reach is not done while it shuts in victims put before', () => {
+  const env = makeEnv();
+  env.act.newMap();
+  env.act.openRoom4();
+  const r4 = env.creator!.r4;
+  r4.tokenCount = 3;
+  const step = T.LESSON.find((s) => s.id === 'r4reach')!;
+  const st: T.StepState = {};
+  step.enter!(env, st);
+  assert.ok(!step.goal!(env, st));
+  // a square drawn round a victim: out of reach, and the victim with it
+  env.creator!.r4api.drawPen([[0, 0], [1, 0], [1, 1], [0, 0]]);
+  r4.unreachCount = 1;
+  assert.ok(!step.goal!(env, st), 'not done with a victim shut in');
+  assert.deepStrictEqual(step.state!(env, st), { key: 'victimsIn', params: { n: 1 } });
+  // "do it for me" takes the victim off
+  step.auto!(env, st);
+  assert.ok(step.goal!(env, st));
+  assert.strictEqual(r4.tokenCount, 2);
+  assert.strictEqual(step.state!(env, st), null);
 });

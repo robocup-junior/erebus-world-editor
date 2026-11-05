@@ -701,7 +701,8 @@
                     "task": "Com a ferramenta de retângulo, desenhe um quadrado pequeno longe das paredes e veja o interior virar listras vermelhas (Faça por mim desenha um quadrado pequeno com a caneta)",
                     "tasks": {
                         "off": "Não há partida, então não dá para calcular onde o robô não consegue chegar. Coloque primeiro a partida no mapa (este passo pode ser pulado)",
-                        "allBlocked": "O robô não consegue entrar em quase nada da sala 4: algo fecha a entrada. Apague a parede na frente dela, ou coloque um modelo de novo com Apagar primeiro ligado"
+                        "allBlocked": "O robô não consegue entrar em quase nada da sala 4: algo fecha a entrada. Apague a parede na frente dela, ou coloque um modelo de novo com Apagar primeiro ligado",
+                        "victimsIn": "{{n}} das vítimas postas até agora estão onde o robô não chega: as verificações parariam a exportação por elas. Desfaça (Ctrl+Z) e desenhe o quadrado em outro lugar, ou tire-as com a Borracha em \"Só vítimas\" (\"Faça por mim\" as tira)"
                     }
                 },
                 "r4file": {

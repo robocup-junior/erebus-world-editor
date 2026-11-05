@@ -701,7 +701,8 @@
                     "task": "Avec l’outil rectangle, tracez un petit carré loin des murs et voyez son intérieur passer en rayures rouges (Le faire pour moi trace un petit carré au stylo)",
                     "tasks": {
                         "off": "Il n’y a pas de départ, donc on ne peut pas calculer où le robot ne peut pas aller. Placez d’abord le départ sur la carte (cette étape peut être passée)",
-                        "allBlocked": "Le robot ne peut entrer presque nulle part dans la salle 4 : quelque chose bloque son entrée. Gommez le mur devant, ou replacez un modèle avec Effacer d’abord activé"
+                        "allBlocked": "Le robot ne peut entrer presque nulle part dans la salle 4 : quelque chose bloque son entrée. Gommez le mur devant, ou replacez un modèle avec Effacer d’abord activé",
+                        "victimsIn": "{{n}} des victimes posées jusqu’ici sont maintenant là où le robot ne peut pas aller : les vérifications bloqueraient l’export pour elles. Annulez (Ctrl+Z) et dessinez le carré ailleurs, ou retirez-les avec la Gomme sur « Victimes seulement » (« Le faire pour moi » les retire)"
                     }
                 },
                 "r4file": {

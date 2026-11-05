@@ -701,7 +701,8 @@
                     "task": "With the rectangle tool, draw a small square away from the walls and see its inside turn to red stripes (Do it for me draws a small square with the pen)",
                     "tasks": {
                         "off": "There is no start, so where the robot cannot get to cannot be worked out. Put the start on the map first (this step can be skipped)",
-                        "allBlocked": "The robot cannot get into almost any of room 4: something closes off its entrance. Rub out the wall in front of it, or put a template again with Clear first on"
+                        "allBlocked": "The robot cannot get into almost any of room 4: something closes off its entrance. Rub out the wall in front of it, or put a template again with Clear first on",
+                        "victimsIn": "{{n}} of the victims put so far are now where the robot cannot get to: the checks would stop the export for them. Undo (Ctrl+Z) and draw the square somewhere else, or take them off with the Eraser on Victims only (\"Do it for me\" takes them off)"
                     }
                 },
                 "r4file": {

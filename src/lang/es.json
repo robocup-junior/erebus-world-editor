@@ -701,7 +701,8 @@
                     "task": "Con la herramienta de rectángulo, dibuja un cuadrado pequeño lejos de las paredes y mira cómo su interior se vuelve de rayas rojas (Hazlo por mí dibuja un cuadrado pequeño con el lápiz)",
                     "tasks": {
                         "off": "No hay salida, así que no se puede calcular a dónde no puede llegar el robot. Pon primero la salida en el mapa (este paso se puede saltar)",
-                        "allBlocked": "El robot no puede entrar en casi nada de la sala 4: algo cierra su entrada. Borra la pared que está delante, o vuelve a poner una plantilla con Borrar primero activado"
+                        "allBlocked": "El robot no puede entrar en casi nada de la sala 4: algo cierra su entrada. Borra la pared que está delante, o vuelve a poner una plantilla con Borrar primero activado",
+                        "victimsIn": "{{n}} de las víctimas puestas hasta ahora están donde el robot no llega: las comprobaciones detendrían la exportación por ellas. Deshaz (Ctrl+Z) y dibuja el cuadrado en otro sitio, o quítalas con el Borrador en «Solo víctimas» («Hazlo por mí» las quita)"
                     }
                 },
                 "r4file": {

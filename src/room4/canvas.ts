@@ -2115,6 +2115,14 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         eraseTokensAt({ x: t.cx, y: t.cy });
         commit();
     };
+    // the eraser on victims only, on each victim the robot cannot get to
+    scope.r4api.eraseUnreachable = function () {
+        const out = tokens.filter(function (t) { return t.unreachable; });
+        if (!out.length) return;
+        checkpoint();
+        out.forEach(function (t) { eraseTokensAt({ x: t.cx, y: t.cy }); });
+        commit();
+    };
     scope.r4api.selectToken = function (i) { selectToken(tokens[i || 0] || null); };
     scope.r4api.undo = function () {
         if (sel) { sel = null; syncSel(); }

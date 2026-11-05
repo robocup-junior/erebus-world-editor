@@ -701,7 +701,8 @@
                     "task": "Zeichne mit dem Rechteck-Werkzeug ein kleines Quadrat abseits der Wände und sieh, wie sein Inneres rot gestreift wird (Für mich erledigen zeichnet ein kleines Quadrat mit dem Stift)",
                     "tasks": {
                         "off": "Es gibt keinen Start, also lässt sich nicht berechnen, wo der Roboter nicht hinkommt. Setze zuerst den Start auf die Karte (dieser Schritt kann übersprungen werden)",
-                        "allBlocked": "Der Roboter kommt fast nirgends in Raum 4 hinein: Etwas versperrt seinen Eingang. Radiere die Wand davor weg oder setze erneut eine Vorlage mit Zuerst leeren an"
+                        "allBlocked": "Der Roboter kommt fast nirgends in Raum 4 hinein: Etwas versperrt seinen Eingang. Radiere die Wand davor weg oder setze erneut eine Vorlage mit Zuerst leeren an",
+                        "victimsIn": "{{n}} der bisher gesetzten Opfer liegen jetzt, wo der Roboter nicht hinkommt: Die Prüfung würde den Export dafür stoppen. Mache es rückgängig (Strg+Z) und zeichne das Quadrat woanders, oder entferne sie mit dem Radierer auf „Nur Opfer“ („Für mich erledigen“ entfernt sie)"
                     }
                 },
                 "r4file": {

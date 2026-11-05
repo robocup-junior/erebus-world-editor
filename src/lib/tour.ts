@@ -437,13 +437,27 @@ const ROOM4: TourStep[] = [
         // a place the robot cannot get into made on purpose (a small closed square), and seen
         id: 'r4reach', chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-topbar', '.r4-status', r4tool('rect')], r4tool: 'rect', showReach: true,
         r4guide: [R4.square],
-        enter: function (env, st) { st.b0 = env.creator ? env.creator!.r4.reachBlocked || 0 : 0; },
-        goal: function (env, st) { return !!env.creator && (env.creator!.r4.reachBlocked || 0) > st.b0; },
-        auto: function (env) { env.creator!.r4api.drawPen(R4.square); },
-        state: function (env) {
+        // done with a place out of reach that has none of the victims put so far in it (else the
+        // checks would stop the export for them, and only drawing again fixes that)
+        enter: function (env, st) {
+            st.b0 = env.creator ? env.creator!.r4.reachBlocked || 0 : 0;
+            st.u0 = env.creator ? env.creator!.r4.unreachCount || 0 : 0;
+        },
+        goal: function (env, st) {
+            const r4 = env.creator && env.creator!.r4;
+            return !!r4 && (r4.reachBlocked || 0) > st.b0 && (r4.unreachCount || 0) <= st.u0;
+        },
+        // the square drawn; once more, the victims it shut in taken off
+        auto: function (env, st) {
+            const cr = env.creator!;
+            if ((cr.r4.unreachCount || 0) > st.u0) cr.r4api.eraseUnreachable();
+            else cr.r4api.drawPen(R4.square);
+        },
+        state: function (env, st) {
             const r4 = env.creator && env.creator!.r4;
             if (!r4) return null;
             if (r4.reachState && r4.reachState !== 'ok') return { key: 'off' };
+            if ((r4.unreachCount || 0) > st.u0) return { key: 'victimsIn', params: { n: (r4.unreachCount || 0) - st.u0 } };
             // nearly all of room 4 out of reach already: its entrance is closed off
             if (r4.reachRoom && (r4.reachBlocked || 0) >= 0.9 * r4.reachRoom) return { key: 'allBlocked' };
             return null;
