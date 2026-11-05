@@ -52,13 +52,37 @@ test('a victim on a wall of a narrow channel is pointed out, and stops the expor
   assert.ok(!M.problems(wide).some((x) => x.key === 'victimUnreachable'));
 });
 
-test('a room not got into at all (no passage yet) is left out', () => {
+test('a room the robot does not get into at all is out of reach too: one with no passage yet, or one past a passage it cannot get through', () => {
   const map = room2();
   // room 1 on the left column; rooms 1 and 2 then have a wall between them and no passage
   for (let y = 1; y <= 5; y += 2) M.setRoom(map, 1, y, 1);
-  M.syncBorderWalls(map, new Set());
-  const r = M.robotReach(map);
-  assert.strictEqual(r.pocketCount, 0);
+  let borders = M.syncBorderWalls(map, new Set());
+  let r = M.robotReach(map);
+  assert.strictEqual(r.pocketCount, 1, 'room 2, all of it');
+  assert.ok(r.pocketAt(24, 18) && !r.pocketAt(6, 18));
+  // a passage into it, then an obstacle in front of the passage: out of reach again, its victims as well
+  assert.strictEqual(M.togglePassage(map, 2, 3, [1, 3]), 'open');
+  borders = M.syncBorderWalls(map, borders);
+  // a victim on a 6 cm face of room 2's outer wall (room 2 takes them there)
+  const slot = [...Array(16).keys()].find((i) => M.slotHasWall(map, 5, 3, i))!;
+  assert.ok(M.setSlotVictim(map, 5, 3, slot, 'H', false, { rot: 0 }));
+  assert.ok(!M.robotReach(map).pocketAt(24, 18), 'room 2 got into through the passage');
+  M.setObstacle(map, 3, 3, { shape: 'box', w: 10, d: 10, h: 6 });     // on the room 2 tile past the passage
+  r = M.robotReach(map);
+  assert.ok(r.pocketAt(24, 18), 'room 2 past the blocked passage');
+  assert.strictEqual(r.victims.length, 1, 'its victim cannot be got to');
+});
+
+test('the passage tool gets its way in on the side the robot comes from, not one that shuts it off from the start', () => {
+  // room 1 on the left column, the start at its bottom; a passage on its middle tile into room 2:
+  // across from the way out is the outer wall, so the way in is above or below - below, from the start
+  const map = room2();
+  for (let y = 1; y <= 5; y += 2) M.setRoom(map, 1, y, 1);
+  let borders = M.syncBorderWalls(map, new Set());
+  M.togglePassage(map, 2, 3, [1, 3]);
+  borders = M.syncBorderWalls(map, borders);
+  assert.deepStrictEqual(map.cells['1,3,0'].tile!.passageWalls, ['h,0,2', 'h,1,2'], 'its top walled, not its bottom');
+  assert.ok(!M.robotReach(map).pocketAt(24, 18));
 });
 
 test('the corner a curve closes off is under 5 cm2: left out as a speck, as in the room 4 creator', () => {

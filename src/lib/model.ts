@@ -543,23 +543,60 @@ function wallPassage(map: MapData, x: number, y: number, exit?: string | null) {
     const outs = exit && open.some(function (s) { return s.side === exit; }) ? [exit]
         : open.filter(function (s) { return s.room === p.other; }).map(function (s) { return s.side; });
     const t = ensureTile(map, x, y);
-    for (let i = 0; i < outs.length; i++) {
-        const out = outs[i];
-        const ins = open.filter(function (s) { return s.side !== out && s.room === p.own; }).map(function (s) { return s.side; })
-            .sort(function (a, b) { return (a === OPPOSITE[out] ? 0 : 1) - (b === OPPOSITE[out] ? 0 : 1); });
-        for (let j = 0; j < ins.length; j++) {
-            const added: string[] = [];
-            open.forEach(function (s) {
-                if (s.side === out || s.side === ins[j]) return;
-                sideSegs(x, y, s.side).forEach(function (g) { if (!L.hasSeg(map, g)) { L.setSeg(map, g, true); added.push(g); } });
-            });
-            const now = openSides(map, x, y).map(function (s) { return s.side; });
-            if (now.length === 2 && now.indexOf(out) > -1 && now.indexOf(ins[j]) > -1) {
-                t.passageWalls = (t.passageWalls || []).concat(added);
-                return added.length;
+    // each way out and in that leaves both open, in order of choice
+    const choices: string[][] = [];
+    outs.forEach(function (out) {
+        open.filter(function (s) { return s.side !== out && s.room === p.own; }).map(function (s) { return s.side; })
+            .sort(function (a, b) { return (a === OPPOSITE[out] ? 0 : 1) - (b === OPPOSITE[out] ? 0 : 1); })
+            .forEach(function (into) { choices.push([out, into]); });
+    });
+    const wallUp = function (c: string[]) {
+        const added: string[] = [];
+        open.forEach(function (s) {
+            if (s.side === c[0] || s.side === c[1]) return;
+            sideSegs(x, y, s.side).forEach(function (g) { if (!L.hasSeg(map, g)) { L.setSeg(map, g, true); added.push(g); } });
+        });
+        return added;
+    };
+    const takeDown = function (added: string[]) { added.forEach(function (g) { L.setSeg(map, g, false); }); };
+    const keeps = function (c: string[]) {
+        const now = openSides(map, x, y).map(function (s) { return s.side; });
+        return now.length === 2 && now.indexOf(c[0]) > -1 && now.indexOf(c[1]) > -1;
+    };
+    // the ways in the robot can come by from the start: the tile beside each side reached with the
+    // passage tile itself shut (worked out once: not through the passage, which is what is being
+    // decided), so that its way in is not one that shuts it off from the rest of its room
+    const comesBy = (function () {
+        const shut = wallUp(['', '']);
+        const r = robotReach(map);
+        takeDown(shut);
+        const ok: Record<string, boolean> = {};
+        open.forEach(function (sd) {
+            if (!r) { ok[sd.side] = true; return; }
+            const nx = x + 2 * SIDES[sd.side][0], ny = y + 2 * SIDES[sd.side][1];
+            for (let j = Math.floor((6 * ny - 3) / r.res); j <= Math.floor((6 * ny + 3) / r.res) && !ok[sd.side]; j++) {
+                for (let i = Math.floor((6 * nx - 3) / r.res); i <= Math.floor((6 * nx + 3) / r.res); i++) {
+                    if (i >= 0 && j >= 0 && i < r.gw && j < r.gh && r.reached[j * r.gw + i]) { ok[sd.side] = true; break; }
+                }
             }
-            added.forEach(function (g) { L.setSeg(map, g, false); });
+        });
+        return ok;
+    })();
+    const reachedHere = function (c: string[]) { return !!comesBy[c[1]]; };
+    let fallback: string[] | null = null;
+    for (let k = 0; k < choices.length; k++) {
+        const added = wallUp(choices[k]);
+        if (keeps(choices[k])) {
+            if (reachedHere(choices[k])) { t.passageWalls = (t.passageWalls || []).concat(added); return added.length; }
+            if (!fallback) fallback = choices[k];
         }
+        takeDown(added);
+    }
+    // none the robot gets onto from the start (the start not put yet, or cut off): the first that works
+    if (fallback) {
+        const added = wallUp(fallback);
+        t.passageWalls = (t.passageWalls || []).concat(added);
+        return added.length;
     }
     if (!t.passageWalls) t.passageWalls = [];
     return 0;
@@ -1652,6 +1689,15 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
     // every wall as short straight pieces (curves too), for line of sight
     const pieces = wallPieces(map).concat(W.obstaclePieces(map));
     pieces.forEach(function (s) { markSeg(s[0], s[1]); });
+    // an obstacle is solid: the floor inside its outline is no floor to stand on, nor to reach
+    W.obstacleOutlines(map).forEach(function (r) {
+        const xs = r.map(function (p) { return p[0]; }), ys = r.map(function (p) { return p[1]; });
+        for (let j = Math.max(0, Math.floor(Math.min.apply(null, ys) / res)); j <= Math.min(gh - 1, Math.floor(Math.max.apply(null, ys) / res)); j++) {
+            for (let i = Math.max(0, Math.floor(Math.min.apply(null, xs) / res)); i <= Math.min(gw - 1, Math.floor(Math.max.apply(null, xs) / res)); i++) {
+                if (W.insideRing((i + 0.5) * res, (j + 0.5) * res, r)) wall[j * gw + i] = 1;
+            }
+        }
+    });
     // the map's edge is a wall too
     const dWall = (function () {
         const src = new Uint8Array(gw * gh);
@@ -1688,19 +1734,18 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
     // the floor its body covers
     const dReach = distanceTo(reached, gw, gh);
     const covered = function (n: number) { return dReach[n] <= need + 0.5; };
-    // rooms it gets into at all
-    const roomIn: Record<number, boolean> = {};
     const roomAtCell = function (n: number) {
         const i = n % gw, j = (n - i) / gw;
         return roomOf(map, 2 * Math.floor(i * res / 12) + 1, 2 * Math.floor(j * res / 12) + 1);
     };
-    for (let n = 0; n < gw * gh; n++) if (reached[n]) roomIn[roomAtCell(n)] = true;
-    // the floor of rooms 1-3 out of reach, without specks
+    // the floor out of reach, without specks: a room the robot does not get into at all (cut off past
+    // a passage it cannot get through) as well; room 4's with its picture's walls (a preset's walls
+    // are not known here: its floor is left out)
+    const preset = !!(map.area4Room && map.area4Room.type >= 2);
     const miss = new Uint8Array(gw * gh);
     for (let n = 0; n < gw * gh; n++) {
         if (wall[n] || outside[n] || covered(n)) continue;
-        const room = roomAtCell(n);
-        if (room === 4 || !roomIn[room]) continue;
+        if (preset && roomAtCell(n) === 4) continue;
         miss[n] = 1;
     }
     const minCells = SPECK_CM2 / (res * res);
@@ -1748,7 +1793,7 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
         }
         return false;
     };
-    const skip = function (x: number, y: number) { return isOutside(map, x, y) || roomOf(map, x, y) === 4 || !roomIn[roomOf(map, x, y)]; };
+    const skip = function (x: number, y: number) { return isOutside(map, x, y) || roomOf(map, x, y) === 4; };
     const victims: number[][] = [];
     for (let x = 1; x < 2 * map.width; x += 2) {
         for (let y = 1; y < 2 * map.length; y += 2) {

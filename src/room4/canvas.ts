@@ -110,6 +110,14 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         x.lineWidth = geo.wallHalfCm * 2;
         x.lineCap = 'square';
         geo.shapes.forEach(function (sh) { mapShapePath(x, sh); x.stroke(); });
+        // the map's obstacles, solid: in the robot's way to room 4 as walls are
+        x.fillStyle = '#000';
+        ((geo as any).obstacles || []).forEach(function (r: number[][]) {
+            x.beginPath();
+            r.forEach(function (p, i) { if (i) x.lineTo(p[0], p[1]); else x.moveTo(p[0], p[1]); });
+            x.closePath();
+            x.fill();
+        });
         return { canvas: c, gw: gw, gh: gh, holes: new Uint8Array(gw * gh), holeTiles: new Uint8Array(gw * gh) };
     })();
 

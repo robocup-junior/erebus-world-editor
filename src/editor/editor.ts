@@ -887,7 +887,9 @@ export function createEditor() {
             roomTiles: map.roomTiles,
             canvasWidth: size.w,
             canvasHeight: size.h,
-            room4MapGeometry: function () { return W.mapGeometry(map); },
+            // the map as the creator works out the robot's reach on it: its walls, holes and start, and
+            // its obstacles (solid, in the way to room 4's entrances as well)
+            room4MapGeometry: function () { return Object.assign(W.mapGeometry(map), { obstacles: W.obstacleOutlines(map) }); },
             room4Img: new Image(),
             room4CanvasSave: map.room4CanvasSave || null,
             room4Tokens: JSON.parse(JSON.stringify(map.room4Tokens || [])),

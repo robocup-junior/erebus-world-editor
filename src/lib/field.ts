@@ -345,6 +345,25 @@ function obstaclePieces(map: MapData): number[][][] {
     return out;
 }
 
+// Every obstacle's outlines on the map (cm): rings to fill (an obstacle is solid, not only its sides)
+function obstacleOutlines(map: MapData): number[][][] {
+    const out: number[][][] = [];
+    Object.keys(map.cells).forEach(function (k) {
+        const p = k.split(',').map(Number);
+        const sh = p[2] === 0 && p[0] % 2 === 1 && p[1] % 2 === 1 ? obstacleShape(map.cells[k].tile) : null;
+        if (sh) obstacleRings(sh, p[0], p[1]).forEach(function (r) { out.push(r); });
+    });
+    return out;
+}
+// Whether point (x, y) is inside a ring
+function insideRing(x: number, y: number, r: number[][]) {
+    let n = false;
+    for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+        if ((r[i][1] > y) !== (r[j][1] > y) && x < (r[j][0] - r[i][0]) * (y - r[i][1]) / (r[j][1] - r[i][1]) + r[i][0]) n = !n;
+    }
+    return n;
+}
+
 // fits(x, y): whether the robot body fits with its centre at (x, y) cm
 function robotFits(map: MapData): (x: number, y: number) => boolean {
     const g = rulesOf(map).geometry;
@@ -361,9 +380,11 @@ function robotFits(map: MapData): (x: number, y: number) => boolean {
             for (let j = Math.floor((box[1] - reach) / TILE_CM); j <= Math.floor((box[3] + reach) / TILE_CM); j++)
                 (buckets[i + ',' + j] = buckets[i + ',' + j] || []).push(s);
     });
+    const solids = obstacleOutlines(map);
     return function (x, y) {
         const list = buckets[Math.floor(x / TILE_CM) + ',' + Math.floor(y / TILE_CM)] || [];
-        return list.every(function (s) { return shapeDistance(s, x, y) >= reach; });
+        return list.every(function (s) { return shapeDistance(s, x, y) >= reach; })
+            && !solids.some(function (r) { return insideRing(x, y, r); });
     };
 }
 
@@ -1216,6 +1237,8 @@ export {
     obstacleRingsLocal,
     obstacleRings,
     obstaclePieces,
+    obstacleOutlines,
+    insideRing,
     wallShapes,
     connectionStatus,
     mapGeometry
