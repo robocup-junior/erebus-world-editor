@@ -215,7 +215,7 @@
         "draw": "Dessiner son contour",
         "drawDone": "Fermer et poser",
         "drawHow": "Cliquez ses coins sur la carte ; cliquez le premier ou appuyez sur Entrée pour le fermer, Échap pour arrêter. Le centre du rectangle qui l’entoure va sur une case, loin de ses bords.",
-        "onTile": "Son centre reste sur sa case, loin de ses bords (règle {{rule_obstacles}}). Il peut s’appuyer contre un mur, pas le traverser : déplacé ou agrandi, il s’arrête là où il en touche un. Faites-le glisser sur la carte pour le déplacer.",
+        "onTile": "Son centre reste sur sa case, loin de ses bords (règle {{rule_obstacles}}). Il peut s’appuyer contre un mur, pas le traverser : déplacé ou agrandi, il s’arrête là où il en touche un. Faites-le glisser sur la carte pour le déplacer. Ses poignées sur la carte changent sa taille et sa rotation (Maj : pas de 15°).",
         "colorNote": "N’importe quelle couleur (règle {{rule_obstacles}}). Une couleur proche de celle d’un sol (argent, noir, brun, cyan), d’un passage ou d’une victime est plus difficile à distinguer pour le robot.",
         "moreColors": "Autres couleurs"
     },
@@ -433,6 +433,8 @@
         "obstacle_drawCentre": "Son centre serait sur le bord d’une case : le centre d’un obstacle est sur une case (règle {{rule_obstacles}})",
         "obstacle_iconFailed": "Cette icône n’a pas pu être tracée",
         "obstacle_pickIcon": "Choisissez d’abord une icône dans le panneau",
+        "obstacle_resize": "Faites glisser pour changer sa taille (autour de son centre)",
+        "obstacle_rotate": "Faites glisser pour le tourner ; avec Maj, par pas de 15°",
         "victim_place": "Cliquez pour placer « {{name}} »",
         "victim_move": "Cliquez pour placer « {{name}} » ici (la victime de la case vient ici : une par case)",
         "victim_unreachable": "Le robot ne peut pas s’approcher d’ici, donc aucune victime ne va ici (règle {{rule_reach}})",

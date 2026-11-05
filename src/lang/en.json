@@ -215,7 +215,7 @@
         "draw": "Draw its outline",
         "drawDone": "Close and put",
         "drawHow": "Click its corners on the map; click the first one or press Enter to close it, Esc to stop. The middle of the box round it goes on a tile, off its edges.",
-        "onTile": "Its centre stays on its tile, off the tile's edges (rule {{rule_obstacles}}). It may stand against a wall, not go through it: moved or made larger, it stops where it meets one. Drag it on the map to move it.",
+        "onTile": "Its centre stays on its tile, off the tile's edges (rule {{rule_obstacles}}). It may stand against a wall, not go through it: moved or made larger, it stops where it meets one. Drag it on the map to move it. Its handles on the map change its size and its turn (Shift: steps of 15°).",
         "colorNote": "Any colour (rule {{rule_obstacles}}). One close to a floor's (silver, black, brown, cyan), a passage's or a victim's is harder for the robot to tell apart.",
         "moreColors": "Other colours"
     },
@@ -433,6 +433,8 @@
         "obstacle_drawCentre": "Its middle would be on a tile's edge: an obstacle's centre is on a tile (rule {{rule_obstacles}})",
         "obstacle_iconFailed": "That icon could not be traced",
         "obstacle_pickIcon": "Choose an icon in the panel first",
+        "obstacle_resize": "Drag to change its size (about its middle)",
+        "obstacle_rotate": "Drag to turn it; Shift held, in steps of 15°",
         "victim_place": "Click to place \"{{name}}\"",
         "victim_move": "Click to place \"{{name}}\" here (the tile's victim moves here: one per tile)",
         "victim_unreachable": "The robot cannot get near here, so no victim goes here (rule {{rule_reach}})",

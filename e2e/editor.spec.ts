@@ -395,9 +395,12 @@ test('JSON: obstacles of each kind saved, the file opened again, and saved the s
     // a box turned, a regular prism, an outline drawn, an icon (each put, then let go: the panel
     // changes the one picked)
     const letGo = () => page.locator('.ed-selected-head .btn-link').click();
-    await page.locator('.ed-obstacle-field input[data-field=rot]').fill('30');
     await page.locator('.ed-obstacle-color[data-color="#dc2626"]').click();
     await click(page, 6, 30);
+    // turned with its handle, Shift held: 30 degrees exactly
+    await page.keyboard.down('Shift');
+    await drag(page, [[6, 25.5], [3.8, 26.2]]);
+    await page.keyboard.up('Shift');
     await letGo();
     await page.locator('.ed-obstacle-shapes [data-shape=prism]').click();
     await page.locator('.ed-obstacle-field input[data-field=n]').fill('5');
@@ -438,6 +441,26 @@ test('JSON: obstacles of each kind saved, the file opened again, and saved the s
     const second = await download(page, () => page.locator('.ed-file button').nth(2).click());
     expect(second.text).toBe(first.text);
     keep('obstacles.json', second.text);
+});
+
+test('obstacle: its size and turn dragged by its handles on the map, with no numbers for them in the panel', async ({ page }) => {
+    await boot(page);
+    await openMap(page, 'mapA.json');
+    await tool(page, 'obstacle');
+    await click(page, 6, 30);                       // a box 4 x 4 cm in the middle of tile (0, 2)
+    await settle(page, 300);
+    await shot(page, 'obstacle-handles');
+    await drag(page, [[8, 30], [10, 30]]);          // its right side's handle: 2 cm out, about its middle
+    await drag(page, [[6, 25.5], [11, 30]]);        // its turn's handle (above it) to its right: a quarter turn
+    // its depth's handle, now on its left side (turned), 0.5 cm in: 3 cm deep
+    await drag(page, [[4, 30], [4.5, 30]]);
+    await settle(page, 300);
+    const sh = JSON.parse((await download(page, () => page.locator('.ed-file button').nth(2).click())).text).cells['1,5,0'].tile.obstacleShape;
+    expect(sh.w).toBeCloseTo(8, 0);
+    expect(sh.d).toBeCloseTo(3, 0);
+    expect(sh.rot).toBeCloseTo(1.5 * Math.PI, 1);
+    // the panel has no numbers for what the handles change: the height only (a box)
+    await expect(page.locator('.ed-obstacle-field input[type=range]')).toHaveCount(1);
 });
 
 test('shape: rows and columns added and taken out', async ({ page }) => {

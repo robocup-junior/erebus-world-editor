@@ -306,7 +306,13 @@ onMounted(function () {
               <div class="ed-along-row">
                 <input type="range" class="ed-along-range" :data-field="f.id" :min="f.min" :max="f.max" :step="f.step" :value="f.value" :aria-label="t('obstacles.fields.' + f.label)"
                   @input="E.obstacleInput(f.id, Number(($event.target as HTMLInputElement).value))" @change="E.obstacleDone()" @pointerup="E.obstacleDone()" @blur="E.obstacleDone()">
-                <span class="ed-along-value">{{ f.unit === '°' ? f.value + '°' : f.unit ? f.value.toFixed(1) + ' cm' : f.value }}</span>
+                <!-- the value, to type as well -->
+                <span class="ed-obstacle-num">
+                  <input type="number" class="form-control form-control-sm" :data-num="f.id" :min="f.min" :max="f.max" :step="f.step"
+                    :value="f.unit === 'cm' ? f.value.toFixed(1) : f.value" :aria-label="t('obstacles.fields.' + f.label)"
+                    @change="E.obstacleInput(f.id, Number(($event.target as HTMLInputElement).value)); E.obstacleDone()" @keydown.enter="($event.target as HTMLInputElement).blur()">
+                  <span>{{ f.unit }}</span>
+                </span>
               </div>
             </div>
             <!-- its colour: any (rule 3.6.3.c), as it is seen -->

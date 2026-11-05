@@ -215,7 +215,7 @@
         "draw": "Gambar garis tepinya",
         "drawDone": "Tutup dan pasang",
         "drawHow": "Klik sudut-sudutnya di peta; klik sudut pertama atau tekan Enter untuk menutup, Esc untuk berhenti. Tengah kotak yang melingkupinya ada di petak, jauh dari tepinya.",
-        "onTile": "Pusatnya tetap di petaknya, jauh dari tepinya (aturan {{rule_obstacles}}). Boleh menempel pada dinding, tidak menembusnya: saat dipindah atau diperbesar, berhenti ketika menyentuh dinding. Seret di peta untuk memindahkannya.",
+        "onTile": "Pusatnya tetap di petaknya, jauh dari tepinya (aturan {{rule_obstacles}}). Boleh menempel pada dinding, tidak menembusnya: saat dipindah atau diperbesar, berhenti ketika menyentuh dinding. Seret di peta untuk memindahkannya. Pegangannya di peta mengubah ukuran dan putarannya (Shift: per 15°).",
         "colorNote": "Warna apa saja (aturan {{rule_obstacles}}). Warna yang mirip lantai (perak, hitam, cokelat, sian), lorong, atau korban lebih sulit dibedakan oleh robot.",
         "moreColors": "Warna lain"
     },
@@ -433,6 +433,8 @@
         "obstacle_drawCentre": "Tengahnya akan berada di tepi petak: tengah rintangan ada di petak (aturan {{rule_obstacles}})",
         "obstacle_iconFailed": "Ikon itu tidak bisa ditelusuri",
         "obstacle_pickIcon": "Pilih ikon di panel terlebih dahulu",
+        "obstacle_resize": "Seret untuk mengubah ukurannya (di sekitar tengahnya)",
+        "obstacle_rotate": "Seret untuk memutarnya; dengan Shift, per 15°",
         "victim_place": "Klik untuk menempatkan “{{name}}”",
         "victim_move": "Klik untuk menempatkan “{{name}}” di sini (korban petak pindah ke sini: satu per petak)",
         "victim_unreachable": "Robot tidak bisa mendekat ke sini, jadi tidak ada korban di sini (aturan {{rule_reach}})",

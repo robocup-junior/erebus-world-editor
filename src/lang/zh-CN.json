@@ -215,7 +215,7 @@
         "draw": "画轮廓",
         "drawDone": "闭合并放置",
         "drawHow": "在地图上点击放置角点；点击第一个点或按 Enter 闭合，按 Esc 停止。外接矩形的中心要在格子上，离开格子的边。",
-        "onTile": "中心在格子上，离开格子的边（规则 {{rule_obstacles}}）。可以贴着墙放，但不能穿过：移动或放大时，碰到墙就会停下。在地图上拖动可以移动它。",
+        "onTile": "中心在格子上，离开格子的边（规则 {{rule_obstacles}}）。可以贴着墙放，但不能穿过：移动或放大时，碰到墙就会停下。在地图上拖动可以移动它。地图上的控制点可改变大小和朝向（Shift：每次 15°）。",
         "colorNote": "颜色可以自由选择（规则 {{rule_obstacles}}）。与地面（银、黑、棕、青）、通道或受害者的颜色相近时，机器人更难分辨。",
         "moreColors": "其他颜色"
     },
@@ -433,6 +433,8 @@
         "obstacle_drawCentre": "中心会落在格子的边上：障碍物的中心要在格子上（规则 {{rule_obstacles}}）",
         "obstacle_iconFailed": "无法读取这个图标的形状",
         "obstacle_pickIcon": "请先在面板中选择图标",
+        "obstacle_resize": "拖动可改变大小（中心不动）",
+        "obstacle_rotate": "拖动可旋转；按住 Shift 每次 15°",
         "victim_place": "点击放置“{{name}}”",
         "victim_move": "点击在这里放置“{{name}}”（该格子的受害者会移到这里：每格一个）",
         "victim_unreachable": "机器人无法靠近这里，所以这里不放受害者（规则 {{rule_reach}}）",

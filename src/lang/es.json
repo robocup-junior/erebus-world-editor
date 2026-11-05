@@ -215,7 +215,7 @@
         "draw": "Dibujar su contorno",
         "drawDone": "Cerrar y poner",
         "drawHow": "Haz clic en sus esquinas en el mapa; haz clic en la primera o pulsa Enter para cerrarlo, Esc para parar. El centro del rectángulo que lo rodea va en una baldosa, lejos de sus bordes.",
-        "onTile": "Su centro queda en su baldosa, lejos de sus bordes (regla {{rule_obstacles}}). Puede apoyarse en una pared, no atravesarla: al moverlo o agrandarlo, se detiene donde toca una. Arrástralo en el mapa para moverlo.",
+        "onTile": "Su centro queda en su baldosa, lejos de sus bordes (regla {{rule_obstacles}}). Puede apoyarse en una pared, no atravesarla: al moverlo o agrandarlo, se detiene donde toca una. Arrástralo en el mapa para moverlo. Sus asas en el mapa cambian su tamaño y su giro (Mayús: de 15° en 15°).",
         "colorNote": "Cualquier color (regla {{rule_obstacles}}). Uno parecido al de un suelo (plata, negro, marrón, cian), un pasaje o una víctima es más difícil de distinguir para el robot.",
         "moreColors": "Otros colores"
     },
@@ -433,6 +433,8 @@
         "obstacle_drawCentre": "Su centro quedaría en el borde de una baldosa: el centro de un obstáculo está en una baldosa (regla {{rule_obstacles}})",
         "obstacle_iconFailed": "No se pudo calcar ese icono",
         "obstacle_pickIcon": "Elige primero un icono en el panel",
+        "obstacle_resize": "Arrastra para cambiar su tamaño (sobre su centro)",
+        "obstacle_rotate": "Arrastra para girarlo; con Mayús, de 15° en 15°",
         "victim_place": "Haz clic para colocar «{{name}}»",
         "victim_move": "Haz clic para colocar «{{name}}» aquí (la víctima de la baldosa se mueve aquí: una por baldosa)",
         "victim_unreachable": "El robot no puede acercarse aquí, así que aquí no va ninguna víctima (regla {{rule_reach}})",

@@ -1189,6 +1189,10 @@ export function createEditor() {
             stroke = hit ? { grab: hit, down: p } : {};
         } else if (tool === 'obstacle' && S.obstacleMode === 'draw') {
             stroke = { drawCorner: true };
+        } else if (tool === 'obstacle' && obstacleHandleAt(p)) {
+            // a handle of the picked one: its size or its turn, dragged
+            const at = S.obstacle.at!;
+            stroke = { obstacle: at, handle: obstacleHandleAt(p)!.kind, shape: Object.assign({}, W.obstacleShape(M.tileOf(map, at.x, at.y))) };
         } else if (tool === 'obstacle') {
             // on an obstacle: picked, and dragged it moves on its tile
             const tl = tileAt(p);
@@ -1215,6 +1219,7 @@ export function createEditor() {
             else if (tool === 'shape' && ui.shapeMode === 'outline') paintShape(p);
             else if (tool === 'eraser') erase(p, stroke.floors, false);
             else if (tool === 'victim') dragVictim(p);
+            else if (tool === 'obstacle' && stroke.handle) obstacleHandleDrag(p);
             else if (tool === 'obstacle' && stroke.obstacle) {
                 M.changeObstacle(map, stroke.obstacle.x, stroke.obstacle.y, { dx: stroke.from.dx + p.x - stroke.down.x, dy: stroke.from.dy + p.y - stroke.down.y });
                 syncObstacle();
@@ -1907,6 +1912,59 @@ export function createEditor() {
 
     // ---- an obstacle drawn: its corners clicked on the map (snapped to 0.5 cm), closed on its first
     // corner or with Enter; its middle (of the box round it) on a tile of rooms 1-3, off its edges
+    // ---- the picked obstacle's handles on the map: its sizes and its turn, dragged ----
+    // Each at [x, y] cm: 'w' and 'd' on the middles of a box's or a pyramid's sides (its width, its
+    // depth), 'size' on the corners of the box round a drawn one or an icon (both, in proportion), 'r'
+    // on a round or regular one's edge (its diameter), 'rot' above it (its turn; none for a cylinder,
+    // a cone or a sphere, the same any way round). It grows and shrinks about its middle.
+    let shiftHeld = false;
+    function obstacleHandles(): { kind: string; at: number[] }[] {
+        const at = S.obstacle.at;
+        // one of the classic editor (no shape: the place its box may be) as that box: dragged, it has one
+        const sh = at && W.obstacleShape(M.tileOf(map, at.x, at.y));
+        if (!at || !sh) return [];
+        const c = Math.cos(sh.rot), sn = Math.sin(sh.rot);
+        const cx = 6 * at.x + sh.dx, cy = 6 * at.y + sh.dy;
+        const toMap = function (u: number, v: number) { return [cx + u * c + v * sn, cy - u * sn + v * c]; };
+        const out: { kind: string; at: number[] }[] = [];
+        const hw = sh.w / 2, hd = sh.d / 2;
+        if (sh.shape === 'box' || sh.shape === 'pyramid') {
+            out.push({ kind: 'w', at: toMap(hw, 0) }, { kind: 'w', at: toMap(-hw, 0) }, { kind: 'd', at: toMap(0, hd) }, { kind: 'd', at: toMap(0, -hd) });
+        } else if (sh.shape === 'polygon' || sh.shape === 'icon') {
+            [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(function (q) { out.push({ kind: 'size', at: toMap(q[0] * hw, q[1] * hd) }); });
+        } else out.push({ kind: 'r', at: toMap(hw, 0) });
+        if (sh.shape !== 'cylinder' && sh.shape !== 'cone' && sh.shape !== 'sphere') out.push({ kind: 'rot', at: toMap(0, -(W.obstacleRound(sh.shape) ? hw : hd) - 2.5) });
+        return out;
+    }
+    // the handle at p (within a few pixels), or null
+    function obstacleHandleAt(p: P) {
+        const r = 7 / view.scale();
+        let best: { kind: string; at: number[] } | null = null, bestD = r;
+        obstacleHandles().forEach(function (h) { const d = Math.hypot(p.x - h.at[0], p.y - h.at[1]); if (d <= bestD) { best = h; bestD = d; } });
+        return best as { kind: string; at: number[] } | null;
+    }
+    // a handle dragged to p: the change it makes, from the shape it had when the drag began
+    function obstacleHandleDrag(p: P) {
+        const at = stroke.obstacle, from: W.ObstacleShape = stroke.shape;
+        const cx = 6 * at.x + from.dx, cy = 6 * at.y + from.dy, X = p.x - cx, Y = p.y - cy;
+        const u = X * Math.cos(from.rot) - Y * Math.sin(from.rot), v = X * Math.sin(from.rot) + Y * Math.cos(from.rot);
+        let change: Partial<W.ObstacleShape>;
+        if (stroke.handle === 'w') change = { w: 2 * Math.abs(u) };
+        else if (stroke.handle === 'd') change = { d: 2 * Math.abs(v) };
+        else if (stroke.handle === 'r') change = { w: 2 * Math.hypot(X, Y) };
+        else if (stroke.handle === 'size') {
+            const k = Math.hypot(X, Y) / Math.hypot(from.w / 2, from.d / 2);
+            change = { w: from.w * k, d: from.d * k };
+        } else {
+            // the turn that puts the handle under the pointer; Shift: in steps of 15 degrees
+            let rot = Math.atan2(-X, -Y);
+            if (shiftHeld) rot = Math.round(rot / (Math.PI / 12)) * (Math.PI / 12);
+            change = { rot: rot };
+        }
+        M.changeObstacle(map, at.x, at.y, change);
+        syncObstacle();
+    }
+
     // the shape button shown chosen: drawing an outline or picking an icon is that kind already
     function obstacleKindActive(k: string) {
         if (S.obstacleMode === 'draw') return k === 'polygon';
@@ -1990,21 +2048,15 @@ export function createEditor() {
         const r = M.randomObstacle();
         obstacleChange(S.obstacle.at ? r : Object.assign(r, { dx: 0, dy: 0 }));
     }
-    // the panel's sliders for the shape: its sizes (round ones one across), its sides, its height (not
-    // a sphere's) and its turn (degrees); where it stands on its tile is dragged on the map
+    // the panel's sliders for the shape: what its handles on the map do not change - its height (not a
+    // sphere's) and a regular one's sides; its sizes and its turn are dragged on the map
     const OBSTACLE_ICONS: Record<string, string> = { box: 'fa-cube', cylinder: 'fa-database', cone: 'fa-caret-up', sphere: 'fa-circle', pyramid: 'fa-mountain',
         prism: 'fa-dice-d6', npyramid: 'fa-play', polygon: 'fa-draw-polygon', icon: 'fa-icons' };
     function obstacleFields() {
-        const sh = S.obstacle.shape, lim = W.OBSTACLE_LIMITS, round = W.obstacleRound(sh.shape);
-        // a drawn one and an icon keep their outline's proportions: one size, their longer side
-        const kept = sh.shape === 'polygon' || sh.shape === 'icon';
-        const stretch = Math.max(sh.aspect || 1, 1 / (sh.aspect || 1));
-        const out = kept ? [{ id: 'size', label: 'size', min: Math.min(lim.size[1], Math.ceil(lim.size[0] * stretch * 2) / 2), max: lim.size[1], step: 0.5, value: Math.max(sh.w, sh.d), unit: 'cm' }]
-            : [{ id: 'w', label: round ? 'diameter' : 'width', min: lim.size[0], max: lim.size[1], step: 0.5, value: sh.w, unit: 'cm' }];
-        if (!round && !kept) out.push({ id: 'd', label: 'depth', min: lim.size[0], max: lim.size[1], step: 0.5, value: sh.d, unit: 'cm' });
+        const sh = S.obstacle.shape, lim = W.OBSTACLE_LIMITS;
+        const out: { id: string; label: string; min: number; max: number; step: number; value: number; unit: string }[] = [];
         if (sh.shape === 'prism' || sh.shape === 'npyramid') out.push({ id: 'n', label: 'sides', min: lim.sides[0], max: lim.sides[1], step: 1, value: sh.n || 6, unit: '' });
         if (sh.shape !== 'sphere') out.push({ id: 'h', label: 'height', min: lim.height[0], max: lim.height[1], step: 0.5, value: sh.h, unit: 'cm' });
-        if (sh.shape !== 'sphere' && sh.shape !== 'cylinder' && sh.shape !== 'cone') out.push({ id: 'rot', label: 'turn', min: 0, max: 359, step: 1, value: Math.round(sh.rot * 180 / Math.PI) % 360, unit: '°' });
         return out;
     }
     function obstacleInput(id: string, value: number) {
@@ -2106,6 +2158,8 @@ export function createEditor() {
             if (!tl) return null;
             const tile = M.tileOf(map, tl.x, tl.y);
             if (S.obstacleMode === 'draw') { say(S.obstacleDraw.length >= 3 ? 'obstacle_drawClose' : 'obstacle_drawCorner'); return null; }
+            const h = obstacleHandleAt(p);
+            if (h) { say(h.kind === 'rot' ? 'obstacle_rotate' : 'obstacle_resize'); return null; }
             const refused = !(tile && tile.obstacle) && floorRefused(tl, 'obstacle');
             if (M.isOutside(map, tl.x, tl.y)) say('floor_outside');
             else if (refused) say(refused.key, refused.params);
@@ -2294,6 +2348,21 @@ export function createEditor() {
             ctx.lineWidth = 2 * px;
             ctx.stroke();
             dot(ctx, 6 * ob.x + obShape.dx, 6 * ob.y + obShape.dy, 1.6 * px, '#2563eb');
+            // its handles: squares for its sizes, a round one on a stalk for its turn
+            const mid = [6 * ob.x + obShape.dx, 6 * ob.y + obShape.dy];
+            obstacleHandles().forEach(function (h) {
+                ctx.fillStyle = '#fff';
+                ctx.strokeStyle = '#2563eb';
+                ctx.lineWidth = 1.6 * px;
+                if (h.kind === 'rot') {
+                    ctx.beginPath(); ctx.moveTo(mid[0], mid[1]); ctx.lineTo(h.at[0], h.at[1]);
+                    ctx.setLineDash([2 * px, 2 * px]); ctx.stroke(); ctx.setLineDash([]);
+                    ctx.beginPath(); ctx.arc(h.at[0], h.at[1], 5 * px, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+                    return;
+                }
+                ctx.fillRect(h.at[0] - 4 * px, h.at[1] - 4 * px, 8 * px, 8 * px);
+                ctx.strokeRect(h.at[0] - 4 * px, h.at[1] - 4 * px, 8 * px, 8 * px);
+            });
         }
         if (!hover) return;
         if (hover.kind === 'line') {
@@ -2961,6 +3030,10 @@ export function createEditor() {
         // The guide to look at only, and the guide's choice, take the keys before anything else (the
         // room 4 creator, a modal, would close on Esc): arrows and Enter go through the guide, Esc ends
         // it or closes the choice. The lesson leaves the keys to the editor, which is being used.
+        // Shift held (the obstacle's turn in steps), whatever has the focus
+        window.addEventListener('keydown', function (e) { if (e.key === 'Shift') shiftHeld = true; });
+        window.addEventListener('keyup', function (e) { if (e.key === 'Shift') shiftHeld = false; });
+        window.addEventListener('blur', function () { shiftHeld = false; });
         window.addEventListener('keydown', function (e) {
             if (ui.guidePick) {
                 e.preventDefault();
@@ -3010,6 +3083,8 @@ export function createEditor() {
                 e.preventDefault(); apply(k === 'enter' ? obstacleDrawDone : obstacleDrawCancel); return;
             }
             if (ui.tool === 'obstacle' && S.obstacle.at && (k === 'delete' || k === 'backspace')) { e.preventDefault(); apply(obstacleRemove); return; }
+            // Esc with the obstacle tool: the picked one let go (as the select tool lets its pick go)
+            if (ui.tool === 'obstacle' && S.obstacle.at && k === 'escape' && !stroke) { apply(obstacleDeselect); return; }
             if (e.ctrlKey || e.metaKey || e.altKey) return;
             if (e.key === '?') { e.preventDefault(); apply(function () { openGuidePick('keys'); }); return; }
             if (k === 'escape') { apply(cancelStroke); return; }

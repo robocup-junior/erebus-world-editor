@@ -1509,3 +1509,8 @@
 .ed-obstacle-color { width: 1.35rem; height: 1.35rem; border-radius: 50%; border: 1.5px solid #cbd5e1; padding: 0; cursor: pointer; }
 .ed-obstacle-color.active { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563eb; }
 .ed-obstacle-color.more { background: conic-gradient(#f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); }
+
+/* a size, a turn or a number of sides typed beside its slider */
+.ed-obstacle-num { flex: none; display: inline-flex; align-items: center; gap: 0.2rem; font-size: 0.75rem; color: var(--ed-muted, #64748b); }
+.ed-obstacle-num input { width: 4.2rem; padding: 0.1rem 0.3rem; text-align: right; font-variant-numeric: tabular-nums; }
+.ed-obstacle-num span { min-width: 1.2rem; }

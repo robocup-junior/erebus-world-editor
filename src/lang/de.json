@@ -215,7 +215,7 @@
         "draw": "Umriss zeichnen",
         "drawDone": "Schließen und setzen",
         "drawHow": "Klicke seine Ecken auf der Karte; klicke die erste oder drücke Enter zum Schließen, Esc zum Abbrechen. Die Mitte des umgebenden Rechtecks liegt auf einer Kachel, weg von deren Rändern.",
-        "onTile": "Seine Mitte bleibt auf seiner Kachel, weg von deren Rändern (Regel {{rule_obstacles}}). Es darf an einer Wand stehen, aber nicht durch sie hindurch: verschoben oder vergrößert, hält es an, wo es eine trifft. Ziehe es auf der Karte, um es zu verschieben.",
+        "onTile": "Seine Mitte bleibt auf seiner Kachel, weg von deren Rändern (Regel {{rule_obstacles}}). Es darf an einer Wand stehen, aber nicht durch sie hindurch: verschoben oder vergrößert, hält es an, wo es eine trifft. Ziehe es auf der Karte, um es zu verschieben. Seine Griffe auf der Karte ändern Größe und Drehung (Umschalt: 15°-Schritte).",
         "colorNote": "Jede Farbe (Regel {{rule_obstacles}}). Eine, die der eines Bodens (Silber, Schwarz, Braun, Cyan), eines Durchgangs oder eines Opfers ähnelt, kann der Roboter schwerer unterscheiden.",
         "moreColors": "Andere Farben"
     },
@@ -433,6 +433,8 @@
         "obstacle_drawCentre": "Seine Mitte läge auf einem Kachelrand: Die Mitte eines Hindernisses liegt auf einer Kachel (Regel {{rule_obstacles}})",
         "obstacle_iconFailed": "Dieses Symbol konnte nicht nachgezeichnet werden",
         "obstacle_pickIcon": "Wähle zuerst ein Symbol im Bereich",
+        "obstacle_resize": "Ziehe, um die Größe zu ändern (um die Mitte)",
+        "obstacle_rotate": "Ziehe, um es zu drehen; mit Umschalt in 15°-Schritten",
         "victim_place": "Klicke, um „{{name}}“ zu setzen",
         "victim_move": "Klicke, um „{{name}}“ hierher zu setzen (das Opfer der Kachel wandert hierher: eins pro Kachel)",
         "victim_unreachable": "Der Roboter kommt hier nicht nahe heran, also kommt hier kein Opfer hin (Regel {{rule_reach}})",

@@ -215,7 +215,7 @@
         "draw": "Dış çizgisini çiz",
         "drawDone": "Kapat ve koy",
         "drawHow": "Haritada köşelerine tıklayın; kapatmak için ilkine tıklayın ya da Enter'a basın, durmak için Esc. Çevresindeki dikdörtgenin ortası bir karenin üstünde, kenarlarından uzakta olur.",
-        "onTile": "Merkezi karesinin üstünde, kenarlarından uzakta kalır (kural {{rule_obstacles}}). Duvara yaslanabilir, içinden geçemez: taşındığında ya da büyütüldüğünde duvara değdiği yerde durur. Taşımak için haritada sürükleyin.",
+        "onTile": "Merkezi karesinin üstünde, kenarlarından uzakta kalır (kural {{rule_obstacles}}). Duvara yaslanabilir, içinden geçemez: taşındığında ya da büyütüldüğünde duvara değdiği yerde durur. Taşımak için haritada sürükleyin. Haritadaki tutamaçları boyutunu ve dönüşünü değiştirir (Shift: 15°'lik adımlar).",
         "colorNote": "Her renk olabilir (kural {{rule_obstacles}}). Bir zeminin (gümüş, siyah, kahverengi, camgöbeği), geçidin ya da kazazedenin rengine yakın bir rengi robot daha zor ayırt eder.",
         "moreColors": "Diğer renkler"
     },
@@ -433,6 +433,8 @@
         "obstacle_drawCentre": "Ortası bir karenin kenarına düşer: engelin merkezi bir karenin üstündedir (kural {{rule_obstacles}})",
         "obstacle_iconFailed": "Bu simgenin şekli okunamadı",
         "obstacle_pickIcon": "Önce panelden bir simge seçin",
+        "obstacle_resize": "Boyutunu değiştirmek için sürükleyin (ortası sabit)",
+        "obstacle_rotate": "Döndürmek için sürükleyin; Shift basılıyken 15°'lik adımlarla",
         "victim_place": "“{{name}}” koymak için tıklayın",
         "victim_move": "“{{name}}” buraya koymak için tıklayın (karenin kazazedesi buraya gelir: kare başına bir)",
         "victim_unreachable": "Robot buraya yaklaşamaz, bu yüzden buraya kazazede konmaz (kural {{rule_reach}})",

@@ -215,7 +215,7 @@
         "draw": "Desenhar o contorno",
         "drawDone": "Fechar e pôr",
         "drawHow": "Clique os cantos no mapa; clique o primeiro ou tecle Enter para fechar, Esc para parar. O centro do retângulo em volta fica num ladrilho, longe das bordas.",
-        "onTile": "Seu centro fica no seu ladrilho, longe das bordas (regra {{rule_obstacles}}). Pode encostar numa parede, não atravessá-la: ao mover ou aumentar, ele para onde encontra uma. Arraste no mapa para movê-lo.",
+        "onTile": "Seu centro fica no seu ladrilho, longe das bordas (regra {{rule_obstacles}}). Pode encostar numa parede, não atravessá-la: ao mover ou aumentar, ele para onde encontra uma. Arraste no mapa para movê-lo. As alças no mapa mudam o tamanho e o giro (Shift: de 15° em 15°).",
         "colorNote": "Qualquer cor (regra {{rule_obstacles}}). Uma parecida com a de um piso (prata, preto, marrom, ciano), de uma passagem ou de uma vítima é mais difícil de o robô distinguir.",
         "moreColors": "Outras cores"
     },
@@ -433,6 +433,8 @@
         "obstacle_drawCentre": "O centro ficaria na borda de um ladrilho: o centro de um obstáculo fica num ladrilho (regra {{rule_obstacles}})",
         "obstacle_iconFailed": "Não foi possível contornar esse ícone",
         "obstacle_pickIcon": "Escolha primeiro um ícone no painel",
+        "obstacle_resize": "Arraste para mudar o tamanho (em torno do centro)",
+        "obstacle_rotate": "Arraste para girá-lo; com Shift, de 15° em 15°",
         "victim_place": "Clique para colocar “{{name}}”",
         "victim_move": "Clique para colocar “{{name}}” aqui (a vítima do ladrilho vem para cá: uma por ladrilho)",
         "victim_unreachable": "O robô não consegue chegar perto daqui, então nenhuma vítima vai aqui (regra {{rule_reach}})",
