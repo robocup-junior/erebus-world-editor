@@ -300,10 +300,11 @@ test('victims: put where clicked along the wall, dragged along it, moved in the 
     await drag(page, [[33, 4], [20, 4]]);
     await expect(page.locator('.ed-along-value')).toHaveText('−5.0 cm');
     await shot(page, 'victim-dragged');
-    // back to the middle, then 2 cm with the slider; undo goes back one step at a time
+    // back to the middle, then 2 cm along by dragging; undo goes back one step at a time
     await page.locator('.ed-along-foot .btn-link').click();
     await expect(page.locator('.ed-along-value')).toHaveText('0.0 cm');
-    await page.locator('.ed-along-range').fill('2');
+    await expect(page.locator('.ed-along-range')).toHaveCount(0);
+    await drag(page, [[30, 4], [32, 4]]);
     await expect(page.locator('.ed-along-value')).toHaveText('+2.0 cm');
     await settle(page);
     await shot(page, 'victim-slid');

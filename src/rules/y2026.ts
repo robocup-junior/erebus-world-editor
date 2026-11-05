@@ -23,6 +23,7 @@ export const rules: Ruleset = {
     refs: {
         passageWalls: '3.3.4',      // a passage tile: walls on two sides, one way in and one way out
         start: '3.3.5',             // the starting tile is one of the tiles of area 1
+        obstacles: '3.6.3',         // obstacles: on a tile, off its edges, one to a tile
         oneKind: '5.6.10.b.iii',    // a tile is no more than one of swamp, hole, checkpoint, start, passage
         reach: '3.2.4',             // no tokens where the robot cannot go
         room4Checkpoint: '3.5.3',   // a checkpoint right behind each passage into area 4

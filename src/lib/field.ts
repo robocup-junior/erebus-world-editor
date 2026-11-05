@@ -259,12 +259,101 @@ function shapeDistance(s: WallShape, x: number, y: number): number {
     return Math.min(Math.hypot(px - s.dx * s.r, py), Math.hypot(px, py - s.dy * s.r));
 }
 
+// ---- Obstacles ----------------------------------------------------------------------------
+// An obstacle on a tile of rooms 1-3 (tile.obstacle; rule 3.6.3: any shape, any colour, its centre
+// on its tile and off the tile's edges, one to a tile), kept in tile.obstacleShape: shape, w (its
+// width along x, or its diameter), d (its depth along y), h (its height; a sphere's is its
+// diameter), all cm; n (a regular prism's or pyramid's sides); outline (a drawn one's or an icon's
+// rings, in a unit box: -0.5..0.5 across and down, made w x d) and icon (the icon's name); dx, dy its
+// centre from the tile's (cm); rot its turn about the vertical (radians, as the world file has it).
+// A map of the classic editor has an obstacle with no shape: its export draws a box at random within
+// the middle 8 x 8 cm, which stands for it here.
+export type ObstacleKind = 'box' | 'cylinder' | 'cone' | 'sphere' | 'pyramid' | 'prism' | 'npyramid' | 'star' | 'polygon' | 'icon';
+export interface ObstacleShape {
+    shape: ObstacleKind; w: number; d: number; h: number; dx: number; dy: number; rot: number;
+    n?: number; outline?: number[][][]; icon?: string;
+}
+const OBSTACLE_KINDS: ObstacleKind[] = ['box', 'cylinder', 'cone', 'sphere', 'pyramid', 'prism', 'npyramid', 'star', 'polygon', 'icon'];
+// what the editor lets them be (cm): the centre half a wall in from the tile's edges
+const OBSTACLE_LIMITS = { size: [1, 12], height: [1, 15], offset: 5.5, sides: [3, 8] };
+const OBSTACLE_ZONE: ObstacleShape = { shape: 'box', w: 8, d: 8, h: 6, dx: 0, dy: 0, rot: 0 };
+const STAR_INNER = 0.45;      // a star's inner points, of its outer radius
+
+function obstacleShape(t: Tile | undefined | null): ObstacleShape | null {
+    if (!t || !t.obstacle) return null;
+    return t.obstacleShape || OBSTACLE_ZONE;
+}
+// round ones (and regular ones) have one size across; a box, a pyramid, a drawn one and an icon two
+function obstacleRound(shape: ObstacleKind) {
+    return shape === 'cylinder' || shape === 'cone' || shape === 'sphere' || shape === 'star' || shape === 'prism' || shape === 'npyramid';
+}
+// those that go up to an apex over their middle, from their outline on the floor
+function obstaclePointed(shape: ObstacleKind) { return shape === 'cone' || shape === 'pyramid' || shape === 'npyramid'; }
+
+// Its outlines on the floor in its own frame (cm, x along w, y along d, before its turn): one ring,
+// or a drawn one's and an icon's rings; `inset` cm in from its sides (not a drawn one or an icon:
+// the robot keeps half a wall further off them)
+function obstacleRingsLocal(sh: ObstacleShape, inset?: number): number[][][] {
+    const k = inset || 0;
+    if ((sh.shape === 'polygon' || sh.shape === 'icon') && sh.outline && sh.outline.length) {
+        return sh.outline.map(function (r) { return r.map(function (q) { return [q[0] * sh.w, q[1] * sh.d]; }); });
+    }
+    if (sh.shape === 'box' || sh.shape === 'pyramid' || sh.shape === 'polygon' || sh.shape === 'icon') {
+        const hw = Math.max(0.01, sh.w / 2 - k), hd = Math.max(0.01, sh.d / 2 - k);
+        return [[[-hw, -hd], [hw, -hd], [hw, hd], [-hw, hd]]];
+    }
+    const r = Math.max(0.01, sh.w / 2 - k), out: number[][] = [];
+    if (sh.shape === 'star') {
+        for (let i = 0; i < 10; i++) {
+            const a = -Math.PI / 2 + i * Math.PI / 5, q = i % 2 ? Math.max(0.01, STAR_INNER * sh.w / 2 - k) : r;
+            out.push([q * Math.cos(a), q * Math.sin(a)]);
+        }
+        return [out];
+    }
+    // a regular one: a corner to the front (up on the map); round ones as 24 sides
+    const n = sh.shape === 'prism' || sh.shape === 'npyramid' ? Math.round(sh.n || 6) : 24;
+    for (let i = 0; i < n; i++) {
+        const a = -Math.PI / 2 + i * 2 * Math.PI / n;
+        out.push([r * Math.cos(a), r * Math.sin(a)]);
+    }
+    return [out];
+}
+
+// Its outlines on the map (cm) on the tile at cell (x, y), `inset` cm in from its sides. Turned by
+// rot about the world's vertical (y up), the map (x right, y = the world's z, down) sees it turned
+// by -rot.
+function obstacleRings(sh: ObstacleShape, x: number, y: number, inset?: number): number[][][] {
+    const cx = 6 * x + sh.dx, cy = 6 * y + sh.dy;
+    const c = Math.cos(-sh.rot), s = Math.sin(-sh.rot);
+    return obstacleRingsLocal(sh, inset).map(function (r) {
+        return r.map(function (q) { return [cx + q[0] * c - q[1] * s, cy + q[0] * s + q[1] * c]; });
+    });
+}
+
+// The obstacles' outlines as wall centre lines (pairs of points), half a wall in from them: the
+// robot's room from a wall counts from its centre line, so it then counts from the outline
+function obstaclePieces(map: MapData): number[][][] {
+    const inset = rulesOf(map).geometry.wallHalfCm, out: number[][][] = [];
+    Object.keys(map.cells).forEach(function (k) {
+        const p = k.split(',').map(Number);
+        const sh = p[2] === 0 && p[0] % 2 === 1 && p[1] % 2 === 1 ? obstacleShape(map.cells[k].tile) : null;
+        if (!sh) return;
+        obstacleRings(sh, p[0], p[1], inset).forEach(function (c) {
+            for (let i = 0; i < c.length; i++) out.push([c[i], c[(i + 1) % c.length]]);
+        });
+    });
+    return out;
+}
+
 // fits(x, y): whether the robot body fits with its centre at (x, y) cm
 function robotFits(map: MapData): (x: number, y: number) => boolean {
     const g = rulesOf(map).geometry;
     const reach = g.robotRadiusCm + g.wallHalfCm;
     const buckets: Record<string, WallShape[]> = {};
-    wallShapes(map).forEach(function (s) {
+    const shapes = wallShapes(map).concat(obstaclePieces(map).map(function (q): WallShape {
+        return { type: 'seg', x1: q[0][0], y1: q[0][1], x2: q[1][0], y2: q[1][1] };
+    }));
+    shapes.forEach(function (s) {
         const box = s.type === 'seg'
             ? [Math.min(s.x1, s.x2), Math.min(s.y1, s.y2), Math.max(s.x1, s.x2), Math.max(s.y1, s.y2)]
             : [s.cx - s.r, s.cy - s.r, s.cx + s.r, s.cy + s.r];
@@ -1119,6 +1208,14 @@ export {
     tileAt,
     robotFits,
     edgePassable,
+    OBSTACLE_KINDS,
+    OBSTACLE_LIMITS,
+    obstacleShape,
+    obstacleRound,
+    obstaclePointed,
+    obstacleRingsLocal,
+    obstacleRings,
+    obstaclePieces,
     wallShapes,
     connectionStatus,
     mapGeometry

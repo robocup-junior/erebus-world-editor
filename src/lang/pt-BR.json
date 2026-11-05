@@ -121,8 +121,8 @@
             "room": "Pinte ladrilhos com uma sala (a sala 1 os devolve). As paredes surgem sozinhas onde as salas se encontram e ao redor do mapa. A sala 4 é desenhada como uma imagem com o botão abaixo.",
             "passage": "Clique perto da divisa entre salas: o ladrilho do lado em que você clica vira a passagem (clique de novo para fechá-la; no outro lado, para movê-la para lá). Clique no meio de um ladrilho de passagem para removê-la. Uma passagem que já não combina com suas salas some sozinha. Uma passagem recebe paredes nos outros dois lados sozinha, para ter uma entrada (do lado oposto à fronteira) e uma saída (regra {{rule_passageWalls}}); elas saem junto com a passagem.",
             "line": "Arraste para desenhar paredes. A linha vira com o ponteiro, então um único arraste pode desenhar um zigue-zague (volte pelo mesmo caminho para desfazer uma curva). Comece com Shift pressionado para uma única linha reta. A sala 1 se ajusta a 12 cm (bordas dos ladrilhos) e as salas 2 e 3 a 6 cm. Não dentro da sala 4.",
-            "eraser": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint); um clique remove a partida. As paredes externas ficam.",
-            "floor": "Clique em um ladrilho para definir seu piso.",
+            "eraser": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint); um clique remove a partida. As paredes externas ficam. Um obstáculo também sai com um clique.",
+            "floor": "Clique em um ladrilho para definir seu piso. Um obstáculo pode ter qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, estrela, um contorno desenhado no mapa, um ícone), tamanho e giro, um por ladrilho nas salas 1-3, com o centro no seu ladrilho (regra {{rule_obstacles}}): ajuste no painel e arraste no mapa. O robô precisa contorná-lo: as verificações levam isso em conta.",
             "victim": "Clique perto de uma parede: a vítima vai para a parede onde você clica. Sala 1: em um lado do ladrilho (uma por ladrilho); salas 2 e 3: em uma face das paredes de 6 cm (4 quartos × 4 faces); uma curva tem dois lugares (dentro e fora). Arraste uma vítima colocada para movê-la ao longo da parede (ela para antes do fim da parede e de outras vítimas). Clique nela com o tipo escolhido para selecioná-la e mudar seu giro, anéis ou posição, ou removê-la; com outro tipo escolhido, ela assume esse tipo.",
             "curve": "Aponte para um quarto de ladrilho na sala 3 para ver suas quatro curvas; a mais próxima (azul) entra com um clique. Clique de novo na mesma para removê-la.",
             "select": "Selecione paredes, salas, pisos e vítimas juntos para movê-los, copiá-los, colá-los ou apagá-los.",
@@ -179,8 +179,39 @@
         "black": "Buraco",
         "swamp": "Pântano",
         "start": "Partida",
+        "obstacle": "Obstáculo",
         "clear": "Nenhum",
         "contact": "Ladrilho de contato"
+    },
+    "obstacles": {
+        "next": "Obstáculo a pôr",
+        "picked": "Obstáculo escolhido",
+        "shapes": {
+            "box": "Caixa",
+            "cylinder": "Cilindro",
+            "cone": "Cone",
+            "sphere": "Esfera",
+            "pyramid": "Pirâmide",
+            "prism": "Prisma",
+            "npyramid": "Pirâmide regular",
+            "star": "Estrela",
+            "polygon": "Desenhado",
+            "icon": "Ícone"
+        },
+        "fields": {
+            "width": "Largura",
+            "depth": "Profundidade",
+            "diameter": "Diâmetro",
+            "height": "Altura",
+            "turn": "Giro",
+            "sides": "Lados"
+        },
+        "random": "Aleatório",
+        "remove": "Tirar",
+        "draw": "Desenhar o contorno",
+        "drawDone": "Fechar e pôr",
+        "drawHow": "Clique os cantos no mapa; clique o primeiro ou tecle Enter para fechar, Esc para parar. O centro do retângulo em volta fica num ladrilho, longe das bordas.",
+        "onTile": "Seu centro fica no seu ladrilho, longe das bordas (regra {{rule_obstacles}}). Pode encostar numa parede, não atravessá-la: ao mover ou aumentar, ele para onde encontra uma. Arraste no mapa para movê-lo."
     },
     "victims": {
         "types": {
@@ -205,7 +236,7 @@
         },
         "along": {
             "title": "Posição ao longo da parede",
-            "note": "Você também pode arrastá-la no mapa (passos de 0,1 cm)",
+            "note": "Arraste no mapa para movê-la (em passos de 0,1 cm)",
             "middle": "Para o meio"
         }
     },
@@ -259,7 +290,9 @@
         "problems": {
             "noStart": "Não há ladrilho de partida",
             "startNotRoom1": "O ladrilho de partida não está na sala 1. A partida é um dos ladrilhos da sala 1 (regra {{rule_start}})",
-            "tileTwoKinds": "Alguns ladrilhos são dois ou mais de buraco, pântano, checkpoint, partida e passagem ({{count}}). Um ladrilho é só uma dessas coisas (regra {{rule_oneKind}})",
+            "tileTwoKinds": "Alguns ladrilhos são dois ou mais de buraco, pântano, checkpoint, obstáculo, partida e passagem ({{count}}). Um ladrilho é só uma dessas coisas (regra {{rule_oneKind}})",
+            "obstacleRoom": "Alguns obstáculos estão em ladrilhos da sala 4 ou fora do mapa ({{count}}). Os da sala 4 são desenhados na sua imagem",
+            "obstacleOverlap": "Alguns obstáculos entram numa parede ou em outro obstáculo ({{count}}). Um obstáculo pode encostar numa parede, não atravessá-la",
             "passageOpenSides": "Algumas passagens estão abertas em mais de dois lados ({{count}}). Uma passagem tem paredes em dois lados: uma entrada, uma saída (regra {{rule_passageWalls}})",
             "victimNoWall": "Algumas vítimas perderam a parede ({{count}})",
             "victimInPassage": "Algumas vítimas estão em uma passagem entre áreas ({{count}}): não há vítimas nas passagens (regra {{rule_passageTokens}})",
@@ -320,10 +353,10 @@
         "passage_moved": "Passagem movida para este lado",
         "passage_movedWalls": "Passagem movida para este lado, com paredes nos lados: uma entrada, uma saída",
         "passage_closed": "Passagem removida",
-        "passage_taken": "Esse ladrilho é a partida ou um buraco, pântano ou checkpoint, então não pode ser uma passagem",
+        "passage_taken": "Esse ladrilho é a partida ou um buraco, pântano, checkpoint ou obstáculo, então não pode ser uma passagem",
         "passageOpen": "Clique para pôr a passagem no lado colorido",
         "passageOpenWalls": "Clique para pôr a passagem no lado colorido; paredes sobem nos lados em azul, para uma entrada e uma saída (regra {{rule_passageWalls}})",
-        "passageTaken": "Este ladrilho é a partida ou um buraco, pântano ou checkpoint, então não pode ser uma passagem (regra {{rule_oneKind}})",
+        "passageTaken": "Este ladrilho é a partida ou um buraco, pântano, checkpoint ou obstáculo, então não pode ser uma passagem (regra {{rule_oneKind}})",
         "passageClose": "Clique para remover a passagem",
         "passageRemove": "Clique para remover esta passagem",
         "shapeOut": "Clique ou arraste para tirar ladrilhos do mapa",
@@ -362,9 +395,14 @@
         "floor_isStart": "Este é o ladrilho de partida (a borracha o remove)",
         "floor_start": "Clique para mover a partida para cá (há uma só partida)",
         "floor_startRoom": "A partida é um dos ladrilhos da sala 1 (este ladrilho é da sala {{room}})",
-        "floor_startTaken": "A partida não pode ficar em um buraco, pântano, checkpoint ou passagem: um ladrilho é só uma dessas coisas (regra {{rule_oneKind}})",
-        "floor_onStart": "{{floor}} não pode ficar no ladrilho de partida: um ladrilho é só um de buraco, pântano, checkpoint, partida e passagem (regra {{rule_oneKind}})",
-        "floor_onPassage": "{{floor}} não pode ficar em um ladrilho de passagem: um ladrilho é só um de buraco, pântano, checkpoint, partida e passagem (regra {{rule_oneKind}})",
+        "floor_startTaken": "A partida não pode ficar em um buraco, pântano, checkpoint, obstáculo ou passagem: um ladrilho é só uma dessas coisas (regra {{rule_oneKind}})",
+        "floor_onStart": "{{floor}} não pode ficar no ladrilho de partida: um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}})",
+        "floor_onPassage": "{{floor}} não pode ficar em um ladrilho de passagem: um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}})",
+        "floor_onObstacle": "{{floor}} não pode ficar em um ladrilho com obstáculo: um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}})",
+        "floor_obstacleOn": "Clique para pôr aqui um obstáculo ({{shape}}) como ajustado no painel esquerdo (regra {{rule_obstacles}})",
+        "floor_obstacleSelect": "Clique para escolher este obstáculo (mude-o no painel esquerdo); arraste para movê-lo no seu ladrilho",
+        "floor_obstacleRoom4": "Os obstáculos da sala 4 são desenhados na sua imagem: abra o criador da sala 4",
+        "floor_obstacleTaken": "Um obstáculo não pode ficar na partida, numa passagem ou num buraco, pântano ou checkpoint: um ladrilho é só uma dessas coisas (regra {{rule_oneKind}})",
         "floor_clear": "Clique para remover o piso (buraco, pântano, checkpoint)",
         "floor_off": "Clique para remover: {{floor}}",
         "floor_on": "Clique para torná-lo: {{floor}}",
@@ -376,6 +414,15 @@
         "erase_wallWhole": "Clique para remover esta parede (12 cm; arraste para continuar)",
         "erase_floor": "Clique para remover o piso deste ladrilho",
         "erase_start": "Clique para remover o ladrilho de partida",
+        "erase_obstacle": "Clique para tirar o obstáculo",
+        "obstacle_blocked": "Ali ele entraria numa parede ou em outro obstáculo: um obstáculo pode encostar numa parede, não atravessá-la",
+        "obstacle_drawCorner": "Clique para pôr um canto do contorno do obstáculo",
+        "obstacle_drawClose": "Clique um canto, ou o primeiro (ou Enter) para fechar o contorno",
+        "obstacle_drawFew": "Um contorno precisa de três cantos ou mais",
+        "obstacle_drawCrossing": "O contorno se cruza: desenhe de novo sem cruzar",
+        "obstacle_drawSize": "Um contorno de {{min}}-{{max}} cm de largura e profundidade, por favor",
+        "obstacle_drawCentre": "O centro ficaria na borda de um ladrilho: o centro de um obstáculo fica num ladrilho (regra {{rule_obstacles}})",
+        "obstacle_iconFailed": "Não foi possível contornar esse ícone",
         "victim_place": "Clique para colocar “{{name}}”",
         "victim_move": "Clique para colocar “{{name}}” aqui (a vítima do ladrilho vem para cá: uma por ladrilho)",
         "victim_replace": "Clique para mudá-la para “{{name}}”",
@@ -542,7 +589,7 @@
                 },
                 "start": {
                     "title": "Colocar a partida",
-                    "body": "A ferramenta de piso define o piso de um ladrilho. Partida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Sem ela o mundo não pode ser exportado. Um ladrilho é só um de buraco, pântano, checkpoint, partida e passagem (regra {{rule_oneKind}}).",
+                    "body": "A ferramenta de piso define o piso de um ladrilho. Partida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Sem ela o mundo não pode ser exportado. Um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}}).",
                     "task": "Escolha Partida e clique no ladrilho de baixo à esquerda (moldura verde)",
                     "tasks": {
                         "room": "A partida está fora da sala 1. Clique em um ladrilho da sala 1 (moldura verde) para colocá-la ali"
@@ -837,7 +884,7 @@
                 },
                 "floor": {
                     "title": "Piso (F): checkpoints, buracos, pântanos, a partida",
-                    "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso. Um ladrilho é só um de buraco, pântano, checkpoint, partida e passagem (regra {{rule_oneKind}}).\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho."
+                    "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso. Um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}}). Um obstáculo pode ter qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, estrela, um contorno desenhado no mapa, um ícone), tamanho e giro, um por ladrilho nas salas 1-3, com o centro no seu ladrilho (regra {{rule_obstacles}}): ajuste no painel e arraste no mapa. O robô precisa contorná-lo: as verificações levam isso em conta.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho."
                 },
                 "victim": {
                     "title": "Vítima (V): vítimas e alvos cognitivos",
@@ -1094,7 +1141,7 @@
             },
             "tools": {
                 "help": {
-                    "eraser": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint, ladrilho de contato); um clique remove a partida. As paredes externas ficam."
+                    "eraser": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint, ladrilho de contato); um clique remove a partida. As paredes externas ficam. Um obstáculo também sai com um clique."
                 }
             },
             "checks": {
@@ -1128,7 +1175,7 @@
                     "steps": {
                         "floor": {
                             "title": "Piso (F): checkpoints, buracos, pântanos, ladrilhos de contato, a partida",
-                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso. Um ladrilho é só um de buraco, pântano, checkpoint, partida e passagem (regra {{rule_oneKind}}).\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos."
+                            "body": "Escolha um tipo e clique em um ladrilho para dar a ele esse piso. Clicar de novo com o mesmo tipo o remove.\nPartida é um dos ladrilhos da sala 1: ali o robô começa sua rodada. Nenhum remove o piso. Um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}}). Um obstáculo pode ter qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, estrela, um contorno desenhado no mapa, um ícone), tamanho e giro, um por ladrilho nas salas 1-3, com o centro no seu ladrilho (regra {{rule_obstacles}}): ajuste no painel e arraste no mapa. O robô precisa contorná-lo: as verificações levam isso em conta.\nAs regras pedem um checkpoint em cada passagem para a sala 4, então ele é colocado sozinho.\nUm ladrilho de contato (ciano) é onde o robô tem a bateria trocada depois de ficar parado nele por 5 segundos."
                         },
                         "victim": {
                             "body": "Escolha um tipo no painel (vítimas sorridentes - ferida um rosto triste, estável um rosto neutro, ilesa um rosto feliz - e suas falsas, alvos cognitivos de quatro tipos - gás inflamável, veneno, corrosivo, peróxido orgânico - e um falso) e clique perto de uma parede: ela vai para a parede onde você clica.\nElas vão nos lados dos ladrilhos na sala 1 (uma por ladrilho), nas faces das paredes de 6 cm nas salas 2 e 3, e em dois lugares de uma curva (dentro e fora). Arraste uma colocada para movê-la ao longo da parede. Onde não dá para colocar, a linha de status diz por quê.\nGire o dial (Giro fixo) para a rotação, ou escolha Aleatório para uma nova a cada vez. Para um alvo cognitivo, clique em um anel do alvo e depois em uma cor abaixo; a soma dos anéis dá o tipo.\nClique em uma vítima com o mesmo tipo para selecioná-la e depois mude o giro, os anéis ou a posição ao longo da parede, ou remova-a. Clicar com outro tipo muda o tipo dela."

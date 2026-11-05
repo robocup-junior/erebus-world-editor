@@ -19,6 +19,8 @@ import { fixed } from './format';
 import { rulesOf, rulesFor, years, upcomingYears, FIRST_YEAR, LATEST_YEAR } from '../rules/registry';
 import type { Ruleset, MaxScore, StampType, Tokens, FloorKind } from '../rules/types';
 import * as OpenCV from '../lib/opencv';
+import * as Outline from '../lib/outline';
+import * as FaIcons from '../room4/faIcons';
 import type { MapData, Room4Token } from '../lib/types';
 import type { Problem, Region, Where, VictimInfo, Clip, Show } from '../lib/model';
 import type { TourStep, TourEnv, CreatorApi, Rect, StepState } from '../lib/tour';
@@ -131,11 +133,12 @@ export function createEditor() {
         };
     }
     const firstPanel = victimPanel(rulesFor(LATEST_YEAR)!);
-    // The floor tool's choices: the kinds of floor of the map's year (rules: floors), the start tile
-    // and none
+    // The floor tool's choices: the kinds of floor of the map's year (rules: floors), an obstacle
+    // (rule 3.6.3: a tile that is one only - not a floor of the rules, but put and taken off as one),
+    // the start tile and none
     function floorPanel(rules: Ruleset) {
         return rules.floors.map(function (k) { return { id: k.id, icon: k.icon }; })
-            .concat([{ id: 'start', icon: 'fa-play' }, { id: 'clear', icon: 'fa-times' }]);
+            .concat([{ id: 'obstacle', icon: 'fa-cube' }, { id: 'start', icon: 'fa-play' }, { id: 'clear', icon: 'fa-times' }]);
     }
     let panelYear = LATEST_YEAR;
 
@@ -168,6 +171,15 @@ export function createEditor() {
         ],
         ctTypes: ['F', 'P', 'C', 'O', 'X'],
         selected: null as Selected | null,
+        // the floor tool's obstacle: the one picked on the map (at: its tile cell), or the one to put
+        // next; its shape as the panel shows it
+        obstacle: { at: null as { x: number; y: number } | null, shape: Object.assign({}, M.OBSTACLE_DEFAULT) as W.ObstacleShape },
+        obstacleKinds: W.OBSTACLE_KINDS,
+        // drawing an obstacle's outline on the map (its corners so far), or picking an icon for one
+        obstacleMode: '' as '' | 'draw' | 'icon',
+        obstacleDraw: [] as number[][],
+        obstacleIcons: { loading: false, loaded: false, failed: false, query: '', all: [] as FaIcons.Icon[], byName: {} as Record<string, FaIcons.Icon>, categories: [] as FaIcons.Category[] },
+        obstacleLimits: W.OBSTACLE_LIMITS,
         ui: {
             tool: 'line', room: 2, floor: 'checkpoint', victim: 'H', fake: false,
             // the year of the rules a new map is made with (asked on the start screen)
@@ -405,6 +417,8 @@ export function createEditor() {
     // victim on a linear tile is worth less. Worked out on a copy of the map, when it is shown.
     // the walls a passage would get where the passage tool points (worked out again after a change)
     let passageWallsAt: { key: string; segs: string[] } | null = null;
+    // where the pointer last was on the map (cm), for what follows it
+    let lastPointer: { x: number; y: number } | null = null;
     let linear: { noStart?: boolean; tiles?: Record<string, string>; floating?: { segs: string[]; arcs: L.Arc[] }; unreached?: boolean } | null = null;
     function computeLinear() {
         linear = null;
@@ -592,6 +606,7 @@ export function createEditor() {
         // the problems are worked out again: one pointed out may be gone (its item with it)
         pointed = null;
         if (S.selected && !M.victimAt(map, S.selected.where)) S.selected = null;
+        syncObstacle();
         S.canUndo = past.length > 0;
         S.canRedo = future.length > 0;
         const had = S.problems.length;
@@ -1152,6 +1167,16 @@ export function createEditor() {
             // on a placed one: dragged, it goes along its wall
             const hit = victimUnder(p);
             stroke = hit ? { grab: hit, down: p } : {};
+        } else if (tool === 'floor' && ui.floor === 'obstacle' && S.obstacleMode === 'draw') {
+            stroke = { drawCorner: true };
+        } else if (tool === 'floor' && ui.floor === 'obstacle') {
+            // on an obstacle: picked, and dragged it moves on its tile
+            const tl = tileAt(p);
+            const t = tl && M.tileOf(map, tl.x, tl.y);
+            if (tl && t && t.obstacle) {
+                pickObstacle(tl);
+                stroke = { obstacle: tl, down: p, from: { dx: S.obstacle.shape.dx, dy: S.obstacle.shape.dy } };
+            } else stroke = {};
         } else {
             stroke = {};
         }
@@ -1160,6 +1185,7 @@ export function createEditor() {
 
     function toolMove(p: P, dragging: boolean) {
         const tool = ui.tool;
+        lastPointer = { x: p.x, y: p.y };
         if (dragging && stroke) {
             if (tool === 'line') {
                 stroke.to = L.snap(p.x, p.y, stroke.step, map.width, map.length);
@@ -1169,6 +1195,10 @@ export function createEditor() {
             else if (tool === 'shape' && ui.shapeMode === 'outline') paintShape(p);
             else if (tool === 'eraser') erase(p, stroke.floors, false);
             else if (tool === 'victim') dragVictim(p);
+            else if (tool === 'floor' && stroke.obstacle) {
+                M.changeObstacle(map, stroke.obstacle.x, stroke.obstacle.y, { dx: stroke.from.dx + p.x - stroke.down.x, dy: stroke.from.dy + p.y - stroke.down.y });
+                syncObstacle();
+            }
         }
         hover = hoverAt(p);
         view.redraw();
@@ -1201,7 +1231,15 @@ export function createEditor() {
             const tl = tileAt(p);
             const refused = tl && !M.isOutside(map, tl.x, tl.y) && floorRefused(tl, ui.floor);
             if (refused) notify(refused.key, refused.params, 'warn');
-            else if (tl) M.setFloor(map, tl.x, tl.y, ui.floor);
+            else if (stroke.drawCorner) obstacleDrawAt(p);
+            else if (stroke.obstacle) { /* picked (and moved) */ }
+            else if (tl && ui.floor === 'obstacle') {
+                // put with the panel's shape, in the middle of its tile, and picked; not where it would
+                // go into a wall or another obstacle
+                const sh = Object.assign({}, S.obstacle.shape, { dx: 0, dy: 0 });
+                if (!M.obstacleFits(map, tl.x, tl.y, sh)) notify('obstacle_blocked', null, 'warn');
+                else { M.setObstacle(map, tl.x, tl.y, sh); pickObstacle(tl); }
+            } else if (tl) M.setFloor(map, tl.x, tl.y, ui.floor);
         } else if (tool === 'victim' && stroke.victim) {
             dropVictim();
         } else if (tool === 'victim') {
@@ -1389,6 +1427,7 @@ export function createEditor() {
         const at = tileAt(p);
         if (!at) return null;
         const tl = M.tileOf(map, at.x, at.y);
+        if (tl && tl.obstacle) return { tile: at, kind: 'obstacle' };
         if (W.floorKindOf(map, tl)) return { tile: at, kind: 'clear' };
         const st = map.startTile;
         if (click && st && st.x === at.x && st.y === at.y) return { tile: at, kind: 'start' };
@@ -1536,9 +1575,8 @@ export function createEditor() {
         selectWhere(sel.where);
     }
 
-    // The selected victim moved along its wall from the panel: to `offset`, as far as it fits. The
-    // slider moves it as it goes (slideSelected) and is one change when let go (slideDone); the
-    // middle button is one change at once.
+    // The selected victim moved along its wall from the panel (its middle button): to `offset`, as far
+    // as it fits, one change (slideSelected as it goes, slideDone once there)
     let sliding: { from: number } | null = null;
     function slideSelected(offset: number) {
         const sel = S.selected;
@@ -1714,14 +1752,174 @@ export function createEditor() {
         return passageWallsAt.segs;
     }
 
+    // ---- obstacles (the floor tool's obstacle): picked on the map, changed in the panel ----
+    function pickObstacle(tl: { x: number; y: number }) {
+        S.obstacle.at = { x: tl.x, y: tl.y };
+        syncObstacle();
+    }
+    // the panel's shape: the picked obstacle's (none once it is gone), else the one to put next
+    function syncObstacle() {
+        const at = S.obstacle.at;
+        const sh = at && map && W.obstacleShape(M.tileOf(map, at.x, at.y));
+        if (at && !sh) S.obstacle.at = null;
+        if (sh) S.obstacle.shape = Object.assign({}, sh);
+    }
+    function obstacleDeselect() { S.obstacle.at = null; view.redraw(); }
+    // a change from the panel: to the picked obstacle (a slider as it goes, one change once let go:
+    // obstacleDone), and to the one to put next
+    let obstacleSliding = false;
+    function obstacleSet(change: Partial<W.ObstacleShape>) {
+        const at = S.obstacle.at;
+        S.obstacle.shape = M.clampObstacle(Object.assign({}, S.obstacle.shape, change));
+        if (!at) return true;
+        if (!obstacleSliding) { begin(); obstacleSliding = true; }
+        // as far as it goes without going into a wall or another obstacle
+        const done = M.changeObstacle(map, at.x, at.y, change);
+        syncObstacle();
+        view.redraw();
+        return done;
+    }
+    function obstacleDone() {
+        if (!obstacleSliding) return;
+        obstacleSliding = false;
+        commit();
+    }
+    // a change made at once (a shape picked, drawn at random). A drawn one and an icon take the
+    // outline last drawn or picked; with none yet, their kind starts drawing one / picking one.
+    let lastDrawn: Partial<W.ObstacleShape> | null = null, lastIcon: Partial<W.ObstacleShape> | null = null;
+    function obstacleChange(change: Partial<W.ObstacleShape>) {
+        if (change.shape === 'polygon' || change.shape === 'icon') {
+            const keep = change.shape === 'polygon' ? lastDrawn : lastIcon;
+            S.obstacleMode = change.shape === 'polygon' ? (keep ? '' : 'draw') : 'icon';
+            S.obstacleDraw = [];
+            if (S.obstacleMode === 'icon') loadObstacleIcons();
+            if (!keep) return;
+            change = Object.assign({}, change, keep);
+        } else if (change.shape) S.obstacleMode = '';
+        if (!obstacleSet(change) && change.shape) notify('obstacle_blocked', null, 'warn');
+        obstacleDone();
+    }
+
+    // ---- an obstacle drawn: its corners clicked on the map (snapped to 0.5 cm), closed on its first
+    // corner or with Enter; its middle (of the box round it) on a tile of rooms 1-3, off its edges
+    function obstacleDrawStart() { S.obstacleMode = 'draw'; S.obstacleDraw = []; view.redraw(); }
+    function obstacleDrawCancel() { S.obstacleMode = ''; S.obstacleDraw = []; view.redraw(); }
+    function obstacleDrawAt(p: P) {
+        const q = [Math.round(p.x * 2) / 2, Math.round(p.y * 2) / 2];
+        const pts = S.obstacleDraw;
+        if (pts.length >= 3 && Math.hypot(q[0] - pts[0][0], q[1] - pts[0][1]) < 1) { obstacleDrawDone(); return; }
+        if (pts.length && q[0] === pts[pts.length - 1][0] && q[1] === pts[pts.length - 1][1]) return;
+        pts.push(q);
+        view.redraw();
+    }
+    function obstacleDrawDone() {
+        const pts = S.obstacleDraw.slice();
+        if (pts.length < 3) { notify('obstacle_drawFew', null, 'warn'); return; }
+        if (Outline.selfCrossing(pts)) { notify('obstacle_drawCrossing', null, 'warn'); return; }
+        const xs = pts.map(function (q) { return q[0]; }), ys = pts.map(function (q) { return q[1]; });
+        const x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs), y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
+        const lim = W.OBSTACLE_LIMITS;
+        if (x1 - x0 < lim.size[0] || y1 - y0 < lim.size[0] || x1 - x0 > lim.size[1] || y1 - y0 > lim.size[1]) { notify('obstacle_drawSize', { min: lim.size[0], max: lim.size[1] }, 'warn'); return; }
+        // its middle: on which tile, how far from the tile's
+        const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+        const tile = { x: 2 * Math.floor(cx / 12) + 1, y: 2 * Math.floor(cy / 12) + 1 };
+        const dx = cx - 6 * tile.x, dy = cy - 6 * tile.y;
+        if (Math.abs(dx) > lim.offset || Math.abs(dy) > lim.offset) { notify('obstacle_drawCentre', null, 'warn'); return; }
+        const t0 = M.tileOf(map, tile.x, tile.y);
+        if (!(t0 && t0.obstacle) && !M.floorFree(map, tile.x, tile.y, 'obstacle')) {
+            const r = floorRefused(tile, 'obstacle');
+            notify(r ? r.key : 'floor_obstacleTaken', r ? r.params : null, 'warn');
+            return;
+        }
+        const norm = Outline.normalize([pts])!;
+        const sh: Partial<W.ObstacleShape> = { shape: 'polygon', outline: norm.rings, w: x1 - x0, d: y1 - y0, h: S.obstacle.shape.h, dx: dx, dy: dy, rot: 0 };
+        // one to a tile: it takes the place of the tile's obstacle
+        const keep = t0 && t0.obstacle ? { obstacle: t0.obstacle, obstacleShape: t0.obstacleShape } : null;
+        if (keep) M.setObstacle(map, tile.x, tile.y, null);
+        if (!M.obstacleFits(map, tile.x, tile.y, sh)) {
+            if (keep) Object.assign(M.tileOf(map, tile.x, tile.y)!, keep);
+            notify('obstacle_blocked', null, 'warn');
+            return;
+        }
+        begin();
+        if (keep) Object.assign(M.tileOf(map, tile.x, tile.y)!, keep);
+        M.setObstacle(map, tile.x, tile.y, sh);
+        commit();
+        lastDrawn = { outline: norm.rings, w: sh.w, d: sh.d };
+        S.obstacleMode = '';
+        S.obstacleDraw = [];
+        pickObstacle(tile);
+    }
+
+    // ---- an icon for an obstacle: Font Awesome's, as the room 4 creator's shape tool lists them
+    function loadObstacleIcons() {
+        const ic = S.obstacleIcons;
+        if (ic.loaded || ic.loading) return;
+        ic.loading = true;
+        FaIcons.loadIcons().then(function (res) {
+            apply(function () { Object.assign(ic, { loading: false, loaded: true, all: res.all, byName: res.byName, categories: res.categories }); });
+        }, function () {
+            apply(function () { ic.loading = false; ic.failed = true; });
+        });
+    }
+    function obstacleIconResults() { return FaIcons.iconResults(S.obstacleIcons, S.obstacleIcons.query, '').slice(0, 60); }
+    function obstacleIconClass(i: FaIcons.Icon) { return FaIcons.iconClass(i); }
+    function obstaclePickIcon(i: FaIcons.Icon) {
+        Outline.iconOutline(i.unicode, i.styles.indexOf('solid') > -1).then(function (res) {
+            apply(function () {
+                if (!res) { notify('obstacle_iconFailed', null, 'warn'); return; }
+                // as wide as the shape now is, as deep as the icon is for that
+                const w = S.obstacle.shape.w, d = Math.max(W.OBSTACLE_LIMITS.size[0], Math.min(W.OBSTACLE_LIMITS.size[1], w / res.aspect));
+                lastIcon = { outline: res.rings, icon: i.name, w: w, d: d };
+                obstacleChange({ shape: 'icon' });
+            });
+        }, function () { apply(function () { notify('obstacle_iconFailed', null, 'warn'); }); });
+    }
+    function obstacleRandom() {
+        const r = M.randomObstacle();
+        obstacleChange(S.obstacle.at ? r : Object.assign(r, { dx: 0, dy: 0 }));
+    }
+    // the panel's sliders for the shape: its sizes (round ones one across), its sides, its height (not
+    // a sphere's) and its turn (degrees); where it stands on its tile is dragged on the map
+    const OBSTACLE_ICONS: Record<string, string> = { box: 'fa-cube', cylinder: 'fa-database', cone: 'fa-caret-up', sphere: 'fa-circle', pyramid: 'fa-mountain',
+        prism: 'fa-dice-d6', npyramid: 'fa-play', star: 'fa-star', polygon: 'fa-draw-polygon', icon: 'fa-icons' };
+    function obstacleFields() {
+        const sh = S.obstacle.shape, lim = W.OBSTACLE_LIMITS, round = W.obstacleRound(sh.shape);
+        const out = [{ id: 'w', label: round ? 'diameter' : 'width', min: lim.size[0], max: lim.size[1], step: 0.5, value: sh.w, unit: 'cm' }];
+        if (!round) out.push({ id: 'd', label: 'depth', min: lim.size[0], max: lim.size[1], step: 0.5, value: sh.d, unit: 'cm' });
+        if (sh.shape === 'prism' || sh.shape === 'npyramid') out.push({ id: 'n', label: 'sides', min: lim.sides[0], max: lim.sides[1], step: 1, value: sh.n || 6, unit: '' });
+        if (sh.shape !== 'sphere') out.push({ id: 'h', label: 'height', min: lim.height[0], max: lim.height[1], step: 0.5, value: sh.h, unit: 'cm' });
+        if (sh.shape !== 'sphere' && sh.shape !== 'cylinder' && sh.shape !== 'cone') out.push({ id: 'rot', label: 'turn', min: 0, max: 359, step: 1, value: Math.round(sh.rot * 180 / Math.PI) % 360, unit: '°' });
+        return out;
+    }
+    function obstacleInput(id: string, value: number) {
+        const change: Record<string, number> = {};
+        change[id] = id === 'rot' ? Number(value) * Math.PI / 180 : Number(value);
+        obstacleSet(change);
+    }
+    function obstacleRemove() {
+        const at = S.obstacle.at;
+        if (!at) return;
+        begin();
+        M.setObstacle(map, at.x, at.y, null);
+        S.obstacle.at = null;
+        commit();
+    }
+
     // Why floor `kind` (or the start) cannot go on tile tl by the rules: the status line's text, or null
     function floorRefused(tl: { x: number; y: number }, kind: string): { key: string; params: Record<string, unknown> } | null {
         const st = map.startTile, onStart = !!st && st.x === tl.x && st.y === tl.y;
         if (kind === 'start' && onStart) return null;
         if (kind === 'start' && M.roomOf(map, tl.x, tl.y) !== 1) return { key: 'floor_startRoom', params: { room: M.roomOf(map, tl.x, tl.y) } };
         if (kind === 'start') return M.startFree(map, tl.x, tl.y) ? null : { key: 'floor_startTaken', params: {} };
+        const tile = M.tileOf(map, tl.x, tl.y);
+        if (kind === 'obstacle' && tile && tile.obstacle) return null;
         if (M.floorFree(map, tl.x, tl.y, kind)) return null;
-        return { key: onStart ? 'floor_onStart' : 'floor_onPassage', params: { floor: t('floors.' + kind) } };
+        if (kind === 'obstacle') {
+            const room = M.roomOf(map, tl.x, tl.y);
+            return room === 4 ? { key: 'floor_obstacleRoom4', params: {} } : { key: 'floor_obstacleTaken', params: {} };
+        }
+        return { key: onStart ? 'floor_onStart' : tile && tile.obstacle ? 'floor_onObstacle' : 'floor_onPassage', params: { floor: t('floors.' + kind) } };
     }
 
     // What the tool would do at p, for the preview
@@ -1778,6 +1976,8 @@ export function createEditor() {
             else if (kind === 'start' && st && st.x === tl.x && st.y === tl.y) say('floor_isStart');
             else if (refused) say(refused.key, refused.params);
             else if (kind === 'start') say('floor_start');
+            else if (kind === 'obstacle' && S.obstacleMode === 'draw') say(S.obstacleDraw.length >= 3 ? 'obstacle_drawClose' : 'obstacle_drawCorner');
+            else if (kind === 'obstacle') say(tile && tile.obstacle ? 'floor_obstacleSelect' : 'floor_obstacleOn', { shape: t('obstacles.shapes.' + S.obstacle.shape.shape) });
             else if (kind === 'clear') say('floor_clear');
             else if (tile && tile[kind]) say('floor_off', { floor: name });
             else say('floor_on', { floor: name });
@@ -1804,7 +2004,7 @@ export function createEditor() {
             if (!s) {
                 // while dragging over walls, floors are left alone
                 const f = !(stroke && !stroke.floors) && floorNear(p, !stroke);
-                if (f) say(f.kind === 'start' ? 'erase_start' : 'erase_floor');
+                if (f) say(f.kind === 'start' ? 'erase_start' : f.kind === 'obstacle' ? 'erase_obstacle' : 'erase_floor');
                 return f ? { kind: 'tile', tile: f.tile, color: '#dc2626' } : null;
             }
             const rule = L.segRule(s, M.roomLookup(map), rulesOf(map).rooms);
@@ -1928,6 +2128,32 @@ export function createEditor() {
         }
         const sp = selectedPos();
         if (sp) { ring(ctx, sp[0], sp[1], 2.4, '#f59e0b', px * 1.4); }
+        if (ui.tool === 'floor' && ui.floor === 'obstacle' && S.obstacleMode === 'draw' && S.obstacleDraw.length) {
+            // the outline being drawn, on to the pointer
+            const pts = S.obstacleDraw;
+            ctx.beginPath();
+            pts.forEach(function (q, i) { if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
+            if (lastPointer) ctx.lineTo(Math.round(lastPointer.x * 2) / 2, Math.round(lastPointer.y * 2) / 2);
+            ctx.strokeStyle = '#2563eb';
+            ctx.lineWidth = 1.6 * px;
+            ctx.setLineDash([3 * px, 2 * px]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            pts.forEach(function (q, i) { dot(ctx, q[0], q[1], (i ? 1.4 : 2.2) * px, '#2563eb'); });
+        }
+        const ob = ui.tool === 'floor' && ui.floor === 'obstacle' && S.obstacle.at;
+        const obShape = ob && W.obstacleShape(M.tileOf(map, ob.x, ob.y));
+        if (ob && obShape) {
+            ctx.beginPath();
+            W.obstacleRings(obShape, ob.x, ob.y).forEach(function (c) {
+                c.forEach(function (q, i) { if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
+                ctx.closePath();
+            });
+            ctx.strokeStyle = '#2563eb';
+            ctx.lineWidth = 2 * px;
+            ctx.stroke();
+            dot(ctx, 6 * ob.x + obShape.dx, 6 * ob.y + obShape.dy, 1.6 * px, '#2563eb');
+        }
         if (!hover) return;
         if (hover.kind === 'line') {
             const o = hover.op;
@@ -2623,6 +2849,10 @@ export function createEditor() {
                 if (arrow && S.region && !e.ctrlKey && !e.metaKey) { e.preventDefault(); apply(function () { nudgeRegion(arrow[0], arrow[1]); }); return; }
                 if (k === 'escape') { apply(function () { S.region = null; view.redraw(); }); return; }
             }
+            if (ui.tool === 'floor' && ui.floor === 'obstacle' && S.obstacleMode === 'draw' && (k === 'enter' || k === 'escape')) {
+                e.preventDefault(); apply(k === 'enter' ? obstacleDrawDone : obstacleDrawCancel); return;
+            }
+            if (ui.tool === 'floor' && ui.floor === 'obstacle' && S.obstacle.at && (k === 'delete' || k === 'backspace')) { e.preventDefault(); apply(obstacleRemove); return; }
             if (e.ctrlKey || e.metaKey || e.altKey) return;
             if (e.key === '?') { e.preventDefault(); apply(function () { openGuidePick('keys'); }); return; }
             if (k === 'escape') { apply(cancelStroke); return; }
@@ -2663,8 +2893,13 @@ export function createEditor() {
         pointProblem: act(pointProblem), restoreKept: act(restoreKept), keptOtherYear: keptOtherYear, resize: act(resize), setSize: act(setSize), toCustomRoom4: act(toCustomRoom4),
         renamed: act(renamed), zoomIn: act(zoomIn), zoomOut: act(zoomOut), fit: act(fit), setTool: act(setTool),
         copyRegion: act(copyRegion), cutRegion: act(cutRegion), clearRegion: act(clearRegion), pasteRegion: act(pasteRegion),
-        duplicateRegion: act(duplicateRegion), selectNone: act(selectNone), changeSelected: act(changeSelected), moveSelected: act(moveSelected), slideSelected: act(slideSelected), slideDone: act(slideDone), selectedRange: selectedRange, offsetText: offsetText,
-        removeSelected: act(removeSelected), switchLang: act(switchLang), openGuidePick: act(openGuidePick),
+        duplicateRegion: act(duplicateRegion), selectNone: act(selectNone), changeSelected: act(changeSelected), moveSelected: act(moveSelected), selectedRange: selectedRange, offsetText: offsetText,
+        removeSelected: act(removeSelected),
+        obstacleSet: act(obstacleSet), obstacleDone: act(obstacleDone), obstacleChange: act(obstacleChange), obstacleRandom: act(obstacleRandom),
+        obstacleRemove: act(obstacleRemove), obstacleDeselect: act(obstacleDeselect), obstacleFields: obstacleFields, obstacleInput: act(obstacleInput),
+        obstacleIcon: function (k: string) { return OBSTACLE_ICONS[k]; },
+        obstacleDrawStart: act(obstacleDrawStart), obstacleDrawCancel: act(obstacleDrawCancel), obstacleDrawDone: act(obstacleDrawDone),
+        obstacleIconResults: obstacleIconResults, obstacleIconClass: obstacleIconClass, obstaclePickIcon: act(obstaclePickIcon), switchLang: act(switchLang), openGuidePick: act(openGuidePick),
         closeGuidePick: act(closeGuidePick), pickGuide: act(pickGuide), startTour: act(startTour), startRoom4Tour: act(startRoom4Tour),
         tourRoom4Inside: act(tourRoom4Inside), tourFold: act(tourFold), tourCloseCreator: act(tourCloseCreator),
         tourOpenCreator: act(tourOpenCreator), tourDoIt: act(tourDoIt), tourGo: act(tourGo), tourJump: act(tourJump), endTour: act(endTour)

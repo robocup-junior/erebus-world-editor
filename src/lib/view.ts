@@ -5,6 +5,7 @@ import * as L from './lattice';
 import * as Icons from './icons';
 import { drawHole } from './hole';
 import * as R4 from './room4';
+import * as F from './field';
 import { rulesOf } from '../rules/registry';
 
 // A stamp of the room 4 picture as the map shows it: where it is and the face of the wall it is
@@ -266,7 +267,44 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
                 drawHole(ctx, r[0], r[1], TILE, TILE * g.holeRimCm / g.tileCm, floor.color);
             } else if (floor) { ctx.fillStyle = floor.color; ctx.fillRect(r[0], r[1], r[2], r[3]); }
             if (t.color) { ctx.fillStyle = t.color; ctx.globalAlpha = 0.75; ctx.fillRect(r[0], r[1], r[2], r[3]); ctx.globalAlpha = 1; }
+            drawObstacle(t, p[0], p[1]);
         });
+    }
+
+    // an obstacle seen from above: its outline grey as Erebus shows it, a pyramid's edges and a cone's
+    // and a sphere's shading to tell them apart; one of the classic editor (no shape: a box drawn at
+    // random in the export) as the place it may be, dashed
+    function drawObstacle(t: Record<string, any>, x: number, y: number) {
+        const sh = F.obstacleShape(t);
+        if (!sh) return;
+        const rings = F.obstacleRings(sh, x, y), mx = 6 * x + sh.dx, my = 6 * y + sh.dy;
+        ctx.beginPath();
+        rings.forEach(function (c) {
+            c.forEach(function (q, i) { if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
+            ctx.closePath();
+        });
+        ctx.lineWidth = 1.2 / view.scale;
+        ctx.strokeStyle = '#3f3f46';
+        if (!t.obstacleShape) {
+            ctx.fillStyle = 'rgba(115, 115, 115, 0.25)'; ctx.fill();
+            ctx.setLineDash([2 / view.scale, 2 / view.scale]); ctx.stroke(); ctx.setLineDash([]);
+            return;
+        }
+        if (sh.shape === 'sphere' || sh.shape === 'cone') {
+            const g = ctx.createRadialGradient(mx - sh.w / 6, my - sh.w / 6, 0, mx, my, sh.w / 2);
+            g.addColorStop(0, sh.shape === 'sphere' ? '#c4c4c4' : '#a3a3a3'); g.addColorStop(1, '#5c5c5c');
+            ctx.fillStyle = g;
+        } else ctx.fillStyle = '#737373';
+        ctx.fill();
+        ctx.stroke();
+        if (F.obstaclePointed(sh.shape)) {
+            // its edges up to the apex, over its middle (a cone: four of them)
+            const c = rings[0];
+            ctx.beginPath();
+            (sh.shape === 'cone' ? [c[0], c[6], c[12], c[18]] : c).forEach(function (q) { ctx.moveTo(q[0], q[1]); ctx.lineTo(mx, my); });
+            ctx.lineWidth = 0.8 / view.scale;
+            ctx.stroke();
+        }
     }
 
     function drawGrid() {

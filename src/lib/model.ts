@@ -111,9 +111,11 @@ function isStart(map: MapData, x: number, y: number) {
     const st = map.startTile;
     return !!st && st.x === x && st.y === y;
 }
-// What tile (x, y) is of those a tile is only one of: its alone floors, 'start', 'passage'
+// What tile (x, y) is of those a tile is only one of: its alone floors, 'obstacle', 'start', 'passage'
 function tileKinds(map: MapData, x: number, y: number): string[] {
-    const out = aloneFloors(map, tileOf(map, x, y));
+    const t = tileOf(map, x, y);
+    const out = aloneFloors(map, t);
+    if (t && t.obstacle) out.push('obstacle');
     if (isStart(map, x, y)) out.push('start');
     if (isPassage(map, x, y)) out.push('passage');
     return out;
@@ -285,6 +287,8 @@ function setRoom(map: MapData, x: number, y: number, room: number) {
     } else {
         delete t.outside;
     }
+    // room 4's obstacles are drawn in its picture, and an outside tile has none
+    if (room === 0 || room === 4) { delete t.obstacle; delete t.obstacleShape; }
     // the room it goes into (an outside tile takes nothing)
     const takes = rulesOf(map).rooms[room] || { edges: 'whole', inner: false, curves: false, picture: false, tokens: 'edge' };
     t.halfTile = takes.inner ? 1 : 0;
@@ -478,7 +482,8 @@ function togglePassage(map: MapData, ex: number, ey: number, side?: Pt | null): 
 
 // Whether tile (x, y) can be a passage: not the start, no floor that keeps the tile to itself
 function passageFree(map: MapData, x: number, y: number) {
-    return !isStart(map, x, y) && !aloneFloors(map, tileOf(map, x, y)).length;
+    const t = tileOf(map, x, y);
+    return !isStart(map, x, y) && !aloneFloors(map, t).length && !(t && t.obstacle);
 }
 
 // The side ('top', ...) of tile (x, y) that edge (ex, ey) is
@@ -663,7 +668,9 @@ function setFloor(map: MapData, x: number, y: number, kind: string) {
         map.startTile = { x: x, y: y, z: 0 };
         return true;
     }
-    if (!floorFree(map, x, y, kind)) return false;
+    if (!floorFree(map, x, y, kind) && !(kind === 'obstacle' && (tileOf(map, x, y) || {}).obstacle)) return false;
+    if (kind === 'obstacle') { setObstacle(map, x, y, (tileOf(map, x, y) || {}).obstacle ? null : OBSTACLE_DEFAULT); return true; }
+    if (kind === 'clear' && (tileOf(map, x, y) || {}).obstacle) setObstacle(map, x, y, null);
     const was = !!(tileOf(map, x, y) || {})[kind];
     const t = ensureTile(map, x, y);
     clearFloors(map, t);
@@ -672,15 +679,175 @@ function setFloor(map: MapData, x: number, y: number, kind: string) {
     return true;
 }
 
-// Whether the start can go on tile (x, y): no floor that keeps the tile to itself, not a passage
+// Whether the start can go on tile (x, y): no floor that keeps the tile to itself, no obstacle,
+// not a passage
 function startFree(map: MapData, x: number, y: number) {
-    return !aloneFloors(map, tileOf(map, x, y)).length && !isPassage(map, x, y);
+    const t = tileOf(map, x, y);
+    return !aloneFloors(map, t).length && !(t && t.obstacle) && !isPassage(map, x, y);
 }
-// Whether floor `kind` can go on tile (x, y): one that keeps its tile to itself goes on no start
-// and no passage ('clear' and the other floors go anywhere)
+// Whether floor `kind` (or 'obstacle') can go on tile (x, y): one that keeps its tile to itself goes
+// on no start, no passage and no obstacle ('clear' and the other floors go anywhere); an obstacle
+// goes on a tile of rooms 1-3 (room 4's are drawn in its picture) that is none of them and has no
+// such floor
 function floorFree(map: MapData, x: number, y: number, kind: string) {
+    const t = tileOf(map, x, y);
+    if (kind === 'obstacle') {
+        const room = roomOf(map, x, y);
+        return room >= 1 && room <= 3 && !isOutside(map, x, y) && !aloneFloors(map, t).length && !isStart(map, x, y) && !isPassage(map, x, y);
+    }
     const k = rulesOf(map).floors.find(function (f) { return f.id === kind; });
-    return !(k && k.alone) || (!isStart(map, x, y) && !isPassage(map, x, y));
+    return !(k && k.alone) || (!isStart(map, x, y) && !isPassage(map, x, y) && !(t && t.obstacle));
+}
+
+// ---- Obstacles (rule 3.6.3) ----------------------------------------------------------------------
+// Any shape (W.ObstacleShape), put with its tile and kept with it, its centre on the tile and off its
+// edges (3.6.3.e), one to a tile (3.6.3.f). The sizes are kept to what the editor lets them be.
+const OBSTACLE_DEFAULT: W.ObstacleShape = { shape: 'box', w: 4, d: 4, h: 6, dx: 0, dy: 0, rot: 0 };
+function clampObstacle(sh: Partial<W.ObstacleShape>): W.ObstacleShape {
+    const lim = W.OBSTACLE_LIMITS, r1 = function (v: number) { return Math.round(v * 10) / 10; };
+    const within = function (v: unknown, lo: number, hi: number, dflt: number) { const n = Number(v); return r1(isFinite(n) ? Math.max(lo, Math.min(hi, n)) : dflt); };
+    let shape = W.OBSTACLE_KINDS.indexOf(sh.shape as W.ObstacleKind) > -1 ? sh.shape as W.ObstacleKind : 'box';
+    // a drawn one's and an icon's rings: each of 3 points or more, in the unit box
+    const outline = Array.isArray(sh.outline) ? sh.outline.filter(function (r) {
+        return Array.isArray(r) && r.length >= 3 && r.every(function (q) { return Array.isArray(q) && Math.abs(Number(q[0])) <= 0.51 && Math.abs(Number(q[1])) <= 0.51; });
+    }).map(function (r) { return r.map(function (q) { return [Number(q[0]), Number(q[1])]; }); }) : [];
+    if ((shape === 'polygon' || shape === 'icon') && !outline.length) shape = 'box';
+    const w = within(sh.w, lim.size[0], lim.size[1], OBSTACLE_DEFAULT.w);
+    const rot = ((Number(sh.rot) || 0) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+    const out: W.ObstacleShape = {
+        shape: shape, w: w,
+        d: W.obstacleRound(shape) ? w : within(sh.d, lim.size[0], lim.size[1], OBSTACLE_DEFAULT.d),
+        h: shape === 'sphere' ? w : within(sh.h, lim.height[0], lim.height[1], OBSTACLE_DEFAULT.h),
+        dx: within(sh.dx, -lim.offset, lim.offset, 0), dy: within(sh.dy, -lim.offset, lim.offset, 0),
+        rot: Math.round(rot * 1000) / 1000
+    };
+    // what each kind has of its own, kept with it (so going back to it brings it back)
+    if (sh.n !== undefined || shape === 'prism' || shape === 'npyramid') out.n = Math.round(within(sh.n, lim.sides[0], lim.sides[1], 6));
+    if (outline.length) out.outline = outline;
+    if (sh.icon) out.icon = String(sh.icon);
+    return out;
+}
+// One drawn at random: a shape of its own (not a drawn one or an icon), 2-8 cm across, 3-10 cm high,
+// any turn, near the tile's middle
+function randomObstacle(): W.ObstacleShape {
+    const kinds = W.OBSTACLE_KINDS.filter(function (k) { return k !== 'polygon' && k !== 'icon'; });
+    const shape = kinds[Math.floor(Math.random() * kinds.length)];
+    const w = 2 + 6 * Math.random(), d = 2 + 6 * Math.random();
+    const free = Math.max(0, 4 - Math.hypot(w, W.obstacleRound(shape) ? w : d) / 2);
+    return clampObstacle({ shape: shape, w: w, d: d, h: 3 + 7 * Math.random(), rot: Math.random() * 2 * Math.PI, n: 3 + Math.floor(6 * Math.random()),
+        dx: (2 * Math.random() - 1) * free, dy: (2 * Math.random() - 1) * free });
+}
+// The obstacle of tile (x, y): put (shape) or taken off (null)
+function setObstacle(map: MapData, x: number, y: number, shape: Partial<W.ObstacleShape> | null) {
+    const t = ensureTile(map, x, y);
+    if (shape) { t.obstacle = true; t.obstacleShape = clampObstacle(shape); }
+    else { delete t.obstacle; delete t.obstacleShape; }
+}
+// Whether point p is inside polygon poly
+function insidePoly(p: number[], poly: number[][]) {
+    let n = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+        if ((poly[i][1] > p[1]) !== (poly[j][1] > p[1]) && p[0] < (poly[j][0] - poly[i][0]) * (p[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0]) n = !n;
+    }
+    return n;
+}
+// The distance from segment a-b to polygon poly: 0 when it crosses it or lies inside
+function segToPoly(a: number[], b: number[], poly: number[][]) {
+    if (insidePoly(a, poly) || insidePoly(b, poly)) return 0;
+    const o = function (p: number[], q: number[], r: number[]) { return (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]); };
+    let best = Infinity;
+    for (let i = 0; i < poly.length; i++) {
+        const c = poly[i], d = poly[(i + 1) % poly.length];
+        if (o(a, b, c) * o(a, b, d) < 0 && o(c, d, a) * o(c, d, b) < 0) return 0;
+        best = Math.min(best, segSegDist(a, b, c, d));
+    }
+    return best;
+}
+
+// Whether the obstacle of tile (x, y) - with shape `sh`, if given - runs into a wall (into its
+// thickness: standing against it is all right) or into another obstacle. An obstacle cannot go
+// through a wall, as on a real field.
+function obstacleClashes(map: MapData, x: number, y: number, sh?: W.ObstacleShape, walls?: number[][][]): boolean {
+    const shape = sh || W.obstacleShape(tileOf(map, x, y));
+    if (!shape) return false;
+    const half = rulesOf(map).geometry.wallHalfCm - 0.01;
+    const rings = W.obstacleRings(shape, x, y);
+    const box = ([] as number[][]).concat.apply([], rings).reduce(function (r, p) { return [Math.min(r[0], p[0]), Math.min(r[1], p[1]), Math.max(r[2], p[0]), Math.max(r[3], p[1])]; }, [Infinity, Infinity, -Infinity, -Infinity]);
+    const hitsWall = (walls || wallPieces(map)).some(function (w) {
+        if (Math.max(w[0][0], w[1][0]) < box[0] - half || Math.min(w[0][0], w[1][0]) > box[2] + half || Math.max(w[0][1], w[1][1]) < box[1] - half || Math.min(w[0][1], w[1][1]) > box[3] + half) return false;
+        return rings.some(function (poly) { return segToPoly(w[0], w[1], poly) < half; });
+    });
+    if (hitsWall) return true;
+    for (let nx = x - 4; nx <= x + 4; nx += 2) {
+        for (let ny = y - 4; ny <= y + 4; ny += 2) {
+            if (nx === x && ny === y) continue;
+            const other = W.obstacleShape(tileOf(map, nx, ny));
+            if (!other) continue;
+            const hit = W.obstacleRings(other, nx, ny).some(function (q) {
+                return q.some(function (p, k) { return rings.some(function (poly) { return segToPoly(p, q[(k + 1) % q.length], poly) === 0; }); });
+            });
+            if (hit) return true;
+        }
+    }
+    return false;
+}
+
+// The obstacle of tile (x, y) changed: what `change` has of its shape, kept to what it can be, and
+// as far towards it as it can go without running into a wall or another obstacle (a drag stops at
+// the wall it meets, a slider at the size that fits). One that clashes already (from a file) takes
+// the change as it is. Whether it changed.
+function changeObstacle(map: MapData, x: number, y: number, change: Partial<W.ObstacleShape>) {
+    const t = tileOf(map, x, y);
+    if (!t || !t.obstacle) return false;
+    const from = W.obstacleShape(t)!, to = clampObstacle(Object.assign({}, from, change));
+    if (!t.obstacleShape || obstacleClashes(map, x, y, from) || !obstacleClashes(map, x, y, to)) { t.obstacleShape = to; return true; }
+    if (to.shape !== from.shape) return false;
+    // as far from the old shape to the new as fits: halved 12 times
+    const walls = wallPieces(map);
+    const at = function (k: number): W.ObstacleShape {
+        const mix = function (a: number, b: number) { return a + (b - a) * k; };
+        let dr = to.rot - from.rot;
+        if (dr > Math.PI) dr -= 2 * Math.PI; else if (dr < -Math.PI) dr += 2 * Math.PI;
+        return clampObstacle({ shape: to.shape, w: mix(from.w, to.w), d: mix(from.d, to.d), h: mix(from.h, to.h), dx: mix(from.dx, to.dx), dy: mix(from.dy, to.dy), rot: from.rot + dr * k });
+    };
+    let lo = 0, hi = 1;
+    for (let i = 0; i < 12; i++) { const mid = (lo + hi) / 2; if (obstacleClashes(map, x, y, at(mid), walls)) hi = mid; else lo = mid; }
+    const best = at(lo);
+    if (obstacleClashes(map, x, y, best, walls)) return false;
+    const same = JSON.stringify(best) === JSON.stringify(from);
+    t.obstacleShape = best;
+    return !same;
+}
+
+// Whether an obstacle of shape `sh` can be put on tile (x, y) as it is: none of a wall or another
+// obstacle in its way
+function obstacleFits(map: MapData, x: number, y: number, sh: Partial<W.ObstacleShape>) {
+    return !obstacleClashes(map, x, y, clampObstacle(sh));
+}
+
+// The obstacles that run into a wall or another obstacle: [x, y] tile indices
+function obstaclesInTheWay(map: MapData): number[][] {
+    const walls = wallPieces(map), out: number[][] = [];
+    for (let x = 1; x < 2 * map.width; x += 2) {
+        for (let y = 1; y < 2 * map.length; y += 2) {
+            if (W.obstacleShape(tileOf(map, x, y)) && obstacleClashes(map, x, y, undefined, walls)) out.push([(x - 1) / 2, (y - 1) / 2]);
+        }
+    }
+    return out;
+}
+
+// Fixes one that runs into something: back to the middle of its tile, then smaller as it has to be;
+// taken off if nothing fits
+function freeObstacle(map: MapData, x: number, y: number) {
+    const t = tileOf(map, x, y);
+    const sh = W.obstacleShape(t);
+    if (!t || !sh) return;
+    let tryShape = clampObstacle(Object.assign({}, sh, { dx: 0, dy: 0 }));
+    while (obstacleClashes(map, x, y, tryShape) && (tryShape.w > 1 || tryShape.d > 1)) {
+        tryShape = clampObstacle(Object.assign({}, tryShape, { w: tryShape.w - 0.5, d: tryShape.d - 0.5, h: tryShape.shape === 'sphere' ? tryShape.w - 0.5 : tryShape.h }));
+    }
+    if (obstacleClashes(map, x, y, tryShape)) setObstacle(map, x, y, null);
+    else t.obstacleShape = tryShape;
 }
 
 // The floor of tile (x, y) as `kind` ('black', 'swamp', 'checkpoint', or '' for none): set, not
@@ -1483,7 +1650,7 @@ function robotReach(map: MapData, picture?: Room4Picture | null): Reach | null {
         }
     }
     // every wall as short straight pieces (curves too), for line of sight
-    const pieces = wallPieces(map);
+    const pieces = wallPieces(map).concat(W.obstaclePieces(map));
     pieces.forEach(function (s) { markSeg(s[0], s[1]); });
     // the map's edge is a wall too
     const dWall = (function () {
@@ -1641,15 +1808,23 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
     if (type >= 2) out.push({ key: 'presetNotSupported', block: true, at: regionAt, show: { tiles: tilesOf(4) } });
     // tiles that are two or more of a swamp, a hole, a checkpoint, the start and a passage (5.6.10.b.iii),
     // and passage tiles open on more than two sides: one way in and one way out (3.3.4)
-    const twoKinds: number[][] = [], openPassages: number[][] = [];
+    const twoKinds: number[][] = [], openPassages: number[][] = [], misplacedObstacles: number[][] = [];
     const fits = W.robotFits(map);
     for (let x = 1; x < 2 * map.width; x += 2) {
         for (let y = 1; y < 2 * map.length; y += 2) {
             if (tileKinds(map, x, y).length > 1) twoKinds.push([(x - 1) / 2, (y - 1) / 2]);
+            const ot = tileOf(map, x, y), room = roomOf(map, x, y);
+            if (ot && ot.obstacle && (room < 1 || room > 3 || isOutside(map, x, y))) misplacedObstacles.push([(x - 1) / 2, (y - 1) / 2]);
             if (isPassage(map, x, y) && openSides(map, x, y, fits).length > 2) openPassages.push([(x - 1) / 2, (y - 1) / 2]);
         }
     }
     if (twoKinds.length) out.push({ key: 'tileTwoKinds', params: { count: twoKinds.length }, block: true, at: [12 * twoKinds[0][0] + 6, 12 * twoKinds[0][1] + 6], show: { tiles: twoKinds } });
+    // an obstacle that runs into a wall or another obstacle (one may stand against a wall, not go
+    // through it)
+    const inTheWay = obstaclesInTheWay(map);
+    if (inTheWay.length) out.push({ key: 'obstacleOverlap', params: { count: inTheWay.length }, block: true, at: [12 * inTheWay[0][0] + 6, 12 * inTheWay[0][1] + 6], show: { tiles: inTheWay } });
+    // an obstacle on a tile of room 4 or outside the map (a region pasted there): room 4's are drawn
+    if (misplacedObstacles.length) out.push({ key: 'obstacleRoom', params: { count: misplacedObstacles.length }, block: true, at: [12 * misplacedObstacles[0][0] + 6, 12 * misplacedObstacles[0][1] + 6], show: { tiles: misplacedObstacles } });
     if (openPassages.length) out.push({ key: 'passageOpenSides', params: { count: openPassages.length }, block: true, at: [12 * openPassages[0][0] + 6, 12 * openPassages[0][1] + 6], show: { tiles: openPassages } });
     // the rooms' connections are always checked here (the classic editor's switch, connCheckOff,
     // is kept in the map as it is, for that editor)
@@ -1728,7 +1903,7 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
 // walls set (as syncBorderWalls), or null when it cannot be fixed here (the custom room 4 picture
 // has to be drawn). FIXABLE: the problems it handles.
 
-const FIXABLE = ['noStart', 'startNotRoom1', 'tileTwoKinds', 'passageOpenSides', 'presetNotSupported', 'room4Checkpoint', 'conn.notConnected', 'conn.passageNoRoom',
+const FIXABLE = ['noStart', 'startNotRoom1', 'tileTwoKinds', 'passageOpenSides', 'obstacleRoom', 'obstacleOverlap', 'presetNotSupported', 'room4Checkpoint', 'conn.notConnected', 'conn.passageNoRoom',
     'conn.passageMisplaced', 'conn.unmarkedGap', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable', 'wallRule'];
 // fixed by drawing in the room 4 creator
 const DRAW_FIX = ['customRoom4NoPicture', 'room4Untyped', 'room4Unreachable'];
@@ -1738,7 +1913,7 @@ function fixStart(map: MapData) {
     for (let y = 2 * map.length - 1; y > 0; y -= 2) {
         for (let x = 1; x < 2 * map.width; x += 2) {
             const t = tileOf(map, x, y);
-            if (roomOf(map, x, y) !== 1 || !t || W.floorKindOf(map, t) || t.color || isStart(map, x, y)) continue;
+            if (roomOf(map, x, y) !== 1 || !t || W.floorKindOf(map, t) || t.color || t.obstacle || isStart(map, x, y)) continue;
             map.startTile = { x: x, y: y, z: 0 };
             return true;
         }
@@ -1789,14 +1964,24 @@ function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string>
     const key = p.key;
     if (key === 'noStart' || key === 'startNotRoom1') { fixStart(map); return borders; }
     if (key === 'tileTwoKinds') {
-        // the passage and the start stay (the start moves off a passage); floors go, but one
+        // the passage and the start stay (the start moves off a passage), then an obstacle; floors go,
+        // but one
         (p.show && p.show.tiles || []).forEach(function (q) {
             const x = 2 * q[0] + 1, y = 2 * q[1] + 1, t = tileOf(map, x, y)!;
             const floors = aloneFloors(map, t);
             const start = isStart(map, x, y), passage = isPassage(map, x, y);
-            floors.forEach(function (f, i) { if (start || passage || i > 0) t[f] = false; });
+            if (start || passage) setObstacle(map, x, y, null);
+            floors.forEach(function (f, i) { if (start || passage || t.obstacle || i > 0) t[f] = false; });
             if (start && passage) fixStart(map);
         });
+        return borders;
+    }
+    if (key === 'obstacleOverlap') {
+        (p.show && p.show.tiles || []).forEach(function (q) { freeObstacle(map, 2 * q[0] + 1, 2 * q[1] + 1); });
+        return borders;
+    }
+    if (key === 'obstacleRoom') {
+        (p.show && p.show.tiles || []).forEach(function (q) { setObstacle(map, 2 * q[0] + 1, 2 * q[1] + 1, null); });
         return borders;
     }
     if (key === 'passageOpenSides') {
@@ -1866,8 +2051,8 @@ function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string>
 // Every problem that can be fixed, in an order where one fix does not undo another
 function fixAll(map: MapData, borders: Set<string>, picture?: Room4Picture | null): Set<string> {
     const order = ['presetNotSupported', 'conn.passageNoRoom', 'conn.passageMisplaced', 'conn.unmarkedGap', 'wallRule',
-        'conn.notConnected', 'passageOpenSides', 'room4Checkpoint', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable',
-        'tileTwoKinds', 'noStart', 'startNotRoom1'];
+        'conn.notConnected', 'passageOpenSides', 'obstacleRoom', 'obstacleOverlap', 'room4Checkpoint', 'victimNoWall', 'victimInPassage', 'victimMisplaced',
+        'victimUnreachable', 'tileTwoKinds', 'noStart', 'startNotRoom1'];
     order.forEach(function (key) {
         problems(map, picture).filter(function (p) { return p.key === key; }).forEach(function (p) {
             const after = fixProblem(map, p, borders);
@@ -1933,6 +2118,12 @@ export {
     borderAt,
     togglePassage,
     passageFree,
+    setObstacle,
+    changeObstacle,
+    obstacleFits,
+    clampObstacle,
+    randomObstacle,
+    OBSTACLE_DEFAULT,
     passageWallsPreview,
     startFree,
     floorFree,

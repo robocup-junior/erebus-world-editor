@@ -121,8 +121,8 @@
             "room": "Peignez des cases dans une salle (la salle 1 les remet). Les murs se placent d’eux-mêmes là où les salles se touchent et autour de la carte. La salle 4 se dessine comme une image avec le bouton ci-dessous.",
             "passage": "Cliquez près d’une limite de salle : la case du côté où vous cliquez devient le passage (cliquez à nouveau pour le fermer, de l’autre côté pour l’y déplacer). Cliquez au centre d’une case de passage pour le retirer. Un passage qui ne correspond plus à ses salles disparaît de lui-même. Un passage reçoit de lui-même des murs sur ses deux autres côtés, pour avoir une entrée (en face de la limite) et une sortie (règle {{rule_passageWalls}}) ; ils partent avec le passage.",
             "line": "Faites glisser pour tracer des murs. La ligne tourne avec le pointeur, donc un seul tracé peut faire un zigzag (revenez sur vos pas pour annuler un virage). Commencez avec Maj enfoncée pour une seule ligne droite. La salle 1 s’aligne sur 12 cm (bords des cases), les salles 2 et 3 sur 6 cm. Pas dans la salle 4.",
-            "eraser": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint) ; un clic retire le départ. Les murs extérieurs restent.",
-            "floor": "Cliquez sur une case pour choisir son sol.",
+            "eraser": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint) ; un clic retire le départ. Les murs extérieurs restent. Un obstacle part aussi d’un clic.",
+            "floor": "Cliquez sur une case pour choisir son sol. Un obstacle peut avoir n’importe quelle forme (boîte, cylindre, cône, sphère, pyramide, prisme ou pyramide réguliers, étoile, un contour dessiné sur la carte, une icône), taille et rotation, un par case dans les salles 1-3, son centre sur sa case (règle {{rule_obstacles}}) : réglez-le dans le panneau, faites-le glisser sur la carte. Le robot doit le contourner : les vérifications en tiennent compte.",
             "victim": "Cliquez près d’un mur : la victime se place sur le mur là où vous cliquez. Salle 1 : sur un côté de case (une par case) ; salles 2 et 3 : sur une face des murs de 6 cm (4 quarts × 4 faces) ; une courbe a deux places (intérieur et extérieur). Faites glisser une victime placée pour la déplacer le long de son mur (elle s’arrête avant le bout du mur et les autres victimes). Cliquez dessus avec son type choisi pour la sélectionner et changer son orientation, ses anneaux ou sa position, ou la retirer ; avec un autre type choisi, elle prend ce type.",
             "curve": "Pointez un quart de case dans la salle 3 pour voir ses quatre courbes ; la plus proche (bleue) se place d’un clic. Cliquez à nouveau sur la même pour la retirer.",
             "select": "Sélectionnez ensemble murs, salles, sols et victimes pour les déplacer, copier, coller ou effacer.",
@@ -179,8 +179,39 @@
         "black": "Trou",
         "swamp": "Marais",
         "start": "Départ",
+        "obstacle": "Obstacle",
         "clear": "Aucun",
         "contact": "Case de contact"
+    },
+    "obstacles": {
+        "next": "Obstacle à poser",
+        "picked": "Obstacle choisi",
+        "shapes": {
+            "box": "Boîte",
+            "cylinder": "Cylindre",
+            "cone": "Cône",
+            "sphere": "Sphère",
+            "pyramid": "Pyramide",
+            "prism": "Prisme",
+            "npyramid": "Pyramide régulière",
+            "star": "Étoile",
+            "polygon": "Dessiné",
+            "icon": "Icône"
+        },
+        "fields": {
+            "width": "Largeur",
+            "depth": "Profondeur",
+            "diameter": "Diamètre",
+            "height": "Hauteur",
+            "turn": "Rotation",
+            "sides": "Côtés"
+        },
+        "random": "Au hasard",
+        "remove": "Retirer",
+        "draw": "Dessiner son contour",
+        "drawDone": "Fermer et poser",
+        "drawHow": "Cliquez ses coins sur la carte ; cliquez le premier ou appuyez sur Entrée pour le fermer, Échap pour arrêter. Le centre du rectangle qui l’entoure va sur une case, loin de ses bords.",
+        "onTile": "Son centre reste sur sa case, loin de ses bords (règle {{rule_obstacles}}). Il peut s’appuyer contre un mur, pas le traverser : déplacé ou agrandi, il s’arrête là où il en touche un. Faites-le glisser sur la carte pour le déplacer."
     },
     "victims": {
         "types": {
@@ -205,7 +236,7 @@
         },
         "along": {
             "title": "Position le long de son mur",
-            "note": "Vous pouvez aussi la faire glisser sur la carte (pas de 0,1 cm)",
+            "note": "Faites-la glisser sur la carte pour la déplacer (par pas de 0,1 cm)",
             "middle": "Au milieu"
         }
     },
@@ -259,7 +290,9 @@
         "problems": {
             "noStart": "Il n’y a pas de case de départ",
             "startNotRoom1": "La case de départ n’est pas dans la salle 1. Le départ est l’une des cases de la salle 1 (règle {{rule_start}})",
-            "tileTwoKinds": "Des cases sont deux ou plus de trou, marais, checkpoint, départ et passage ({{count}}). Une case n’est qu’une de ces choses (règle {{rule_oneKind}})",
+            "tileTwoKinds": "Des cases sont deux ou plus de trou, marais, checkpoint, obstacle, départ et passage ({{count}}). Une case n’est qu’une de ces choses (règle {{rule_oneKind}})",
+            "obstacleRoom": "Des obstacles sont sur des cases de la salle 4 ou hors de la carte ({{count}}). Ceux de la salle 4 se dessinent dans son image",
+            "obstacleOverlap": "Des obstacles entrent dans un mur ou un autre obstacle ({{count}}). Un obstacle peut s’appuyer contre un mur, pas le traverser",
             "passageOpenSides": "Des passages sont ouverts sur plus de deux côtés ({{count}}). Un passage a des murs sur deux côtés : une entrée, une sortie (règle {{rule_passageWalls}})",
             "victimNoWall": "Des victimes ont perdu leur mur ({{count}})",
             "victimInPassage": "Des victimes sont dans un passage entre zones ({{count}}) : il n’y en a pas dans les passages (règle {{rule_passageTokens}})",
@@ -320,10 +353,10 @@
         "passage_moved": "Passage déplacé de ce côté",
         "passage_movedWalls": "Passage déplacé de ce côté, avec des murs sur ses côtés : une entrée, une sortie",
         "passage_closed": "Passage retiré",
-        "passage_taken": "Cette case est le départ ou un trou, un marais ou un checkpoint : elle ne peut pas être un passage",
+        "passage_taken": "Cette case est le départ ou un trou, un marais, un checkpoint ou un obstacle : elle ne peut pas être un passage",
         "passageOpen": "Cliquez pour mettre le passage du côté coloré",
         "passageOpenWalls": "Cliquez pour mettre le passage du côté coloré ; des murs se dressent sur les côtés en bleu, pour une entrée et une sortie (règle {{rule_passageWalls}})",
-        "passageTaken": "Cette case est le départ ou un trou, un marais ou un checkpoint : elle ne peut pas être un passage (règle {{rule_oneKind}})",
+        "passageTaken": "Cette case est le départ ou un trou, un marais, un checkpoint ou un obstacle : elle ne peut pas être un passage (règle {{rule_oneKind}})",
         "passageClose": "Cliquez pour retirer le passage",
         "passageRemove": "Cliquez pour retirer ce passage",
         "shapeOut": "Cliquez ou faites glisser pour sortir des cases de la carte",
@@ -362,9 +395,14 @@
         "floor_isStart": "C’est la case de départ (la gomme la retire)",
         "floor_start": "Cliquez pour déplacer le départ ici (il n’y a qu’un départ)",
         "floor_startRoom": "Le départ est l’une des cases de la salle 1 (cette case est dans la salle {{room}})",
-        "floor_startTaken": "Le départ ne peut pas aller sur un trou, un marais, un checkpoint ou un passage : une case n’est qu’une de ces choses (règle {{rule_oneKind}})",
-        "floor_onStart": "{{floor}} ne peut pas aller sur la case de départ : une case n’est qu’un de trou, marais, checkpoint, départ et passage (règle {{rule_oneKind}})",
-        "floor_onPassage": "{{floor}} ne peut pas aller sur une case de passage : une case n’est qu’un de trou, marais, checkpoint, départ et passage (règle {{rule_oneKind}})",
+        "floor_startTaken": "Le départ ne peut pas aller sur un trou, un marais, un checkpoint, un obstacle ou un passage : une case n’est qu’une de ces choses (règle {{rule_oneKind}})",
+        "floor_onStart": "{{floor}} ne peut pas aller sur la case de départ : une case n’est qu’un de trou, marais, checkpoint, obstacle, départ et passage (règle {{rule_oneKind}})",
+        "floor_onPassage": "{{floor}} ne peut pas aller sur une case de passage : une case n’est qu’un de trou, marais, checkpoint, obstacle, départ et passage (règle {{rule_oneKind}})",
+        "floor_onObstacle": "{{floor}} ne peut pas aller sur une case avec un obstacle : une case n’est qu’un de trou, marais, checkpoint, obstacle, départ et passage (règle {{rule_oneKind}})",
+        "floor_obstacleOn": "Cliquez pour poser ici un obstacle ({{shape}}) tel que réglé dans le panneau de gauche (règle {{rule_obstacles}})",
+        "floor_obstacleSelect": "Cliquez pour choisir cet obstacle (modifiez-le dans le panneau de gauche) ; faites glisser pour le déplacer sur sa case",
+        "floor_obstacleRoom4": "Les obstacles de la salle 4 se dessinent dans son image : ouvrez le créateur de la salle 4",
+        "floor_obstacleTaken": "Un obstacle ne peut pas aller sur le départ, un passage ou un trou, un marais ou un checkpoint : une case n’est qu’une de ces choses (règle {{rule_oneKind}})",
         "floor_clear": "Cliquez pour retirer le sol (trou, marais, checkpoint)",
         "floor_off": "Cliquez pour retirer : {{floor}}",
         "floor_on": "Cliquez pour en faire : {{floor}}",
@@ -376,6 +414,15 @@
         "erase_wallWhole": "Cliquez pour retirer ce mur (12 cm ; faites glisser pour continuer)",
         "erase_floor": "Cliquez pour retirer le sol de cette case",
         "erase_start": "Cliquez pour retirer la case de départ",
+        "erase_obstacle": "Cliquez pour retirer l’obstacle",
+        "obstacle_blocked": "Là, il entrerait dans un mur ou un autre obstacle : un obstacle peut s’appuyer contre un mur, pas le traverser",
+        "obstacle_drawCorner": "Cliquez pour poser un coin du contour de l’obstacle",
+        "obstacle_drawClose": "Cliquez un coin, ou le premier (ou Entrée) pour fermer le contour",
+        "obstacle_drawFew": "Un contour demande au moins trois coins",
+        "obstacle_drawCrossing": "Le contour se croise : redessinez-le sans croisement",
+        "obstacle_drawSize": "Un contour de {{min}} à {{max}} cm en largeur et en profondeur, s’il vous plaît",
+        "obstacle_drawCentre": "Son centre serait sur le bord d’une case : le centre d’un obstacle est sur une case (règle {{rule_obstacles}})",
+        "obstacle_iconFailed": "Cette icône n’a pas pu être tracée",
         "victim_place": "Cliquez pour placer « {{name}} »",
         "victim_move": "Cliquez pour placer « {{name}} » ici (la victime de la case vient ici : une par case)",
         "victim_replace": "Cliquez pour la changer en « {{name}} »",
@@ -542,7 +589,7 @@
                 },
                 "start": {
                     "title": "Placer le départ",
-                    "body": "L’outil sol fixe le sol d’une case. Départ est l’une des cases de la salle 1 : le robot y commence son parcours. Sans lui, le monde ne peut pas être exporté. Une case n’est qu’un de trou, marais, checkpoint, départ et passage (règle {{rule_oneKind}}).",
+                    "body": "L’outil sol fixe le sol d’une case. Départ est l’une des cases de la salle 1 : le robot y commence son parcours. Sans lui, le monde ne peut pas être exporté. Une case n’est qu’un de trou, marais, checkpoint, obstacle, départ et passage (règle {{rule_oneKind}}).",
                     "task": "Choisissez Départ et cliquez sur la case en bas à gauche (cadre vert)",
                     "tasks": {
                         "room": "Le départ est hors de la salle 1. Cliquez sur une case de la salle 1 (cadre vert) pour l’y mettre"
@@ -837,7 +884,7 @@
                 },
                 "floor": {
                     "title": "Sol (F) : checkpoints, trous, marais, le départ",
-                    "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire.\nDépart est l’une des cases de la salle 1 : le robot y commence son parcours. Aucun retire le sol. Une case n’est qu’un de trou, marais, checkpoint, départ et passage (règle {{rule_oneKind}}).\nLes règles demandent un checkpoint à chaque passage vers la salle 4, donc il s’y place de lui-même."
+                    "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire.\nDépart est l’une des cases de la salle 1 : le robot y commence son parcours. Aucun retire le sol. Une case n’est qu’un de trou, marais, checkpoint, obstacle, départ et passage (règle {{rule_oneKind}}). Un obstacle peut avoir n’importe quelle forme (boîte, cylindre, cône, sphère, pyramide, prisme ou pyramide réguliers, étoile, un contour dessiné sur la carte, une icône), taille et rotation, un par case dans les salles 1-3, son centre sur sa case (règle {{rule_obstacles}}) : réglez-le dans le panneau, faites-le glisser sur la carte. Le robot doit le contourner : les vérifications en tiennent compte.\nLes règles demandent un checkpoint à chaque passage vers la salle 4, donc il s’y place de lui-même."
                 },
                 "victim": {
                     "title": "Victime (V) : victimes et cibles cognitives",
@@ -1094,7 +1141,7 @@
             },
             "tools": {
                 "help": {
-                    "eraser": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint, case de contact) ; un clic retire le départ. Les murs extérieurs restent."
+                    "eraser": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint, case de contact) ; un clic retire le départ. Les murs extérieurs restent. Un obstacle part aussi d’un clic."
                 }
             },
             "checks": {
@@ -1128,7 +1175,7 @@
                     "steps": {
                         "floor": {
                             "title": "Sol (F) : checkpoints, trous, marais, cases de contact, le départ",
-                            "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire.\nDépart est l’une des cases de la salle 1 : le robot y commence son parcours. Aucun retire le sol. Une case n’est qu’un de trou, marais, checkpoint, départ et passage (règle {{rule_oneKind}}).\nLes règles demandent un checkpoint à chaque passage vers la salle 4, donc il s’y place de lui-même.\nUne case de contact (cyan) est l’endroit où le robot reçoit une batterie neuve après y être resté immobile 5 secondes."
+                            "body": "Choisissez un type et cliquez sur une case pour lui donner ce sol. Un nouveau clic avec le même type le retire.\nDépart est l’une des cases de la salle 1 : le robot y commence son parcours. Aucun retire le sol. Une case n’est qu’un de trou, marais, checkpoint, obstacle, départ et passage (règle {{rule_oneKind}}). Un obstacle peut avoir n’importe quelle forme (boîte, cylindre, cône, sphère, pyramide, prisme ou pyramide réguliers, étoile, un contour dessiné sur la carte, une icône), taille et rotation, un par case dans les salles 1-3, son centre sur sa case (règle {{rule_obstacles}}) : réglez-le dans le panneau, faites-le glisser sur la carte. Le robot doit le contourner : les vérifications en tiennent compte.\nLes règles demandent un checkpoint à chaque passage vers la salle 4, donc il s’y place de lui-même.\nUne case de contact (cyan) est l’endroit où le robot reçoit une batterie neuve après y être resté immobile 5 secondes."
                         },
                         "victim": {
                             "body": "Choisissez un type dans le panneau (victimes smileys - blessée un visage triste, stable un visage neutre, indemne un visage joyeux - et leurs fausses, cibles cognitives de quatre types - gaz inflammable, poison, corrosif, peroxyde organique - et une fausse) et cliquez près d’un mur : elle se place sur le mur là où vous cliquez.\nElles vont sur les côtés des cases dans la salle 1 (une par case), sur les faces des murs de 6 cm dans les salles 2 et 3, et à deux places sur une courbe (intérieur et extérieur). Faites glisser une victime placée pour la déplacer le long de son mur. Là où elle ne peut pas aller, la ligne d’état dit pourquoi.\nTournez le cadran (Orientation fixe) pour son orientation, ou choisissez Aléatoire pour une nouvelle à chaque fois. Pour une cible cognitive, cliquez sur un anneau de la cible puis sur une couleur en dessous ; la somme des anneaux donne son type.\nCliquez sur une victime avec le même type pour la sélectionner, puis changez son orientation, ses anneaux ou sa position le long du mur, ou retirez-la. Un clic avec un autre type change son type."

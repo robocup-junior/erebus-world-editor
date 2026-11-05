@@ -121,8 +121,8 @@
             "room": "Pinta baldosas con una sala (la sala 1 las devuelve). Las paredes aparecen solas donde se unen las salas y alrededor del mapa. La sala 4 se dibuja como una imagen con el botón de abajo.",
             "passage": "Haz clic cerca del borde entre salas: la baldosa del lado en que haces clic se convierte en el pasaje (otro clic lo cierra; un clic en el otro lado lo mueve allí). Haz clic en el centro de una baldosa de pasaje para quitarlo. Un pasaje que ya no encaja con sus salas desaparece solo. Un pasaje recibe paredes en sus otros dos lados por sí solo, para tener una entrada (frente al borde) y una salida (regla {{rule_passageWalls}}); se van con el pasaje.",
             "line": "Arrastra para dibujar paredes. La línea gira con el puntero, así que un solo arrastre puede dibujar un zigzag (vuelve por donde viniste para deshacer un giro). Empieza con Shift pulsado para una sola línea recta. En la sala 1 se ajusta a 12 cm (bordes de baldosa) y en las salas 2 y 3 a 6 cm. No dentro de la sala 4.",
-            "eraser": "Haz clic o arrastra sobre paredes, curvas y víctimas para quitarlas. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control); un clic quita la salida. Las paredes exteriores se quedan.",
-            "floor": "Haz clic en una baldosa para cambiar su suelo.",
+            "eraser": "Haz clic o arrastra sobre paredes, curvas y víctimas para quitarlas. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control); un clic quita la salida. Las paredes exteriores se quedan. Un obstáculo también se quita con un clic.",
+            "floor": "Haz clic en una baldosa para cambiar su suelo. Un obstáculo puede tener cualquier forma (caja, cilindro, cono, esfera, pirámide, prisma o pirámide regular, estrella, un contorno dibujado en el mapa, un icono), tamaño y giro, uno por baldosa en las salas 1-3, su centro en su baldosa (regla {{rule_obstacles}}): ajústalo en el panel y arrástralo en el mapa. El robot tiene que rodearlo: las comprobaciones lo tienen en cuenta.",
             "victim": "Haz clic cerca de una pared: la víctima se coloca en la pared donde haces clic. Sala 1: en un lado de la baldosa (una por baldosa); salas 2 y 3: en una cara de las paredes de 6 cm (4 cuartos × 4 caras); una curva tiene dos sitios (dentro y fuera). Arrastra una víctima colocada para moverla a lo largo de su pared (se detiene antes del extremo de la pared y de otras víctimas). Haz clic en ella con su tipo elegido para seleccionarla y cambiar su giro, anillos o posición, o quitarla; con otro tipo elegido, toma ese tipo.",
             "curve": "Señala un cuarto de baldosa en la sala 3 para ver sus cuatro curvas; la más cercana (azul) se coloca con un clic. Haz clic de nuevo en la misma para quitarla.",
             "select": "Selecciona paredes, salas, suelos y víctimas a la vez para moverlos, copiarlos, pegarlos o borrarlos.",
@@ -179,8 +179,39 @@
         "black": "Agujero",
         "swamp": "Pantano",
         "start": "Salida",
+        "obstacle": "Obstáculo",
         "clear": "Ninguno",
         "contact": "Baldosa de contacto"
+    },
+    "obstacles": {
+        "next": "Obstáculo a poner",
+        "picked": "Obstáculo elegido",
+        "shapes": {
+            "box": "Caja",
+            "cylinder": "Cilindro",
+            "cone": "Cono",
+            "sphere": "Esfera",
+            "pyramid": "Pirámide",
+            "prism": "Prisma",
+            "npyramid": "Pirámide regular",
+            "star": "Estrella",
+            "polygon": "Dibujado",
+            "icon": "Icono"
+        },
+        "fields": {
+            "width": "Ancho",
+            "depth": "Fondo",
+            "diameter": "Diámetro",
+            "height": "Alto",
+            "turn": "Giro",
+            "sides": "Lados"
+        },
+        "random": "Al azar",
+        "remove": "Quitar",
+        "draw": "Dibujar su contorno",
+        "drawDone": "Cerrar y poner",
+        "drawHow": "Haz clic en sus esquinas en el mapa; haz clic en la primera o pulsa Enter para cerrarlo, Esc para parar. El centro del rectángulo que lo rodea va en una baldosa, lejos de sus bordes.",
+        "onTile": "Su centro queda en su baldosa, lejos de sus bordes (regla {{rule_obstacles}}). Puede apoyarse en una pared, no atravesarla: al moverlo o agrandarlo, se detiene donde toca una. Arrástralo en el mapa para moverlo."
     },
     "victims": {
         "types": {
@@ -205,7 +236,7 @@
         },
         "along": {
             "title": "Posición a lo largo de su pared",
-            "note": "También puedes arrastrarla en el mapa (pasos de 0,1 cm)",
+            "note": "Arrástrala en el mapa para moverla (de 0,1 cm en 0,1 cm)",
             "middle": "Al centro"
         }
     },
@@ -259,7 +290,9 @@
         "problems": {
             "noStart": "No hay baldosa de salida",
             "startNotRoom1": "La baldosa de salida no está en la sala 1. La salida es una de las baldosas de la sala 1 (regla {{rule_start}})",
-            "tileTwoKinds": "Algunas baldosas son dos o más de agujero, pantano, punto de control, salida y pasaje ({{count}}). Una baldosa es solo una de esas cosas (regla {{rule_oneKind}})",
+            "tileTwoKinds": "Algunas baldosas son dos o más de agujero, pantano, punto de control, obstáculo, salida y pasaje ({{count}}). Una baldosa es solo una de esas cosas (regla {{rule_oneKind}})",
+            "obstacleRoom": "Algunos obstáculos están en baldosas de la sala 4 o fuera del mapa ({{count}}). Los de la sala 4 se dibujan en su imagen",
+            "obstacleOverlap": "Algunos obstáculos se meten en una pared o en otro obstáculo ({{count}}). Un obstáculo puede apoyarse en una pared, no atravesarla",
             "passageOpenSides": "Algunos pasajes están abiertos por más de dos lados ({{count}}). Un pasaje tiene paredes en dos lados: una entrada, una salida (regla {{rule_passageWalls}})",
             "victimNoWall": "Algunas víctimas han perdido su pared ({{count}})",
             "victimInPassage": "Algunas víctimas están en un pasaje entre áreas ({{count}}): en los pasajes no hay víctimas (regla {{rule_passageTokens}})",
@@ -320,10 +353,10 @@
         "passage_moved": "Pasaje movido a este lado",
         "passage_movedWalls": "Pasaje movido a este lado, con paredes en sus lados: una entrada, una salida",
         "passage_closed": "Pasaje quitado",
-        "passage_taken": "Esa baldosa es la salida o un agujero, pantano o punto de control, así que no puede ser un pasaje",
+        "passage_taken": "Esa baldosa es la salida o un agujero, pantano, punto de control u obstáculo, así que no puede ser un pasaje",
         "passageOpen": "Haz clic para poner el pasaje en el lado coloreado",
         "passageOpenWalls": "Haz clic para poner el pasaje en el lado coloreado; se levantan paredes en los lados azules, para una entrada y una salida (regla {{rule_passageWalls}})",
-        "passageTaken": "Esta baldosa es la salida o un agujero, pantano o punto de control, así que no puede ser un pasaje (regla {{rule_oneKind}})",
+        "passageTaken": "Esta baldosa es la salida o un agujero, pantano, punto de control u obstáculo, así que no puede ser un pasaje (regla {{rule_oneKind}})",
         "passageClose": "Haz clic para quitar el pasaje",
         "passageRemove": "Haz clic para quitar este pasaje",
         "shapeOut": "Haz clic o arrastra para sacar baldosas del mapa",
@@ -362,9 +395,14 @@
         "floor_isStart": "Esta es la baldosa de salida (el borrador la quita)",
         "floor_start": "Haz clic para mover la salida aquí (hay una sola salida)",
         "floor_startRoom": "La salida es una de las baldosas de la sala 1 (esta baldosa es de la sala {{room}})",
-        "floor_startTaken": "La salida no puede ir en un agujero, pantano, punto de control o pasaje: una baldosa es solo una de esas cosas (regla {{rule_oneKind}})",
-        "floor_onStart": "{{floor}} no puede ir en la baldosa de salida: una baldosa es solo uno de agujero, pantano, punto de control, salida y pasaje (regla {{rule_oneKind}})",
-        "floor_onPassage": "{{floor}} no puede ir en una baldosa de pasaje: una baldosa es solo uno de agujero, pantano, punto de control, salida y pasaje (regla {{rule_oneKind}})",
+        "floor_startTaken": "La salida no puede ir en un agujero, pantano, punto de control, obstáculo o pasaje: una baldosa es solo una de esas cosas (regla {{rule_oneKind}})",
+        "floor_onStart": "{{floor}} no puede ir en la baldosa de salida: una baldosa es solo uno de agujero, pantano, punto de control, obstáculo, salida y pasaje (regla {{rule_oneKind}})",
+        "floor_onPassage": "{{floor}} no puede ir en una baldosa de pasaje: una baldosa es solo uno de agujero, pantano, punto de control, obstáculo, salida y pasaje (regla {{rule_oneKind}})",
+        "floor_onObstacle": "{{floor}} no puede ir en una baldosa con obstáculo: una baldosa es solo uno de agujero, pantano, punto de control, obstáculo, salida y pasaje (regla {{rule_oneKind}})",
+        "floor_obstacleOn": "Haz clic para poner aquí un obstáculo ({{shape}}) como está en el panel izquierdo (regla {{rule_obstacles}})",
+        "floor_obstacleSelect": "Haz clic para elegir este obstáculo (cámbialo en el panel izquierdo); arrastra para moverlo en su baldosa",
+        "floor_obstacleRoom4": "Los obstáculos de la sala 4 se dibujan en su imagen: abre el creador de la sala 4",
+        "floor_obstacleTaken": "Un obstáculo no puede ir en la salida, un pasaje o un agujero, pantano o punto de control: una baldosa es solo una de esas cosas (regla {{rule_oneKind}})",
         "floor_clear": "Haz clic para quitar el suelo (agujero, pantano, punto de control)",
         "floor_off": "Haz clic para quitar: {{floor}}",
         "floor_on": "Haz clic para convertirla en: {{floor}}",
@@ -376,6 +414,15 @@
         "erase_wallWhole": "Haz clic para quitar esta pared (12 cm; arrastra para seguir)",
         "erase_floor": "Haz clic para quitar el suelo de esta baldosa",
         "erase_start": "Haz clic para quitar la baldosa de salida",
+        "erase_obstacle": "Haz clic para quitar el obstáculo",
+        "obstacle_blocked": "Ahí se metería en una pared o en otro obstáculo: un obstáculo puede apoyarse en una pared, no atravesarla",
+        "obstacle_drawCorner": "Haz clic para poner una esquina del contorno del obstáculo",
+        "obstacle_drawClose": "Haz clic en una esquina, o en la primera (o Enter) para cerrar el contorno",
+        "obstacle_drawFew": "Un contorno necesita tres esquinas o más",
+        "obstacle_drawCrossing": "El contorno se cruza: dibújalo de nuevo sin cruces",
+        "obstacle_drawSize": "Un contorno de {{min}}-{{max}} cm de ancho y fondo, por favor",
+        "obstacle_drawCentre": "Su centro quedaría en el borde de una baldosa: el centro de un obstáculo está en una baldosa (regla {{rule_obstacles}})",
+        "obstacle_iconFailed": "No se pudo calcar ese icono",
         "victim_place": "Haz clic para colocar «{{name}}»",
         "victim_move": "Haz clic para colocar «{{name}}» aquí (la víctima de la baldosa se mueve aquí: una por baldosa)",
         "victim_replace": "Haz clic para cambiarla a «{{name}}»",
@@ -542,7 +589,7 @@
                 },
                 "start": {
                     "title": "Poner la salida",
-                    "body": "La herramienta de suelo fija el suelo de una baldosa. Salida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Sin ella no se puede exportar el mundo. Una baldosa es solo uno de agujero, pantano, punto de control, salida y pasaje (regla {{rule_oneKind}}).",
+                    "body": "La herramienta de suelo fija el suelo de una baldosa. Salida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Sin ella no se puede exportar el mundo. Una baldosa es solo uno de agujero, pantano, punto de control, obstáculo, salida y pasaje (regla {{rule_oneKind}}).",
                     "task": "Elige Salida y haz clic en la baldosa de abajo a la izquierda (marco verde)",
                     "tasks": {
                         "room": "La salida está fuera de la sala 1. Haz clic en una baldosa de la sala 1 (marco verde) para ponerla ahí"
@@ -837,7 +884,7 @@
                 },
                 "floor": {
                     "title": "Suelo (F): puntos de control, agujeros, pantanos, la salida",
-                    "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Ninguno quita el suelo. Una baldosa es solo uno de agujero, pantano, punto de control, salida y pasaje (regla {{rule_oneKind}}).\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo."
+                    "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Ninguno quita el suelo. Una baldosa es solo uno de agujero, pantano, punto de control, obstáculo, salida y pasaje (regla {{rule_oneKind}}). Un obstáculo puede tener cualquier forma (caja, cilindro, cono, esfera, pirámide, prisma o pirámide regular, estrella, un contorno dibujado en el mapa, un icono), tamaño y giro, uno por baldosa en las salas 1-3, su centro en su baldosa (regla {{rule_obstacles}}): ajústalo en el panel y arrástralo en el mapa. El robot tiene que rodearlo: las comprobaciones lo tienen en cuenta.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo."
                 },
                 "victim": {
                     "title": "Víctima (V): víctimas y objetivos cognitivos",
@@ -1094,7 +1141,7 @@
             },
             "tools": {
                 "help": {
-                    "eraser": "Haz clic o arrastra sobre paredes, curvas y víctimas para quitarlas. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control, baldosa de contacto); un clic quita la salida. Las paredes exteriores se quedan."
+                    "eraser": "Haz clic o arrastra sobre paredes, curvas y víctimas para quitarlas. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control, baldosa de contacto); un clic quita la salida. Las paredes exteriores se quedan. Un obstáculo también se quita con un clic."
                 }
             },
             "checks": {
@@ -1128,7 +1175,7 @@
                     "steps": {
                         "floor": {
                             "title": "Suelo (F): puntos de control, agujeros, pantanos, baldosas de contacto, la salida",
-                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Ninguno quita el suelo. Una baldosa es solo uno de agujero, pantano, punto de control, salida y pasaje (regla {{rule_oneKind}}).\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos."
+                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Ninguno quita el suelo. Una baldosa es solo uno de agujero, pantano, punto de control, obstáculo, salida y pasaje (regla {{rule_oneKind}}). Un obstáculo puede tener cualquier forma (caja, cilindro, cono, esfera, pirámide, prisma o pirámide regular, estrella, un contorno dibujado en el mapa, un icono), tamaño y giro, uno por baldosa en las salas 1-3, su centro en su baldosa (regla {{rule_obstacles}}): ajústalo en el panel y arrástralo en el mapa. El robot tiene que rodearlo: las comprobaciones lo tienen en cuenta.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos."
                         },
                         "victim": {
                             "body": "Elige un tipo en el panel (víctimas sonrientes - herido una cara triste, estable una cara neutra, ileso una cara feliz - y sus falsas, objetivos cognitivos de cuatro tipos - gas inflamable, veneno, corrosivo, peróxido orgánico - y uno falso) y haz clic cerca de una pared: se coloca en la pared donde haces clic.\nVan en los lados de baldosa en la sala 1 (una por baldosa), en las caras de las paredes de 6 cm en las salas 2 y 3, y en dos sitios de una curva (dentro y fuera). Arrastra una colocada para moverla a lo largo de su pared. Donde no se puede poner, la línea de estado dice por qué.\nGira el dial (Giro fijo) para su rotación, o elige Aleatorio para una nueva cada vez. Para un objetivo cognitivo, haz clic en un anillo del objetivo y luego en un color abajo; la suma de los anillos da su tipo.\nHaz clic en una víctima con el mismo tipo para seleccionarla, y luego cambia su giro, anillos o posición a lo largo de su pared, o quítala. Un clic con otro tipo cambia su tipo."

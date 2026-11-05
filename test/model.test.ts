@@ -123,6 +123,138 @@ test('fix all walls the passages of the sample maps, also where a side is open o
   }
 });
 
+test('an obstacle: any shape on a tile of rooms 1-3, its centre on the tile, one to a tile, a tile that is nothing else', () => {
+  const map = M.newMap(4, 3, 2026);
+  let borders = paint(map, 4, [[3, 0], [3, 1], [3, 2]], new Set());
+  M.setFloor(map, 1, 5, 'start');
+  assert.ok(M.setFloor(map, 5, 3, 'obstacle'));
+  assert.deepStrictEqual(map.cells['5,3,0'].tile!.obstacleShape, M.OBSTACLE_DEFAULT);
+  // kept to what it can be: its centre half a wall in from the tile's edges, a round one one across
+  const sh = M.clampObstacle({ shape: 'cylinder', w: 30, d: 2, h: 0, dx: 9, dy: -9, rot: -Math.PI / 2 });
+  assert.deepStrictEqual([sh.shape, sh.w, sh.d, sh.h, sh.dx, sh.dy], ['cylinder', 12, 12, 1, 5.5, -5.5]);
+  assert.ok(Math.abs(sh.rot - 1.5 * Math.PI) < 1e-3);
+  M.changeObstacle(map, 5, 3, { shape: 'cylinder' });
+  assert.strictEqual(map.cells['5,3,0'].tile!.obstacleShape.shape, 'cylinder');
+  M.changeObstacle(map, 5, 3, { shape: 'sphere', w: 5 });
+  assert.strictEqual(map.cells['5,3,0'].tile!.obstacleShape.h, 5, 'a sphere as high as it is across');
+  assert.strictEqual(M.setFloor(map, 5, 3, 'swamp'), false, 'no swamp on it');
+  assert.strictEqual(M.setFloor(map, 1, 5, 'obstacle'), false, 'not on the start');
+  assert.strictEqual(M.setFloor(map, 7, 3, 'obstacle'), false, 'not in room 4');
+  assert.strictEqual(M.togglePassage(map, 6, 3, [5, 3]), 'taken', 'not a passage');
+  for (let i = 0; i < 20; i++) {
+    const r = M.randomObstacle();
+    assert.ok(W.OBSTACLE_KINDS.includes(r.shape) && r.w >= 2 && r.w <= 8 && Math.abs(r.dx) <= 5.5);
+  }
+  M.setObstacle(map, 5, 3, null);
+  assert.ok(!map.cells['5,3,0'].tile!.obstacle);
+  // painted into room 4: it goes
+  M.setFloor(map, 5, 3, 'obstacle');
+  borders = paint(map, 4, [[2, 1]], borders);
+  assert.ok(!map.cells['5,3,0'].tile!.obstacle);
+  assert.deepStrictEqual(M.problems(map).filter((p) => p.key === 'obstacleRoom' || p.key === 'tileTwoKinds'), []);
+});
+
+test('an obstacle may stand against a wall, not go through it, nor into another obstacle', () => {
+  const map = M.newMap(3, 1, 2026);
+  M.setFloor(map, 1, 1, 'start');
+  M.setObstacle(map, 3, 1, { shape: 'box', w: 4, d: 4, h: 6 });
+  M.setObstacle(map, 5, 1, { shape: 'star', w: 8, h: 6 });
+  assert.ok(!M.problems(map).some((p) => p.key === 'obstacleOverlap'));
+  // dragged up to the outer wall (its face 0.5 cm in from y = 0): it stops against it
+  assert.ok(M.changeObstacle(map, 3, 1, { dy: -5.5 }));
+  const sh = map.cells['3,1,0'].tile!.obstacleShape;
+  assert.ok(Math.abs(sh.dy - -3.5) <= 0.1, 'its top side against the wall: ' + sh.dy);
+  assert.ok(!M.problems(map).some((p) => p.key === 'obstacleOverlap'), 'against a wall is all right');
+  // made larger towards the star on the next tile: it stops at it (the star's point at 26.2 cm)
+  M.changeObstacle(map, 3, 1, { dy: 0, dx: 5.5 });
+  M.changeObstacle(map, 3, 1, { w: 10 });
+  const wide = map.cells['3,1,0'].tile!.obstacleShape;
+  assert.ok(wide.w < 10 && !M.problems(map).some((p) => p.key === 'obstacleOverlap'), 'stopped at ' + wide.w);
+  // not put where it would go into something: a room 2 tile with a wall through its middle
+  const m2 = M.newMap(2, 1, 2026);
+  M.setRoom(m2, 1, 1, 2);
+  M.setWalls(m2, ['v,1,0', 'v,1,1'], true);
+  assert.ok(!M.obstacleFits(m2, 1, 1, M.OBSTACLE_DEFAULT));
+  assert.ok(M.obstacleFits(m2, 3, 1, M.OBSTACLE_DEFAULT));
+});
+
+test('one that goes through a wall (a file, a wall drawn over it) stops the export, and is fixed', () => {
+  const map = M.newMap(3, 1, 2026);
+  M.setFloor(map, 1, 1, 'start');
+  map.cells['3,1,0'].tile!.obstacle = true;
+  map.cells['3,1,0'].tile!.obstacleShape = { shape: 'box', w: 6, d: 6, h: 6, dx: 0, dy: -5, rot: 0 };
+  M.setObstacle(map, 5, 1, { shape: 'cylinder', w: 4, h: 6 });
+  M.setWalls(map, ['v,5,0', 'v,5,1'], true);               // a wall through the middle of tile (2, 0)
+  const p = M.problems(map).find((q) => q.key === 'obstacleOverlap')!;
+  assert.ok(p.block, 'stops the export');
+  assert.deepStrictEqual(p.show!.tiles, [[1, 0], [2, 0]]);
+  M.fixProblem(map, p, new Set());
+  assert.ok(!M.problems(map).some((q) => q.key === 'obstacleOverlap'));
+  const a = map.cells['3,1,0'].tile!.obstacleShape;
+  assert.deepStrictEqual([a.dx, a.dy, a.w], [0, 0, 6], 'back to the middle of its tile');
+  assert.ok(!map.cells['5,1,0'].tile!.obstacle, 'nothing fits with the wall through its tile: taken off');
+});
+
+test('an obstacle is in the way of the robot: a one-tile corridor with one is closed to it', () => {
+  // 3 x 1: the start, an obstacle, a victim at the far end
+  const map = M.newMap(3, 1, 2026);
+  M.setFloor(map, 1, 1, 'start');
+  M.setVictim(map, 5, 1, 'right', 'H', false, { rot: 0 });
+  assert.ok(!M.problems(map).some((p) => p.key === 'victimUnreachable'));
+  M.setObstacle(map, 3, 1, { shape: 'cylinder', w: 6, h: 6 });
+  assert.ok(M.problems(map).some((p) => p.key === 'victimUnreachable'), 'the victim behind it is out of reach');
+  // a small one at the side leaves room
+  M.changeObstacle(map, 3, 1, { w: 2, dy: -3 });
+  assert.ok(!M.problems(map).some((p) => p.key === 'victimUnreachable'));
+});
+
+test('the world file has the obstacles put in the editor, each of its shape', () => {
+  const map = M.newMap(3, 2, 2026);
+  M.setFloor(map, 1, 1, 'start');
+  M.setObstacle(map, 3, 1, { shape: 'box', w: 4, d: 3, h: 5, dx: 1, dy: -0.5, rot: 0.25 });
+  M.setObstacle(map, 5, 1, { shape: 'sphere', w: 4 });
+  M.setObstacle(map, 3, 3, { shape: 'star', w: 6, h: 8 });
+  M.setObstacle(map, 5, 3, { shape: 'pyramid', w: 6, d: 4, h: 8 });
+  const world = quietly(() => M.world(map));
+  const m = world.match(/DEF OBSTACLE0 Solid \{\s*translation (\S+) (\S+) (\S+)\s*rotation 0 1 0 (\S+)[\s\S]*?Box \{\s*size (\S+) (\S+) (\S+)/);
+  assert.ok(m, 'the box');
+  assert.deepStrictEqual(m!.slice(4).map(Number), [0.25, 0.04, 0.05, 0.03]);
+  // the tiles of the world as its other parts have them (a tile at its index x 12 cm, from minus half
+  // the map's width and length): tile (1, 0) at -6 cm, -12 cm; the box 1 cm right, 0.5 cm up, on the
+  // floor (its top at -3 cm) and 5 cm high
+  assert.ok(Math.abs(Number(m![1]) - -0.05) < 1e-6 && Math.abs(Number(m![2]) - -0.005) < 1e-6 && Math.abs(Number(m![3]) - -0.125) < 1e-6, m!.slice(1, 4).join(' '));
+  assert.match(world, /translation \S+ -0\.01 \S+\s*rotation[^\n]*\n(?:(?!Solid)[\s\S])*?Sphere \{\s*radius 0\.02/);
+  // the star and the pyramid as meshes from the floor up: 10 points round a prism, 4 to an apex
+  const meshes = world.match(/point \[ [^\]]* \] \}\s*coordIndex \[ [^\]]* \]/g)!;
+  assert.strictEqual(meshes.length, 2);
+  const star = meshes.find((g) => g.split('point [')[1].split(']')[0].split(',').length === 20)!.match(/coordIndex \[ ([^\]]*) \]/)!;
+  assert.strictEqual(star[1].split('-1').length - 1, 10 + 8 + 8, 'a side for each of its 10 corners, and its top and base in 8 triangles each');
+  const pyr = meshes.find((g) => g.split('point [')[1].split(']')[0].split(',').length === 5)!.match(/point \[ ([^\]]*) \]/)!;
+  assert.strictEqual(pyr[1].split(',').length, 5, 'four corners and the apex');
+  assert.ok(pyr[1].trim().endsWith('0 0.08 0'), 'the apex 8 cm up');
+});
+
+test('regular prisms and pyramids, a drawn outline and the outlines of an icon are obstacles too', () => {
+  const map = M.newMap(3, 1, 2026);
+  M.setFloor(map, 1, 1, 'start');
+  M.setObstacle(map, 3, 1, { shape: 'prism', w: 6, h: 5, n: 5 });
+  assert.strictEqual(W.obstacleRings(map.cells['3,1,0'].tile!.obstacleShape, 3, 1)[0].length, 5);
+  assert.strictEqual(M.clampObstacle({ shape: 'npyramid', n: 20 }).n, 8, 'sides 3-8');
+  // an L drawn, in its unit box, made 6 x 4 cm
+  const L4 = [[-0.5, -0.5], [0.5, -0.5], [0.5, 0], [0, 0], [0, 0.5], [-0.5, 0.5]];
+  M.setObstacle(map, 5, 1, { shape: 'polygon', outline: [L4], w: 6, d: 4, h: 6 });
+  const ring = W.obstacleRings(map.cells['5,1,0'].tile!.obstacleShape, 5, 1)[0];
+  assert.deepStrictEqual(ring[2].map((v) => Math.round(v * 100) / 100), [33, 6]);
+  // without an outline, a drawn one is a box
+  assert.strictEqual(M.clampObstacle({ shape: 'polygon' }).shape, 'box');
+  const world = quietly(() => M.world(map));
+  assert.ok(world.includes('OBSTACLE1'), 'both in the world');
+  // an icon of two pieces: both outlines in the robot's way
+  M.setObstacle(map, 5, 1, { shape: 'icon', icon: 'x', outline: [[[-0.5, -0.5], [-0.1, -0.5], [-0.1, 0.5], [-0.5, 0.5]], [[0.1, -0.5], [0.5, -0.5], [0.5, 0.5], [0.1, 0.5]]], w: 6, d: 6, h: 6 });
+  assert.strictEqual(W.obstacleRings(map.cells['5,1,0'].tile!.obstacleShape, 5, 1).length, 2);
+  assert.strictEqual(quietly(() => M.world(map)).match(/IndexedFaceSet/g)!.length, 2);
+});
+
 test('resizing keeps what fits and moves the outer walls', () => {
   const map = M.newMap(3, 3, 2026);
   M.setFloor(map, 5, 5, 'start');

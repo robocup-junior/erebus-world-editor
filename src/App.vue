@@ -261,6 +261,47 @@ onMounted(function () {
               <i class="fas fa-fw" :class="f.icon"></i>{{ t('floors.' + f.id) }}
             </button>
           </div>
+          <div class="ed-obstacle" v-if="S.ui.tool === 'floor' && S.ui.floor === 'obstacle'">
+            <div class="ed-selected-head">
+              <span><i class="fas fa-cube mr-1"></i>{{ t(S.obstacle.at ? 'obstacles.picked' : 'obstacles.next') }}</span>
+              <button class="btn btn-sm btn-link p-0" type="button" v-if="S.obstacle.at" @click="E.obstacleDeselect()">{{ t('common.done') }}</button>
+            </div>
+            <div class="ed-obstacle-shapes">
+              <button class="ed-choice" type="button" v-for="k in S.obstacleKinds" :key="k" :class="{ active: S.obstacle.shape.shape === k }" :data-shape="k" @click="E.obstacleChange({ shape: k })">
+                <i class="fas fa-fw" :class="E.obstacleIcon(k)"></i>{{ t('obstacles.shapes.' + k) }}
+              </button>
+            </div>
+            <div class="ed-obstacle-draw" v-if="S.obstacleMode === 'draw' || S.obstacle.shape.shape === 'polygon'">
+              <p class="ed-muted" v-if="S.obstacleMode === 'draw'">{{ keys(t('obstacles.drawHow')) }}</p>
+              <div class="ed-obstacle-actions">
+                <button class="btn btn-sm btn-outline-primary" type="button" v-if="S.obstacleMode !== 'draw'" @click="E.obstacleDrawStart()"><i class="fas fa-draw-polygon mr-1"></i>{{ t('obstacles.draw') }}</button>
+                <button class="btn btn-sm btn-primary" type="button" v-if="S.obstacleMode === 'draw'" :disabled="S.obstacleDraw.length < 3" @click="E.obstacleDrawDone()"><i class="fas fa-check mr-1"></i>{{ t('obstacles.drawDone') }}</button>
+                <button class="btn btn-sm btn-outline-secondary" type="button" v-if="S.obstacleMode === 'draw'" @click="E.obstacleDrawCancel()">{{ t('common.cancel') }}</button>
+              </div>
+            </div>
+            <div class="ed-obstacle-icons r4-shape-icons" v-if="S.obstacleMode === 'icon' || S.obstacle.shape.shape === 'icon'">
+              <input type="search" class="form-control form-control-sm" v-model.trim="S.obstacleIcons.query" :placeholder="t('room4.iconSearch')">
+              <div class="r4-icon-grid" v-if="S.obstacleIcons.loaded">
+                <button type="button" v-for="i in E.obstacleIconResults()" :key="i.name" :class="{ active: S.obstacle.shape.icon === i.name }" @click="E.obstaclePickIcon(i)" :title="i.label"><i :class="E.obstacleIconClass(i)"></i></button>
+              </div>
+              <div class="ed-muted" v-if="S.obstacleIcons.loading"><i class="fas fa-spinner fa-spin mr-1"></i>{{ t('room4.iconLoading') }}</div>
+              <div class="ed-muted" v-if="S.obstacleIcons.failed">{{ t('room4.iconUnavailable') }}</div>
+              <div class="ed-muted" v-if="S.obstacleIcons.loaded && !E.obstacleIconResults().length">{{ t('room4.iconNone') }}</div>
+            </div>
+            <div class="ed-obstacle-field" v-for="f in E.obstacleFields()" :key="f.id">
+              <div class="ed-label">{{ t('obstacles.fields.' + f.label) }}</div>
+              <div class="ed-along-row">
+                <input type="range" class="ed-along-range" :data-field="f.id" :min="f.min" :max="f.max" :step="f.step" :value="f.value" :aria-label="t('obstacles.fields.' + f.label)"
+                  @input="E.obstacleInput(f.id, Number(($event.target as HTMLInputElement).value))" @change="E.obstacleDone()" @pointerup="E.obstacleDone()" @blur="E.obstacleDone()">
+                <span class="ed-along-value">{{ f.unit === '°' ? f.value + '°' : f.unit ? f.value.toFixed(1) + ' cm' : f.value }}</span>
+              </div>
+            </div>
+            <p class="ed-muted" v-if="S.obstacle.at">{{ t('obstacles.onTile') }}</p>
+            <div class="ed-obstacle-actions">
+              <button class="btn btn-sm btn-outline-primary" type="button" @click="E.obstacleRandom()"><i class="fas fa-dice mr-1"></i>{{ t('obstacles.random') }}</button>
+              <button class="btn btn-sm btn-outline-danger" type="button" v-if="S.obstacle.at" @click="E.obstacleRemove()"><i class="fas fa-trash-alt mr-1"></i>{{ t('obstacles.remove') }}</button>
+            </div>
+          </div>
           <div v-if="S.ui.tool === 'victim'">
             <div class="ed-selected" v-if="S.selected">
               <div class="ed-selected-head">
@@ -283,13 +324,11 @@ onMounted(function () {
                 <div class="ed-label">{{ t('victims.turn.title') }}</div>
                 <RotationDial class="ed-dial" :model-value="S.selected.rot" @update:model-value="(v: number) => S.selected!.rot = v" @change="E.changeSelected({ rot: S.selected!.rot })" :symbol="E.symbolOf(S.selected.victim.type)" :face="E.faceOf(S.selected.victim.type)"></RotationDial>
               </div>
-              <!-- where along its wall: dragged on the map, or here -->
+              <!-- where along its wall: dragged on the map -->
               <div class="ed-along" v-for="r in [E.selectedRange()]" :key="'along'">
                 <template v-if="r">
                   <div class="ed-label">{{ t('victims.along.title') }}</div>
                   <div class="ed-along-row">
-                    <input type="range" class="ed-along-range" :min="r.min" :max="r.max" step="0.1" :value="S.selected.offset" :disabled="r.min === r.max"
-                      :aria-label="t('victims.along.title')" @input="E.slideSelected(Number(($event.target as HTMLInputElement).value))" @change="E.slideDone()" @pointerup="E.slideDone()" @blur="E.slideDone()">
                     <span class="ed-along-value">{{ E.offsetText(S.selected.offset) }} cm</span>
                   </div>
                   <div class="ed-along-foot">

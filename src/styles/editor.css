@@ -1491,3 +1491,13 @@
 }
 .ed-small-size .fas { margin-right: 0.45rem; color: var(--ed-accent); }
 .ed-small-size span { font-weight: 400; color: var(--ed-muted); }
+
+/* the floor tool's obstacle: its shape, sizes, turn and place */
+.ed-obstacle { margin-top: 0.8rem; padding-top: 0.7rem; border-top: 1px solid var(--ed-line); }
+.ed-obstacle-shapes { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem; margin-bottom: 0.5rem; }
+.ed-obstacle-shapes .ed-choice { font-size: 0.78rem; padding: 0.3rem 0.45rem; }
+.ed-obstacle-field { margin-bottom: 0.35rem; }
+.ed-obstacle-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+
+/* a victim's place along its wall, shown (it is dragged on the map) */
+.ed-along > .ed-along-row .ed-along-value { min-width: 0; text-align: left; }
