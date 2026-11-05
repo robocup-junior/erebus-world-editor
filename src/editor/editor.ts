@@ -1908,12 +1908,18 @@ export function createEditor() {
                 ctx.beginPath();
                 if (o.axis === 'y') { ctx.moveTo(-6, at); ctx.lineTo(w + 6, at); } else { ctx.moveTo(at, -6); ctx.lineTo(at, h + 6); }
                 ctx.stroke();
-                dot(ctx, o.axis === 'y' ? -6 : at, o.axis === 'y' ? at : -6, 9 * px, '#16a34a');
-                ctx.fillStyle = '#fff';
-                ctx.font = '700 ' + (14 * px) + 'px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('+', o.axis === 'y' ? -6 : at, (o.axis === 'y' ? at : -6) + px);
+                const bx = o.axis === 'y' ? -6 : at, by = o.axis === 'y' ? at : -6, arm = 4.5 * px;
+                dot(ctx, bx, by, 9 * px, '#16a34a');
+                // the plus drawn as two strokes, not a '+' of a font: a glyph sits where its font puts it,
+                // not at the badge's centre
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2.4 * px;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(bx - arm, by); ctx.lineTo(bx + arm, by);
+                ctx.moveTo(bx, by - arm); ctx.lineTo(bx, by + arm);
+                ctx.stroke();
+                ctx.lineCap = 'butt';
             } else {
                 const at = 6 * (o.index - 1);
                 ctx.fillStyle = 'rgba(220, 38, 38, 0.18)';
