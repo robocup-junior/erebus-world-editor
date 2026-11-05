@@ -258,6 +258,7 @@
         },
         "problems": {
             "noStart": "There is no start tile",
+            "startNotRoom1": "The start tile is not in room 1. The start is one of the room 1 tiles",
             "victimNoWall": "Some victims have lost their wall ({{count}})",
             "victimInPassage": "Some victims are in a passage between areas ({{count}}): there are none in the passages (rule {{rule_passageTokens}})",
             "victimUnreachable": "Some victims are where the robot cannot get ({{count}}): there are none where the robot cannot go (rule {{rule_reach}})",
@@ -353,6 +354,7 @@
         "floor_outside": "Outside the map",
         "floor_isStart": "This is the start tile (the eraser takes it off)",
         "floor_start": "Click to move the start here (there is one start)",
+        "floor_startRoom": "The start is one of the room 1 tiles (this tile is room {{room}})",
         "floor_clear": "Click to take the floor off (hole, swamp, checkpoint)",
         "floor_off": "Click to take the {{floor}} off",
         "floor_on": "Click to make it a {{floor}}",
@@ -530,7 +532,7 @@
                 },
                 "start": {
                     "title": "Put the start",
-                    "body": "The floor tool sets a tile's floor. Start is the tile the robot is put on: one on a map. Without it the world cannot be exported.",
+                    "body": "The floor tool sets a tile's floor. Start is one of the room 1 tiles: the robot starts its run there. Without it the world cannot be exported.",
                     "task": "Pick Start and click the bottom left tile (green frame)",
                     "tasks": {
                         "room": "The start is outside room 1. Click a room 1 tile (green frame) to put it there"
@@ -824,7 +826,7 @@
                 },
                 "floor": {
                     "title": "Floor (F): checkpoints, holes, swamps, the start",
-                    "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is the tile the robot is put on: one on a map. None takes the floor off.\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself."
+                    "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is one of the room 1 tiles: the robot starts its run there. None takes the floor off.\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself."
                 },
                 "victim": {
                     "title": "Victim (V): victims and cognitive targets",
@@ -1115,7 +1117,7 @@
                     "steps": {
                         "floor": {
                             "title": "Floor (F): checkpoints, holes, swamps, contact tiles, the start",
-                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is the tile the robot is put on: one on a map. None takes the floor off.\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds."
+                            "body": "Pick a kind and click a tile to give it that floor. Clicking again with the same kind takes it back.\nStart is one of the room 1 tiles: the robot starts its run there. None takes the floor off.\nThe rules need a checkpoint on each passage into room 4, so it is put there by itself.\nA contact tile (cyan) is where the robot has its battery replaced after standing still on it for 5 seconds."
                         },
                         "victim": {
                             "body": "Pick a kind in the panel (smiley victims - harmed a sad face, stable a neutral face, unharmed a happy face - and fake ones, cognitive targets of four types - flammable gas, poison, corrosive, organic peroxide - and a fake one) and click near a wall: it goes on the wall where you click.\nThey go on tile sides in room 1 (one per tile), on the faces of the 6 cm walls in rooms 2 and 3, and on two places on a curve (inside and outside). Drag a placed one to move it along its wall. Where one cannot go, the status line says why.\nTurn the dial (Set the turn) for its rotation, or choose Random for a new one each time. For a cognitive target, click a ring of the target and then a colour below; the sum of the rings gives its type.\nClick a victim with the same kind to select it, then change its turn, rings or place along its wall, or remove it. Clicking it with another kind changes its kind."

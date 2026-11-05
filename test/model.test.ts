@@ -29,6 +29,22 @@ test('a new map has its tiles and outer walls, and no start yet', () => {
   assert.deepStrictEqual(M.problems(map).map((p) => p.key), ['noStart']);
 });
 
+test('the start goes in room 1 only, and a start the room was painted over is a problem it fixes', () => {
+  const map = M.newMap(4, 2, 2026);
+  let borders = paint(map, 2, [[2, 0], [3, 0], [2, 1], [3, 1]], new Set());
+  assert.strictEqual(M.setFloor(map, 5, 1, 'start'), false, 'not on a room 2 tile');
+  assert.deepStrictEqual(map.startTile, { x: 0, y: 0, z: 0 });
+  assert.strictEqual(M.setFloor(map, 3, 1, 'start'), true);
+  assert.ok(!M.problems(map).some((p) => p.key === 'startNotRoom1'));
+  borders = paint(map, 2, [[1, 0]], borders);
+  const p = M.problems(map).find((q) => q.key === 'startNotRoom1');
+  assert.ok(p && p.block, 'blocks the export');
+  assert.deepStrictEqual(p!.show!.tiles, [[1, 0]]);
+  M.fixProblem(map, p!, borders);
+  assert.strictEqual(M.roomOf(map, map.startTile.x, map.startTile.y), 1, 'moved back into room 1');
+  assert.ok(!M.problems(map).some((q) => q.key === 'startNotRoom1'));
+});
+
 test('resizing keeps what fits and moves the outer walls', () => {
   const map = M.newMap(3, 3, 2026);
   M.setFloor(map, 5, 5, 'start');

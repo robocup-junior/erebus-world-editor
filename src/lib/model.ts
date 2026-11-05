@@ -511,6 +511,8 @@ function segNear(map: MapData, x: number, y: number, reach: number): string | nu
 function setFloor(map: MapData, x: number, y: number, kind: string) {
     if (!isInside(map, x, y)) return false;
     if (kind === 'start') {
+        // the start tile is in room 1 (area 1) only
+        if (roomOf(map, x, y) !== 1) return false;
         map.startTile = { x: x, y: y, z: 0 };
         return true;
     }
@@ -1448,6 +1450,11 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
     const out: Problem[] = [];
     const st = map.startTile;
     if (!st || !(st.x > 0 && st.y > 0)) out.push({ key: 'noStart', block: true });
+    // a start put in room 1 that is no longer there (the room painted over, a region moved or pasted)
+    else if (roomOf(map, st.x, st.y) !== 1) {
+        const tile = [(st.x - 1) / 2, (st.y - 1) / 2];
+        out.push({ key: 'startNotRoom1', block: true, at: [12 * tile[0] + 6, 12 * tile[1] + 6], show: { tiles: [tile] } });
+    }
     const type = map.area4Room && map.area4Room.type;
     const region = W.room4Region(map);
     const regionAt = region ? [6 * (region.minX + region.maxX + 1), 6 * (region.minY + region.maxY + 1)] : null;
@@ -1550,7 +1557,7 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
 // walls set (as syncBorderWalls), or null when it cannot be fixed here (the custom room 4 picture
 // has to be drawn). FIXABLE: the problems it handles.
 
-const FIXABLE = ['noStart', 'presetNotSupported', 'room4Checkpoint', 'conn.notConnected', 'conn.passageNoRoom',
+const FIXABLE = ['noStart', 'startNotRoom1', 'presetNotSupported', 'room4Checkpoint', 'conn.notConnected', 'conn.passageNoRoom',
     'conn.passageMisplaced', 'conn.unmarkedGap', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable', 'wallRule'];
 // fixed by drawing in the room 4 creator
 const DRAW_FIX = ['customRoom4NoPicture', 'room4Untyped', 'room4Unreachable'];
@@ -1609,7 +1616,7 @@ function connectRoom(map: MapData, room: number, borders: Set<string>): Set<stri
 
 function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string> | null {
     const key = p.key;
-    if (key === 'noStart') { fixStart(map); return borders; }
+    if (key === 'noStart' || key === 'startNotRoom1') { fixStart(map); return borders; }
     if (key === 'presetNotSupported') {
         map.area4Room = W.area4Presets()[(map.roomTiles[2] || []).length ? 1 : 0];
         return resyncBorderWalls(map, borders);

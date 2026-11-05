@@ -258,6 +258,7 @@
         },
         "problems": {
             "noStart": "No hay baldosa de salida",
+            "startNotRoom1": "La baldosa de salida no está en la sala 1. La salida es una de las baldosas de la sala 1",
             "victimNoWall": "Algunas víctimas han perdido su pared ({{count}})",
             "victimInPassage": "Algunas víctimas están en un pasaje entre áreas ({{count}}): en los pasajes no hay víctimas (regla {{rule_passageTokens}})",
             "victimUnreachable": "Algunas víctimas están donde el robot no puede llegar ({{count}}): no hay víctimas donde el robot no puede ir (regla {{rule_reach}})",
@@ -353,6 +354,7 @@
         "floor_outside": "Fuera del mapa",
         "floor_isStart": "Esta es la baldosa de salida (el borrador la quita)",
         "floor_start": "Haz clic para mover la salida aquí (hay una sola salida)",
+        "floor_startRoom": "La salida es una de las baldosas de la sala 1 (esta baldosa es de la sala {{room}})",
         "floor_clear": "Haz clic para quitar el suelo (agujero, pantano, punto de control)",
         "floor_off": "Haz clic para quitar: {{floor}}",
         "floor_on": "Haz clic para convertirla en: {{floor}}",
@@ -530,7 +532,7 @@
                 },
                 "start": {
                     "title": "Poner la salida",
-                    "body": "La herramienta de suelo fija el suelo de una baldosa. Salida es la baldosa donde se coloca el robot: una por mapa. Sin ella no se puede exportar el mundo.",
+                    "body": "La herramienta de suelo fija el suelo de una baldosa. Salida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Sin ella no se puede exportar el mundo.",
                     "task": "Elige Salida y haz clic en la baldosa de abajo a la izquierda (marco verde)",
                     "tasks": {
                         "room": "La salida está fuera de la sala 1. Haz clic en una baldosa de la sala 1 (marco verde) para ponerla ahí"
@@ -824,7 +826,7 @@
                 },
                 "floor": {
                     "title": "Suelo (F): puntos de control, agujeros, pantanos, la salida",
-                    "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es la baldosa donde se coloca el robot: una por mapa. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo."
+                    "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo."
                 },
                 "victim": {
                     "title": "Víctima (V): víctimas y objetivos cognitivos",
@@ -1115,7 +1117,7 @@
                     "steps": {
                         "floor": {
                             "title": "Suelo (F): puntos de control, agujeros, pantanos, baldosas de contacto, la salida",
-                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es la baldosa donde se coloca el robot: una por mapa. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos."
+                            "body": "Elige un tipo y haz clic en una baldosa para darle ese suelo. Otro clic con el mismo tipo lo quita.\nSalida es una de las baldosas de la sala 1: allí el robot empieza su recorrido. Ninguno quita el suelo.\nLas reglas piden un punto de control en cada pasaje hacia la sala 4, así que se pone solo.\nUna baldosa de contacto (cian) es donde al robot se le cambia la batería tras quedarse quieto en ella 5 segundos."
                         },
                         "victim": {
                             "body": "Elige un tipo en el panel (víctimas sonrientes - herido una cara triste, estable una cara neutra, ileso una cara feliz - y sus falsas, objetivos cognitivos de cuatro tipos - gas inflamable, veneno, corrosivo, peróxido orgánico - y uno falso) y haz clic cerca de una pared: se coloca en la pared donde haces clic.\nVan en los lados de baldosa en la sala 1 (una por baldosa), en las caras de las paredes de 6 cm en las salas 2 y 3, y en dos sitios de una curva (dentro y fuera). Arrastra una colocada para moverla a lo largo de su pared. Donde no se puede poner, la línea de estado dice por qué.\nGira el dial (Giro fijo) para su rotación, o elige Aleatorio para una nueva cada vez. Para un objetivo cognitivo, haz clic en un anillo del objetivo y luego en un color abajo; la suma de los anillos da su tipo.\nHaz clic en una víctima con el mismo tipo para seleccionarla, y luego cambia su giro, anillos o posición a lo largo de su pared, o quítala. Un clic con otro tipo cambia su tipo."

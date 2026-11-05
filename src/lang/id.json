@@ -258,6 +258,7 @@
         },
         "problems": {
             "noStart": "Tidak ada petak start",
+            "startNotRoom1": "Petak start tidak berada di ruang 1. Start adalah salah satu petak ruang 1",
             "victimNoWall": "Beberapa korban kehilangan dindingnya ({{count}})",
             "victimInPassage": "Beberapa korban berada di lorong antar-area ({{count}}): di lorong tidak ada korban (aturan {{rule_passageTokens}})",
             "victimUnreachable": "Beberapa korban berada di tempat yang tidak bisa dicapai robot ({{count}}): tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}})",
@@ -353,6 +354,7 @@
         "floor_outside": "Di luar peta",
         "floor_isStart": "Ini petak start (penghapus menghapusnya)",
         "floor_start": "Klik untuk memindahkan start ke sini (hanya ada satu start)",
+        "floor_startRoom": "Start adalah salah satu petak ruang 1 (petak ini ruang {{room}})",
         "floor_clear": "Klik untuk menghapus lantai (lubang, rawa, checkpoint)",
         "floor_off": "Klik untuk menghapus: {{floor}}",
         "floor_on": "Klik untuk menjadikan: {{floor}}",
@@ -530,7 +532,7 @@
                 },
                 "start": {
                     "title": "Pasang start",
-                    "body": "Alat lantai mengatur lantai petak. Start adalah petak tempat robot diletakkan: satu per peta. Tanpa start, dunia tidak bisa diekspor.",
+                    "body": "Alat lantai mengatur lantai petak. Start adalah salah satu petak ruang 1: robot memulai run dari sana. Tanpa start, dunia tidak bisa diekspor.",
                     "task": "Pilih Start dan klik petak kiri bawah (bingkai hijau)",
                     "tasks": {
                         "room": "Start berada di luar ruang 1. Klik petak ruang 1 (bingkai hijau) untuk memasangnya di sana"
@@ -824,7 +826,7 @@
                 },
                 "floor": {
                     "title": "Lantai (F): checkpoint, lubang, rawa, start",
-                    "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah petak tempat robot diletakkan: satu per peta. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya."
+                    "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah salah satu petak ruang 1: robot memulai run dari sana. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya."
                 },
                 "victim": {
                     "title": "Korban (V): korban dan target kognitif",
@@ -1115,7 +1117,7 @@
                     "steps": {
                         "floor": {
                             "title": "Lantai (F): checkpoint, lubang, rawa, petak kontak, start",
-                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah petak tempat robot diletakkan: satu per peta. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik."
+                            "body": "Pilih jenis dan klik petak untuk memberinya lantai itu. Klik lagi dengan jenis yang sama mengembalikannya.\nStart adalah salah satu petak ruang 1: robot memulai run dari sana. Tidak ada menghapus lantai.\nAturan mewajibkan checkpoint di setiap lorong menuju ruang 4, jadi dipasang di sana dengan sendirinya.\nPetak kontak (sian) adalah tempat baterai robot diganti setelah robot diam di atasnya selama 5 detik."
                         },
                         "victim": {
                             "body": "Pilih jenis di panel (korban smiley - terluka wajah sedih, stabil wajah datar, tidak terluka wajah senang - dan yang palsu, target kognitif empat jenis - gas mudah terbakar, racun, korosif, peroksida organik - dan yang palsu) lalu klik di dekat dinding: ia ditempatkan di dinding tempat Anda klik.\nDi ruang 1 di sisi petak (satu per petak), di ruang 2 dan 3 di muka dinding 6 cm, dan di dua tempat pada lengkung (dalam dan luar). Seret yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya. Jika tidak bisa ditempatkan, baris status memberi tahu alasannya.\nPutar dial (Putaran tetap) untuk rotasinya, atau pilih Acak untuk putaran baru setiap kali. Untuk target kognitif, klik cincin target lalu warna di bawah; jumlah cincin menentukan jenisnya.\nKlik korban dengan jenis yang sama untuk memilihnya, lalu ubah putaran, cincin, atau posisinya di sepanjang dinding, atau hapus. Klik dengan jenis lain mengubah jenisnya."

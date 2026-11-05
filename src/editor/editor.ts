@@ -1750,7 +1750,8 @@ export function createEditor() {
             const st = map.startTile;
             const name = t('floors.' + kind);
             if (M.isOutside(map, tl.x, tl.y)) say('floor_outside');
-            else if (kind === 'start') say(st && st.x === tl.x && st.y === tl.y ? 'floor_isStart' : 'floor_start');
+            else if (kind === 'start' && st && st.x === tl.x && st.y === tl.y) say('floor_isStart');
+            else if (kind === 'start') say(M.roomOf(map, tl.x, tl.y) === 1 ? 'floor_start' : 'floor_startRoom', { room: M.roomOf(map, tl.x, tl.y) });
             else if (kind === 'clear') say('floor_clear');
             else if (tile && tile[kind]) say('floor_off', { floor: name });
             else say('floor_on', { floor: name });

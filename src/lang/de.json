@@ -258,6 +258,7 @@
         },
         "problems": {
             "noStart": "Es gibt keine Startkachel",
+            "startNotRoom1": "Die Startkachel liegt nicht in Raum 1. Der Start ist eine der Kacheln von Raum 1",
             "victimNoWall": "Einige Opfer haben ihre Wand verloren ({{count}})",
             "victimInPassage": "Einige Opfer liegen in einem Durchgang zwischen Bereichen ({{count}}): In Durchgängen gibt es keine (Regel {{rule_passageTokens}})",
             "victimUnreachable": "Einige Opfer liegen dort, wo der Roboter nicht hinkommt ({{count}}): Wo der Roboter nicht hinkann, gibt es keine (Regel {{rule_reach}})",
@@ -353,6 +354,7 @@
         "floor_outside": "Außerhalb der Karte",
         "floor_isStart": "Das ist die Startkachel (der Radierer entfernt sie)",
         "floor_start": "Klicke, um den Start hierher zu verschieben (es gibt einen Start)",
+        "floor_startRoom": "Der Start ist eine der Kacheln von Raum 1 (diese Kachel ist Raum {{room}})",
         "floor_clear": "Klicke, um den Boden zu entfernen (Loch, Sumpf, Checkpoint)",
         "floor_off": "Klicke zum Entfernen: {{floor}}",
         "floor_on": "Klicke zum Setzen: {{floor}}",
@@ -530,7 +532,7 @@
                 },
                 "start": {
                     "title": "Den Start setzen",
-                    "body": "Das Bodenwerkzeug legt den Boden einer Kachel fest. Start ist die Kachel, auf die der Roboter gesetzt wird: eine pro Karte. Ohne ihn kann die Welt nicht exportiert werden.",
+                    "body": "Das Bodenwerkzeug legt den Boden einer Kachel fest. Start ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Ohne ihn kann die Welt nicht exportiert werden.",
                     "task": "Wähle Start und klicke auf die Kachel unten links (grüner Rahmen)",
                     "tasks": {
                         "room": "Der Start liegt außerhalb von Raum 1. Klicke auf eine Kachel von Raum 1 (grüner Rahmen), um ihn dorthin zu setzen"
@@ -824,7 +826,7 @@
                 },
                 "floor": {
                     "title": "Boden (F): Checkpoints, Löcher, Sümpfe, der Start",
-                    "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist die Kachel, auf die der Roboter gesetzt wird: eine pro Karte. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt."
+                    "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt."
                 },
                 "victim": {
                     "title": "Opfer (V): Opfer und kognitive Ziele",
@@ -1115,7 +1117,7 @@
                     "steps": {
                         "floor": {
                             "title": "Boden (F): Checkpoints, Löcher, Sümpfe, Kontaktkacheln, der Start",
-                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist die Kachel, auf die der Roboter gesetzt wird: eine pro Karte. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand."
+                            "body": "Wähle eine Art und klicke auf eine Kachel, um ihr diesen Boden zu geben. Erneut mit derselben Art klicken nimmt ihn zurück.\nStart ist eine der Kacheln von Raum 1: Dort beginnt der Roboter seinen Lauf. Keiner entfernt den Boden.\nDie Regeln verlangen einen Checkpoint an jedem Durchgang in Raum 4, deshalb wird er von selbst gesetzt.\nEine Kontaktkachel (cyan) ist die Stelle, an der dem Roboter der Akku getauscht wird, nachdem er 5 Sekunden still darauf stand."
                         },
                         "victim": {
                             "body": "Wähle im Bereich eine Art (Smiley-Opfer – verletzt ein trauriges Gesicht, stabil ein neutrales, unverletzt ein fröhliches – und falsche, kognitive Ziele von vier Typen – entzündliches Gas, Gift, ätzend, organisches Peroxid – und ein falsches) und klicke nahe einer Wand: Es kommt an die Wand, wo du klickst.\nSie kommen an Kachelseiten in Raum 1 (eins pro Kachel), an die Flächen der 6-cm-Wände in den Räumen 2 und 3 und an zwei Plätze an einer Kurve (innen und außen). Ziehe ein gesetztes, um es entlang seiner Wand zu verschieben. Wo eins nicht hinkann, sagt die Statuszeile warum.\nDrehe am Drehregler (Feste Drehung) für seine Drehung, oder wähle Zufällig für jedes Mal eine neue. Für ein kognitives Ziel klicke einen Ring des Ziels an, dann unten eine Farbe; die Summe der Ringe ergibt den Typ.\nKlicke ein Opfer mit derselben Art an, um es auszuwählen, und ändere dann Drehung, Ringe oder Position entlang der Wand, oder entferne es. Ein Klick mit einer anderen Art ändert seine Art."

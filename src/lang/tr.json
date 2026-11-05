@@ -258,6 +258,7 @@
         },
         "problems": {
             "noStart": "Başlangıç karesi yok",
+            "startNotRoom1": "Başlangıç karesi oda 1'de değil. Başlangıç, oda 1'in karelerinden biridir",
             "victimNoWall": "Bazı kazazedeler duvarını kaybetti ({{count}})",
             "victimInPassage": "Bazı kazazedeler alanlar arasındaki bir geçitte ({{count}}): geçitlerde kazazede olmaz (kural {{rule_passageTokens}})",
             "victimUnreachable": "Bazı kazazedeler robotun ulaşamadığı yerde ({{count}}): robotun gidemediği yerde kazazede olmaz (kural {{rule_reach}})",
@@ -353,6 +354,7 @@
         "floor_outside": "Haritanın dışında",
         "floor_isStart": "Bu başlangıç karesi (silgi kaldırır)",
         "floor_start": "Başlangıcı buraya taşımak için tıklayın (tek bir başlangıç vardır)",
+        "floor_startRoom": "Başlangıç, oda 1'in karelerinden biridir (bu kare oda {{room}})",
         "floor_clear": "Zemini kaldırmak için tıklayın (çukur, bataklık, kontrol noktası)",
         "floor_off": "Kaldırmak için tıklayın: {{floor}}",
         "floor_on": "Yapmak için tıklayın: {{floor}}",
@@ -530,7 +532,7 @@
                 },
                 "start": {
                     "title": "Başlangıcı koyun",
-                    "body": "Zemin aracı bir karenin zeminini belirler. Başlangıç, robotun konduğu karedir: haritada bir tane. O olmadan dünya dışa aktarılamaz.",
+                    "body": "Zemin aracı bir karenin zeminini belirler. Başlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. O olmadan dünya dışa aktarılamaz.",
                     "task": "“Başlangıç” seçeneğini seçin ve sol alttaki kareye (yeşil çerçeve) tıklayın",
                     "tasks": {
                         "room": "Başlangıç oda 1'in dışında. Oraya koymak için bir oda 1 karesine (yeşil çerçeve) tıklayın"
@@ -824,7 +826,7 @@
                 },
                 "floor": {
                     "title": "Zemin (F): kontrol noktaları, çukurlar, bataklıklar, başlangıç",
-                    "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, robotun konduğu karedir: haritada bir tane. Yok zemini kaldırır.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur."
+                    "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. Yok zemini kaldırır.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur."
                 },
                 "victim": {
                     "title": "Kazazede (V): kazazedeler ve bilişsel hedefler",
@@ -1115,7 +1117,7 @@
                     "steps": {
                         "floor": {
                             "title": "Zemin (F): kontrol noktaları, çukurlar, bataklıklar, temas kareleri, başlangıç",
-                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, robotun konduğu karedir: haritada bir tane. Yok zemini kaldırır.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir."
+                            "body": "Bir tür seçin ve o zemini vermek için bir kareye tıklayın. Aynı türle tekrar tıklamak onu geri alır.\nBaşlangıç, oda 1'in karelerinden biridir: robot koşusuna orada başlar. Yok zemini kaldırır.\nKurallar oda 4'e giden her geçitte bir kontrol noktası ister, bu yüzden oraya kendiliğinden konur.\nTemas karesi (camgöbeği), robotun üzerinde 5 saniye hareketsiz durduktan sonra pilinin değiştirildiği yerdir."
                         },
                         "victim": {
                             "body": "Panelden bir tür seçin (gülen yüz kazazedeler - yaralı üzgün yüz, stabil nötr yüz, yaralanmamış mutlu yüz - ve sahteleri, dört türde bilişsel hedef - yanıcı gaz, zehir, aşındırıcı, organik peroksit - ve bir sahte) ve bir duvarın yakınına tıklayın: tıkladığınız yerdeki duvara konur.\nOda 1'de kare kenarlarına (kare başına bir), oda 2 ve 3'te 6 cm duvarların yüzlerine, bir eğride iki yere (iç ve dış) konur. Konmuş birini duvarı boyunca taşımak için sürükleyin. Konamayacağı yerde durum satırı nedenini söyler.\nDönüşü için kadranı çevirin (Sabit dönüş) veya her seferinde yenisi için “Rastgele” seçeneğini seçin. Bilişsel hedef için hedefin bir halkasına, sonra aşağıdaki bir renge tıklayın; halkaların toplamı türünü verir.\nSeçmek için aynı türle bir kazazedeye tıklayın, sonra dönüşünü, halkalarını veya duvar boyunca yerini değiştirin ya da kaldırın. Başka bir türle tıklamak türünü değiştirir."
