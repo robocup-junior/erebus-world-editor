@@ -1036,7 +1036,14 @@
 }
 .ed-tour-ring.extra { border: 2px dashed #fbbf24; box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.2); }
 /* the places on the map the step is about */
-.ed-tour-ring.place { border: 3px dashed #16a34a; border-radius: 4px; box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.2); }
+.ed-tour-ring.place {
+    border: 3px dashed #16a34a; border-radius: 4px; background: rgba(22, 163, 74, 0.16);
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.2); animation: ed-tour-place 1.6s ease-in-out infinite;
+}
+/* tinted and pulsing: a frame of the lesson, not a thing on the map (the start is a green square too) */
+@keyframes ed-tour-place {
+    50% { background: rgba(22, 163, 74, 0.04); box-shadow: 0 0 0 9px rgba(22, 163, 74, 0.08); }
+}
 
 .ed-tour-card {
     position: absolute;
