@@ -124,7 +124,7 @@
             "line": "Arraste para desenhar paredes. A linha vira com o ponteiro, então um único arraste pode desenhar um zigue-zague (volte pelo mesmo caminho para desfazer uma curva). Comece com Shift pressionado para uma única linha reta. A sala 1 se ajusta a 12 cm (bordas dos ladrilhos) e as salas 2 e 3 a 6 cm. Não dentro da sala 4.",
             "eraser": "Clique ou arraste sobre paredes, curvas e vítimas para removê-las. Longe das paredes, remove o piso de um ladrilho (buraco, pântano, checkpoint); um clique remove a partida. As paredes externas ficam. Um obstáculo também sai com um clique.",
             "floor": "Clique em um ladrilho para definir seu piso.",
-            "obstacle": "Clique um ladrilho para pôr um obstáculo da forma e da cor escolhidas no painel (salas 1-3, um por ladrilho; regra {{rule_obstacles}}). Clique um para escolhê-lo: as alças no mapa mudam o tamanho e o giro (Shift: de 15° em 15°), o painel a altura, a cor e a forma; arraste para mover, Delete o tira. Os cantos de um contorno são clicados no mapa; um ícone é procurado pelo nome.",
+            "obstacle": "Clique um ladrilho para pôr um obstáculo da forma e da cor escolhidas no painel (salas 1-3: um por ladrilho, com o centro nele; regra {{rule_obstacles}}). Na sala 4, quantos quiser, onde você clicar. Clique um para escolhê-lo: as alças no mapa mudam o tamanho e o giro (Shift: de 15° em 15°), o painel a altura, a cor e a forma; arraste para mover, Delete o tira. Os cantos de um contorno são clicados no mapa; um ícone é procurado pelo nome.",
             "victim": "Clique perto de uma parede: a vítima vai para a parede onde você clica. Sala 1: em um lado do ladrilho (uma por ladrilho); salas 2 e 3: em uma face das paredes de 6 cm (4 quartos × 4 faces); uma curva tem dois lugares (dentro e fora). Arraste uma vítima colocada para movê-la ao longo da parede (ela para antes do fim da parede e de outras vítimas). Clique numa colocada para selecioná-la: o tipo, os anéis e o giro são então mudados no painel, ou ela é removida.",
             "curve": "Aponte para um quarto de ladrilho na sala 3 para ver suas quatro curvas; a mais próxima (azul) entra com um clique. Clique de novo na mesma para removê-la.",
             "select": "Selecione paredes, salas, pisos e vítimas juntos para movê-los, copiá-los, colá-los ou apagá-los. Clique uma vítima ou um obstáculo para abrir sua ferramenta com ele escolhido; clique uma parede ou uma curva para escolhê-la e Delete para tirá-la.",
@@ -215,7 +215,7 @@
         "draw": "Desenhar o contorno",
         "drawDone": "Fechar e pôr",
         "drawHow": "Clique os cantos no mapa; clique o primeiro ou tecle Enter para fechar, Esc para parar. O centro do retângulo em volta fica num ladrilho, longe das bordas.",
-        "onTile": "Seu centro fica no seu ladrilho, longe das bordas (regra {{rule_obstacles}}). Pode encostar numa parede, não atravessá-la: ao mover ou aumentar, ele para onde encontra uma. Arraste no mapa para movê-lo. As alças no mapa mudam o tamanho e o giro (Shift: de 15° em 15°).",
+        "onTile": "Nas salas 1-3 o centro fica no seu ladrilho, longe das bordas (regra {{rule_obstacles}}). Na sala 4 o centro pode ficar em qualquer lugar, e pode haver quantos quiser. Pode encostar numa parede, não atravessá-la: movido ou aumentado, para onde encontra uma. Arraste-o no mapa para movê-lo. As alças no mapa mudam o tamanho e o giro (Shift: de 15° em 15°).",
         "colorNote": "Qualquer cor (regra {{rule_obstacles}}). Uma parecida com a de um piso (prata, preto, marrom, ciano), de uma passagem ou de uma vítima é mais difícil de o robô distinguir.",
         "moreColors": "Outras cores"
     },
@@ -296,8 +296,9 @@
             "noStart": "Não há ladrilho de partida",
             "startNotRoom1": "O ladrilho de partida não está na sala 1. A partida é um dos ladrilhos da sala 1 (regra {{rule_start}})",
             "tileTwoKinds": "Alguns ladrilhos são dois ou mais de buraco, pântano, checkpoint, obstáculo, partida e passagem ({{count}}). Um ladrilho é só uma dessas coisas (regra {{rule_oneKind}})",
-            "obstacleRoom": "Alguns obstáculos estão em ladrilhos da sala 4 ou fora do mapa ({{count}}). Os da sala 4 são desenhados na sua imagem",
+            "obstacleRoom": "Há obstáculos de ladrilho em ladrilhos da sala 4 ou fora do mapa ({{count}}). Ponha os obstáculos da sala 4 de novo clicando dentro dela",
             "obstacleOverlap": "Alguns obstáculos entram numa parede ou em outro obstáculo ({{count}}). Um obstáculo pode encostar numa parede, não atravessá-la",
+            "room4ObstacleOverlap": "Alguns obstáculos da sala 4 atravessam uma parede ou outro obstáculo, cobrem uma vítima, ou saem da sala 4 ({{count}}). Podem encostar numa parede, não atravessá-la",
             "passageOpenSides": "Algumas passagens estão abertas em mais de dois lados ({{count}}). Uma passagem tem paredes em dois lados: uma entrada, uma saída (regra {{rule_passageWalls}})",
             "victimNoWall": "Algumas vítimas perderam a parede ({{count}})",
             "victimInPassage": "Algumas vítimas estão em uma passagem entre áreas ({{count}}): não há vítimas nas passagens (regra {{rule_passageTokens}})",
@@ -370,7 +371,7 @@
         "regionPick": "Arraste para selecionar",
         "regionDrag": "Arraste para mover, Alt+arrastar para copiar. As setas movem um ladrilho; Ctrl+C / X / V e Delete também funcionam",
         "select_victim": "Clique para abrir a ferramenta de vítimas com esta vítima escolhida (arraste-a ao longo da parede)",
-        "select_obstacle": "Clique para abrir a ferramenta de piso com este obstáculo escolhido (arraste-o no seu ladrilho)",
+        "select_obstacle": "Clique para ir à ferramenta de obstáculos com este obstáculo escolhido (arraste para movê-lo)",
         "select_curve": "Clique para escolher esta curva",
         "select_wall": "Clique para escolher esta parede (um trecho reto)",
         "regionCopied": "Copiado. Ctrl+V cola no ladrilho sob o ponteiro",
@@ -409,8 +410,9 @@
         "floor_onPassage": "{{floor}} não pode ficar em um ladrilho de passagem: um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}})",
         "floor_onObstacle": "{{floor}} não pode ficar em um ladrilho com obstáculo: um ladrilho é só um de buraco, pântano, checkpoint, obstáculo, partida e passagem (regra {{rule_oneKind}})",
         "floor_obstacleOn": "Clique para pôr aqui um obstáculo ({{shape}}) como ajustado no painel esquerdo (regra {{rule_obstacles}})",
-        "floor_obstacleSelect": "Clique para escolher este obstáculo (mude-o no painel esquerdo); arraste para movê-lo no seu ladrilho",
-        "floor_obstacleRoom4": "Os obstáculos da sala 4 são desenhados na sua imagem: abra o criador da sala 4",
+        "floor_obstacleSelect": "Clique para escolher este obstáculo e mudá-lo no painel à esquerda. Arraste para movê-lo",
+        "floor_obstacleRoom4": "Uma sala 4 predefinida não aceita obstáculos (mude a sala 4 para personalizada para pô-los)",
+        "floor_obstacleOnRoom4": "Clique para pôr um obstáculo ({{shape}}) como no painel à esquerda onde você clicar (na sala 4, em qualquer lugar e quantos quiser)",
         "floor_obstacleTaken": "Um obstáculo não pode ficar na partida, numa passagem ou num buraco, pântano ou checkpoint: um ladrilho é só uma dessas coisas (regra {{rule_oneKind}})",
         "floor_clear": "Clique para remover o piso (buraco, pântano, checkpoint)",
         "floor_off": "Clique para remover: {{floor}}",
@@ -624,7 +626,7 @@
                 },
                 "obstacle": {
                     "title": "Pôr um obstáculo",
-                    "body": "A ferramenta de obstáculos (O) põe obstáculos em ladrilhos das salas 1-3, um por ladrilho. Escolha a forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, um contorno desenhado no mapa, um ícone) e a cor no painel e clique num ladrilho.\nUm obstáculo não vai na partida, numa passagem, num buraco, num pântano nem num checkpoint. O robô precisa contorná-lo, então ponha-o onde não feche um caminho: as verificações avisam se fechar.",
+                    "body": "A ferramenta de obstáculos (O) põe obstáculos em ladrilhos das salas 1-3, um por ladrilho. Escolha a forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, um contorno desenhado no mapa, um ícone) e a cor no painel e clique num ladrilho. Na sala 4, quantos quiser, onde você clicar dentro dela.\nUm obstáculo não vai na partida, numa passagem, num buraco, num pântano nem num checkpoint. O robô precisa contorná-lo, então ponha-o onde não feche um caminho: as verificações avisam se fechar.",
                     "task": "Com a ferramenta de obstáculos, clique o ladrilho no quadro verde para pôr um obstáculo"
                 },
                 "obstacleEdit": {
@@ -729,13 +731,10 @@
                     "body": "A borracha apaga paredes e vítimas por onde você arrasta. O tamanho (P, M, G) está nos ajustes.\nApagar tudo (a lixeira) na barra superior tira a imagem inteira.",
                     "task": "Com a borracha, apague a linha de cima (laranja tracejada)"
                 },
-                "r4template": {
-                    "title": "Modelo (T)",
-                    "body": "Escolha um modelo (labirinto, pilares, diagonais, zigue-zague, anéis, obstáculos) e pressione Colocar: paredes são postas por toda a sala 4, deixando o mínimo possível fora do alcance do robô.\nCom Apagar primeiro as paredes e vítimas ligado, o que está desenhado sai antes: um jeito de tirar também as formas de treino.",
-                    "task": "Escolha um modelo (p. ex. Pilares), ligue Apagar primeiro as paredes e vítimas e pressione Colocar",
-                    "tasks": {
-                        "clearOff": "Apagar primeiro as paredes e vítimas está desligado. Ligue-o e depois pressione Colocar (ele tira as formas de treino)"
-                    }
+                "r4clear": {
+                    "title": "Apagar tudo",
+                    "body": "A lixeira da barra de cima (Apagar tudo) apaga a imagem inteira e tira também os obstáculos da sala 4. Desfazer (Ctrl+Z) a traz de volta.\nTire as formas de treino e depois ponha vítimas e obstáculos.",
+                    "task": "Aperte a lixeira da barra de cima para apagar as formas de treino"
                 },
                 "r4stamp": {
                     "title": "Colocar vítimas",
@@ -758,19 +757,24 @@
                         "target": "A borracha está em Tudo. Mude para Só vítimas"
                     }
                 },
+                "r4obstacle": {
+                    "title": "Pôr um obstáculo",
+                    "body": "A ferramenta de obstáculos (K) põe um obstáculo onde você clica na sala 4. A sala 4 não segue os ladrilhos, então você pode pôr quantos couberem. Escolha a forma, a altura e a cor no painel.\nClique em um para escolhê-lo, arraste-o para movê-lo e arraste suas alças para mudar o tamanho e o giro. Ele para onde encontra uma parede ou outro obstáculo. O robô não consegue entrar em um obstáculo, e as imagens salvas aqui os guardam.",
+                    "task": "Com a ferramenta de obstáculos, clique na sala 4 para pôr um obstáculo"
+                },
                 "r4reach": {
                     "title": "Criar um lugar fora de alcance e vê-lo",
                     "body": "Com Fora de alcance ligado, onde o robô (raio de 3,7 cm) não consegue chegar aparece com listras vermelhas: um lugar fechado por paredes, ou uma passagem mais estreita que o robô.\nUm lugar fora de alcance não é um problema em si (o interior de um obstáculo deve ser assim). Mas o robô não consegue achar uma vítima posta ali, então use as listras ao colocar vítimas. Vítimas das quais o robô não consegue chegar perto, ou que estão fora da parede, ganham um anel vermelho tracejado, e a linha de baixo as conta.\nEntradas / CP mostra as entradas e os checkpoints. Experimente criar um lugar fora de alcance.",
                     "task": "Com a ferramenta de retângulo, desenhe um quadrado pequeno longe das paredes e veja o interior virar listras vermelhas (Faça por mim desenha um quadrado pequeno com a caneta)",
                     "tasks": {
                         "off": "Não há partida, então não dá para calcular onde o robô não consegue chegar. Coloque primeiro a partida no mapa (este passo pode ser pulado)",
-                        "allBlocked": "O robô não consegue entrar em quase nada da sala 4: algo fecha a entrada. Apague a parede na frente dela, ou coloque um modelo de novo com Apagar primeiro ligado",
+                        "allBlocked": "O robô não consegue entrar em quase nada da sala 4: algo fecha a entrada. Apague a parede na frente dela",
                         "victimsIn": "{{n}} das vítimas postas até agora estão onde o robô não chega: as verificações parariam a exportação por elas. Desfaça (Ctrl+Z) e desenhe o quadrado em outro lugar, ou tire-as com a Borracha em \"Só vítimas\" (\"Faça por mim\" as tira)"
                     }
                 },
                 "r4file": {
                     "title": "Salvar e abrir como imagem",
-                    "body": "Os botões à direita da barra superior salvam a imagem como PNG e abrem um PNG ou JPEG.\nOs tipos das vítimas ficam guardados na imagem, então uma imagem salva abre do jeito que estava: útil para a mesma sala 4 em outro mapa."
+                    "body": "Os botões à direita da barra superior salvam a imagem como PNG e abrem um PNG ou JPEG.\nOs tipos das vítimas ficam guardados na imagem, então uma imagem salva abre do jeito que estava: útil para a mesma sala 4 em outro mapa.\nOs obstáculos da sala 4 também ficam guardados na imagem: uma imagem salva aqui os traz de volta ao ser aberta."
                 },
                 "r4ok": {
                     "title": "De volta ao mapa",
@@ -905,7 +909,7 @@
                 },
                 "obstacle": {
                     "title": "Obstáculo (O): qualquer forma, tamanho e cor",
-                    "body": "Ponha obstáculos em ladrilhos das salas 1-3, um por ladrilho, com o centro no ladrilho (regra {{rule_obstacles}}): qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, um contorno desenhado no mapa, um ícone) e cor, escolhidas no painel.\nUm escolhido tem alças: quadradas para o tamanho, uma redonda em cima para o giro (Shift: de 15° em 15°). A altura fica no painel. Pode encostar numa parede, não atravessá-la.\nO robô precisa contorná-lo: as verificações mostram aonde ele não chega."
+                    "body": "Nas salas 1-3, ponha obstáculos em ladrilhos, um por ladrilho, com o centro no ladrilho (regra {{rule_obstacles}}). A sala 4 não é feita de ladrilhos: lá, quantos quiser, onde você clicar. Qualquer forma (caixa, cilindro, cone, esfera, pirâmide, prisma ou pirâmide regular, um contorno desenhado no mapa, um ícone) e cor, escolhidas no painel.\nUm escolhido tem alças: quadradas para o tamanho, uma redonda em cima para o giro (Shift: de 15° em 15°). A altura fica no painel. Pode encostar numa parede, não atravessá-la.\nO robô precisa contorná-lo: as verificações mostram aonde ele não chega."
                 },
                 "victim": {
                     "title": "Vítima (V): vítimas e alvos cognitivos",
@@ -1019,24 +1023,6 @@
         },
         "randomGo": "Colocar {{n}}",
         "randomNote2": "Ao longo de paredes das quais o robô consegue chegar a meio ladrilho, a pelo menos meio ladrilho umas das outras.",
-        "templates": {
-            "maze": "Labirinto",
-            "pillars": "Pilares",
-            "diagonal": "Diagonais",
-            "zigzag": "Zigue-zague",
-            "rings": "Anéis",
-            "obstacles": "Obstáculos"
-        },
-        "templateHints": {
-            "maze": "Um labirinto de corredores de um ladrilho (com alguns atalhos).",
-            "pillars": "Pilares redondos nos cantos dos ladrilhos.",
-            "diagonal": "Paredes diagonais curtas dentro dos ladrilhos.",
-            "zigzag": "Um único caminho que vira nas pontas.",
-            "rings": "Anéis em volta do meio, cada um com uma abertura.",
-            "obstacles": "Círculos, caixas e triângulos espalhados."
-        },
-        "templateClear": "Apagar primeiro as paredes e vítimas",
-        "templateApply": "Colocar",
         "showGuides": "Mostrar entradas e checkpoints",
         "missingCheckpoints": "{{count}} ladrilho(s) logo depois de uma passagem não são checkpoints (regra {{rule_room4Checkpoint}}). Defina-os no editor principal (\"CP?\" tracejado).",
         "noEntrance": "A sala 4 não tem entrada. Abra uma parede para uma passagem do lado de fora no editor principal.",
@@ -1088,6 +1074,7 @@
             "pen": "Caneta",
             "line": "Linha",
             "rect": "Retângulo",
+            "obstacle": "Obstáculo",
             "stamp": "Vítima",
             "floor": "Piso",
             "erase": "Borracha",
@@ -1096,8 +1083,7 @@
             "ellipse": "Círculo / elipse",
             "polygon": "Polígono",
             "shape": "Forma",
-            "select": "Selecionar",
-            "template": "Modelo"
+            "select": "Selecionar"
         },
         "undo": "Desfazer",
         "redo": "Refazer",
@@ -1129,7 +1115,7 @@
             "polygon": "Arraste a partir do centro para desenhar um polígono regular. Gira em passos de 15° (livre com Shift).",
             "shape": "Escolha um ícone ou uma imagem e depois arraste na tela para definir o tamanho (mantém as proporções; livre com Shift).",
             "select": "Arraste para selecionar uma caixa e depois arraste dentro dela para movê-la (segure Alt para copiar). As setas a empurram, [ ] a giram, Enter ou um clique fora a solta, Delete a apaga.",
-            "template": "Escolha um modelo e pressione Colocar. Disposições que deixam o robô de fora são refeitas automaticamente."
+            "obstacle": "Clique na sala 4 para pôr ali um obstáculo com a forma e a cor do painel (quantos couberem). Clique em um para escolhê-lo: arraste-o para movê-lo e arraste suas alças para mudar o tamanho e o giro (Shift: de 15° em 15°). Delete ou um clique direito o tira; Esc o solta. Ele não pode atravessar paredes nem outros obstáculos."
         },
         "messages": {
             "outside": "Não pode ir para fora da sala 4.",
@@ -1139,9 +1125,9 @@
             "imageFailed": "Não foi possível carregar a imagem.",
             "randomDone": "{{placed}} colocadas.",
             "randomShort": "Só {{placed}} de {{asked}} colocadas (não há paredes suficientes para elas).",
-            "templateBlocked": "Todas as disposições testadas deixam parte da sala fora de alcance. Confira as partes em vermelho claro.",
             "wallEnd": "Não na ponta de uma parede. Clique em uma face de parede pelo menos tão larga quanto uma vítima (2 cm).",
-            "unreachable": "O robô não consegue chegar perto daqui: não há vítimas onde o robô não pode ir (regra {{rule_reach}})."
+            "unreachable": "O robô não consegue chegar perto daqui: não há vítimas onde o robô não pode ir (regra {{rule_reach}}).",
+            "obstacleBlocked": "Não cabe aqui: atravessaria uma parede ou outro obstáculo, cobriria uma vítima, ou sairia da sala 4."
         },
         "tokens": "Marcadores de parede: {{count}}",
         "farFromWall": "{{count}} longe de qualquer parede (círculo vermelho tracejado)",

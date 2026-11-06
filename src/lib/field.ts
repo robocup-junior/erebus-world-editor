@@ -336,30 +336,56 @@ function obstacleRings(sh: ObstacleShape, x: number, y: number, inset?: number):
     });
 }
 
-// The obstacles' outlines as wall centre lines (pairs of points), half a wall in from them: the
-// robot's room from a wall counts from its centre line, so it then counts from the outline
-function obstaclePieces(map: MapData): number[][][] {
-    const inset = rulesOf(map).geometry.wallHalfCm, out: number[][][] = [];
-    Object.keys(map.cells).forEach(function (k) {
-        const p = k.split(',').map(Number);
-        const sh = p[2] === 0 && p[0] % 2 === 1 && p[1] % 2 === 1 ? obstacleShape(map.cells[k].tile) : null;
-        if (!sh) return;
-        obstacleRings(sh, p[0], p[1], inset).forEach(function (c) {
-            for (let i = 0; i < c.length; i++) out.push([c[i], c[(i + 1) % c.length]]);
-        });
-    });
-    return out;
+// ---- Room 4's obstacles: anywhere in a custom room 4 (rule 3.3: its walls and obstacles are not on
+// a grid; 3.6.3.e and f are of tiles), kept in map.room4Obstacles, their centres as fractions of room
+// 4's box. None while room 4 is not a custom one.
+export type Room4Obstacle = ObstacleShape & { fx: number; fy: number };
+function room4Obstacles(map: MapData): Room4Obstacle[] {
+    return map.area4Room && map.area4Room.type === 1 && Array.isArray(map.room4Obstacles) ? map.room4Obstacles as Room4Obstacle[] : [];
+}
+// Room 4's box on the map (cm), from its tiles; null with none
+function room4Box(map: MapData): { x0: number; y0: number; w: number; h: number } | null {
+    const r = room4Region(map);
+    return r ? { x0: TILE_CM * r.minX, y0: TILE_CM * r.minY, w: TILE_CM * r.w, h: TILE_CM * r.h } : null;
+}
+// Its centre on the map (cm), or null (no room 4)
+function room4ObstacleCentre(map: MapData, o: { fx: number; fy: number }): number[] | null {
+    const b = room4Box(map);
+    return b ? [b.x0 + o.fx * b.w, b.y0 + o.fy * b.h] : null;
+}
+// Its outlines on the map (cm), `inset` cm in from its sides (as obstacleRings)
+function room4ObstacleRings(map: MapData, o: Room4Obstacle, inset?: number): number[][][] {
+    const c = room4ObstacleCentre(map, o);
+    return c ? obstacleRings(Object.assign({}, o, { dx: 0, dy: 0 }), c[0] / 6, c[1] / 6, inset) : [];
 }
 
-// Every obstacle's outlines on the map (cm): rings to fill (an obstacle is solid, not only its sides)
-function obstacleOutlines(map: MapData): number[][][] {
+// Every obstacle's outlines, tiles' and room 4's, `inset` cm in from their sides (tilesOnly: the
+// tiles' ones only)
+function allObstacleRings(map: MapData, inset?: number, tilesOnly?: boolean): number[][][] {
     const out: number[][][] = [];
     Object.keys(map.cells).forEach(function (k) {
         const p = k.split(',').map(Number);
         const sh = p[2] === 0 && p[0] % 2 === 1 && p[1] % 2 === 1 ? obstacleShape(map.cells[k].tile) : null;
-        if (sh) obstacleRings(sh, p[0], p[1]).forEach(function (r) { out.push(r); });
+        if (sh) obstacleRings(sh, p[0], p[1], inset).forEach(function (r) { out.push(r); });
+    });
+    if (!tilesOnly) room4Obstacles(map).forEach(function (o) { room4ObstacleRings(map, o, inset).forEach(function (r) { out.push(r); }); });
+    return out;
+}
+
+// The obstacles' outlines as wall centre lines (pairs of points), half a wall in from them: the
+// robot's room from a wall counts from its centre line, so it then counts from the outline
+function obstaclePieces(map: MapData): number[][][] {
+    const out: number[][][] = [];
+    allObstacleRings(map, rulesOf(map).geometry.wallHalfCm).forEach(function (c) {
+        for (let i = 0; i < c.length; i++) out.push([c[i], c[(i + 1) % c.length]]);
     });
     return out;
+}
+
+// Every obstacle's outlines on the map (cm): rings to fill (an obstacle is solid, not only its sides);
+// tilesOnly: not room 4's
+function obstacleOutlines(map: MapData, tilesOnly?: boolean): number[][][] {
+    return allObstacleRings(map, 0, tilesOnly);
 }
 // Whether point (x, y) is inside a ring
 function insideRing(x: number, y: number, r: number[][]) {
@@ -1246,6 +1272,10 @@ export {
     obstacleRings,
     obstaclePieces,
     obstacleOutlines,
+    room4Obstacles,
+    room4Box,
+    room4ObstacleCentre,
+    room4ObstacleRings,
     insideRing,
     wallShapes,
     connectionStatus,

@@ -1,5 +1,5 @@
 // The room 4 creator's picture: drawing on it (pen, lines, curves, shapes, icons and pictures as
-// walls; stamps for victims; the eraser; selections; templates), what it shows over it (the grid, the
+// walls; stamps for victims; the eraser; selections), what it shows over it (the grid, the
 // map's walls and entrances, where the robot cannot get to, the victims' badges) and its zoom.
 // mountCanvas(scope, stage) sets it up in the stage element (holding canvas.r4-main and
 // canvas.r4-over); scope is the creator's (Room4Creator.vue): its r4 state, its r4api (filled in
@@ -8,6 +8,9 @@ import * as R4 from '../lib/room4';
 import * as Icons from '../lib/icons';
 import { drawHole } from '../lib/hole';
 import type * as World from '../lib/field';
+import * as F from '../lib/field';
+import * as M from '../lib/model';
+import * as Png from '../lib/png';
 import type { CreatorScope } from './scope';
 import * as OpenCV from '../lib/opencv';
 import type { Room4Token } from '../lib/types';
@@ -18,7 +21,7 @@ type Ctx = CanvasRenderingContext2D;
 // a stamp found in the picture, with what the creator works out about it
 interface Token extends R4.FoundToken { nearWall?: boolean; anchor: R4.WallAnchor | null; unreachable?: boolean }
 // a shape being drawn: line / rect / ellipse (a, b; from: the centre it was drawn from, with Alt),
-// circle (a, r) (drawn by the lessons and the templates; the ellipse tool draws circles with Shift), polygon (a, r, n, rot), arc (p0, c, p1),
+// circle (a, r) (drawn by the lessons; the ellipse tool draws circles with Shift), polygon (a, r, n, rot), arc (p0, c, p1),
 // curve (pts, smooth, closed), icon (a, b, free)
 type Shape = { type: string; [key: string]: any };
 type Spot = { ok: true; x: number; y: number; wall: P } | { ok: false; reason: string };
@@ -71,6 +74,14 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     const pxPerCm = block / 12;
     const originCm = { x: ((minX - 1) / 2) * 12, y: ((minY - 1) / 2) * 12 };
     const REACH_RES = 0.5;          // cm per cell of the reach grid
+    // ---- room 4's obstacles (put with the editor's obstacle tool, anywhere in room 4): shown on the
+    // picture, solid in the robot's way, and kept in the pictures saved as images ----
+    function room4Obstacles(): World.Room4Obstacle[] { return Array.isArray(editor.room4Obstacles) ? editor.room4Obstacles : []; }
+    // its outlines in cm on the map (its centre: fractions of the picture, which is room 4's box)
+    function obstacleRingsCm(o: World.Room4Obstacle) {
+        const cx = originCm.x + o.fx * W / pxPerCm, cy = originCm.y + o.fy * H / pxPerCm;
+        return F.obstacleRings(Object.assign({}, o, { dx: 0, dy: 0 }), cx / 6, cy / 6);
+    }
     let reachLayer: HTMLCanvasElement | null = null;          // canvas over the room 4 box: tint where the robot cannot get to
     let reachInfo: { dist: Float32Array; gw: number; gh: number; need: number } | null = null;           // distance (cells) from each cell to the nearest reachable robot centre
     let reachStats: { blocked: number; room: number } | null = null;          // { blocked, room }: reach-grid cells of room 4 floor, and those out of reach
@@ -212,6 +223,16 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         }
         pctx.putImageData(img, 0, 0);
         x.drawImage(pic, originCm.x / REACH_RES, originCm.y / REACH_RES, W / pxPerCm / REACH_RES, H / pxPerCm / REACH_RES);
+        // room 4's obstacles, solid
+        x.save();
+        x.setTransform(1 / REACH_RES, 0, 0, 1 / REACH_RES, 0, 0);
+        x.fillStyle = '#000';
+        room4Obstacles().forEach(function (o) {
+            x.beginPath();
+            obstacleRingsCm(o).forEach(function (r) { r.forEach(function (q, i) { if (i) x.lineTo(q[0], q[1]); else x.moveTo(q[0], q[1]); }); x.closePath(); });
+            x.fill();
+        });
+        x.restore();
         const occ = x.getImageData(0, 0, gw, gh).data;
 
         const src = new cv.Mat(gh, gw, cv.CV_8UC1);
@@ -369,8 +390,8 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     // ---- picture state, history and saving ------------------------------------------
     let pixels: Uint8ClampedArray = null as unknown as Uint8ClampedArray;
     let tokens: Token[] = [];
-    // a step of the history: the picture and the floors
-    type Step = { img: ImageData; floors: string };
+    // a step of the history: the picture, the floors and room 4's obstacles (an image opened brings its own)
+    type Step = { img: ImageData; floors: string; obstacles: string };
     const undo: Step[] = [];
     let redo: Step[] = [];
 
@@ -378,7 +399,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         return ctx.getImageData(0, 0, W, H);
     }
     function step(): Step {
-        return { img: snapshot(), floors: JSON.stringify(floors) };
+        return { img: snapshot(), floors: JSON.stringify(floors), obstacles: JSON.stringify(room4Obstacles()) };
     }
 
     function checkpoint() {
@@ -530,6 +551,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         tokens.forEach(function (t) { counts[t.type] = (counts[t.type] || 0) + 1; });
         scope.$applyAsync(function () {
             r4.tokenCount = tokens.length;
+            r4.obstacleCount = room4Obstacles().length;
             r4.farCount = tokens.filter(function (t) { return !t.nearWall; }).length;
             r4.unreachCount = tokens.filter(function (t) { return t.unreachable; }).length;
             const order = function (idx: number) {
@@ -547,6 +569,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     }
 
     function commit() {
+        obPicture = null;
         mask();
         save();
         // every change put onto the picture, counted on (undo keeps only 40): the guide of the
@@ -566,6 +589,10 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         save();
         Object.keys(floors).forEach(function (key) { delete floors[key]; });
         Object.assign(floors, JSON.parse(s.floors));
+        editor.room4Obstacles = JSON.parse(s.obstacles);
+        obPicture = null;
+        obSliding = null;
+        obSync();
         markHoles();
         checkGuide();
         analyse();
@@ -872,9 +899,245 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         if (!tipShown) tipEl.style.display = 'none';
     }
 
+    // room 4's obstacles on the picture: their colour (none: the grey Webots shows), their outline darker
+    function drawObstacles() {
+        room4Obstacles().forEach(function (o) {
+            octx.beginPath();
+            obstacleRingsCm(o).forEach(function (r) {
+                r.forEach(function (q, i) { const x = (q[0] - originCm.x) * pxPerCm, y = (q[1] - originCm.y) * pxPerCm; if (i) octx.lineTo(x, y); else octx.moveTo(x, y); });
+                octx.closePath();
+            });
+            octx.fillStyle = o.color || F.OBSTACLE_GREY;
+            octx.globalAlpha = 0.85;
+            octx.fill();
+            octx.globalAlpha = 1;
+            octx.strokeStyle = 'rgba(15, 23, 42, 0.6)';
+            octx.lineWidth = 1.2 * k;
+            octx.stroke();
+        });
+    }
+
+    // ---- the obstacle tool: room 4's obstacles put (a click on room 4, the panel's shape), picked
+    // (a click on one), moved (dragged), sized and turned (its handles), changed in the panel and
+    // taken off (Delete, right click). None goes into a wall - the map's or the picture's - or another
+    // obstacle, or out of room 4: one moved or grown stops where it meets one (lib/model). ----
+    let obPicture: M.Room4Picture | null = null;      // the picture's walls, read once a change needs them
+    function obPic() {
+        if (!obPicture) obPicture = M.readRoom4Picture(ctx.getImageData(0, 0, W, H).data, W, H, true);
+        return obPicture;
+    }
+    // the map with the creator's obstacles as room 4's
+    function obMap() {
+        if (!Array.isArray(editor.room4Obstacles)) editor.room4Obstacles = [];
+        return editor.room4ObstacleMap(editor.room4Obstacles);
+    }
+    function cmOf(p: P) { return [originCm.x + p.x / pxPerCm, originCm.y + p.y / pxPerCm]; }
+    function pxOf(q: number[]): P { return { x: (q[0] - originCm.x) * pxPerCm, y: (q[1] - originCm.y) * pxPerCm }; }
+    function obCentreCm(o: World.Room4Obstacle) { return [originCm.x + o.fx * W / pxPerCm, originCm.y + o.fy * H / pxPerCm]; }
+    // the obstacle under p (the last put first), or -1
+    function obUnder(p: P) {
+        const list = room4Obstacles(), q = cmOf(p);
+        for (let i = list.length - 1; i >= 0; i--) {
+            if (obstacleRingsCm(list[i]).some(function (r) { return F.insideRing(q[0], q[1], r); })) return i;
+        }
+        return -1;
+    }
+    // the panel's shape: the picked one's (the one to put next takes it, as in the map editor)
+    function obSync() {
+        const list = room4Obstacles();
+        if (r4.obSel !== null && !list[r4.obSel]) r4.obSel = null;
+        const o = r4.obSel !== null ? list[r4.obSel] : null;
+        r4.obPicked = o ? Object.assign({}, o) : null;
+        r4.obstacleCount = list.length;
+        if (o) r4.obstacle = M.clampObstacle(Object.assign({}, o, { dx: 0, dy: 0 }));
+    }
+    function obPick(i: number | null) {
+        r4.obSel = i;
+        obSync();
+        drawOverlay();
+    }
+    // a step of the history taken before a change, kept once it changed something
+    function keepStep(before: Step) {
+        undo.push(before);
+        if (undo.length > 40) undo.shift();
+        redo = [];
+    }
+    function obChange(change: Partial<World.Room4Obstacle>) {
+        if (r4.obSel === null) return false;
+        const done = M.changeRoom4Obstacle(obMap(), r4.obSel, change, obPic());
+        obSync();
+        return done;
+    }
+    // one put with its centre at p, and picked; none where it does not fit
+    function obPut(p: P) {
+        if (!roomAt(p.x, p.y)) { obPick(null); return; }
+        const before = step();
+        const i = M.addRoom4Obstacle(obMap(), Object.assign({}, r4.obstacle, { fx: p.x / W, fy: p.y / H }), obPic());
+        if (i < 0) { scope.$applyAsync(function () { r4.message = 'obstacleBlocked'; r4.messageParams = {}; }); obPick(r4.obSel); return; }
+        keepStep(before);
+        scope.$applyAsync(function () { r4.message = ''; });
+        r4.obSel = i;
+        obSync();
+        commit();
+    }
+    function obRemove(i: number) {
+        const before = step();
+        room4Obstacles().splice(i, 1);
+        keepStep(before);
+        r4.obSel = null;
+        obSync();
+        commit();
+    }
+    // the picked one's handles (px): 'w' and 'd' on a box's or a pyramid's sides, 'size' on the
+    // corners round a drawn one or an icon, 'r' on a round or regular one's edge, 'rot' above it
+    // (none for a cylinder, a cone or a sphere), as on the map
+    function obHandles(): { kind: string; at: P }[] {
+        const o = r4.obSel !== null ? room4Obstacles()[r4.obSel] : null;
+        if (!o || r4.tool !== 'obstacle') return [];
+        const c = Math.cos(o.rot), sn = Math.sin(o.rot), mid = obCentreCm(o);
+        const at = function (u: number, v: number) { return pxOf([mid[0] + u * c + v * sn, mid[1] - u * sn + v * c]); };
+        const out: { kind: string; at: P }[] = [];
+        const hw = o.w / 2, hd = o.d / 2;
+        if (o.shape === 'box' || o.shape === 'pyramid') out.push({ kind: 'w', at: at(hw, 0) }, { kind: 'w', at: at(-hw, 0) }, { kind: 'd', at: at(0, hd) }, { kind: 'd', at: at(0, -hd) });
+        else if (o.shape === 'polygon' || o.shape === 'icon') [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(function (q) { out.push({ kind: 'size', at: at(q[0] * hw, q[1] * hd) }); });
+        else out.push({ kind: 'r', at: at(hw, 0) });
+        if (o.shape !== 'cylinder' && o.shape !== 'cone' && o.shape !== 'sphere') out.push({ kind: 'rot', at: at(0, -(F.obstacleRound(o.shape) ? hw : hd) - 2.5) });
+        return out;
+    }
+    function obHandleAt(p: P) {
+        let best: { kind: string; at: P } | null = null, bestD = 8 * k;
+        obHandles().forEach(function (h) { const d = Math.hypot(p.x - h.at.x, p.y - h.at.y); if (d <= bestD) { best = h; bestD = d; } });
+        return best as { kind: string; at: P } | null;
+    }
+    // a handle dragged to p: the change it makes from the shape it had when the drag began
+    function obHandleDrag(kind: string, from: World.Room4Obstacle, p: P, shift: boolean) {
+        const mid = obCentreCm(from), q = cmOf(p), X = q[0] - mid[0], Y = q[1] - mid[1];
+        const u = X * Math.cos(from.rot) - Y * Math.sin(from.rot), v = X * Math.sin(from.rot) + Y * Math.cos(from.rot);
+        let change: Partial<World.Room4Obstacle>;
+        if (kind === 'w') change = { w: 2 * Math.abs(u) };
+        else if (kind === 'd') change = { d: 2 * Math.abs(v) };
+        else if (kind === 'r') change = { w: 2 * Math.hypot(X, Y) };
+        else if (kind === 'size') {
+            const f = Math.hypot(X, Y) / Math.hypot(from.w / 2, from.d / 2);
+            change = { w: from.w * f, d: from.d * f };
+        } else {
+            let rot = Math.atan2(-X, -Y);
+            if (shift) rot = Math.round(rot / (Math.PI / 12)) * (Math.PI / 12);
+            change = { rot: rot };
+        }
+        return obChange(change);
+    }
+    // the outline of an obstacle (cm rings) as a path on the overlay
+    function obPath(rings: number[][][]) {
+        octx.beginPath();
+        rings.forEach(function (r) {
+            r.forEach(function (q, i) { const a = pxOf(q); if (i) octx.lineTo(a.x, a.y); else octx.moveTo(a.x, a.y); });
+            octx.closePath();
+        });
+    }
+    // the picked one, outlined, with its handles
+    function drawObstaclePick() {
+        const o = r4.obSel !== null ? room4Obstacles()[r4.obSel] : null;
+        if (!o || r4.tool !== 'obstacle') return;
+        octx.save();
+        obPath(obstacleRingsCm(o));
+        octx.strokeStyle = '#f59e0b';
+        octx.lineWidth = 2.5 * k;
+        octx.stroke();
+        obHandles().forEach(function (h) {
+            if (h.kind === 'rot') {
+                const mid = pxOf(obCentreCm(o));
+                const len = Math.hypot(h.at.x - mid.x, h.at.y - mid.y) || 1;
+                const back = 2.5 * pxPerCm;
+                octx.beginPath();
+                octx.moveTo(h.at.x + (mid.x - h.at.x) / len * back, h.at.y + (mid.y - h.at.y) / len * back);
+                octx.lineTo(h.at.x, h.at.y);
+                octx.strokeStyle = '#f59e0b';
+                octx.lineWidth = 1.5 * k;
+                octx.stroke();
+                octx.beginPath();
+                octx.arc(h.at.x, h.at.y, 5 * k, 0, Math.PI * 2);
+            } else {
+                octx.beginPath();
+                octx.rect(h.at.x - 4.5 * k, h.at.y - 4.5 * k, 9 * k, 9 * k);
+            }
+            octx.fillStyle = '#ffffff';
+            octx.fill();
+            octx.strokeStyle = '#d97706';
+            octx.lineWidth = 2 * k;
+            octx.stroke();
+        });
+        octx.restore();
+    }
+    // what a click would do: a handle or an obstacle under the pointer shown, else the one it would
+    // put there (outlined red where it does not fit)
+    function drawObstacleHover(p: P) {
+        const h = obHandleAt(p);
+        if (h) {
+            octx.beginPath();
+            octx.arc(h.at.x, h.at.y, 8 * k, 0, Math.PI * 2);
+            octx.strokeStyle = 'rgba(37, 99, 235, 0.8)';
+            octx.lineWidth = 2 * k;
+            octx.stroke();
+            return;
+        }
+        const i = obUnder(p);
+        if (i >= 0) {
+            if (i === r4.obSel) return;
+            obPath(obstacleRingsCm(room4Obstacles()[i]));
+            octx.strokeStyle = '#2563eb';
+            octx.lineWidth = 2 * k;
+            octx.stroke();
+            return;
+        }
+        if (!roomAt(p.x, p.y)) return;
+        const ghost = M.clampRoom4Obstacle(Object.assign({}, r4.obstacle, { fx: p.x / W, fy: p.y / H }));
+        const fits = !M.room4ObstacleClashes(obMap(), -1, ghost, obPic());
+        obPath(obstacleRingsCm(ghost));
+        octx.globalAlpha = 0.45;
+        octx.fillStyle = fits ? (ghost.color || F.OBSTACLE_GREY) : 'rgba(220, 38, 38, 0.5)';
+        octx.fill();
+        octx.globalAlpha = 1;
+        octx.setLineDash([4 * k, 3 * k]);
+        octx.strokeStyle = fits ? '#2563eb' : '#dc2626';
+        octx.lineWidth = 1.5 * k;
+        octx.stroke();
+        octx.setLineDash([]);
+    }
+    // the panel: a change to the picked one (a slider as it goes, one step once let go:
+    // obstacleDone) and to the one to put next
+    let obSliding: Step | null = null;
+    scope.r4api.obstacleSet = function (change: Partial<World.ObstacleShape>) {
+        r4.obstacle = M.clampObstacle(Object.assign({}, r4.obstacle, change, { dx: 0, dy: 0 }));
+        if (r4.obSel === null) return true;
+        if (!obSliding) obSliding = step();
+        const done = obChange(change);
+        drawOverlay();
+        return done;
+    };
+    scope.r4api.obstacleDone = function () {
+        if (!obSliding) return;
+        keepStep(obSliding);
+        obSliding = null;
+        commit();
+    };
+    scope.r4api.obstacleChange = function (change: Partial<World.ObstacleShape>) {
+        const done = scope.r4api.obstacleSet(change);
+        scope.r4api.obstacleDone();
+        r4.message = !done && change.shape ? 'obstacleBlocked' : '';
+        r4.messageParams = {};
+    };
+    scope.r4api.obstacleRandom = function () { scope.r4api.obstacleChange(Object.assign(M.randomObstacle(), { dx: 0, dy: 0 })); };
+    scope.r4api.obstacleRemove = function () { if (r4.obSel !== null) obRemove(r4.obSel); };
+    scope.r4api.obstacleDeselect = function () { obPick(null); };
+    // for the guide and the tests: one put at [fx, fy] (fractions of the picture), as a click there
+    scope.r4api.putObstacle = function (f: number[]) { obPut({ x: f[0] * W, y: f[1] * H }); };
+
     function drawOverlayParts() {
         octx.clearRect(0, 0, W, H);
         drawFloors();
+        drawObstacles();
+        drawObstaclePick();
         if (tokenCover) octx.drawImage(tokenCover, 0, 0);
         // grid: tiles, and quarter tiles while snapping
         octx.save();
@@ -1042,6 +1305,8 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
                     octx.moveTo(hover.x + d, hover.y - d); octx.lineTo(hover.x - d, hover.y + d);
                     octx.stroke();
                 }
+            } else if (r4.tool === 'obstacle') {
+                drawObstacleHover(hover);
             } else if (r4.snap && r4.tool !== 'pen') {
                 dot(snap(hover), '#2563eb');
             }
@@ -1671,147 +1936,6 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         });
     };
 
-    // ---- room templates -----------------------------------------------------------------
-    const roomTiles = Object.keys(inRoom).map(function (key) { return key.split(',').map(Number); });
-    function shuffle<T>(a: T[]) {
-        for (let i = a.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            const t = a[i]; a[i] = a[j]; a[j] = t;
-        }
-        return a;
-    }
-    function line(c: Ctx, x1: number, y1: number, x2: number, y2: number) { c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); }
-
-    const TEMPLATES: Record<string, (c: Ctx) => void> = {
-        // a maze on the tile grid: corridors one tile wide, a few extra openings for loops
-        maze: function (c: Ctx) {
-            const seen: Record<string, boolean> = {}, open: Record<string, boolean> = {};
-            const keyOf = function (x: number, y: number) { return x + ',' + y; };
-            const start = roomTiles[Math.floor(Math.random() * roomTiles.length)];
-            const stack = [start];
-            seen[keyOf(start[0], start[1])] = true;
-            while (stack.length) {
-                const cur = stack[stack.length - 1];
-                const next = shuffle([[1, 0], [-1, 0], [0, 1], [0, -1]]).map(function (d) { return [cur[0] + d[0], cur[1] + d[1]]; })
-                    .find(function (n) { return inRoom[keyOf(n[0], n[1])] && !seen[keyOf(n[0], n[1])]; });
-                if (!next) { stack.pop(); continue; }
-                seen[keyOf(next[0], next[1])] = true;
-                open[[keyOf(cur[0], cur[1]), keyOf(next[0], next[1])].sort().join('|')] = true;
-                stack.push(next);
-            }
-            roomTiles.forEach(function (t) {
-                [[1, 0], [0, 1]].forEach(function (d) {
-                    const n = [t[0] + d[0], t[1] + d[1]];
-                    if (!inRoom[keyOf(n[0], n[1])]) return;
-                    if (open[[keyOf(t[0], t[1]), keyOf(n[0], n[1])].sort().join('|')] || Math.random() < 0.12) return;
-                    if (d[0]) line(c, n[0] * block, t[1] * block, n[0] * block, (t[1] + 1) * block);
-                    else line(c, t[0] * block, n[1] * block, (t[0] + 1) * block, n[1] * block);
-                });
-            });
-        },
-        // round pillars on the inner tile corners
-        pillars: function (c: Ctx) {
-            const r = block * 0.12;
-            roomTiles.forEach(function (t) {
-                const x = t[0] + 1, y = t[1] + 1;
-                if (!inRoom[x + ',' + t[1]] || !inRoom[t[0] + ',' + y] || !inRoom[x + ',' + y]) return;
-                c.beginPath(); c.arc(x * block, y * block, r, 0, Math.PI * 2); c.fill();
-            });
-        },
-        // short diagonal walls in some tiles (room 4 asks for diagonal movement)
-        diagonal: function (c: Ctx) {
-            roomTiles.forEach(function (t) {
-                // fewer next to the room's edge, where a wall end leaves a pocket the robot cannot enter
-                const edge = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(function (d) { return !inRoom[(t[0] + d[0]) + ',' + (t[1] + d[1])]; });
-                if (Math.random() > (edge ? 0.2 : 0.5)) return;
-                const cx = (t[0] + 0.5) * block, cy = (t[1] + 0.5) * block, h = block * 0.3;
-                const s = Math.random() < 0.5 ? 1 : -1;
-                line(c, cx - h, cy - s * h, cx + h, cy + s * h);
-            });
-        },
-        // walls across the room, leaving a tile-wide gap at alternate ends
-        zigzag: function (c: Ctx) {
-            const cols = Math.round(W / block), rowsN = Math.round(H / block);
-            if (cols >= rowsN) {
-                for (let i = 1; i < cols; i++) {
-                    const top = i % 2 === 1;
-                    line(c, i * block, top ? block : 0, i * block, top ? H : H - block);
-                }
-            } else {
-                for (let j = 1; j < rowsN; j++) {
-                    const left = j % 2 === 1;
-                    line(c, left ? block : 0, j * block, left ? W : W - block, j * block);
-                }
-            }
-        },
-        // rings round the middle, each with a gap
-        rings: function (c: Ctx) {
-            const cx = W / 2, cy = H / 2;
-            const maxR = Math.min(W, H) / 2 - block * 0.35;
-            for (let r = block * 0.75; r <= maxR; r += block) {
-                const gapAng = (block * 1.1) / r;
-                const a0 = Math.random() * Math.PI * 2;
-                c.beginPath();
-                c.arc(cx, cy, r, a0 + gapAng, a0 + Math.PI * 2);
-                c.stroke();
-            }
-        },
-        // scattered obstacles: circles, boxes and triangles, at least a tile apart
-        obstacles: function (c: Ctx) {
-            const n = Math.max(2, Math.round(roomTiles.length * 0.35));
-            const placed: { x: number; y: number; size: number }[] = [];
-            for (let tries = 0; placed.length < n && tries < n * 60; tries++) {
-                const t = roomTiles[Math.floor(Math.random() * roomTiles.length)];
-                const x = (t[0] + 0.2 + Math.random() * 0.6) * block, y = (t[1] + 0.2 + Math.random() * 0.6) * block;
-                const size = block * (0.15 + Math.random() * 0.15);
-                // keep clear of the room's edge (its walls and entrances) and of each other
-                const m = size + block * 0.75;
-                if (![[m, 0], [-m, 0], [0, m], [0, -m], [m * 0.7, m * 0.7], [-m * 0.7, m * 0.7], [m * 0.7, -m * 0.7], [-m * 0.7, -m * 0.7]]
-                    .every(function (d) { const qx = x + d[0], qy = y + d[1]; return qx > 0 && qy > 0 && qx < W && qy < H && roomAt(qx, qy); })) continue;
-                if (placed.some(function (q) { return Math.hypot(q.x - x, q.y - y) < q.size + size + block; })) continue;
-                placed.push({ x: x, y: y, size: size });
-                const kind = Math.floor(Math.random() * 3);
-                c.beginPath();
-                if (kind === 0) c.arc(x, y, size, 0, Math.PI * 2);
-                else if (kind === 1) c.rect(x - size, y - size, size * 2, size * 2);
-                else { for (let i = 0; i < 3; i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / 3; if (i) c.lineTo(x + Math.cos(a) * size * 1.2, y + Math.sin(a) * size * 1.2); else c.moveTo(x + Math.cos(a) * size * 1.2, y + Math.sin(a) * size * 1.2); } c.closePath(); }
-                c.fill();
-            }
-        }
-    };
-
-    scope.r4api.applyTemplate = function (id, clearFirst) {
-        const make = TEMPLATES[id];
-        if (!make) return;
-        if (sel) dropSelection();
-        checkpoint();
-        const base = snapshot();
-        let ok = true, best: { blocked: number; image: ImageData } | null = null;
-        // random templates are tried again (up to 10 times) while they shut off a part of the
-        // room (over 12 % of its floor); otherwise the best try is kept
-        for (let attempt = 0; attempt < 10; attempt++) {
-            ctx.putImageData(base, 0, 0);
-            if (clearFirst) { ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H); }
-            ctx.save();
-            clipToRoom(ctx);
-            ctx.strokeStyle = '#000000';
-            ctx.fillStyle = '#000000';
-            ctx.lineWidth = wallWidth;
-            ctx.lineCap = 'round';
-            make(ctx);
-            ctx.restore();
-            mask();
-            pixels = snapshot().data;
-            try { computeReach(); } catch (err) { reachStats = null; }
-            ok = !reachStats || reachStats.blocked <= reachStats.room * 0.12;
-            if (ok) break;
-            if (!best || reachStats!.blocked < best.blocked) best = { blocked: reachStats!.blocked, image: snapshot() };
-        }
-        if (!ok && best) ctx.putImageData(best.image, 0, 0);
-        commit();
-        scope.$applyAsync(function () { r4.message = ok ? '' : 'templateBlocked'; r4.messageParams = {}; });
-    };
-
     // ---- curve (click points) and arc (drag the chord, then bend) ----------------------
     function finishPending(closed: boolean) {
         if (!pending) return;
@@ -1848,6 +1972,11 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         if (e.button === 2) {
             if (pending && pending.type === 'curve') { finishPending(false); return; }
             if (pending) { cancelPending(); return; }
+            if (r4.tool === 'obstacle') {
+                const oi = obUnder(p);
+                if (oi >= 0) obRemove(oi);
+                return;
+            }
             const hit = tokenAt(p);
             if (hit) {
                 checkpoint();
@@ -1872,7 +2001,18 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
             return;
         }
         if (tool === 'stamp') { placeStamp(p); return; }
-        if (tool === 'template') return;
+        if (tool === 'obstacle') {
+            const h = obHandleAt(p);
+            if (h) { drag = { obHandle: h.kind, from: Object.assign({}, room4Obstacles()[r4.obSel!]), before: step() }; drawOverlay(); return; }
+            const oi = obUnder(p);
+            if (oi >= 0) {
+                obPick(oi);
+                drag = { obMove: true, start: p, from: Object.assign({}, room4Obstacles()[oi]), before: step() };
+                return;
+            }
+            obPut(p);
+            return;
+        }
         if (tool === 'floor') {
             // the tile clicked gets the floor chosen, or loses it when it has it already (or with
             // none chosen); dragging gives the tiles passed the same
@@ -1936,7 +2076,11 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
     over.addEventListener('pointermove', function (e) {
         const p = pos(e);
         hover = p;
-        if (drag && drag.move) {
+        if (drag && drag.obMove) {
+            if (obChange({ fx: drag.from.fx + (p.x - drag.start.x) / W, fy: drag.from.fy + (p.y - drag.start.y) / H })) drag.changed = true;
+        } else if (drag && drag.obHandle) {
+            if (obHandleDrag(drag.obHandle, drag.from, p, e.shiftKey)) drag.changed = true;
+        } else if (drag && drag.move) {
             let dx = p.x - drag.start.x, dy = p.y - drag.start.y;
             if (r4.snap) { const st = block / 4; dx = Math.round(dx / st) * st; dy = Math.round(dy / st) * st; }
             sel!.fx = Math.round(drag.fx + dx);
@@ -1976,6 +2120,10 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         const d = drag;
         drag = null;
         if (d.move) { drawOverlay(); return; }
+        if (d.obMove || d.obHandle) {
+            if (d.changed) { keepStep(d.before); commit(); } else drawOverlay();
+            return;
+        }
         if (d.floor !== undefined) {
             // nothing changed: no step to undo
             if (!d.changed) { undo.pop(); drawOverlay(); return; }
@@ -2046,9 +2194,10 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         return false;
     }
     // a tool change drops a curve or arc in progress
-    scope.$watch('r4.tool', function () {
+    scope.$watch('r4.tool', function (tool) {
         if (pending) cancelPending();
         if (sel) dropSelection();
+        if (tool !== 'obstacle' && r4.obSel !== null) obPick(null);
     });
 
     // ---- actions for the dialog -------------------------------------------------------
@@ -2144,20 +2293,40 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         undo.push(step());
         restore(redo.pop()!);
     };
+    // the picture cleared, room 4's obstacles taken off with it (one step to undo); counted for the guide
     scope.r4api.clear = function () {
         checkpoint();
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, W, H);
+        editor.room4Obstacles = [];
+        r4.obSel = null;
+        obSync();
+        r4.clearCount = (r4.clearCount || 0) + 1;
         commit();
     };
+    // the picture as a PNG file, room 4's obstacles kept in it (its text chunk OBSTACLES_KEY)
+    const OBSTACLES_KEY = 'erebus-room4-obstacles';
     scope.r4api.download = function () {
+        const bytes = Png.withText(Png.dataUrlBytes(main.toDataURL('image/png')), OBSTACLES_KEY, JSON.stringify({ version: 1, obstacles: room4Obstacles() }));
+        const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: 'image/png' }));
         const link = document.createElement('a');
         link.download = 'custom_room_4_pic.png';
-        link.href = main.toDataURL('image/png');
+        link.href = url;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
     };
+    // the obstacles kept in a picture file (null: none kept; a picture from elsewhere)
+    function keptObstacles(bytes: Uint8Array): World.Room4Obstacle[] | null {
+        const text = Png.readText(bytes, OBSTACLES_KEY);
+        if (!text) return null;
+        try {
+            const v = JSON.parse(text);
+            const list = v && Array.isArray(v.obstacles) ? v.obstacles : null;
+            return list ? list.filter(function (o: any) { return o && typeof o === 'object' && isFinite(o.fx) && isFinite(o.fy) && typeof o.shape === 'string'; }) : null;
+        } catch (e) { return null; }
+    }
     function drawPicture(src: string, done: () => void) {
         const img = new Image();
         img.onload = function () {
@@ -2171,13 +2340,19 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         };
         img.src = src;
     }
+    // a picture file opened: its walls, stamps and floors drawn in; the obstacles it keeps (a picture
+    // saved here) in place of room 4's, those there are left as they are with a picture from elsewhere
     scope.r4api.importFile = function (file) {
         if (!file) return;
-        const url = URL.createObjectURL(file);
-        checkpoint();
-        drawPicture(url, function () {
-            URL.revokeObjectURL(url);
-            commit();
+        const read = file.arrayBuffer ? file.arrayBuffer() : Promise.resolve(new ArrayBuffer(0));
+        read.then(function (buf: ArrayBuffer) { return keptObstacles(new Uint8Array(buf)); }, function () { return null; }).then(function (kept: World.Room4Obstacle[] | null) {
+            const url = URL.createObjectURL(file);
+            checkpoint();
+            if (kept) { editor.room4Obstacles = kept; r4.obSel = null; obSync(); }
+            drawPicture(url, function () {
+                URL.revokeObjectURL(url);
+                commit();
+            });
         });
     };
 
@@ -2292,6 +2467,13 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         if (mod && k === '-') { e.preventDefault(); scope.r4api.zoom(-1); return; }
         if (mod && k === '0') { e.preventDefault(); scope.r4api.zoom(0); return; }
         if (mod || e.altKey) return;
+        // the picked obstacle: Delete takes it off, Esc lets it go
+        if (r4.tool === 'obstacle' && r4.obSel !== null && (e.key === 'Delete' || e.key === 'Backspace' || e.key === 'Escape')) {
+            e.preventDefault();
+            e.stopPropagation();
+            scope.$apply(function () { if (e.key === 'Escape') obPick(null); else obRemove(r4.obSel!); });
+            return;
+        }
         const tool = scope.tools.find(function (t) { return t.key.toLowerCase() === k; });
         if (tool) scope.$apply(function () { scope.setTool(tool.id); });
     }

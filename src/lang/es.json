@@ -124,7 +124,7 @@
             "line": "Arrastra para dibujar paredes. La línea gira con el puntero, así que un solo arrastre puede dibujar un zigzag (vuelve por donde viniste para deshacer un giro). Empieza con Shift pulsado para una sola línea recta. En la sala 1 se ajusta a 12 cm (bordes de baldosa) y en las salas 2 y 3 a 6 cm. No dentro de la sala 4.",
             "eraser": "Haz clic o arrastra sobre paredes, curvas y víctimas para quitarlas. Lejos de las paredes quita el suelo de una baldosa (agujero, pantano, punto de control); un clic quita la salida. Las paredes exteriores se quedan. Un obstáculo también se quita con un clic.",
             "floor": "Haz clic en una baldosa para cambiar su suelo.",
-            "obstacle": "Haz clic en una baldosa para poner un obstáculo de la forma y el color elegidos en el panel (salas 1-3, uno por baldosa; regla {{rule_obstacles}}). Haz clic en uno para elegirlo: sus asas en el mapa cambian su tamaño y su giro (Mayús: de 15° en 15°), el panel su altura, color y forma; arrástralo para moverlo, Supr lo quita. Las esquinas de un contorno se marcan con clics en el mapa; un icono se busca por su nombre.",
+            "obstacle": "Haz clic en una baldosa para poner un obstáculo de la forma y el color elegidos en el panel (salas 1-3: uno por baldosa, con su centro en ella; regla {{rule_obstacles}}). En la sala 4 van donde hagas clic, tantos como quieras. Haz clic en uno para elegirlo: sus asas en el mapa cambian su tamaño y su giro (Mayús: de 15° en 15°), el panel su altura, color y forma; arrástralo para moverlo, Supr lo quita. Las esquinas de un contorno se marcan con clics en el mapa; un icono se busca por su nombre.",
             "victim": "Haz clic cerca de una pared: la víctima se coloca en la pared donde haces clic. Sala 1: en un lado de la baldosa (una por baldosa); salas 2 y 3: en una cara de las paredes de 6 cm (4 cuartos × 4 caras); una curva tiene dos sitios (dentro y fuera). Arrastra una víctima colocada para moverla a lo largo de su pared (se detiene antes del extremo de la pared y de otras víctimas). Haz clic en una colocada para seleccionarla: su tipo, anillos y giro se cambian entonces en el panel, o se quita.",
             "curve": "Señala un cuarto de baldosa en la sala 3 para ver sus cuatro curvas; la más cercana (azul) se coloca con un clic. Haz clic de nuevo en la misma para quitarla.",
             "select": "Selecciona paredes, salas, suelos y víctimas a la vez para moverlos, copiarlos, pegarlos o borrarlos. Haz clic en una víctima o un obstáculo para abrir su herramienta con él elegido; haz clic en una pared o una curva para elegirla y Supr para quitarla.",
@@ -215,7 +215,7 @@
         "draw": "Dibujar su contorno",
         "drawDone": "Cerrar y poner",
         "drawHow": "Haz clic en sus esquinas en el mapa; haz clic en la primera o pulsa Enter para cerrarlo, Esc para parar. El centro del rectángulo que lo rodea va en una baldosa, lejos de sus bordes.",
-        "onTile": "Su centro queda en su baldosa, lejos de sus bordes (regla {{rule_obstacles}}). Puede apoyarse en una pared, no atravesarla: al moverlo o agrandarlo, se detiene donde toca una. Arrástralo en el mapa para moverlo. Sus asas en el mapa cambian su tamaño y su giro (Mayús: de 15° en 15°).",
+        "onTile": "En las salas 1-3 su centro queda en su baldosa, lejos de sus bordes (regla {{rule_obstacles}}). En la sala 4 su centro puede estar en cualquier sitio, y puede haber tantos como quieras. Puede apoyarse en una pared, no atravesarla: al moverlo o agrandarlo se detiene donde toca una. Arrástralo en el mapa para moverlo. Sus asas en el mapa cambian su tamaño y su giro (Mayús: de 15° en 15°).",
         "colorNote": "Cualquier color (regla {{rule_obstacles}}). Uno parecido al de un suelo (plata, negro, marrón, cian), un pasaje o una víctima es más difícil de distinguir para el robot.",
         "moreColors": "Otros colores"
     },
@@ -296,8 +296,9 @@
             "noStart": "No hay baldosa de salida",
             "startNotRoom1": "La baldosa de salida no está en la sala 1. La salida es una de las baldosas de la sala 1 (regla {{rule_start}})",
             "tileTwoKinds": "Algunas baldosas son dos o más de agujero, pantano, punto de control, obstáculo, salida y pasaje ({{count}}). Una baldosa es solo una de esas cosas (regla {{rule_oneKind}})",
-            "obstacleRoom": "Algunos obstáculos están en baldosas de la sala 4 o fuera del mapa ({{count}}). Los de la sala 4 se dibujan en su imagen",
+            "obstacleRoom": "Hay obstáculos de baldosa en baldosas de la sala 4 o fuera del mapa ({{count}}). Vuelve a poner los obstáculos de la sala 4 haciendo clic dentro de ella",
             "obstacleOverlap": "Algunos obstáculos se meten en una pared o en otro obstáculo ({{count}}). Un obstáculo puede apoyarse en una pared, no atravesarla",
+            "room4ObstacleOverlap": "Algunos obstáculos de la sala 4 atraviesan una pared u otro obstáculo, tapan una víctima, o salen de la sala 4 ({{count}}). Pueden apoyarse en una pared, no atravesarla",
             "passageOpenSides": "Algunos pasajes están abiertos por más de dos lados ({{count}}). Un pasaje tiene paredes en dos lados: una entrada, una salida (regla {{rule_passageWalls}})",
             "victimNoWall": "Algunas víctimas han perdido su pared ({{count}})",
             "victimInPassage": "Algunas víctimas están en un pasaje entre áreas ({{count}}): en los pasajes no hay víctimas (regla {{rule_passageTokens}})",
@@ -370,7 +371,7 @@
         "regionPick": "Arrastra para seleccionar",
         "regionDrag": "Arrastra para mover, Alt+arrastrar para copiar. Las flechas mueven una baldosa; también Ctrl+C / X / V y Supr",
         "select_victim": "Haz clic para abrir la herramienta de víctimas con esta víctima elegida (arrástrala a lo largo de su pared)",
-        "select_obstacle": "Haz clic para abrir la herramienta de suelo con este obstáculo elegido (arrástralo en su baldosa)",
+        "select_obstacle": "Haz clic para pasar a la herramienta de obstáculos con este obstáculo elegido (arrastra para moverlo)",
         "select_curve": "Haz clic para elegir esta curva",
         "select_wall": "Haz clic para elegir esta pared (un tramo recto)",
         "regionCopied": "Copiado. Ctrl+V lo pega en la baldosa bajo el puntero",
@@ -409,8 +410,9 @@
         "floor_onPassage": "{{floor}} no puede ir en una baldosa de pasaje: una baldosa es solo uno de agujero, pantano, punto de control, obstáculo, salida y pasaje (regla {{rule_oneKind}})",
         "floor_onObstacle": "{{floor}} no puede ir en una baldosa con obstáculo: una baldosa es solo uno de agujero, pantano, punto de control, obstáculo, salida y pasaje (regla {{rule_oneKind}})",
         "floor_obstacleOn": "Haz clic para poner aquí un obstáculo ({{shape}}) como está en el panel izquierdo (regla {{rule_obstacles}})",
-        "floor_obstacleSelect": "Haz clic para elegir este obstáculo (cámbialo en el panel izquierdo); arrastra para moverlo en su baldosa",
-        "floor_obstacleRoom4": "Los obstáculos de la sala 4 se dibujan en su imagen: abre el creador de la sala 4",
+        "floor_obstacleSelect": "Haz clic para elegir este obstáculo y cambiarlo en el panel de la izquierda. Arrástralo para moverlo",
+        "floor_obstacleRoom4": "Una sala 4 predefinida no admite obstáculos (cambia la sala 4 a personalizada para ponerlos)",
+        "floor_obstacleOnRoom4": "Haz clic para poner un obstáculo ({{shape}}) como el panel de la izquierda donde hagas clic (en la sala 4, en cualquier sitio y tantos como quieras)",
         "floor_obstacleTaken": "Un obstáculo no puede ir en la salida, un pasaje o un agujero, pantano o punto de control: una baldosa es solo una de esas cosas (regla {{rule_oneKind}})",
         "floor_clear": "Haz clic para quitar el suelo (agujero, pantano, punto de control)",
         "floor_off": "Haz clic para quitar: {{floor}}",
@@ -624,7 +626,7 @@
                 },
                 "obstacle": {
                     "title": "Poner un obstáculo",
-                    "body": "La herramienta de obstáculos (O) pone obstáculos en baldosas de las salas 1-3, uno por baldosa. Elige su forma (caja, cilindro, cono, esfera, pirámide, prisma o pirámide regular, un contorno dibujado en el mapa, un icono) y su color en el panel y haz clic en una baldosa.\nUn obstáculo no va en la salida, un pasaje, un agujero, un pantano ni un punto de control. El robot tiene que rodearlo, así que ponlo donde no cierre un camino: las comprobaciones te avisan si lo hace.",
+                    "body": "La herramienta de obstáculos (O) pone obstáculos en baldosas de las salas 1-3, uno por baldosa. Elige su forma (caja, cilindro, cono, esfera, pirámide, prisma o pirámide regular, un contorno dibujado en el mapa, un icono) y su color en el panel y haz clic en una baldosa. En la sala 4 van donde hagas clic dentro de ella, tantos como quieras.\nUn obstáculo no va en la salida, un pasaje, un agujero, un pantano ni un punto de control. El robot tiene que rodearlo, así que ponlo donde no cierre un camino: las comprobaciones te avisan si lo hace.",
                     "task": "Con la herramienta de obstáculos, haz clic en la baldosa del marco verde para poner un obstáculo"
                 },
                 "obstacleEdit": {
@@ -729,13 +731,10 @@
                     "body": "El borrador borra paredes y víctimas por donde arrastras. Su tamaño (S, M, L) está en los ajustes.\nBorrar todo (la papelera) en la barra superior quita toda la imagen.",
                     "task": "Con el borrador, borra la línea de arriba (naranja discontinua)"
                 },
-                "r4template": {
-                    "title": "Plantilla (T)",
-                    "body": "Elige una plantilla (laberinto, columnas, diagonales, zigzag, anillos, obstáculos) y pulsa Colocar: se ponen paredes por toda la sala 4, dejando lo menos posible a donde el robot no puede llegar.\nCon Borrar primero las paredes y víctimas activado, lo dibujado se va antes: una forma de quitar también las formas de práctica.",
-                    "task": "Elige una plantilla (p. ej. Columnas), activa Borrar primero las paredes y víctimas y pulsa Colocar",
-                    "tasks": {
-                        "clearOff": "Borrar primero las paredes y víctimas está desactivado. Actívalo y luego pulsa Colocar (quita las formas de práctica)"
-                    }
+                "r4clear": {
+                    "title": "Borrar todo",
+                    "body": "La papelera de la barra superior (Borrar todo) borra toda la imagen y quita también los obstáculos de la sala 4. Deshacer (Ctrl+Z) la recupera.\nQuita las formas de práctica y después pon víctimas y obstáculos.",
+                    "task": "Pulsa la papelera de la barra superior para quitar las formas de práctica"
                 },
                 "r4stamp": {
                     "title": "Poner víctimas",
@@ -758,19 +757,24 @@
                         "target": "El borrador está en Todo. Cámbialo a Solo víctimas"
                     }
                 },
+                "r4obstacle": {
+                    "title": "Poner un obstáculo",
+                    "body": "La herramienta de obstáculos (K) pone un obstáculo donde haces clic en la sala 4. La sala 4 no sigue las baldosas, así que puedes poner todos los que quepan. Elige la forma, la altura y el color en el panel.\nHaz clic en uno para elegirlo, arrástralo para moverlo y arrastra sus asas para cambiar su tamaño y su giro. Se detiene donde toca una pared u otro obstáculo. El robot no puede entrar en un obstáculo, y las imágenes guardadas aquí los conservan.",
+                    "task": "Con la herramienta de obstáculos, haz clic en la sala 4 para poner un obstáculo"
+                },
                 "r4reach": {
                     "title": "Crea un sitio inalcanzable y míralo",
                     "body": "Con Inalcanzable activado, donde el robot (radio 3,7 cm) no puede llegar se muestra con rayas rojas: un sitio cerrado por paredes, o un hueco más estrecho que el robot.\nUn sitio inalcanzable está bien en sí mismo (el interior de un obstáculo debe serlo). Pero el robot no puede encontrar una víctima puesta ahí, así que usa las rayas al poner víctimas. Las víctimas a las que el robot no puede acercarse, o que están fuera de su pared, llevan un anillo rojo discontinuo, y la línea de abajo las cuenta.\nEntradas / CP muestra las entradas y los puntos de control. Prueba a crear un sitio inalcanzable.",
                     "task": "Con la herramienta de rectángulo, dibuja un cuadrado pequeño lejos de las paredes y mira cómo su interior se vuelve de rayas rojas (Hazlo por mí dibuja un cuadrado pequeño con el lápiz)",
                     "tasks": {
                         "off": "No hay salida, así que no se puede calcular a dónde no puede llegar el robot. Pon primero la salida en el mapa (este paso se puede saltar)",
-                        "allBlocked": "El robot no puede entrar en casi nada de la sala 4: algo cierra su entrada. Borra la pared que está delante, o vuelve a poner una plantilla con Borrar primero activado",
+                        "allBlocked": "El robot no puede entrar en casi nada de la sala 4: algo cierra su entrada. Borra la pared que está delante",
                         "victimsIn": "{{n}} de las víctimas puestas hasta ahora están donde el robot no llega: las comprobaciones detendrían la exportación por ellas. Deshaz (Ctrl+Z) y dibuja el cuadrado en otro sitio, o quítalas con el Borrador en «Solo víctimas» («Hazlo por mí» las quita)"
                     }
                 },
                 "r4file": {
                     "title": "Guardar y abrir como imagen",
-                    "body": "Los botones a la derecha de la barra superior guardan la imagen como PNG, y abren un PNG o JPEG.\nLos tipos de las víctimas se guardan en la imagen, así que una imagen guardada se abre tal como estaba: útil para la misma sala 4 en otro mapa."
+                    "body": "Los botones a la derecha de la barra superior guardan la imagen como PNG, y abren un PNG o JPEG.\nLos tipos de las víctimas se guardan en la imagen, así que una imagen guardada se abre tal como estaba: útil para la misma sala 4 en otro mapa.\nLos obstáculos de la sala 4 también se guardan en la imagen: una imagen guardada aquí los recupera al abrirla."
                 },
                 "r4ok": {
                     "title": "Volver al mapa",
@@ -905,7 +909,7 @@
                 },
                 "obstacle": {
                     "title": "Obstáculo (O): cualquier forma, tamaño y color",
-                    "body": "Pon obstáculos en baldosas de las salas 1-3, uno por baldosa, con su centro en la baldosa (regla {{rule_obstacles}}): cualquier forma (caja, cilindro, cono, esfera, pirámide, prisma o pirámide regular, un contorno dibujado en el mapa, un icono) y color, elegidos en el panel.\nUno elegido tiene asas: cuadradas para su tamaño, una redonda arriba para su giro (Mayús: de 15° en 15°). Su altura está en el panel. Puede apoyarse en una pared, no atravesarla.\nEl robot tiene que rodearlo: las comprobaciones muestran adónde no llega."
+                    "body": "En las salas 1-3 pon obstáculos en baldosas, uno por baldosa, con su centro en la baldosa (regla {{rule_obstacles}}). La sala 4 no está hecha de baldosas: allí van donde hagas clic, tantos como quieras. Cualquier forma (caja, cilindro, cono, esfera, pirámide, prisma o pirámide regular, un contorno dibujado en el mapa, un icono) y color, elegidos en el panel.\nUno elegido tiene asas: cuadradas para su tamaño, una redonda arriba para su giro (Mayús: de 15° en 15°). Su altura está en el panel. Puede apoyarse en una pared, no atravesarla.\nEl robot tiene que rodearlo: las comprobaciones muestran adónde no llega."
                 },
                 "victim": {
                     "title": "Víctima (V): víctimas y objetivos cognitivos",
@@ -1019,24 +1023,6 @@
         },
         "randomGo": "Colocar {{n}}",
         "randomNote2": "A lo largo de paredes a las que el robot puede acercarse a media baldosa, separadas al menos media baldosa.",
-        "templates": {
-            "maze": "Laberinto",
-            "pillars": "Columnas",
-            "diagonal": "Diagonales",
-            "zigzag": "Zigzag",
-            "rings": "Anillos",
-            "obstacles": "Obstáculos"
-        },
-        "templateHints": {
-            "maze": "Un laberinto de pasillos de una baldosa (con algunos atajos).",
-            "pillars": "Columnas redondas en las esquinas de las baldosas.",
-            "diagonal": "Paredes diagonales cortas dentro de las baldosas.",
-            "zigzag": "Un solo camino que gira en los extremos.",
-            "rings": "Anillos alrededor del centro, cada uno con un hueco.",
-            "obstacles": "Círculos, cajas y triángulos dispersos."
-        },
-        "templateClear": "Borrar primero las paredes y víctimas",
-        "templateApply": "Colocar",
         "showGuides": "Mostrar entradas y puntos de control",
         "missingCheckpoints": "{{count}} baldosa(s) justo dentro de un pasaje no son puntos de control (regla {{rule_room4Checkpoint}}). Ponlos en el editor principal (\"CP?\" discontinuo).",
         "noEntrance": "La sala 4 no tiene entrada. Abre una pared hacia un pasaje exterior en el editor principal.",
@@ -1088,6 +1074,7 @@
             "pen": "Lápiz",
             "line": "Línea",
             "rect": "Rectángulo",
+            "obstacle": "Obstáculo",
             "stamp": "Víctima",
             "floor": "Suelo",
             "erase": "Borrador",
@@ -1096,8 +1083,7 @@
             "ellipse": "Círculo / elipse",
             "polygon": "Polígono",
             "shape": "Forma",
-            "select": "Seleccionar",
-            "template": "Plantilla"
+            "select": "Seleccionar"
         },
         "undo": "Deshacer",
         "redo": "Rehacer",
@@ -1129,7 +1115,7 @@
             "polygon": "Arrastra desde el centro para dibujar un polígono regular. Gira en pasos de 15° (libre con Shift).",
             "shape": "Elige un icono o una imagen, y luego arrastra en el lienzo para darle tamaño (mantiene sus proporciones; libre con Shift).",
             "select": "Arrastra para seleccionar una caja, y luego arrastra dentro de ella para moverla (mantén Alt para copiar). Las flechas la empujan, [ ] la giran, Intro o un clic fuera la suelta, Supr la elimina.",
-            "template": "Elige una plantilla y pulsa Colocar. Las disposiciones que dejan fuera al robot se vuelven a generar automáticamente."
+            "obstacle": "Haz clic en la sala 4 para poner allí un obstáculo con la forma y el color del panel (todos los que quepan). Haz clic en uno para elegirlo: arrástralo para moverlo y arrastra sus asas para cambiar su tamaño y su giro (Mayús: de 15° en 15°). Supr o un clic derecho lo quita; Esc lo suelta. No puede atravesar paredes ni otros obstáculos."
         },
         "messages": {
             "outside": "No puede ir fuera de la sala 4.",
@@ -1139,9 +1125,9 @@
             "imageFailed": "No se pudo cargar la imagen.",
             "randomDone": "Se colocaron {{placed}}.",
             "randomShort": "Solo se colocaron {{placed}} de {{asked}} (no hay suficientes paredes donde ponerlas).",
-            "templateBlocked": "Todas las disposiciones probadas dejan parte de la sala inalcanzable. Revisa las partes en rojo claro.",
             "wallEnd": "No en el extremo de una pared. Haz clic en una cara de pared al menos tan ancha como una víctima (2 cm).",
-            "unreachable": "El robot no puede acercarse aquí: no hay víctimas donde el robot no puede ir (regla {{rule_reach}})."
+            "unreachable": "El robot no puede acercarse aquí: no hay víctimas donde el robot no puede ir (regla {{rule_reach}}).",
+            "obstacleBlocked": "No cabe aquí: atravesaría una pared u otro obstáculo, taparía una víctima, o se saldría de la sala 4."
         },
         "tokens": "Marcas de pared: {{count}}",
         "farFromWall": "{{count}} lejos de cualquier pared (círculo rojo discontinuo)",

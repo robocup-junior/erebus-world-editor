@@ -36,10 +36,12 @@ function makeEnv(year = R.LATEST_YEAR) {
           drawShape: drew, drawIcon: drew, erasePen: drew,
           selectBox() { r4.hasSelection = true; },
           selection(a: string) { if (a === 'drop' && r4.hasSelection) { r4.hasSelection = false; drew(); } },
-          applyTemplate(id: string, clear: boolean) { drew(); if (clear) r4.tokenCount = 0; },
           randomStamps(n: number) { r4.tokenCount += n; drew(); },
           selectToken() { r4.sel = {}; },
           eraseToken() { if (r4.tokenCount) { r4.tokenCount--; drew(); } },
+          clear() { r4.clearCount = (r4.clearCount || 0) + 1; r4.reachBlocked = 0; r4.tokenCount = 0; drew(); },
+          obstacleSet() { /* the shape to put next */ },
+          putObstacle() { r4.obstacleCount = (r4.obstacleCount || 0) + 1; drew(); },
           eraseUnreachable() { r4.tokenCount -= r4.unreachCount || 0; r4.unreachCount = 0; drew(); }
         },
         closeRoom4() { env.map.room4CanvasSave = 'data:image/png;base64,AAAA'; env.creator = null; }

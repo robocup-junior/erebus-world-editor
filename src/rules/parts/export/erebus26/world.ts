@@ -4,7 +4,7 @@
 // (lib/field: recalculate). Erebus 27 (../erebus27) writes the same file with what it adds (Flavor).
 import type { MapData, Tile, Pt } from '../../../../lib/types';
 import type { WorldHooks } from '../../../types';
-import { noRandom, getRandomAngle, checkRoomNumber, obstacleRingsLocal, obstaclePointed, linearColor } from '../../../../lib/field';
+import { noRandom, getRandomAngle, checkRoomNumber, obstacleRingsLocal, obstaclePointed, linearColor, room4Obstacles, room4ObstacleCentre } from '../../../../lib/field';
 import { triangulate } from '../../../../lib/outline';
 import type { ObstacleShape } from '../../../../lib/field';
 import { randomCognitiveCode } from '../../tokens/cognitive';
@@ -1409,6 +1409,19 @@ function createWorld(map: MapData, hooks?: Partial<WorldHooks>, flavor: Flavor =
     // area 4 positioning
     if (map.area4Room.value == "Custom Room") {
         allTiles = allTiles + hooks!.createArea4Solid!();
+        // its obstacles, put anywhere in it in this editor: as a tile's are, at their centres (cm; a
+        // tile's centre, 6 cm into it, is at its tile's place)
+        room4Obstacles(map).forEach(function (o) {
+            const c = room4ObstacleCentre(map, o);
+            if (!c) return;
+            const g = obstacleGeometry(o)
+            allObstacles += obstaclePart({
+                id: obstacleId, geometry: g.geometry,
+                x: orgRound((c[0] - 6) / 100 * tileScale[0] / 0.4 + startX, 0.00001), y: orgRound(g.y, 0.00001), z: orgRound((c[1] - 6) / 100 * tileScale[2] / 0.4 + startZ, 0.00001),
+                rot: o.rot, color: o.color
+            })
+            obstacleId = obstacleId + 1
+        })
         map.room4VicTypes = [];
         let scoringElements = hooks!.createArea4Victims!(humanId, hazardId, fakeHumanId);
         allHumans += scoringElements[0];

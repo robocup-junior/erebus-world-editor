@@ -124,7 +124,7 @@
             "line": "Ziehen, um Wände zu zeichnen. Die Linie folgt dem Zeiger, sodass ein Zug ein Zickzack zeichnen kann (geh den Weg zurück, um eine Ecke rückgängig zu machen). Beginne mit gedrückter Umschalttaste für eine einzige gerade Linie. Raum 1 rastet auf 12 cm (Kachelkanten) ein, Räume 2 und 3 auf 6 cm. Nicht in Raum 4.",
             "eraser": "Klicke oder ziehe über Wände, Kurven und Opfer, um sie zu entfernen. Abseits von Wänden entfernt er den Boden einer Kachel (Loch, Sumpf, Checkpoint); ein Klick entfernt den Start. Die Außenwände bleiben. Auch ein Hindernis geht mit einem Klick weg.",
             "floor": "Klicke auf eine Kachel, um ihren Boden festzulegen.",
-            "obstacle": "Klicke eine Kachel, um ein Hindernis der im Bereich gewählten Form und Farbe zu setzen (Raum 1–3, eines pro Kachel; Regel {{rule_obstacles}}). Klicke eines, um es zu wählen: seine Griffe auf der Karte ändern Größe und Drehung (Umschalt: 15°-Schritte), der Bereich Höhe, Farbe und Form; ziehe es zum Verschieben, Entf entfernt es. Die Ecken eines gezeichneten Umrisses klickst du auf der Karte; ein Symbol suchst du per Name.",
+            "obstacle": "Klicke eine Kachel, um ein Hindernis der im Bereich gewählten Form und Farbe zu setzen (Raum 1–3: eines pro Kachel, die Mitte darauf; Regel {{rule_obstacles}}). In Raum 4 kommen beliebig viele dorthin, wo du klickst. Klicke eines, um es zu wählen: seine Griffe auf der Karte ändern Größe und Drehung (Umschalt: 15°-Schritte), der Bereich Höhe, Farbe und Form; ziehe es zum Verschieben, Entf entfernt es. Die Ecken eines gezeichneten Umrisses klickst du auf der Karte; ein Symbol suchst du per Name.",
             "victim": "Klicke nahe einer Wand: Das Opfer kommt an die Wand, wo du klickst. Raum 1: an eine Kachelseite (eins pro Kachel); Räume 2 und 3: an eine Fläche der 6-cm-Wände (4 Viertel × 4 Flächen); eine Kurve hat zwei Plätze (innen und außen). Ziehe ein gesetztes Opfer, um es entlang seiner Wand zu verschieben (es stoppt vor dem Wandende und vor anderen Opfern). Klicke ein gesetztes an, um es auszuwählen: Art, Ringe und Drehung änderst du dann im Bereich, oder du entfernst es.",
             "curve": "Zeige auf eine Viertelkachel in Raum 3, um ihre vier Kurven zu sehen; die nächste (blau) wird mit einem Klick gesetzt. Klicke dieselbe erneut, um sie zu entfernen.",
             "select": "Wähle Wände, Räume, Böden und Opfer zusammen aus, um sie zu verschieben, zu kopieren, einzufügen oder zu leeren. Klicke ein Opfer oder ein Hindernis, um sein Werkzeug mit ihm gewählt zu öffnen; klicke eine Wand oder eine Kurve, um sie zu wählen, und Entf, um sie zu entfernen.",
@@ -215,7 +215,7 @@
         "draw": "Umriss zeichnen",
         "drawDone": "Schließen und setzen",
         "drawHow": "Klicke seine Ecken auf der Karte; klicke die erste oder drücke Enter zum Schließen, Esc zum Abbrechen. Die Mitte des umgebenden Rechtecks liegt auf einer Kachel, weg von deren Rändern.",
-        "onTile": "Seine Mitte bleibt auf seiner Kachel, weg von deren Rändern (Regel {{rule_obstacles}}). Es darf an einer Wand stehen, aber nicht durch sie hindurch: verschoben oder vergrößert, hält es an, wo es eine trifft. Ziehe es auf der Karte, um es zu verschieben. Seine Griffe auf der Karte ändern Größe und Drehung (Umschalt: 15°-Schritte).",
+        "onTile": "In Raum 1–3 bleibt seine Mitte auf seiner Kachel, abseits ihrer Ränder (Regel {{rule_obstacles}}). In Raum 4 darf die Mitte überall sein, und es dürfen beliebig viele sein. Es darf an einer Wand stehen, aber nicht hindurchgehen: verschoben oder vergrößert, hält es an, wo es auf eine trifft. Ziehe es auf der Karte, um es zu verschieben. Seine Griffe auf der Karte ändern Größe und Drehung (Umschalt: 15°-Schritte).",
         "colorNote": "Jede Farbe (Regel {{rule_obstacles}}). Eine, die der eines Bodens (Silber, Schwarz, Braun, Cyan), eines Durchgangs oder eines Opfers ähnelt, kann der Roboter schwerer unterscheiden.",
         "moreColors": "Andere Farben"
     },
@@ -296,8 +296,9 @@
             "noStart": "Es gibt keine Startkachel",
             "startNotRoom1": "Die Startkachel liegt nicht in Raum 1. Der Start ist eine der Kacheln von Raum 1 (Regel {{rule_start}})",
             "tileTwoKinds": "Einige Kacheln sind zwei oder mehr von Loch, Sumpf, Checkpoint, Hindernis, Start und Durchgang ({{count}}). Eine Kachel ist nur eines davon (Regel {{rule_oneKind}})",
-            "obstacleRoom": "Einige Hindernisse liegen auf Kacheln von Raum 4 oder außerhalb der Karte ({{count}}). Die von Raum 4 werden in seinem Bild gezeichnet",
+            "obstacleRoom": "Es gibt Kachel-Hindernisse auf Kacheln von Raum 4 oder außerhalb der Karte ({{count}}). Setze die Hindernisse von Raum 4 neu, indem du in Raum 4 klickst",
             "obstacleOverlap": "Einige Hindernisse gehen in eine Wand oder ein anderes Hindernis ({{count}}). Ein Hindernis darf an einer Wand stehen, aber nicht durch sie hindurch",
+            "room4ObstacleOverlap": "Einige Hindernisse von Raum 4 gehen durch eine Wand oder ein anderes Hindernis, stehen auf einem Opfer oder ragen aus Raum 4 heraus ({{count}}). Sie dürfen an einer Wand stehen, aber nicht hindurchgehen",
             "passageOpenSides": "Einige Durchgänge sind an mehr als zwei Seiten offen ({{count}}). Ein Durchgang hat an zwei Seiten Wände: ein Eingang, ein Ausgang (Regel {{rule_passageWalls}})",
             "victimNoWall": "Einige Opfer haben ihre Wand verloren ({{count}})",
             "victimInPassage": "Einige Opfer liegen in einem Durchgang zwischen Bereichen ({{count}}): In Durchgängen gibt es keine (Regel {{rule_passageTokens}})",
@@ -370,7 +371,7 @@
         "regionPick": "Ziehen zum Auswählen",
         "regionDrag": "Ziehen zum Verschieben, Alt+Ziehen zum Kopieren. Pfeiltasten verschieben um eine Kachel; auch Strg+C / X / V und Entf funktionieren",
         "select_victim": "Klicke, um das Opfer-Werkzeug mit diesem Opfer gewählt zu öffnen (ziehe es an seiner Wand entlang)",
-        "select_obstacle": "Klicke, um das Boden-Werkzeug mit diesem Hindernis gewählt zu öffnen (ziehe es auf seiner Kachel)",
+        "select_obstacle": "Klicke, um mit diesem Hindernis gewählt zum Hindernis-Werkzeug zu wechseln (ziehen zum Verschieben)",
         "select_curve": "Klicke, um diese Kurve zu wählen",
         "select_wall": "Klicke, um diese Wand (ein gerades Stück) zu wählen",
         "regionCopied": "Kopiert. Strg+V fügt an der Kachel unter dem Zeiger ein",
@@ -409,8 +410,9 @@
         "floor_onPassage": "{{floor}} kann nicht auf eine Durchgangskachel: eine Kachel ist nur eines von Loch, Sumpf, Checkpoint, Hindernis, Start und Durchgang (Regel {{rule_oneKind}})",
         "floor_onObstacle": "{{floor}} kann nicht auf eine Kachel mit Hindernis: eine Kachel ist nur eines von Loch, Sumpf, Checkpoint, Hindernis, Start und Durchgang (Regel {{rule_oneKind}})",
         "floor_obstacleOn": "Klicke, um hier ein Hindernis ({{shape}}) wie im linken Bereich eingestellt zu setzen (Regel {{rule_obstacles}})",
-        "floor_obstacleSelect": "Klicke, um dieses Hindernis zu wählen (im linken Bereich ändern); ziehe, um es auf seiner Kachel zu verschieben",
-        "floor_obstacleRoom4": "Hindernisse in Raum 4 werden in seinem Bild gezeichnet: öffne den Raum-4-Editor",
+        "floor_obstacleSelect": "Klicke, um dieses Hindernis zu wählen und es im Bereich links zu ändern. Ziehe es zum Verschieben",
+        "floor_obstacleRoom4": "Eine Raum-4-Vorlage nimmt keine Hindernisse (stelle Raum 4 auf eigenen um, um sie zu setzen)",
+        "floor_obstacleOnRoom4": "Klicke, um ein Hindernis ({{shape}}) wie im Bereich links eingestellt dort zu setzen, wo du klickst (in Raum 4 überall und beliebig viele)",
         "floor_obstacleTaken": "Ein Hindernis kann nicht auf den Start, einen Durchgang oder ein Loch, einen Sumpf oder Checkpoint: eine Kachel ist nur eines davon (Regel {{rule_oneKind}})",
         "floor_clear": "Klicke, um den Boden zu entfernen (Loch, Sumpf, Checkpoint)",
         "floor_off": "Klicke zum Entfernen: {{floor}}",
@@ -624,7 +626,7 @@
                 },
                 "obstacle": {
                     "title": "Ein Hindernis setzen",
-                    "body": "Das Hindernis-Werkzeug (O) setzt Hindernisse auf Kacheln von Raum 1–3, eines pro Kachel. Wähle Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, ein auf der Karte gezeichneter Umriss, ein Symbol) und Farbe im Bereich und klicke eine Kachel.\nEin Hindernis kommt nicht auf den Start, einen Durchgang, ein Loch, einen Sumpf oder einen Checkpoint. Der Roboter muss daran vorbei, also setze es so, dass es keinen Weg versperrt: die Prüfung sagt es dir sonst.",
+                    "body": "Das Hindernis-Werkzeug (O) setzt Hindernisse auf Kacheln von Raum 1–3, eines pro Kachel. Wähle Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, ein auf der Karte gezeichneter Umriss, ein Symbol) und Farbe im Bereich und klicke eine Kachel. In Raum 4 kommen beliebig viele dorthin, wo du in ihm klickst.\nEin Hindernis kommt nicht auf den Start, einen Durchgang, ein Loch, einen Sumpf oder einen Checkpoint. Der Roboter muss daran vorbei, also setze es so, dass es keinen Weg versperrt: die Prüfung sagt es dir sonst.",
                     "task": "Klicke mit dem Hindernis-Werkzeug die Kachel im grünen Rahmen, um ein Hindernis zu setzen"
                 },
                 "obstacleEdit": {
@@ -729,13 +731,10 @@
                     "body": "Der Radierer radiert Wände und Opfer weg, wo du ziehst. Seine Größe (S, M, L) steht in den Einstellungen.\nAlles leeren (der Papierkorb) in der oberen Leiste nimmt das ganze Bild weg.",
                     "task": "Radiere mit dem Radierer die obere Linie (gestrichelt orange) weg"
                 },
-                "r4template": {
-                    "title": "Vorlage (T)",
-                    "body": "Wähle eine Vorlage (Labyrinth, Säulen, Diagonalen, Zickzack, Ringe, Hindernisse) und drücke Setzen: Wände werden über ganz Raum 4 gelegt und lassen so wenig wie möglich übrig, wo der Roboter nicht hinkommt.\nIst Zuerst Wände und Opfer leeren an, verschwindet das Gezeichnete vorher: so lassen sich auch die Übungsformen wegräumen.",
-                    "task": "Wähle eine Vorlage (z. B. Säulen), schalte Zuerst Wände und Opfer leeren ein und drücke Setzen",
-                    "tasks": {
-                        "clearOff": "Zuerst Wände und Opfer leeren ist aus. Schalte es ein und drücke dann Setzen (es räumt die Übungsformen weg)"
-                    }
+                "r4clear": {
+                    "title": "Alles löschen",
+                    "body": "Der Papierkorb in der oberen Leiste (Alles löschen) löscht das ganze Bild und entfernt auch die Hindernisse von Raum 4. Rückgängig (Strg+Z) holt es zurück.\nRäume die Übungsformen weg und setze dann Opfer und Hindernisse.",
+                    "task": "Drücke den Papierkorb in der oberen Leiste, um die Übungsformen zu löschen"
                 },
                 "r4stamp": {
                     "title": "Opfer setzen",
@@ -758,19 +757,24 @@
                         "target": "Der Radierer steht auf Alles. Stelle ihn auf Nur Opfer"
                     }
                 },
+                "r4obstacle": {
+                    "title": "Ein Hindernis setzen",
+                    "body": "Das Hinderniswerkzeug (K) setzt ein Hindernis dorthin, wo du in Raum 4 klickst. Raum 4 folgt nicht den Kacheln, also kannst du so viele setzen, wie Platz haben. Form, Höhe und Farbe wählst du im Panel.\nKlicke eines an, um es auszuwählen, ziehe es zum Verschieben und ziehe an seinen Griffen, um Größe und Drehung zu ändern. Es hält an, wo es auf eine Wand oder ein anderes Hindernis trifft. Der Roboter kommt nicht in ein Hindernis hinein, und die hier gespeicherten Bilder behalten sie.",
+                    "task": "Klicke mit dem Hinderniswerkzeug in Raum 4, um ein Hindernis zu setzen"
+                },
                 "r4reach": {
                     "title": "Eine unerreichbare Stelle schaffen und sehen",
                     "body": "Ist Unerreichbar an, wird rot gestreift gezeigt, wo der Roboter (Radius 3,7 cm) nicht hinkommt: eine von Wänden eingeschlossene Stelle oder eine Lücke, die schmaler als der Roboter ist.\nEine unerreichbare Stelle ist an sich in Ordnung (das Innere eines Hindernisses soll es sein). Aber der Roboter kann ein Opfer dort nicht finden, also nutze die Streifen beim Setzen von Opfern. Opfer, an die der Roboter nicht nahe herankommt oder die nicht an ihrer Wand sind, bekommen einen gestrichelten roten Ring, und die untere Zeile zählt sie.\nEingänge / CP zeigt die Eingänge und Checkpoints. Versuche, eine unerreichbare Stelle zu schaffen.",
                     "task": "Zeichne mit dem Rechteck-Werkzeug ein kleines Quadrat abseits der Wände und sieh, wie sein Inneres rot gestreift wird (Für mich erledigen zeichnet ein kleines Quadrat mit dem Stift)",
                     "tasks": {
                         "off": "Es gibt keinen Start, also lässt sich nicht berechnen, wo der Roboter nicht hinkommt. Setze zuerst den Start auf die Karte (dieser Schritt kann übersprungen werden)",
-                        "allBlocked": "Der Roboter kommt fast nirgends in Raum 4 hinein: Etwas versperrt seinen Eingang. Radiere die Wand davor weg oder setze erneut eine Vorlage mit Zuerst leeren an",
+                        "allBlocked": "Der Roboter kommt fast nirgends in Raum 4 hinein: Etwas versperrt seinen Eingang. Radiere die Wand davor weg",
                         "victimsIn": "{{n}} der bisher gesetzten Opfer liegen jetzt, wo der Roboter nicht hinkommt: Die Prüfung würde den Export dafür stoppen. Mache es rückgängig (Strg+Z) und zeichne das Quadrat woanders, oder entferne sie mit dem Radierer auf „Nur Opfer“ („Für mich erledigen“ entfernt sie)"
                     }
                 },
                 "r4file": {
                     "title": "Als Bild speichern und öffnen",
-                    "body": "Die Schaltflächen rechts in der oberen Leiste speichern das Bild als PNG und öffnen ein PNG oder JPEG.\nDie Arten der Opfer werden im Bild gespeichert, sodass ein gespeichertes Bild so geöffnet wird, wie es war: praktisch für denselben Raum 4 in einer anderen Karte."
+                    "body": "Die Schaltflächen rechts in der oberen Leiste speichern das Bild als PNG und öffnen ein PNG oder JPEG.\nDie Arten der Opfer werden im Bild gespeichert, sodass ein gespeichertes Bild so geöffnet wird, wie es war: praktisch für denselben Raum 4 in einer anderen Karte.\nDie Hindernisse von Raum 4 werden ebenfalls im Bild gespeichert: ein hier gespeichertes Bild bringt sie beim Öffnen zurück."
                 },
                 "r4ok": {
                     "title": "Zurück zur Karte",
@@ -905,7 +909,7 @@
                 },
                 "obstacle": {
                     "title": "Hindernis (O): jede Form, Größe und Farbe",
-                    "body": "Setze Hindernisse auf Kacheln von Raum 1–3, eines pro Kachel, die Mitte auf der Kachel (Regel {{rule_obstacles}}): jede Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, ein auf der Karte gezeichneter Umriss, ein Symbol) und Farbe, im Bereich gewählt.\nEin gewähltes hat Griffe: eckige für die Größe, einen runden darüber für die Drehung (Umschalt: 15°-Schritte). Die Höhe steht im Bereich. Es darf an einer Wand stehen, aber nicht durch sie hindurch.\nDer Roboter muss daran vorbei: die Prüfung zeigt, wohin er nicht kommt."
+                    "body": "In Raum 1–3 setzt du Hindernisse auf Kacheln, eines pro Kachel, die Mitte auf der Kachel (Regel {{rule_obstacles}}). Raum 4 ist nicht in Kacheln aufgeteilt: dort kommen beliebig viele dorthin, wo du klickst. Jede Form (Kiste, Zylinder, Kegel, Kugel, Pyramide, regelmäßiges Prisma oder Pyramide, ein auf der Karte gezeichneter Umriss, ein Symbol) und Farbe, im Bereich gewählt.\nEin gewähltes hat Griffe: eckige für die Größe, einen runden darüber für die Drehung (Umschalt: 15°-Schritte). Die Höhe steht im Bereich. Es darf an einer Wand stehen, aber nicht durch sie hindurch.\nDer Roboter muss daran vorbei: die Prüfung zeigt, wohin er nicht kommt."
                 },
                 "victim": {
                     "title": "Opfer (V): Opfer und kognitive Ziele",
@@ -1019,24 +1023,6 @@
         },
         "randomGo": "{{n}} setzen",
         "randomNote2": "An Wänden, denen der Roboter bis auf eine halbe Kachel nahe kommt, mindestens eine halbe Kachel voneinander entfernt.",
-        "templates": {
-            "maze": "Labyrinth",
-            "pillars": "Säulen",
-            "diagonal": "Diagonalen",
-            "zigzag": "Zickzack",
-            "rings": "Ringe",
-            "obstacles": "Hindernisse"
-        },
-        "templateHints": {
-            "maze": "Ein Labyrinth aus Gängen von einer Kachel (mit ein paar Abkürzungen).",
-            "pillars": "Runde Säulen an den Kachelecken.",
-            "diagonal": "Kurze diagonale Wände in den Kacheln.",
-            "zigzag": "Ein Weg, der an den Enden wendet.",
-            "rings": "Ringe um die Mitte, jeder mit einer Lücke.",
-            "obstacles": "Verstreute Kreise, Boxen und Dreiecke."
-        },
-        "templateClear": "Zuerst Wände und Opfer leeren",
-        "templateApply": "Setzen",
         "showGuides": "Eingänge und Checkpoints zeigen",
         "missingCheckpoints": "{{count}} Kachel(n) direkt hinter einem Durchgang sind keine Checkpoints (Regel {{rule_room4Checkpoint}}). Setze sie im Haupteditor (gestricheltes \"CP?\").",
         "noEntrance": "Raum 4 hat keinen Eingang. Öffne im Haupteditor eine Wand zu einem Durchgang draußen.",
@@ -1088,6 +1074,7 @@
             "pen": "Stift",
             "line": "Linie",
             "rect": "Rechteck",
+            "obstacle": "Hindernis",
             "stamp": "Opfer",
             "floor": "Boden",
             "erase": "Radierer",
@@ -1096,8 +1083,7 @@
             "ellipse": "Kreis / Ellipse",
             "polygon": "Vieleck",
             "shape": "Form",
-            "select": "Auswählen",
-            "template": "Vorlage"
+            "select": "Auswählen"
         },
         "undo": "Rückgängig",
         "redo": "Wiederholen",
@@ -1129,7 +1115,7 @@
             "polygon": "Von der Mitte aus ziehen, um ein regelmäßiges Vieleck zu zeichnen. Es dreht sich in 15°-Schritten (frei mit Umschalttaste).",
             "shape": "Wähle ein Symbol oder ein Bild und ziehe dann auf der Fläche, um seine Größe festzulegen (behält die Proportionen; frei mit Umschalttaste).",
             "select": "Ziehen, um eine Box auszuwählen, dann darin ziehen, um sie zu verschieben (Alt gedrückt zum Kopieren). Pfeiltasten schieben sie, [ ] drehen sie, Enter oder ein Klick daneben setzt sie ab, Entf löscht sie.",
-            "template": "Wähle eine Vorlage und drücke Setzen. Anordnungen, die den Roboter aussperren, werden automatisch neu erzeugt."
+            "obstacle": "Klicke in Raum 4, um dort ein Hindernis in Form und Farbe des Panels zu setzen (so viele, wie Platz haben). Klicke eines an, um es auszuwählen: Ziehe es zum Verschieben und ziehe an seinen Griffen, um Größe und Drehung zu ändern (Umschalt: in 15°-Schritten). Entf oder ein Rechtsklick entfernt es, Esc hebt die Auswahl auf. Es kann nicht durch Wände oder andere Hindernisse gehen."
         },
         "messages": {
             "outside": "Es kann nicht außerhalb von Raum 4 liegen.",
@@ -1139,9 +1125,9 @@
             "imageFailed": "Das Bild konnte nicht geladen werden.",
             "randomDone": "{{placed}} gesetzt.",
             "randomShort": "Nur {{placed}} von {{asked}} gesetzt (nicht genug Wände dafür).",
-            "templateBlocked": "Jede versuchte Anordnung lässt einen Teil des Raums unerreichbar. Prüfe die hellroten Teile.",
             "wallEnd": "Nicht an einem Wandende. Klicke auf eine Wandfläche, die mindestens so breit wie ein Opfer ist (2 cm).",
-            "unreachable": "Der Roboter kommt hier nicht nahe heran: Wo der Roboter nicht hinkann, gibt es keine Opfer (Regel {{rule_reach}})."
+            "unreachable": "Der Roboter kommt hier nicht nahe heran: Wo der Roboter nicht hinkann, gibt es keine Opfer (Regel {{rule_reach}}).",
+            "obstacleBlocked": "Hier passt es nicht: Es würde durch eine Wand oder ein anderes Hindernis gehen, auf einem Opfer stehen oder aus Raum 4 herausragen."
         },
         "tokens": "Wandmarker: {{count}}",
         "farFromWall": "{{count}} von jeder Wand entfernt (gestrichelter roter Kreis)",

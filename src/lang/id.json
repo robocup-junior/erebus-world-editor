@@ -124,7 +124,7 @@
             "line": "Seret untuk menggambar dinding. Garis berbelok mengikuti penunjuk, jadi satu seretan bisa menggambar zigzag (kembali ke jalan semula untuk membatalkan belokan). Mulai dengan menahan Shift untuk satu garis lurus. Ruang 1 menempel ke 12 cm (tepi petak), ruang 2 dan 3 ke 6 cm. Tidak di dalam ruang 4.",
             "eraser": "Klik atau seret di atas dinding, lengkung, dan korban untuk menghapusnya. Jauh dari dinding, alat ini menghapus lantai petak (lubang, rawa, checkpoint); satu klik menghapus start. Dinding luar tetap ada. Rintangan juga hilang dengan satu klik.",
             "floor": "Klik petak untuk mengatur lantainya.",
-            "obstacle": "Klik petak untuk memasang rintangan dengan bentuk dan warna yang dipilih di panel (ruang 1–3, satu per petak; aturan {{rule_obstacles}}). Klik rintangan untuk memilihnya: pegangannya di peta mengubah ukuran dan putaran (Shift: per 15°), panel mengubah tinggi, warna, dan bentuk; seret untuk memindahkan, Delete menghapusnya. Sudut garis tepi diklik di peta; ikon dicari dengan namanya.",
+            "obstacle": "Klik petak untuk memasang rintangan dengan bentuk dan warna yang dipilih di panel (ruang 1–3: satu per petak, pusatnya di petak; aturan {{rule_obstacles}}). Di ruang 4, sebanyak apa pun di tempat yang Anda klik. Klik rintangan untuk memilihnya: pegangannya di peta mengubah ukuran dan putaran (Shift: per 15°), panel mengubah tinggi, warna, dan bentuk; seret untuk memindahkan, Delete menghapusnya. Sudut garis tepi diklik di peta; ikon dicari dengan namanya.",
             "victim": "Klik di dekat dinding: korban ditempatkan di dinding tempat Anda klik. Ruang 1: di sisi petak (satu per petak); ruang 2 dan 3: di muka dinding 6 cm (4 seperempat × 4 muka); lengkung punya dua tempat (dalam dan luar). Seret korban yang sudah ditempatkan untuk memindahkannya di sepanjang dindingnya (berhenti sebelum ujung dinding dan korban lain). Klik korban yang sudah dipasang untuk memilihnya: jenis, cincin, dan putarannya lalu diubah di panel, atau dihapus.",
             "curve": "Arahkan ke seperempat petak di ruang 3 untuk melihat empat lengkungnya; yang terdekat (biru) dipasang dengan satu klik. Klik yang sama lagi untuk menghapusnya.",
             "select": "Pilih dinding, ruang, lantai, dan korban bersama untuk dipindahkan, disalin, ditempel, atau dikosongkan. Klik korban atau rintangan untuk membuka alatnya dengan benda itu terpilih; klik dinding atau lengkungan untuk memilihnya dan Delete untuk menghapusnya.",
@@ -215,7 +215,7 @@
         "draw": "Gambar garis tepinya",
         "drawDone": "Tutup dan pasang",
         "drawHow": "Klik sudut-sudutnya di peta; klik sudut pertama atau tekan Enter untuk menutup, Esc untuk berhenti. Tengah kotak yang melingkupinya ada di petak, jauh dari tepinya.",
-        "onTile": "Pusatnya tetap di petaknya, jauh dari tepinya (aturan {{rule_obstacles}}). Boleh menempel pada dinding, tidak menembusnya: saat dipindah atau diperbesar, berhenti ketika menyentuh dinding. Seret di peta untuk memindahkannya. Pegangannya di peta mengubah ukuran dan putarannya (Shift: per 15°).",
+        "onTile": "Di ruang 1–3 pusatnya tetap di petaknya, jauh dari tepinya (aturan {{rule_obstacles}}). Di ruang 4 pusatnya boleh di mana saja, dan jumlahnya bebas. Boleh menempel dinding, tidak menembusnya: saat dipindah atau diperbesar, ia berhenti saat mengenai dinding. Seret di peta untuk memindahkannya. Pegangannya di peta mengubah ukuran dan putarannya (Shift: per 15°).",
         "colorNote": "Warna apa saja (aturan {{rule_obstacles}}). Warna yang mirip lantai (perak, hitam, cokelat, sian), lorong, atau korban lebih sulit dibedakan oleh robot.",
         "moreColors": "Warna lain"
     },
@@ -296,8 +296,9 @@
             "noStart": "Tidak ada petak start",
             "startNotRoom1": "Petak start tidak berada di ruang 1. Start adalah salah satu petak ruang 1 (aturan {{rule_start}})",
             "tileTwoKinds": "Ada petak yang menjadi dua atau lebih dari lubang, rawa, checkpoint, rintangan, start, dan lorong ({{count}}). Satu petak hanya salah satunya (aturan {{rule_oneKind}})",
-            "obstacleRoom": "Ada rintangan di petak ruang 4 atau di luar peta ({{count}}). Rintangan ruang 4 digambar di gambarnya",
+            "obstacleRoom": "Ada rintangan petak di petak ruang 4 atau di luar peta ({{count}}). Pasang ulang rintangan ruang 4 dengan mengeklik di dalam ruang 4",
             "obstacleOverlap": "Ada rintangan yang masuk ke dinding atau rintangan lain ({{count}}). Rintangan boleh menempel pada dinding, tidak menembusnya",
+            "room4ObstacleOverlap": "Ada rintangan ruang 4 yang menembus dinding atau rintangan lain, menutupi korban, atau keluar dari ruang 4 ({{count}}). Boleh menempel dinding, tidak menembusnya",
             "passageOpenSides": "Ada lorong yang terbuka di lebih dari dua sisi ({{count}}). Lorong berdinding di dua sisi: satu jalan masuk, satu jalan keluar (aturan {{rule_passageWalls}})",
             "victimNoWall": "Beberapa korban kehilangan dindingnya ({{count}})",
             "victimInPassage": "Beberapa korban berada di lorong antar-area ({{count}}): di lorong tidak ada korban (aturan {{rule_passageTokens}})",
@@ -370,7 +371,7 @@
         "regionPick": "Seret untuk memilih",
         "regionDrag": "Seret untuk memindahkan, Alt+seret untuk menyalin. Tombol panah memindahkan satu petak; Ctrl+C / X / V dan Delete juga berfungsi",
         "select_victim": "Klik untuk membuka alat korban dengan korban ini terpilih (seret di sepanjang dindingnya)",
-        "select_obstacle": "Klik untuk membuka alat lantai dengan rintangan ini terpilih (seret di petaknya)",
+        "select_obstacle": "Klik untuk beralih ke alat rintangan dengan rintangan ini terpilih (seret untuk memindahkan)",
         "select_curve": "Klik untuk memilih lengkungan ini",
         "select_wall": "Klik untuk memilih dinding ini (bagian lurusnya)",
         "regionCopied": "Disalin. Ctrl+V menempel di petak di bawah penunjuk",
@@ -409,8 +410,9 @@
         "floor_onPassage": "{{floor}} tidak bisa di petak lorong: satu petak hanya salah satu dari lubang, rawa, checkpoint, rintangan, start, dan lorong (aturan {{rule_oneKind}})",
         "floor_onObstacle": "{{floor}} tidak bisa di petak yang ada rintangannya: satu petak hanya salah satu dari lubang, rawa, checkpoint, rintangan, start, dan lorong (aturan {{rule_oneKind}})",
         "floor_obstacleOn": "Klik untuk memasang rintangan ({{shape}}) seperti diatur di panel kiri (aturan {{rule_obstacles}})",
-        "floor_obstacleSelect": "Klik untuk memilih rintangan ini (ubah di panel kiri); seret untuk memindahkannya di petaknya",
-        "floor_obstacleRoom4": "Rintangan ruang 4 digambar di gambarnya: buka pembuat ruang 4",
+        "floor_obstacleSelect": "Klik untuk memilih rintangan ini dan mengubahnya di panel kiri. Seret untuk memindahkan",
+        "floor_obstacleRoom4": "Ruang 4 prasetel tidak menerima rintangan (ubah ruang 4 menjadi kustom untuk memasangnya)",
+        "floor_obstacleOnRoom4": "Klik untuk memasang rintangan {{shape}} sesuai panel kiri di tempat yang Anda klik (di ruang 4, di mana saja dan sebanyak apa pun)",
         "floor_obstacleTaken": "Rintangan tidak bisa di start, lorong, atau lubang, rawa, checkpoint: satu petak hanya salah satunya (aturan {{rule_oneKind}})",
         "floor_clear": "Klik untuk menghapus lantai (lubang, rawa, checkpoint)",
         "floor_off": "Klik untuk menghapus: {{floor}}",
@@ -624,7 +626,7 @@
                 },
                 "obstacle": {
                     "title": "Pasang rintangan",
-                    "body": "Alat rintangan (O) memasang rintangan di petak ruang 1–3, satu per petak. Pilih bentuknya (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, garis tepi yang digambar di peta, ikon) dan warnanya di panel, lalu klik petak.\nRintangan tidak dipasang di start, lorong, lubang, rawa, atau checkpoint. Robot harus memutarinya, jadi pasang di tempat yang tidak menutup jalan: pemeriksaan memberi tahu jika menutup.",
+                    "body": "Alat rintangan (O) memasang rintangan di petak ruang 1–3, satu per petak. Pilih bentuknya (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, garis tepi yang digambar di peta, ikon) dan warnanya di panel, lalu klik petak. Di ruang 4, sebanyak apa pun di tempat yang Anda klik di dalamnya.\nRintangan tidak dipasang di start, lorong, lubang, rawa, atau checkpoint. Robot harus memutarinya, jadi pasang di tempat yang tidak menutup jalan: pemeriksaan memberi tahu jika menutup.",
                     "task": "Dengan alat rintangan, klik petak berbingkai hijau untuk memasang rintangan"
                 },
                 "obstacleEdit": {
@@ -729,13 +731,10 @@
                     "body": "Penghapus menghapus dinding dan korban di tempat Anda menyeret. Ukurannya (S, M, L) ada di pengaturan.\nHapus semua (tempat sampah) di bilah atas menghapus seluruh gambar.",
                     "task": "Dengan penghapus, hapus garis teratas (oranye putus-putus)"
                 },
-                "r4template": {
-                    "title": "Templat (T)",
-                    "body": "Pilih templat (labirin, tiang, diagonal, zigzag, cincin, rintangan) lalu tekan Pasang: dinding dipasang di seluruh ruang 4, menyisakan sesedikit mungkin tempat yang tidak bisa dicapai robot.\nDengan Hapus dulu dinding dan korban aktif, gambar yang ada hilang lebih dulu: cara untuk membersihkan bentuk latihan juga.",
-                    "task": "Pilih templat (mis. Tiang), aktifkan Hapus dulu dinding dan korban, lalu tekan Pasang",
-                    "tasks": {
-                        "clearOff": "Hapus dulu dinding dan korban nonaktif. Aktifkan, lalu tekan Pasang (ini membersihkan bentuk latihan)"
-                    }
+                "r4clear": {
+                    "title": "Hapus semua",
+                    "body": "Tempat sampah di bilah atas (Hapus semua) menghapus seluruh gambar, sekaligus melepas rintangan ruang 4. Urungkan (Ctrl+Z) mengembalikannya.\nBersihkan bentuk latihan, lalu taruh korban dan rintangan.",
+                    "task": "Tekan tempat sampah di bilah atas untuk menghapus bentuk latihan"
                 },
                 "r4stamp": {
                     "title": "Tempatkan korban",
@@ -758,19 +757,24 @@
                         "target": "Penghapus diatur ke Semua. Ganti ke Korban saja"
                     }
                 },
+                "r4obstacle": {
+                    "title": "Menaruh rintangan",
+                    "body": "Alat rintangan (K) menaruh rintangan di tempat yang Anda klik di ruang 4. Ruang 4 tidak mengikuti ubin, jadi Anda bisa menaruh sebanyak yang muat. Pilih bentuk, tinggi, dan warna di panel.\nKlik satu rintangan untuk memilihnya, seret untuk memindahkan, dan seret pegangannya untuk mengubah ukuran dan arahnya. Rintangan berhenti saat mengenai dinding atau rintangan lain. Robot tidak bisa masuk ke rintangan, dan gambar yang disimpan di sini ikut menyimpannya.",
+                    "task": "Dengan alat rintangan, klik di ruang 4 untuk menaruh satu rintangan"
+                },
                 "r4reach": {
                     "title": "Buat tempat yang tidak terjangkau, dan lihat",
                     "body": "Dengan Tidak terjangkau aktif, tempat yang tidak bisa dicapai robot (jari-jari 3,7 cm) ditampilkan dengan garis-garis merah: tempat yang tertutup dinding, atau celah yang lebih sempit dari robot.\nTempat yang tidak terjangkau tidak masalah dengan sendirinya (bagian dalam rintangan memang begitu). Tetapi robot tidak bisa menemukan korban yang ditempatkan di sana, jadi gunakan garis-garis itu saat menempatkan korban. Korban yang tidak bisa didekati robot, atau yang lepas dari dindingnya, mendapat cincin merah putus-putus, dan baris bawah menghitungnya.\nPintu masuk / CP menampilkan pintu masuk dan checkpoint. Coba buat tempat yang tidak terjangkau.",
                     "task": "Dengan alat persegi panjang, gambar persegi kecil jauh dari dinding dan lihat bagian dalamnya berubah menjadi garis-garis merah (Kerjakan untuk saya menggambar persegi kecil dengan pena)",
                     "tasks": {
                         "off": "Tidak ada start, jadi tempat yang tidak bisa dicapai robot tidak dapat dihitung. Pasang start di peta dulu (langkah ini bisa dilewati)",
-                        "allBlocked": "Robot hampir tidak bisa masuk ke ruang 4: ada yang menutup pintu masuknya. Hapus dinding di depannya, atau pasang templat lagi dengan Hapus dulu aktif",
+                        "allBlocked": "Robot hampir tidak bisa masuk ke ruang 4: ada yang menutup pintu masuknya. Hapus dinding di depannya",
                         "victimsIn": "{{n}} korban yang sudah dipasang kini berada di tempat yang tidak bisa dicapai robot: pemeriksaan akan menghentikan ekspor karenanya. Batalkan (Ctrl+Z) dan gambar persegi di tempat lain, atau hapus dengan Penghapus pada \"Korban saja\" (\"Kerjakan untuk saya\" menghapusnya)"
                     }
                 },
                 "r4file": {
                     "title": "Simpan dan buka sebagai gambar",
-                    "body": "Tombol di kanan bilah atas menyimpan gambar sebagai PNG, dan membuka PNG atau JPEG.\nJenis korban disimpan dalam gambar, jadi gambar yang disimpan terbuka seperti semula: berguna untuk ruang 4 yang sama di peta lain."
+                    "body": "Tombol di kanan bilah atas menyimpan gambar sebagai PNG, dan membuka PNG atau JPEG.\nJenis korban disimpan dalam gambar, jadi gambar yang disimpan terbuka seperti semula: berguna untuk ruang 4 yang sama di peta lain.\nRintangan ruang 4 juga disimpan di gambar: gambar yang disimpan di sini mengembalikannya saat dibuka."
                 },
                 "r4ok": {
                     "title": "Kembali ke peta",
@@ -905,7 +909,7 @@
                 },
                 "obstacle": {
                     "title": "Rintangan (O): bentuk, ukuran, dan warna apa saja",
-                    "body": "Pasang rintangan di petak ruang 1–3, satu per petak, pusatnya di petak (aturan {{rule_obstacles}}): bentuk (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, garis tepi yang digambar di peta, ikon) dan warna apa saja, dipilih di panel.\nRintangan terpilih punya pegangan: persegi untuk ukurannya, satu bulat di atasnya untuk putarannya (Shift: per 15°). Tingginya ada di panel. Boleh menempel dinding, tidak menembusnya.\nRobot harus memutarinya: pemeriksaan menunjukkan tempat yang tidak bisa ia capai."
+                    "body": "Di ruang 1–3, pasang rintangan di petak, satu per petak, pusatnya di petak (aturan {{rule_obstacles}}). Ruang 4 tidak dibagi petak: di sana, sebanyak apa pun di tempat yang Anda klik. Bentuk (kotak, silinder, kerucut, bola, piramida, prisma atau limas beraturan, garis tepi yang digambar di peta, ikon) dan warna apa saja, dipilih di panel.\nRintangan terpilih punya pegangan: persegi untuk ukurannya, satu bulat di atasnya untuk putarannya (Shift: per 15°). Tingginya ada di panel. Boleh menempel dinding, tidak menembusnya.\nRobot harus memutarinya: pemeriksaan menunjukkan tempat yang tidak bisa ia capai."
                 },
                 "victim": {
                     "title": "Korban (V): korban dan target kognitif",
@@ -1019,24 +1023,6 @@
         },
         "randomGo": "Pasang {{n}}",
         "randomNote2": "Di sepanjang dinding yang bisa didekati robot hingga setengah petak, berjarak setidaknya setengah petak satu sama lain.",
-        "templates": {
-            "maze": "Labirin",
-            "pillars": "Tiang",
-            "diagonal": "Diagonal",
-            "zigzag": "Zigzag",
-            "rings": "Cincin",
-            "obstacles": "Rintangan"
-        },
-        "templateHints": {
-            "maze": "Labirin dari koridor selebar satu petak (dengan beberapa jalan pintas).",
-            "pillars": "Tiang bundar di sudut petak.",
-            "diagonal": "Dinding diagonal pendek di dalam petak.",
-            "zigzag": "Satu jalur yang berbelok di ujung-ujungnya.",
-            "rings": "Cincin di sekeliling tengah, masing-masing dengan satu celah.",
-            "obstacles": "Lingkaran, kotak, dan segitiga yang tersebar."
-        },
-        "templateClear": "Hapus dulu dinding dan korban",
-        "templateApply": "Pasang",
         "showGuides": "Tampilkan pintu masuk dan checkpoint",
         "missingCheckpoints": "{{count}} petak tepat di dalam lorong bukan checkpoint (aturan {{rule_room4Checkpoint}}). Atur di editor utama (\"CP?\" putus-putus).",
         "noEntrance": "Ruang 4 tidak punya pintu masuk. Buka dinding ke arah lorong di luar di editor utama.",
@@ -1088,6 +1074,7 @@
             "pen": "Pena",
             "line": "Garis",
             "rect": "Persegi panjang",
+            "obstacle": "Rintangan",
             "stamp": "Korban",
             "floor": "Lantai",
             "erase": "Penghapus",
@@ -1096,8 +1083,7 @@
             "ellipse": "Lingkaran / elips",
             "polygon": "Poligon",
             "shape": "Bentuk",
-            "select": "Pilih",
-            "template": "Templat"
+            "select": "Pilih"
         },
         "undo": "Urungkan",
         "redo": "Ulangi",
@@ -1129,7 +1115,7 @@
             "polygon": "Seret dari pusat untuk menggambar poligon beraturan. Berputar dalam langkah 15° (bebas dengan Shift).",
             "shape": "Pilih ikon atau gambar, lalu seret di kanvas untuk mengatur ukurannya (proporsi tetap; bebas dengan Shift).",
             "select": "Seret untuk memilih kotak, lalu seret di dalamnya untuk memindahkannya (tahan Alt untuk menyalin). Tombol panah menggesernya, [ ] memutarnya, Enter atau klik di luarnya meletakkannya, Delete menghapusnya.",
-            "template": "Pilih templat dan tekan Pasang. Tata letak yang menghalangi robot dibuat ulang secara otomatis."
+            "obstacle": "Klik di ruang 4 untuk menaruh rintangan dengan bentuk dan warna dari panel di sana (sebanyak yang muat). Klik satu rintangan untuk memilihnya: seret untuk memindahkan, dan seret pegangannya untuk mengubah ukuran dan arahnya (Shift: per 15°). Delete atau klik kanan melepasnya, Esc membatalkan pilihan. Rintangan tidak bisa menembus dinding atau rintangan lain."
         },
         "messages": {
             "outside": "Tidak bisa di luar ruang 4.",
@@ -1139,9 +1125,9 @@
             "imageFailed": "Gambar tidak dapat dimuat.",
             "randomDone": "{{placed}} ditempatkan.",
             "randomShort": "Hanya {{placed}} dari {{asked}} yang ditempatkan (dinding tidak cukup untuk menempatkannya).",
-            "templateBlocked": "Setiap tata letak yang dicoba membuat sebagian ruang tidak terjangkau. Periksa bagian merah muda.",
             "wallEnd": "Tidak di ujung dinding. Klik muka dinding yang setidaknya selebar korban (2 cm).",
-            "unreachable": "Robot tidak bisa mendekat ke sini: tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}})."
+            "unreachable": "Robot tidak bisa mendekat ke sini: tidak ada korban di tempat yang tidak bisa didatangi robot (aturan {{rule_reach}}).",
+            "obstacleBlocked": "Tidak muat di sini: akan menembus dinding atau rintangan lain, menutupi korban, atau keluar dari ruang 4."
         },
         "tokens": "Tanda dinding: {{count}}",
         "farFromWall": "{{count}} jauh dari dinding mana pun (lingkaran merah putus-putus)",

@@ -20,7 +20,7 @@ async function openCreator(page: Page): Promise<void> {
 test('the creator: every tool and its panel', async ({ page }) => {
     await openCreator(page);
     await shot(page, 'r4-open');
-    for (const id of ['select', 'template', 'pen', 'line', 'curve', 'arc', 'rect', 'ellipse', 'polygon', 'erase', 'floor', 'stamp']) {
+    for (const id of ['select', 'pen', 'line', 'curve', 'arc', 'rect', 'ellipse', 'polygon', 'erase', 'floor', 'stamp']) {
         await r4tool(page, id);
         await shot(page, 'r4-tool-' + id);
     }
@@ -123,14 +123,11 @@ test('the creator: holes, swamps and checkpoints on room 4\'s tiles, undone, and
     expect(floor('11,5,0')).toEqual([]);
 });
 
-test('the creator: a template, selection turned, zoom', async ({ page }) => {
+test('the creator: selection turned, zoom', async ({ page }) => {
     await openCreator(page);
-    await r4tool(page, 'template');
-    await page.locator('.r4-template').nth(1).click();
-    await reseed(page, 13);
-    await page.locator('.r4-templates .btn-primary').click();
-    await settle(page, 600);
-    await shot(page, 'r4-template');
+    await r4tool(page, 'rect');
+    await r4drag(page, [[0.15, 0.15], [0.35, 0.3]]);
+    await settle(page, 400);
     await r4tool(page, 'select');
     await r4drag(page, [[0.05, 0.05], [0.5, 0.5]]);
     await page.locator('.r4-sel-buttons button').nth(1).click();

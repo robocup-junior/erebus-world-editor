@@ -677,45 +677,11 @@
     color: #94a3b8;
 }
 
-/* Custom room 4 creator: selection, random placement, templates, guides */
+/* Custom room 4 creator: selection, random placement, guides */
 .r4-sel-buttons {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-}
-
-.r4-templates {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.45rem;
-}
-
-.r4-template-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
-}
-
-.r4-template {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.5rem 0.2rem;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 10px;
-    background: #fff;
-    color: #475569;
-}
-
-.r4-template i { font-size: 1.1rem; }
-.r4-template-name { font-size: 0.72rem; font-weight: 700; }
-.r4-template:hover { border-color: #93c5fd; }
-.r4-template.active { border-color: #1d4ed8; background: #eff6ff; color: #1d4ed8; }
-
-.r4-templates > .btn {
-    align-self: flex-start;
 }
 
 .r4-legend-entrance {
@@ -1411,3 +1377,8 @@
 
 /* a stamp clicked keeps no focus ring (what is chosen shows as active); the keyboard's shows */
 .r4-stamp:focus:not(:focus-visible) { outline: none; box-shadow: none; }
+
+/* the creator's obstacle tool: the map editor's obstacle panel, as the whole of the tool's panel */
+.ed-obstacle.r4-obstacle { margin-top: 0; padding-top: 0; border-top: 0; }
+/* the panel scrolls, so it clips: room for the picked colour's ring */
+.r4-obstacle .ed-obstacle-colors { padding: 4px; }

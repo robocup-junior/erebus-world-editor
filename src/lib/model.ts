@@ -43,17 +43,19 @@ interface Reach {
 // and its box in pixels, [minX, minY, maxX, maxY], to take it off)
 export interface Room4Picture { w: number; h: number; wallSum: Int32Array; tokens: { fx: number; fy: number; type: number; box?: number[] }[] }
 
-function readRoom4Picture(px: ArrayLike<number>, w: number, h: number): Room4Picture {
+// (forObstacles: as the room 4 creator checks its obstacles as it draws: its victims' stamps as solid
+// as its walls - an obstacle goes on none - and no list of them)
+function readRoom4Picture(px: ArrayLike<number>, w: number, h: number, forObstacles?: boolean): Room4Picture {
     const sum = new Int32Array((w + 1) * (h + 1));
     for (let y = 0; y < h; y++) {
         let row = 0;
         for (let x = 0; x < w; x++) {
             const i = (y * w + x) * 4;
-            if (R4.isWall(px[i], px[i + 1], px[i + 2])) row++;
+            if (R4.isWall(px[i], px[i + 1], px[i + 2]) || (forObstacles && R4.isToken(px[i], px[i + 1], px[i + 2]))) row++;
             sum[(y + 1) * (w + 1) + x + 1] = sum[y * (w + 1) + x + 1] + row;
         }
     }
-    const tokens = R4.findTokens(px, w, h).map(function (t) { return { fx: t.cx / w, fy: t.cy / h, type: t.type, box: [t.minX, t.minY, t.maxX, t.maxY] }; });
+    const tokens = forObstacles ? [] : R4.findTokens(px, w, h).map(function (t) { return { fx: t.cx / w, fy: t.cy / h, type: t.type, box: [t.minX, t.minY, t.maxX, t.maxY] }; });
     return { w: w, h: h, wallSum: sum, tokens: tokens };
 }
 
@@ -217,6 +219,7 @@ function normalize(map: MapData) {
         const t = map.cells[k].tile;
         if (t && t.obstacle && t.obstacleShape) t.obstacleShape = clampObstacle(t.obstacleShape);
     });
+    map.room4Obstacles = Array.isArray(map.room4Obstacles) ? map.room4Obstacles.filter(function (o) { return o && typeof o === 'object'; }).map(function (o) { return clampRoom4Obstacle(o as unknown as W.Room4Obstacle); }) : [];
     return map;
 }
 
@@ -901,6 +904,141 @@ function obstaclesInTheWay(map: MapData): number[][] {
         }
     }
     return out;
+}
+
+// ---- Room 4's obstacles (lib/field: Room4Obstacle): anywhere in a custom room 4, as many as fit ------
+// Its shape as a tile's has it (no dx, dy), its centre as fractions of room 4's box
+function clampRoom4Obstacle(o: Partial<W.Room4Obstacle>): W.Room4Obstacle {
+    const f = function (v: unknown) { const n = Number(v); return isFinite(n) ? Math.round(Math.max(0, Math.min(1, n)) * 100000) / 100000 : 0.5; };
+    return Object.assign(clampObstacle(Object.assign({}, o, { dx: 0, dy: 0 })), { fx: f(o.fx), fy: f(o.fy) });
+}
+// Whether room 4's obstacle o (number i of the list; -1: one to put) would run into a wall - the
+// map's, or one drawn in room 4's picture (its pixels, given the picture as the checks read it) - or
+// into another of room 4's obstacles, or reach out of room 4. As on its tiles: it may stand against
+// a wall (half a wall into its line), not go through it.
+function room4ObstacleClashes(map: MapData, i: number, o: W.Room4Obstacle, picture?: Room4Picture | null, walls?: number[][][]): boolean {
+    const half = rulesOf(map).geometry.wallHalfCm;
+    const rings = W.room4ObstacleRings(map, o), inner = W.room4ObstacleRings(map, o, half);
+    if (!rings.length) return true;
+    // in room 4: its outline half a wall in from its sides on room 4's tiles
+    const out = inner.some(function (r) {
+        return r.some(function (p) { const x = 2 * Math.floor(p[0] / 12) + 1, y = 2 * Math.floor(p[1] / 12) + 1; return !inMap(map, x, y) || isOutside(map, x, y) || roomOf(map, x, y) !== 4; });
+    });
+    if (out) return true;
+    const box = ([] as number[][]).concat.apply([], rings).reduce(function (r, p) { return [Math.min(r[0], p[0]), Math.min(r[1], p[1]), Math.max(r[2], p[0]), Math.max(r[3], p[1])]; }, [Infinity, Infinity, -Infinity, -Infinity]);
+    const lim = half - 0.01;
+    const hitsWall = (walls || wallPieces(map)).some(function (w) {
+        if (Math.max(w[0][0], w[1][0]) < box[0] - lim || Math.min(w[0][0], w[1][0]) > box[2] + lim || Math.max(w[0][1], w[1][1]) < box[1] - lim || Math.min(w[0][1], w[1][1]) > box[3] + lim) return false;
+        return rings.some(function (poly) { return segToPoly(w[0], w[1], poly) < lim; });
+    });
+    if (hitsWall) return true;
+    const others = W.room4Obstacles(map).some(function (q, j) {
+        if (j === i) return false;
+        return W.room4ObstacleRings(map, q).some(function (r) {
+            return r.some(function (p, k) { return rings.some(function (poly) { return segToPoly(p, r[(k + 1) % r.length], poly) === 0; }); });
+        });
+    });
+    if (others) return true;
+    return !!picture && (pictureWallIn(map, picture, inner) || pictureTokenIn(map, picture, rings));
+}
+// Whether a victim's stamp of room 4's picture and rings (cm on the map) meet: no obstacle goes on one
+function pictureTokenIn(map: MapData, picture: Room4Picture, rings: number[][][]) {
+    const b = W.room4Box(map);
+    if (!b || !picture.w || !picture.h) return false;
+    const sx = picture.w / b.w, sy = picture.h / b.h;
+    return picture.tokens.some(function (t) {
+        if (!t.box) return false;
+        const x0 = b.x0 + t.box[0] / sx, y0 = b.y0 + t.box[1] / sy, x1 = b.x0 + (t.box[2] + 1) / sx, y1 = b.y0 + (t.box[3] + 1) / sy;
+        // its corners and middle in the rings, or a corner of the rings in it
+        const pts = [[x0, y0], [x1, y0], [x0, y1], [x1, y1], [(x0 + x1) / 2, (y0 + y1) / 2]];
+        return rings.some(function (r) {
+            return pts.some(function (p) { return W.insideRing(p[0], p[1], r); })
+                || r.some(function (p) { return p[0] >= x0 && p[0] <= x1 && p[1] >= y0 && p[1] <= y1; });
+        });
+    });
+}
+// Whether a wall of room 4's picture is inside rings (cm on the map): its pixels' centres looked at
+function pictureWallIn(map: MapData, picture: Room4Picture, rings: number[][][]) {
+    const b = W.room4Box(map);
+    if (!b || !picture.w || !picture.h) return false;
+    const sx = picture.w / b.w, sy = picture.h / b.h, W1 = picture.w + 1, sum = picture.wallSum;
+    return rings.some(function (r) {
+        const xs = r.map(function (p) { return p[0]; }), ys = r.map(function (p) { return p[1]; });
+        const x0 = Math.max(0, Math.floor((Math.min.apply(null, xs) - b.x0) * sx)), x1 = Math.min(picture.w - 1, Math.ceil((Math.max.apply(null, xs) - b.x0) * sx));
+        const y0 = Math.max(0, Math.floor((Math.min.apply(null, ys) - b.y0) * sy)), y1 = Math.min(picture.h - 1, Math.ceil((Math.max.apply(null, ys) - b.y0) * sy));
+        for (let py = y0; py <= y1; py++) {
+            for (let px = x0; px <= x1; px++) {
+                const wall = sum[(py + 1) * W1 + px + 1] - sum[py * W1 + px + 1] - sum[(py + 1) * W1 + px] + sum[py * W1 + px];
+                if (wall && W.insideRing(b.x0 + (px + 0.5) / sx, b.y0 + (py + 0.5) / sy, r)) return true;
+            }
+        }
+        return false;
+    });
+}
+// One put: whether it fits there (else it is not put)
+function addRoom4Obstacle(map: MapData, o: Partial<W.Room4Obstacle>, picture?: Room4Picture | null): number {
+    const c = clampRoom4Obstacle(o);
+    if (room4ObstacleClashes(map, -1, c, picture)) return -1;
+    if (!Array.isArray(map.room4Obstacles)) map.room4Obstacles = [];
+    map.room4Obstacles.push(c);
+    return map.room4Obstacles.length - 1;
+}
+function removeRoom4Obstacle(map: MapData, i: number) {
+    if (Array.isArray(map.room4Obstacles)) map.room4Obstacles.splice(i, 1);
+}
+// Room 4's obstacle i changed (its shape, or its place: fx, fy), as changeObstacle changes a tile's:
+// as far towards the change as it goes without running into something. Whether it changed.
+function changeRoom4Obstacle(map: MapData, i: number, change: Partial<W.Room4Obstacle>, picture?: Room4Picture | null) {
+    const list = W.room4Obstacles(map), from = list[i];
+    if (!from) return false;
+    const to = clampRoom4Obstacle(Object.assign({}, from, change));
+    // one that clashes already (from a file, or a picture drawn over it) takes the change as it is
+    if (room4ObstacleClashes(map, i, from, picture)) { list[i] = to; return true; }
+    if (to.shape !== from.shape) {
+        if (room4ObstacleClashes(map, i, to, picture)) return false;
+        list[i] = to;
+        return true;
+    }
+    const walls = wallPieces(map), b = W.room4Box(map)!;
+    const at = function (k: number): W.Room4Obstacle {
+        const mix = function (a: number, c: number) { return a + (c - a) * k; };
+        let dr = to.rot - from.rot;
+        if (dr > Math.PI) dr -= 2 * Math.PI; else if (dr < -Math.PI) dr += 2 * Math.PI;
+        return clampRoom4Obstacle(Object.assign({}, to, { w: mix(from.w, to.w), d: mix(from.d, to.d), h: mix(from.h, to.h), fx: mix(from.fx, to.fx), fy: mix(from.fy, to.fy), rot: from.rot + dr * k }));
+    };
+    // along the way in steps of about half a cm (its middle, its sides, its corners as it turns), so
+    // it stops at the first thing in its way, not past a thin wall
+    const way = Math.hypot((to.fx - from.fx) * b.w, (to.fy - from.fy) * b.h) + Math.abs(to.w - from.w) + Math.abs(to.d - from.d)
+        + Math.abs(to.rot - from.rot) * Math.max(from.w, from.d);
+    const steps = Math.max(1, Math.min(200, Math.ceil(way / 0.5)));
+    let hit = -1;
+    for (let n = 1; n <= steps; n++) { if (room4ObstacleClashes(map, i, at(n / steps), picture, walls)) { hit = n; break; } }
+    if (hit < 0) { list[i] = to; return JSON.stringify(to) !== JSON.stringify(from); }
+    let lo = (hit - 1) / steps, hi = hit / steps;
+    for (let n = 0; n < 10; n++) { const mid = (lo + hi) / 2; if (room4ObstacleClashes(map, i, at(mid), picture, walls)) hi = mid; else lo = mid; }
+    const best = at(lo);
+    if (room4ObstacleClashes(map, i, best, picture, walls)) return false;
+    const same = JSON.stringify(best) === JSON.stringify(from);
+    list[i] = best;
+    return !same;
+}
+// Room 4's obstacles that run into something or reach out of it: their indices
+function room4ObstaclesInTheWay(map: MapData, picture?: Room4Picture | null): number[] {
+    const walls = wallPieces(map), out: number[] = [];
+    W.room4Obstacles(map).forEach(function (o, i) { if (room4ObstacleClashes(map, i, o, picture, walls)) out.push(i); });
+    return out;
+}
+// Fixes those: each made smaller in its place as it has to be; taken off if nothing fits
+function freeRoom4Obstacles(map: MapData, picture?: Room4Picture | null) {
+    const list = W.room4Obstacles(map);
+    for (let i = list.length - 1; i >= 0; i--) {
+        let o = list[i];
+        while (room4ObstacleClashes(map, i, o, picture) && (o.w > 1 || o.d > 1)) {
+            o = clampRoom4Obstacle(Object.assign({}, o, { w: o.w - 0.5, d: o.d - 0.5, h: o.shape === 'sphere' ? o.w - 0.5 : o.h }));
+        }
+        if (room4ObstacleClashes(map, i, o, picture)) list.splice(i, 1);
+        else list[i] = o;
+    }
 }
 
 // Fixes one that runs into something: back to the middle of its tile, then smaller as it has to be;
@@ -1901,6 +2039,12 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
     const inTheWay = obstaclesInTheWay(map);
     if (inTheWay.length) out.push({ key: 'obstacleOverlap', params: { count: inTheWay.length }, block: true, at: [12 * inTheWay[0][0] + 6, 12 * inTheWay[0][1] + 6], show: { tiles: inTheWay } });
     // an obstacle on a tile of room 4 or outside the map (a region pasted there): room 4's are drawn
+    // room 4's obstacles: in room 4, through no wall or other obstacle
+    const r4InTheWay = room4ObstaclesInTheWay(map, picture);
+    if (r4InTheWay.length) {
+        const at = r4InTheWay.map(function (i) { return W.room4ObstacleCentre(map, W.room4Obstacles(map)[i])!; });
+        out.push({ key: 'room4ObstacleOverlap', params: { count: at.length }, block: true, at: at[0], show: { points: at } });
+    }
     if (misplacedObstacles.length) out.push({ key: 'obstacleRoom', params: { count: misplacedObstacles.length }, block: true, at: [12 * misplacedObstacles[0][0] + 6, 12 * misplacedObstacles[0][1] + 6], show: { tiles: misplacedObstacles } });
     if (openPassages.length) out.push({ key: 'passageOpenSides', params: { count: openPassages.length }, block: true, at: [12 * openPassages[0][0] + 6, 12 * openPassages[0][1] + 6], show: { tiles: openPassages } });
     // the rooms' connections are always checked here (the classic editor's switch, connCheckOff,
@@ -1980,7 +2124,7 @@ function problems(map: MapData, picture?: Room4Picture | null): Problem[] {
 // walls set (as syncBorderWalls), or null when it cannot be fixed here (the custom room 4 picture
 // has to be drawn). FIXABLE: the problems it handles.
 
-const FIXABLE = ['noStart', 'startNotRoom1', 'tileTwoKinds', 'passageOpenSides', 'obstacleRoom', 'obstacleOverlap', 'presetNotSupported', 'room4Checkpoint', 'conn.notConnected', 'conn.passageNoRoom',
+const FIXABLE = ['noStart', 'startNotRoom1', 'tileTwoKinds', 'passageOpenSides', 'obstacleRoom', 'obstacleOverlap', 'room4ObstacleOverlap', 'presetNotSupported', 'room4Checkpoint', 'conn.notConnected', 'conn.passageNoRoom',
     'conn.passageMisplaced', 'conn.unmarkedGap', 'victimNoWall', 'victimInPassage', 'victimMisplaced', 'victimUnreachable', 'wallRule'];
 // fixed by drawing in the room 4 creator
 const DRAW_FIX = ['customRoom4NoPicture', 'room4Untyped'];
@@ -2045,8 +2189,9 @@ function connectRoom(map: MapData, room: number, borders: Set<string>): Set<stri
     return borders;
 }
 
-function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string> | null {
+function fixProblem(map: MapData, p: Problem, borders: Set<string>, picture?: Room4Picture | null): Set<string> | null {
     const key = p.key;
+    if (key === 'room4ObstacleOverlap') { freeRoom4Obstacles(map, picture); return borders; }
     if (key === 'noStart' || key === 'startNotRoom1') { fixStart(map); return borders; }
     if (key === 'tileTwoKinds') {
         // the passage and the start stay (the start moves off a passage), then an obstacle; floors go,
@@ -2136,11 +2281,11 @@ function fixProblem(map: MapData, p: Problem, borders: Set<string>): Set<string>
 // Every problem that can be fixed, in an order where one fix does not undo another
 function fixAll(map: MapData, borders: Set<string>, picture?: Room4Picture | null): Set<string> {
     const order = ['presetNotSupported', 'conn.passageNoRoom', 'conn.passageMisplaced', 'conn.unmarkedGap', 'wallRule',
-        'conn.notConnected', 'passageOpenSides', 'obstacleRoom', 'obstacleOverlap', 'room4Checkpoint', 'victimNoWall', 'victimInPassage', 'victimMisplaced',
+        'conn.notConnected', 'passageOpenSides', 'obstacleRoom', 'obstacleOverlap', 'room4ObstacleOverlap', 'room4Checkpoint', 'victimNoWall', 'victimInPassage', 'victimMisplaced',
         'victimUnreachable', 'tileTwoKinds', 'noStart', 'startNotRoom1'];
     order.forEach(function (key) {
         problems(map, picture).filter(function (p) { return p.key === key; }).forEach(function (p) {
-            const after = fixProblem(map, p, borders);
+            const after = fixProblem(map, p, borders, picture);
             if (after) borders = after;
         });
     });
@@ -2148,14 +2293,18 @@ function fixAll(map: MapData, borders: Set<string>, picture?: Room4Picture | nul
 }
 
 // The map as the classic editor saves it (its JSON export)
+// (room 4's obstacles, this editor's own, only when there are some: a map without them is saved as
+// the classic editor saves it)
 function saved(map: MapData) {
-    return {
+    const out: Record<string, any> = {
         name: map.name, length: map.length, height: map.height, width: map.width, finished: map.finished,
         startTile: map.startTile, cells: map.cells, roomTiles: map.roomTiles, time: map.time,
         area4Room: map.area4Room, room4CanvasSave: map.room4CanvasSave || null,
         room4VicTypes: map.room4VicTypes || [], room4Tokens: map.room4Tokens || [], connCheckOff: !!map.connCheckOff,
         rules: map.rules || FIRST_YEAR
     };
+    if (Array.isArray(map.room4Obstacles) && map.room4Obstacles.length) out.room4Obstacles = map.room4Obstacles;
+    return out;
 }
 
 // The world (.wbt) of the map; worked out on a copy, so the map is left as it is. A custom room 4
@@ -2215,6 +2364,12 @@ export {
     floorFree,
     FIXABLE,
     DRAW_FIX,
+    clampRoom4Obstacle,
+    room4ObstacleClashes,
+    addRoom4Obstacle,
+    removeRoom4Obstacle,
+    changeRoom4Obstacle,
+    room4ObstaclesInTheWay,
     PICTURE_FIX,
     room4UnreachedBoxes,
     readRoom4Picture,

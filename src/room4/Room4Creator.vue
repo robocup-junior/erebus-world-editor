@@ -12,6 +12,9 @@ import CtRings from '../components/CtRings.vue';
 import LangMenu from '../components/LangMenu.vue';
 import RotationDial from '../components/RotationDial.vue';
 import VictimGlyph from '../components/VictimGlyph.vue';
+import ColorPicker from '../components/ColorPicker.vue';
+import * as M from '../lib/model';
+import * as F from '../lib/field';
 import { mountCanvas } from './canvas';
 import { scopeTools, type CreatorScope, type R4State, type StampType, type ShapeIcon } from './scope';
 import * as FaIcons from './faIcons';
@@ -48,8 +51,6 @@ const r4 = reactive<R4State>({
     hasClip: false,
     randomCount: 5,
     randomMode: 'current',  // 'current' (the chosen type) or 'mixed' (a type picked for each)
-    template: 'maze',
-    templateClear: true,
     messageParams: {},
     entranceCount: 0,
     passageCount: 0,
@@ -67,7 +68,11 @@ const r4 = reactive<R4State>({
     ring: 0,
     rot: 0,
     randomRot: true,
-    sel: null                // the stamp clicked on: { cx, cy, idx, rot, code }
+    sel: null,               // the stamp clicked on: { cx, cy, idx, rot, code }
+    // the obstacle tool: the shape to put next (the map editor's to begin with), the one picked
+    obstacle: M.clampObstacle(host.room4ObstacleNext),
+    obSel: null,
+    obPicked: null
 });
 const ringColors = Icons.RING_LIST;
 
@@ -93,7 +98,6 @@ const stampGroups = [
 
 const tools = [
     { id: 'select', icon: 'fas fa-mouse-pointer', key: 'S' },
-    { id: 'template', icon: 'fas fa-th-large', key: 'T' },
     { id: 'pen', icon: 'fas fa-pen', key: 'P' },
     { id: 'line', icon: 'fas fa-slash', key: 'L' },
     { id: 'curve', icon: 'fas fa-bezier-curve', key: 'B' },
@@ -105,30 +109,44 @@ const tools = [
     { id: 'shape', icon: 'fas fa-icons', key: 'I' },
     { id: 'erase', icon: 'fas fa-eraser', key: 'E' },
     { id: 'floor', icon: 'fas fa-fill-drip', key: 'F' },
+    { id: 'obstacle', icon: 'fas fa-cube', key: 'K' },
     { id: 'stamp', icon: 'fas fa-user-injured', key: 'V' }
 ];
-// The rail groups the tools in the order of the map editor's rail: looking (select), the room's
-// layout (templates, as the map editor's map and rooms), walls (lines, then shapes and the eraser)
-// and floors and victims
+// The rail groups the tools in the order of the map editor's rail: looking (select), walls (lines,
+// then shapes and the eraser) and floors and victims
 const byId: Record<string, (typeof tools)[number]> = {};
 tools.forEach(function (x) { byId[x.id] = x; });
-const toolGroups = [['select'], ['template'], ['pen', 'line', 'curve', 'arc'], ['rect', 'ellipse', 'polygon', 'shape', 'erase'], ['floor', 'stamp']]
+const toolGroups = [['select'], ['pen', 'line', 'curve', 'arc'], ['rect', 'ellipse', 'polygon', 'shape', 'erase'], ['floor', 'obstacle', 'stamp']]
     .map(function (g) { return g.map(function (id) { return byId[id]; }); });
 function toolKey(id: string) {
     return byId[id] ? byId[id].key : '';
 }
 // Tools that draw walls (mirror drawing applies to them)
 function drawsWalls() {
-    return ['stamp', 'floor', 'select', 'template'].indexOf(r4.tool) < 0;
+    return ['stamp', 'floor', 'select', 'obstacle'].indexOf(r4.tool) < 0;
 }
-const templates = [
-    { id: 'maze', icon: 'fas fa-border-all' },
-    { id: 'pillars', icon: 'fas fa-braille' },
-    { id: 'diagonal', icon: 'fas fa-slash' },
-    { id: 'zigzag', icon: 'fas fa-wave-square' },
-    { id: 'rings', icon: 'far fa-dot-circle' },
-    { id: 'obstacles', icon: 'fas fa-shapes' }
-];
+
+// ---- the obstacle tool's panel: as the map editor's, for room 4's obstacles in the creator ----
+const obstacleColors = E.S.obstacleColors, obstacleGrey = E.S.obstacleGrey;
+const colorOpen = ref(false);
+// the shape the panel shows: the picked one's, else the one to put next
+function obShape() { return r4.obPicked || r4.obstacle; }
+// its kinds: a drawn one and an icon are made in the map editor, so only shown when it is one
+function obstacleKinds() {
+    return (E.S.obstacleKinds as string[]).filter(function (k) { return (k !== 'polygon' && k !== 'icon') || obShape().shape === k; });
+}
+function obstacleFields() {
+    const sh = obShape(), lim = F.OBSTACLE_LIMITS;
+    const out: { id: string; label: string; min: number; max: number; step: number; value: number; unit: string }[] = [];
+    if (sh.shape === 'prism' || sh.shape === 'npyramid') out.push({ id: 'n', label: 'sides', min: lim.sides[0], max: lim.sides[1], step: 1, value: sh.n || 6, unit: '' });
+    if (sh.shape !== 'sphere') out.push({ id: 'h', label: 'height', min: lim.height[0], max: lim.height[1], step: 0.5, value: sh.h, unit: 'cm' });
+    return out;
+}
+function obstacleInput(id: string, value: number) {
+    const change: Record<string, number> = {};
+    change[id] = Number(value);
+    r4api.obstacleSet(change);
+}
 // The floor tool's floors, as the map editor's floor tool has them (a whole tile each, as Erebus
 // has them in room 4 too); no start tile, which is not in room 4
 const floorChoices = host.room4FloorKinds.map(function (k) { return { id: k.id, icon: k.icon }; })
@@ -405,22 +423,6 @@ onBeforeUnmount(function () {
             <button type="button" class="r4-icon danger" @click="r4api.selection('delete')" :disabled="!r4.hasSelection" :title="t('room4.sel.delete') + ' (Delete)'"><i class="fas fa-trash-alt"></i></button>
           </div>
 
-          <!-- Templates -->
-          <div class="r4-templates" v-if="r4.tool === 'template'">
-            <div class="r4-template-grid">
-              <button type="button" class="r4-template" v-for="x in templates" :key="x.id" :class="{ active: r4.template === x.id }" @click="r4.template = x.id" :title="t('room4.templateHints.' + x.id)">
-                <i :class="x.icon"></i>
-                <span class="r4-template-name">{{ t('room4.templates.' + x.id) }}</span>
-              </button>
-            </div>
-            <label class="r4-switch">
-              <input type="checkbox" v-model="r4.templateClear">
-              <span class="r4-switch-track"></span>
-              {{ t('room4.templateClear') }}
-            </label>
-            <button type="button" class="btn btn-sm btn-primary rounded-pill" @click="r4api.applyTemplate(r4.template, r4.templateClear)"><i class="fas fa-magic mr-1"></i>{{ t('room4.templateApply') }}</button>
-          </div>
-
           <!-- Shape tool: a Font Awesome icon or a picture, drawn as walls -->
           <div class="r4-shape" v-if="r4.tool === 'shape'">
             <div class="r4-seg r4-seg-full">
@@ -458,6 +460,48 @@ onBeforeUnmount(function () {
                 <button type="button" disabled>{{ r4.shapeRot }}°</button>
                 <button type="button" @click="rotateShape(90)" title="+90°"><i class="fas fa-redo"></i></button>
               </div>
+            </div>
+          </div>
+
+          <!-- Obstacles of room 4: anywhere in it, as many as fit -->
+          <div class="ed-obstacle r4-obstacle" v-if="r4.tool === 'obstacle'">
+            <div class="ed-selected-head">
+              <span><i class="fas fa-cube mr-1"></i>{{ t(r4.obPicked ? 'obstacles.picked' : 'obstacles.next') }}</span>
+              <button class="btn btn-sm btn-link p-0" type="button" v-if="r4.obPicked" @click="r4api.obstacleDeselect()">{{ t('common.done') }}</button>
+            </div>
+            <div class="ed-obstacle-shapes">
+              <button class="ed-choice" type="button" v-for="k in obstacleKinds()" :key="k" :class="{ active: obShape().shape === k }" :data-shape="k" @click="r4api.obstacleChange({ shape: k })">
+                <i class="fas fa-fw" :class="E.obstacleIcon(k)"></i>{{ t('obstacles.shapes.' + k) }}
+              </button>
+            </div>
+            <div class="ed-obstacle-field" v-for="f in obstacleFields()" :key="f.id">
+              <div class="ed-label">{{ t('obstacles.fields.' + f.label) }}</div>
+              <div class="ed-along-row">
+                <input type="range" class="ed-along-range" :data-field="f.id" :min="f.min" :max="f.max" :step="f.step" :value="f.value" :aria-label="t('obstacles.fields.' + f.label)"
+                  @input="obstacleInput(f.id, Number(($event.target as HTMLInputElement).value))" @change="r4api.obstacleDone()" @pointerup="r4api.obstacleDone()" @blur="r4api.obstacleDone()">
+                <span class="ed-obstacle-num">
+                  <input type="number" class="form-control form-control-sm" :data-num="f.id" :min="f.min" :max="f.max" :step="f.step"
+                    :value="f.unit === 'cm' ? f.value.toFixed(1) : f.value" :aria-label="t('obstacles.fields.' + f.label)"
+                    @change="obstacleInput(f.id, Number(($event.target as HTMLInputElement).value)); r4api.obstacleDone()" @keydown.enter="($event.target as HTMLInputElement).blur()">
+                  <span>{{ f.unit }}</span>
+                </span>
+              </div>
+            </div>
+            <div class="ed-obstacle-field">
+              <div class="ed-label">{{ t('obstacles.fields.color') }}</div>
+              <div class="ed-obstacle-colors">
+                <button type="button" class="ed-obstacle-color" v-for="c in obstacleColors" :key="c" :data-color="c" :style="{ background: c }" :title="c"
+                  :class="{ active: (obShape().color || obstacleGrey) === c }" @click="r4api.obstacleChange({ color: c })"></button>
+                <button type="button" class="ed-obstacle-color more" :class="{ active: colorOpen }" :title="t('obstacles.moreColors')" :aria-label="t('obstacles.moreColors')"
+                  :aria-expanded="colorOpen" @click="colorOpen = !colorOpen"></button>
+              </div>
+              <ColorPicker v-if="colorOpen" :model-value="obShape().color || obstacleGrey"
+                @input="(c: string) => r4api.obstacleSet({ color: c })" @change="r4api.obstacleDone()"></ColorPicker>
+              <p class="ed-muted mb-1">{{ t('obstacles.colorNote') }}</p>
+            </div>
+            <div class="ed-obstacle-actions">
+              <button class="btn btn-sm btn-outline-primary" type="button" @click="r4api.obstacleRandom()"><i class="fas fa-dice mr-1"></i>{{ t('obstacles.random') }}</button>
+              <button class="btn btn-sm btn-outline-danger" type="button" v-if="r4.obPicked" @click="r4api.obstacleRemove()"><i class="fas fa-trash-alt mr-1"></i>{{ t('obstacles.remove') }}</button>
             </div>
           </div>
 

@@ -124,7 +124,7 @@
             "line": "Drag to draw walls. The line turns with the pointer, so one drag can draw a zigzag (go back the way you came to undo a turn). Start with Shift held for one straight line. Room 1 snaps to 12 cm (tile edges), rooms 2 and 3 to 6 cm. Not inside room 4.",
             "eraser": "Click or drag over walls, curves and victims to remove them. Away from walls it takes a tile's floor off (hole, swamp, checkpoint); a click takes the start off. The outer walls stay. An obstacle goes with a click too.",
             "floor": "Click a tile to set its floor.",
-            "obstacle": "Click a tile to put an obstacle of the shape and colour picked in the panel (rooms 1-3, one to a tile; rule {{rule_obstacles}}). Click one to pick it: its handles on the map change its size and turn (Shift: steps of 15°), the panel its height, colour and shape; drag it to move it, Delete takes it off. A drawn one's corners are clicked on the map; an icon is looked for by name.",
+            "obstacle": "Click a tile to put an obstacle of the shape and colour picked in the panel (rooms 1-3: one to a tile, its centre on it; rule {{rule_obstacles}}). In room 4, as many as you like go where you click. Click one to pick it: its handles on the map change its size and turn (Shift: steps of 15°), the panel its height, colour and shape; drag it to move it, Delete takes it off. A drawn one's corners are clicked on the map; an icon is looked for by name.",
             "victim": "Click near a wall: the victim goes on the wall where you click. Room 1: on a tile side (one per tile); rooms 2 and 3: on a face of the 6 cm walls (4 quarters × 4 faces); a curve has two places (inside and outside). Drag a placed victim to move it along its wall (it stops short of the wall's end and other victims). Click a placed one to select it: its kind, rings and turn are then changed in the panel, or it is removed.",
             "curve": "Point at a quarter tile in room 3 to see its four curves; the nearest one (blue) goes in on a click. Click the same one again to remove it.",
             "select": "Select walls, rooms, floors and victims together to move, copy, paste or clear them. Click a victim or an obstacle to open its tool with it picked; click a wall or a curve to pick it and Delete to take it off.",
@@ -215,7 +215,7 @@
         "draw": "Draw its outline",
         "drawDone": "Close and put",
         "drawHow": "Click its corners on the map; click the first one or press Enter to close it, Esc to stop. The middle of the box round it goes on a tile, off its edges.",
-        "onTile": "Its centre stays on its tile, off the tile's edges (rule {{rule_obstacles}}). It may stand against a wall, not go through it: moved or made larger, it stops where it meets one. Drag it on the map to move it. Its handles on the map change its size and its turn (Shift: steps of 15°).",
+        "onTile": "In rooms 1-3 its centre stays on its tile, off the tile's edges (rule {{rule_obstacles}}). In room 4 its centre may be anywhere, and there may be as many as you like. It may stand against a wall, not go through it: moved or made larger, it stops where it meets one. Drag it on the map to move it. Its handles on the map change its size and its turn (Shift: steps of 15°).",
         "colorNote": "Any colour (rule {{rule_obstacles}}). One close to a floor's (silver, black, brown, cyan), a passage's or a victim's is harder for the robot to tell apart.",
         "moreColors": "Other colours"
     },
@@ -296,8 +296,9 @@
             "noStart": "There is no start tile",
             "startNotRoom1": "The start tile is not in room 1. The start is one of the room 1 tiles (rule {{rule_start}})",
             "tileTwoKinds": "Some tiles are two or more of a hole, swamp, checkpoint, obstacle, the start and a passage ({{count}}). A tile is only one of them (rule {{rule_oneKind}})",
-            "obstacleRoom": "Some obstacles are on tiles of room 4 or outside the map ({{count}}). Room 4's are drawn in its picture",
+            "obstacleRoom": "There are tiles' obstacles on tiles of room 4 or outside the map ({{count}}). Put room 4's obstacles again by clicking inside room 4",
             "obstacleOverlap": "Some obstacles go into a wall or another obstacle ({{count}}). An obstacle may stand against a wall, not go through it",
+            "room4ObstacleOverlap": "Some of room 4's obstacles go through a wall or another obstacle, stand on a victim, or reach out of room 4 ({{count}}). They may stand against a wall, not go through it",
             "passageOpenSides": "Some passages are open on more than two sides ({{count}}). A passage has walls on two sides: one way in, one way out (rule {{rule_passageWalls}})",
             "victimNoWall": "Some victims have lost their wall ({{count}})",
             "victimInPassage": "Some victims are in a passage between areas ({{count}}): there are none in the passages (rule {{rule_passageTokens}})",
@@ -370,7 +371,7 @@
         "regionPick": "Drag to select",
         "regionDrag": "Drag to move, Alt+drag to copy. Arrow keys move by a tile; Ctrl+C / X / V and Delete work too",
         "select_victim": "Click to open the victim tool with this victim picked (drag to move it along its wall)",
-        "select_obstacle": "Click to open the floor tool with this obstacle picked (drag to move it on its tile)",
+        "select_obstacle": "Click to switch to the obstacle tool with this obstacle picked (drag to move it)",
         "select_curve": "Click to pick this curve",
         "select_wall": "Click to pick this wall (a straight run of it)",
         "regionCopied": "Copied. Ctrl+V pastes at the tile under the pointer",
@@ -409,8 +410,9 @@
         "floor_onPassage": "{{floor}} cannot go on a passage tile: a tile is only one of a hole, swamp, checkpoint, obstacle, the start and a passage (rule {{rule_oneKind}})",
         "floor_onObstacle": "{{floor}} cannot go on a tile with an obstacle: a tile is only one of a hole, swamp, checkpoint, obstacle, the start and a passage (rule {{rule_oneKind}})",
         "floor_obstacleOn": "Click to put a {{shape}} here, as set in the left panel (rule {{rule_obstacles}})",
-        "floor_obstacleSelect": "Click to pick this obstacle (change it in the left panel); drag to move it on its tile",
-        "floor_obstacleRoom4": "Room 4's obstacles are drawn in its picture: open the room 4 creator",
+        "floor_obstacleSelect": "Click to pick this obstacle and change it in the panel on the left. Drag to move it",
+        "floor_obstacleRoom4": "A room 4 preset takes no obstacles (switch room 4 to custom to put them)",
+        "floor_obstacleOnRoom4": "Click to put a {{shape}} obstacle as set in the panel on the left where you click (in room 4, anywhere and as many as you like)",
         "floor_obstacleTaken": "An obstacle cannot go on the start, a passage or a hole, swamp or checkpoint: a tile is only one of them (rule {{rule_oneKind}})",
         "floor_clear": "Click to take the floor off (hole, swamp, checkpoint)",
         "floor_off": "Click to take the {{floor}} off",
@@ -624,7 +626,7 @@
                 },
                 "obstacle": {
                     "title": "Put an obstacle",
-                    "body": "The obstacle tool (O) puts obstacles on tiles of rooms 1-3, one to a tile. Pick its shape (box, cylinder, cone, sphere, pyramid, regular prism or pyramid, an outline drawn on the map, an icon) and colour in the panel, then click a tile.\nAn obstacle does not go on the start, a passage, a hole, a swamp or a checkpoint. The robot has to get round it, so put it where it does not shut a way off: the checks tell you if it does.",
+                    "body": "The obstacle tool (O) puts obstacles on tiles of rooms 1-3, one to a tile. Pick its shape (box, cylinder, cone, sphere, pyramid, regular prism or pyramid, an outline drawn on the map, an icon) and colour in the panel, then click a tile. In room 4, as many as you like go where you click in it.\nAn obstacle does not go on the start, a passage, a hole, a swamp or a checkpoint. The robot has to get round it, so put it where it does not shut a way off: the checks tell you if it does.",
                     "task": "With the obstacle tool, click the tile in the green frame to put an obstacle"
                 },
                 "obstacleEdit": {
@@ -729,13 +731,10 @@
                     "body": "The eraser rubs out walls and victims where you drag. Its size (S, M, L) is in the settings.\nClear (the bin) in the top bar takes the whole picture away.",
                     "task": "With the eraser, rub out the top line (dashed orange)"
                 },
-                "r4template": {
-                    "title": "Template (T)",
-                    "body": "Pick a template (maze, pillars, diagonals, zigzag, rings, obstacles) and press Place: walls are laid over the whole of room 4, leaving as little as it can that the robot cannot get to.\nWith Clear the walls and victims first on, what is drawn goes before: a way to clear away the practice shapes too.",
-                    "task": "Pick a template (e.g. Pillars), turn on Clear the walls and victims first, and press Place",
-                    "tasks": {
-                        "clearOff": "Clear the walls and victims first is off. Turn it on, then press Place (it clears away the practice shapes)"
-                    }
+                "r4clear": {
+                    "title": "Clear all",
+                    "body": "The bin in the top bar (Clear all) clears the whole picture, and takes room 4's obstacles off too. Undo (Ctrl+Z) brings it back.\nClear away the practice shapes, then put victims and obstacles.",
+                    "task": "Press the bin in the top bar to clear away the practice shapes"
                 },
                 "r4stamp": {
                     "title": "Put victims",
@@ -758,19 +757,24 @@
                         "target": "The eraser is on Everything. Switch it to Victims only"
                     }
                 },
+                "r4obstacle": {
+                    "title": "Put an obstacle",
+                    "body": "The obstacle tool (K) puts an obstacle where you click in room 4. Room 4 does not follow the tiles, so you can put as many as fit. Pick the shape, height and colour in the panel.\nClick one to pick it, drag it to move it, and drag its handles to size and turn it. It stops where it meets a wall or another obstacle. The robot cannot get into an obstacle, and the pictures saved here keep them.",
+                    "task": "With the obstacle tool, click in room 4 to put an obstacle"
+                },
                 "r4reach": {
                     "title": "Make a place out of reach, and see it",
                     "body": "With Out of reach on, where the robot (radius 3.7 cm) cannot get to is shown with red stripes: a place closed in by walls, or a gap narrower than the robot.\nA place out of reach is fine in itself (the inside of an obstacle is meant to be). But the robot cannot find a victim put there, so use the stripes when putting victims. Victims the robot cannot get near, or that are off their wall, get a dashed red ring, and the bottom line counts them.\nEntrances / CP shows the entrances and checkpoints. Try making a place out of reach.",
                     "task": "With the rectangle tool, draw a small square away from the walls and see its inside turn to red stripes (Do it for me draws a small square with the pen)",
                     "tasks": {
                         "off": "There is no start, so where the robot cannot get to cannot be worked out. Put the start on the map first (this step can be skipped)",
-                        "allBlocked": "The robot cannot get into almost any of room 4: something closes off its entrance. Rub out the wall in front of it, or put a template again with Clear first on",
+                        "allBlocked": "The robot cannot get into almost any of room 4: something closes off its entrance. Rub out the wall in front of it",
                         "victimsIn": "{{n}} of the victims put so far are now where the robot cannot get to: the checks would stop the export for them. Undo (Ctrl+Z) and draw the square somewhere else, or take them off with the Eraser on Victims only (\"Do it for me\" takes them off)"
                     }
                 },
                 "r4file": {
                     "title": "Save and open as a picture",
-                    "body": "The buttons at the right of the top bar save the picture as a PNG, and open a PNG or JPEG.\nThe victims' kinds are kept in the picture, so a saved picture opens as it was: handy for the same room 4 in another map."
+                    "body": "The buttons at the right of the top bar save the picture as a PNG, and open a PNG or JPEG.\nThe victims' kinds are kept in the picture, so a saved picture opens as it was: handy for the same room 4 in another map.\nRoom 4's obstacles are kept in the picture too: a picture saved here brings them back when opened."
                 },
                 "r4ok": {
                     "title": "Back to the map",
@@ -905,7 +909,7 @@
                 },
                 "obstacle": {
                     "title": "Obstacle (O): any shape, size and colour",
-                    "body": "Put obstacles on tiles of rooms 1-3, one to a tile, its centre on the tile (rule {{rule_obstacles}}): any shape (box, cylinder, cone, sphere, pyramid, regular prism or pyramid, an outline drawn on the map, an icon) and colour, picked in the panel.\nA picked one has handles: squares for its size, a round one above it for its turn (Shift: steps of 15°). Its height is in the panel. It can stand against a wall, not go through one.\nThe robot has to get round it: the checks show where it cannot get to."
+                    "body": "In rooms 1-3, put obstacles on tiles, one to a tile, its centre on the tile (rule {{rule_obstacles}}). Room 4 is not laid out in tiles: there, as many as you like go where you click. Any shape (box, cylinder, cone, sphere, pyramid, regular prism or pyramid, an outline drawn on the map, an icon) and colour, picked in the panel.\nA picked one has handles: squares for its size, a round one above it for its turn (Shift: steps of 15°). Its height is in the panel. It can stand against a wall, not go through one.\nThe robot has to get round it: the checks show where it cannot get to."
                 },
                 "victim": {
                     "title": "Victim (V): victims and cognitive targets",
@@ -1019,24 +1023,6 @@
         },
         "randomGo": "Place {{n}}",
         "randomNote2": "Along walls the robot can get within half a tile of, at least half a tile apart.",
-        "templates": {
-            "maze": "Maze",
-            "pillars": "Pillars",
-            "diagonal": "Diagonals",
-            "zigzag": "Zigzag",
-            "rings": "Rings",
-            "obstacles": "Obstacles"
-        },
-        "templateHints": {
-            "maze": "A maze of one-tile corridors (with a few short cuts).",
-            "pillars": "Round pillars on the tile corners.",
-            "diagonal": "Short diagonal walls inside tiles.",
-            "zigzag": "One path turning at the ends.",
-            "rings": "Rings round the middle, each with a gap.",
-            "obstacles": "Scattered circles, boxes and triangles."
-        },
-        "templateClear": "Clear the walls and victims first",
-        "templateApply": "Place",
         "showGuides": "Show entrances and checkpoints",
         "missingCheckpoints": "{{count}} tile(s) just inside a passage are not checkpoints (rule {{rule_room4Checkpoint}}). Set them in the main editor (dashed \"CP?\").",
         "noEntrance": "Room 4 has no entrance. Open a wall towards a passage outside in the main editor.",
@@ -1088,6 +1074,7 @@
             "pen": "Pen",
             "line": "Line",
             "rect": "Rectangle",
+            "obstacle": "Obstacle",
             "stamp": "Victim",
             "floor": "Floor",
             "erase": "Eraser",
@@ -1096,8 +1083,7 @@
             "ellipse": "Circle / ellipse",
             "polygon": "Polygon",
             "shape": "Shape",
-            "select": "Select",
-            "template": "Template"
+            "select": "Select"
         },
         "undo": "Undo",
         "redo": "Redo",
@@ -1129,7 +1115,7 @@
             "polygon": "Drag from the centre to draw a regular polygon. It turns in 15° steps (free with Shift).",
             "shape": "Choose an icon or a picture, then drag on the canvas to size it (keeps its proportions; free with Shift).",
             "select": "Drag to select a box, then drag inside it to move it (hold Alt to copy). Arrow keys nudge it, [ ] turn it, Enter or a click outside puts it down, Delete removes it.",
-            "template": "Choose a template and press Place. Layouts that shut the robot out are made again automatically."
+            "obstacle": "Click in room 4 to put an obstacle of the panel's shape and colour there (as many as fit). Click one to pick it: drag it to move it, and drag its handles to size and turn it (Shift: 15° steps). Delete or a right click takes it off, Esc lets it go. It cannot go through walls or other obstacles."
         },
         "messages": {
             "outside": "It cannot go outside room 4.",
@@ -1139,9 +1125,9 @@
             "imageFailed": "The picture could not be loaded.",
             "randomDone": "Placed {{placed}}.",
             "randomShort": "Placed only {{placed}} of {{asked}} (not enough walls to put them on).",
-            "templateBlocked": "Every layout tried leaves part of the room out of reach. Check the light red parts.",
             "wallEnd": "Not on the end of a wall. Click a wall face at least as wide as a victim (2 cm).",
-            "unreachable": "The robot cannot get near here: no victims go where the robot cannot go (rule {{rule_reach}})."
+            "unreachable": "The robot cannot get near here: no victims go where the robot cannot go (rule {{rule_reach}}).",
+            "obstacleBlocked": "It does not fit here: it would go through a wall or another obstacle, stand on a victim, or reach out of room 4."
         },
         "tokens": "Wall tokens: {{count}}",
         "farFromWall": "{{count}} away from any wall (red dashed circle)",

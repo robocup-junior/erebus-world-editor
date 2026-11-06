@@ -5,6 +5,7 @@
 import { watch } from 'vue';
 import { apply, applyAsync } from '../editor/runtime';
 import type { Room4Host } from '../editor/editor';
+import type { ObstacleShape } from '../lib/field';
 import type { StampType as RuleStamp } from '../rules/types';
 
 export type StampType = RuleStamp;
@@ -39,8 +40,6 @@ export interface R4State {
     hasClip: boolean;
     randomCount: number;
     randomMode: string;
-    template: string;
-    templateClear: boolean;
     messageParams: Record<string, unknown>;
     entranceCount: number;
     passageCount: number;
@@ -61,6 +60,13 @@ export interface R4State {
     rot: number;
     randomRot: boolean;
     sel: { cx: number; cy: number; idx: number; rot: number | null; code: string | null } | null;
+    // the obstacle tool: the shape put next, and the obstacle picked (its number in the host's
+    // room4Obstacles) with its shape as the panel shows it
+    obstacle: ObstacleShape;
+    obSel: number | null;
+    obPicked: ObstacleShape | null;
+    obstacleCount?: number;
+    clearCount?: number;
 }
 
 export interface CreatorScope {

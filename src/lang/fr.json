@@ -124,7 +124,7 @@
             "line": "Faites glisser pour tracer des murs. La ligne tourne avec le pointeur, donc un seul tracé peut faire un zigzag (revenez sur vos pas pour annuler un virage). Commencez avec Maj enfoncée pour une seule ligne droite. La salle 1 s’aligne sur 12 cm (bords des cases), les salles 2 et 3 sur 6 cm. Pas dans la salle 4.",
             "eraser": "Cliquez ou faites glisser sur les murs, courbes et victimes pour les retirer. Loin des murs, elle retire le sol d’une case (trou, marais, checkpoint) ; un clic retire le départ. Les murs extérieurs restent. Un obstacle part aussi d’un clic.",
             "floor": "Cliquez sur une case pour choisir son sol.",
-            "obstacle": "Cliquez une case pour poser un obstacle de la forme et de la couleur choisies dans le panneau (salles 1-3, un par case ; règle {{rule_obstacles}}). Cliquez-en un pour le choisir : ses poignées sur la carte changent sa taille et sa rotation (Maj : pas de 15°), le panneau sa hauteur, sa couleur et sa forme ; faites-le glisser pour le déplacer, Suppr le retire. Les coins d’un contour se cliquent sur la carte ; une icône se cherche par son nom.",
+            "obstacle": "Cliquez une case pour poser un obstacle de la forme et de la couleur choisies dans le panneau (salles 1-3 : un par case, son centre dessus ; règle {{rule_obstacles}}). Dans la salle 4, autant que vous voulez, là où vous cliquez. Cliquez-en un pour le choisir : ses poignées sur la carte changent sa taille et sa rotation (Maj : pas de 15°), le panneau sa hauteur, sa couleur et sa forme ; faites-le glisser pour le déplacer, Suppr le retire. Les coins d’un contour se cliquent sur la carte ; une icône se cherche par son nom.",
             "victim": "Cliquez près d’un mur : la victime se place sur le mur là où vous cliquez. Salle 1 : sur un côté de case (une par case) ; salles 2 et 3 : sur une face des murs de 6 cm (4 quarts × 4 faces) ; une courbe a deux places (intérieur et extérieur). Faites glisser une victime placée pour la déplacer le long de son mur (elle s’arrête avant le bout du mur et les autres victimes). Cliquez une victime posée pour la sélectionner : son type, ses anneaux et son orientation se changent alors dans le panneau, ou elle est retirée.",
             "curve": "Pointez un quart de case dans la salle 3 pour voir ses quatre courbes ; la plus proche (bleue) se place d’un clic. Cliquez à nouveau sur la même pour la retirer.",
             "select": "Sélectionnez ensemble murs, salles, sols et victimes pour les déplacer, copier, coller ou effacer. Cliquez une victime ou un obstacle pour ouvrir son outil avec lui choisi ; cliquez un mur ou une courbe pour le choisir et Suppr pour le retirer.",
@@ -215,7 +215,7 @@
         "draw": "Dessiner son contour",
         "drawDone": "Fermer et poser",
         "drawHow": "Cliquez ses coins sur la carte ; cliquez le premier ou appuyez sur Entrée pour le fermer, Échap pour arrêter. Le centre du rectangle qui l’entoure va sur une case, loin de ses bords.",
-        "onTile": "Son centre reste sur sa case, loin de ses bords (règle {{rule_obstacles}}). Il peut s’appuyer contre un mur, pas le traverser : déplacé ou agrandi, il s’arrête là où il en touche un. Faites-le glisser sur la carte pour le déplacer. Ses poignées sur la carte changent sa taille et sa rotation (Maj : pas de 15°).",
+        "onTile": "Dans les salles 1-3, son centre reste sur sa case, loin de ses bords (règle {{rule_obstacles}}). Dans la salle 4, son centre peut être n’importe où, et il peut y en avoir autant que vous voulez. Il peut s’appuyer contre un mur, pas le traverser : déplacé ou agrandi, il s’arrête où il en touche un. Faites-le glisser sur la carte pour le déplacer. Ses poignées sur la carte changent sa taille et sa rotation (Maj : pas de 15°).",
         "colorNote": "N’importe quelle couleur (règle {{rule_obstacles}}). Une couleur proche de celle d’un sol (argent, noir, brun, cyan), d’un passage ou d’une victime est plus difficile à distinguer pour le robot.",
         "moreColors": "Autres couleurs"
     },
@@ -296,8 +296,9 @@
             "noStart": "Il n’y a pas de case de départ",
             "startNotRoom1": "La case de départ n’est pas dans la salle 1. Le départ est l’une des cases de la salle 1 (règle {{rule_start}})",
             "tileTwoKinds": "Des cases sont deux ou plus de trou, marais, checkpoint, obstacle, départ et passage ({{count}}). Une case n’est qu’une de ces choses (règle {{rule_oneKind}})",
-            "obstacleRoom": "Des obstacles sont sur des cases de la salle 4 ou hors de la carte ({{count}}). Ceux de la salle 4 se dessinent dans son image",
+            "obstacleRoom": "Il y a des obstacles de case sur des cases de la salle 4 ou hors de la carte ({{count}}). Reposez les obstacles de la salle 4 en cliquant à l’intérieur",
             "obstacleOverlap": "Des obstacles entrent dans un mur ou un autre obstacle ({{count}}). Un obstacle peut s’appuyer contre un mur, pas le traverser",
+            "room4ObstacleOverlap": "Des obstacles de la salle 4 traversent un mur ou un autre obstacle, recouvrent une victime, ou sortent de la salle 4 ({{count}}). Ils peuvent s’appuyer contre un mur, pas le traverser",
             "passageOpenSides": "Des passages sont ouverts sur plus de deux côtés ({{count}}). Un passage a des murs sur deux côtés : une entrée, une sortie (règle {{rule_passageWalls}})",
             "victimNoWall": "Des victimes ont perdu leur mur ({{count}})",
             "victimInPassage": "Des victimes sont dans un passage entre zones ({{count}}) : il n’y en a pas dans les passages (règle {{rule_passageTokens}})",
@@ -370,7 +371,7 @@
         "regionPick": "Faites glisser pour sélectionner",
         "regionDrag": "Faites glisser pour déplacer, Alt+glisser pour copier. Les flèches déplacent d’une case ; Ctrl+C / X / V et Suppr marchent aussi",
         "select_victim": "Cliquez pour ouvrir l’outil victimes avec cette victime choisie (faites-la glisser le long de son mur)",
-        "select_obstacle": "Cliquez pour ouvrir l’outil sol avec cet obstacle choisi (faites-le glisser sur sa case)",
+        "select_obstacle": "Cliquez pour passer à l’outil obstacles avec cet obstacle choisi (glissez pour le déplacer)",
         "select_curve": "Cliquez pour choisir cette courbe",
         "select_wall": "Cliquez pour choisir ce mur (un tronçon droit)",
         "regionCopied": "Copié. Ctrl+V colle sur la case sous le pointeur",
@@ -409,8 +410,9 @@
         "floor_onPassage": "{{floor}} ne peut pas aller sur une case de passage : une case n’est qu’un de trou, marais, checkpoint, obstacle, départ et passage (règle {{rule_oneKind}})",
         "floor_onObstacle": "{{floor}} ne peut pas aller sur une case avec un obstacle : une case n’est qu’un de trou, marais, checkpoint, obstacle, départ et passage (règle {{rule_oneKind}})",
         "floor_obstacleOn": "Cliquez pour poser ici un obstacle ({{shape}}) tel que réglé dans le panneau de gauche (règle {{rule_obstacles}})",
-        "floor_obstacleSelect": "Cliquez pour choisir cet obstacle (modifiez-le dans le panneau de gauche) ; faites glisser pour le déplacer sur sa case",
-        "floor_obstacleRoom4": "Les obstacles de la salle 4 se dessinent dans son image : ouvrez le créateur de la salle 4",
+        "floor_obstacleSelect": "Cliquez pour choisir cet obstacle et le modifier dans le panneau de gauche. Faites-le glisser pour le déplacer",
+        "floor_obstacleRoom4": "Une salle 4 prédéfinie ne prend pas d’obstacles (passez la salle 4 en personnalisée pour en poser)",
+        "floor_obstacleOnRoom4": "Cliquez pour poser un obstacle ({{shape}}) réglé dans le panneau de gauche là où vous cliquez (dans la salle 4, n’importe où et autant que vous voulez)",
         "floor_obstacleTaken": "Un obstacle ne peut pas aller sur le départ, un passage ou un trou, un marais ou un checkpoint : une case n’est qu’une de ces choses (règle {{rule_oneKind}})",
         "floor_clear": "Cliquez pour retirer le sol (trou, marais, checkpoint)",
         "floor_off": "Cliquez pour retirer : {{floor}}",
@@ -624,7 +626,7 @@
                 },
                 "obstacle": {
                     "title": "Poser un obstacle",
-                    "body": "L’outil obstacles (O) pose des obstacles sur des cases des salles 1-3, un par case. Choisissez sa forme (boîte, cylindre, cône, sphère, pyramide, prisme ou pyramide réguliers, un contour dessiné sur la carte, une icône) et sa couleur dans le panneau, puis cliquez une case.\nUn obstacle ne va pas sur le départ, un passage, un trou, un marais ni un checkpoint. Le robot doit le contourner : posez-le où il ne ferme pas un chemin, les vérifications vous le signalent sinon.",
+                    "body": "L’outil obstacles (O) pose des obstacles sur des cases des salles 1-3, un par case. Choisissez sa forme (boîte, cylindre, cône, sphère, pyramide, prisme ou pyramide réguliers, un contour dessiné sur la carte, une icône) et sa couleur dans le panneau, puis cliquez une case. Dans la salle 4, autant que vous voulez, là où vous cliquez à l’intérieur.\nUn obstacle ne va pas sur le départ, un passage, un trou, un marais ni un checkpoint. Le robot doit le contourner : posez-le où il ne ferme pas un chemin, les vérifications vous le signalent sinon.",
                     "task": "Avec l’outil obstacles, cliquez la case du cadre vert pour poser un obstacle"
                 },
                 "obstacleEdit": {
@@ -729,13 +731,10 @@
                     "body": "La gomme efface murs et victimes là où vous faites glisser. Sa taille (S, M, L) est dans les réglages.\nTout effacer (la corbeille) dans la barre du haut retire toute l’image.",
                     "task": "Avec la gomme, effacez la ligne du haut (orange pointillée)"
                 },
-                "r4template": {
-                    "title": "Modèle (T)",
-                    "body": "Choisissez un modèle (labyrinthe, piliers, diagonales, zigzag, anneaux, obstacles) et appuyez sur Placer : des murs couvrent toute la salle 4, en laissant le moins possible d’endroits inaccessibles au robot.\nAvec Effacer d’abord murs et victimes activé, ce qui est dessiné part avant : un moyen d’enlever aussi les formes d’entraînement.",
-                    "task": "Choisissez un modèle (p. ex. Piliers), activez Effacer d’abord murs et victimes, et appuyez sur Placer",
-                    "tasks": {
-                        "clearOff": "Effacer d’abord murs et victimes est désactivé. Activez-le puis appuyez sur Placer (il enlève les formes d’entraînement)"
-                    }
+                "r4clear": {
+                    "title": "Tout effacer",
+                    "body": "La corbeille de la barre du haut (Tout effacer) efface toute l’image et enlève aussi les obstacles de la salle 4. Annuler (Ctrl+Z) la rétablit.\nEffacez les formes d’entraînement, puis posez des victimes et des obstacles.",
+                    "task": "Appuyez sur la corbeille de la barre du haut pour effacer les formes d’entraînement"
                 },
                 "r4stamp": {
                     "title": "Placer des victimes",
@@ -758,19 +757,24 @@
                         "target": "La gomme est sur Tout. Passez-la sur Victimes seulement"
                     }
                 },
+                "r4obstacle": {
+                    "title": "Poser un obstacle",
+                    "body": "L’outil obstacle (K) pose un obstacle là où vous cliquez dans la salle 4. La salle 4 ne suit pas les dalles : vous pouvez en poser autant qu’il en tient. Choisissez la forme, la hauteur et la couleur dans le panneau.\nCliquez sur un obstacle pour le choisir, faites-le glisser pour le déplacer, et tirez ses poignées pour changer sa taille et son orientation. Il s’arrête là où il touche un mur ou un autre obstacle. Le robot ne peut pas entrer dans un obstacle, et les images enregistrées ici les conservent.",
+                    "task": "Avec l’outil obstacle, cliquez dans la salle 4 pour poser un obstacle"
+                },
                 "r4reach": {
                     "title": "Créer un endroit inaccessible, et le voir",
                     "body": "Avec Inaccessible activé, là où le robot (rayon 3,7 cm) ne peut pas aller s’affiche en rayures rouges : un endroit fermé par des murs, ou un espace plus étroit que le robot.\nUn endroit inaccessible n’est pas un problème en soi (l’intérieur d’un obstacle doit l’être). Mais le robot ne peut pas trouver une victime placée là, alors servez-vous des rayures en plaçant les victimes. Les victimes dont le robot ne peut pas s’approcher, ou qui ne sont pas sur leur mur, ont un anneau rouge pointillé, et la ligne du bas les compte.\nEntrées / CP montre les entrées et les checkpoints. Essayez de créer un endroit inaccessible.",
                     "task": "Avec l’outil rectangle, tracez un petit carré loin des murs et voyez son intérieur passer en rayures rouges (Le faire pour moi trace un petit carré au stylo)",
                     "tasks": {
                         "off": "Il n’y a pas de départ, donc on ne peut pas calculer où le robot ne peut pas aller. Placez d’abord le départ sur la carte (cette étape peut être passée)",
-                        "allBlocked": "Le robot ne peut entrer presque nulle part dans la salle 4 : quelque chose bloque son entrée. Gommez le mur devant, ou replacez un modèle avec Effacer d’abord activé",
+                        "allBlocked": "Le robot ne peut entrer presque nulle part dans la salle 4 : quelque chose bloque son entrée. Gommez le mur devant",
                         "victimsIn": "{{n}} des victimes posées jusqu’ici sont maintenant là où le robot ne peut pas aller : les vérifications bloqueraient l’export pour elles. Annulez (Ctrl+Z) et dessinez le carré ailleurs, ou retirez-les avec la Gomme sur « Victimes seulement » (« Le faire pour moi » les retire)"
                     }
                 },
                 "r4file": {
                     "title": "Enregistrer et ouvrir comme image",
-                    "body": "Les boutons à droite de la barre du haut enregistrent l’image en PNG, et ouvrent un PNG ou un JPEG.\nLes types des victimes sont gardés dans l’image, donc une image enregistrée s’ouvre telle qu’elle était : pratique pour la même salle 4 dans une autre carte."
+                    "body": "Les boutons à droite de la barre du haut enregistrent l’image en PNG, et ouvrent un PNG ou un JPEG.\nLes types des victimes sont gardés dans l’image, donc une image enregistrée s’ouvre telle qu’elle était : pratique pour la même salle 4 dans une autre carte.\nLes obstacles de la salle 4 sont aussi gardés dans l’image : une image enregistrée ici les ramène à l’ouverture."
                 },
                 "r4ok": {
                     "title": "Retour à la carte",
@@ -905,7 +909,7 @@
                 },
                 "obstacle": {
                     "title": "Obstacle (O) : toute forme, taille et couleur",
-                    "body": "Posez des obstacles sur des cases des salles 1-3, un par case, leur centre sur la case (règle {{rule_obstacles}}) : toute forme (boîte, cylindre, cône, sphère, pyramide, prisme ou pyramide réguliers, un contour dessiné sur la carte, une icône) et toute couleur, choisies dans le panneau.\nUn obstacle choisi a des poignées : carrées pour sa taille, une ronde au-dessus pour sa rotation (Maj : pas de 15°). Sa hauteur est dans le panneau. Il peut s’appuyer contre un mur, pas le traverser.\nLe robot doit le contourner : les vérifications montrent où il ne va pas."
+                    "body": "Dans les salles 1-3, posez des obstacles sur des cases, un par case, leur centre sur la case (règle {{rule_obstacles}}). La salle 4 n’est pas faite de cases : on y en pose autant qu’on veut, là où l’on clique. Toute forme (boîte, cylindre, cône, sphère, pyramide, prisme ou pyramide réguliers, un contour dessiné sur la carte, une icône) et toute couleur, choisies dans le panneau.\nUn obstacle choisi a des poignées : carrées pour sa taille, une ronde au-dessus pour sa rotation (Maj : pas de 15°). Sa hauteur est dans le panneau. Il peut s’appuyer contre un mur, pas le traverser.\nLe robot doit le contourner : les vérifications montrent où il ne va pas."
                 },
                 "victim": {
                     "title": "Victime (V) : victimes et cibles cognitives",
@@ -1019,24 +1023,6 @@
         },
         "randomGo": "Placer {{n}}",
         "randomNote2": "Le long de murs dont le robot peut s’approcher à une demi-case, à au moins une demi-case les unes des autres.",
-        "templates": {
-            "maze": "Labyrinthe",
-            "pillars": "Piliers",
-            "diagonal": "Diagonales",
-            "zigzag": "Zigzag",
-            "rings": "Anneaux",
-            "obstacles": "Obstacles"
-        },
-        "templateHints": {
-            "maze": "Un labyrinthe de couloirs d’une case (avec quelques raccourcis).",
-            "pillars": "Piliers ronds aux coins des cases.",
-            "diagonal": "Courts murs diagonaux dans les cases.",
-            "zigzag": "Un seul chemin qui tourne aux extrémités.",
-            "rings": "Des anneaux autour du centre, chacun avec une ouverture.",
-            "obstacles": "Cercles, boîtes et triangles dispersés."
-        },
-        "templateClear": "Effacer d’abord murs et victimes",
-        "templateApply": "Placer",
         "showGuides": "Afficher entrées et checkpoints",
         "missingCheckpoints": "{{count}} case(s) juste derrière un passage ne sont pas des checkpoints (règle {{rule_room4Checkpoint}}). Définissez-les dans l’éditeur principal (\"CP?\" pointillé).",
         "noEntrance": "La salle 4 n’a pas d’entrée. Ouvrez un mur vers un passage extérieur dans l’éditeur principal.",
@@ -1088,6 +1074,7 @@
             "pen": "Stylo",
             "line": "Ligne",
             "rect": "Rectangle",
+            "obstacle": "Obstacle",
             "stamp": "Victime",
             "floor": "Sol",
             "erase": "Gomme",
@@ -1096,8 +1083,7 @@
             "ellipse": "Cercle / ellipse",
             "polygon": "Polygone",
             "shape": "Forme",
-            "select": "Sélection",
-            "template": "Modèle"
+            "select": "Sélection"
         },
         "undo": "Annuler",
         "redo": "Rétablir",
@@ -1129,7 +1115,7 @@
             "polygon": "Faites glisser depuis le centre pour tracer un polygone régulier. Il tourne par pas de 15° (librement avec Maj).",
             "shape": "Choisissez une icône ou une image, puis faites glisser sur le canevas pour la dimensionner (garde ses proportions ; libre avec Maj).",
             "select": "Faites glisser pour sélectionner une boîte, puis faites glisser à l’intérieur pour la déplacer (Alt pour copier). Les flèches la poussent, [ ] la tournent, Entrée ou un clic en dehors la pose, Suppr la supprime.",
-            "template": "Choisissez un modèle et appuyez sur Placer. Les dispositions qui excluent le robot sont refaites automatiquement."
+            "obstacle": "Cliquez dans la salle 4 pour y poser un obstacle de la forme et de la couleur du panneau (autant qu’il en tient). Cliquez sur un obstacle pour le choisir : faites-le glisser pour le déplacer, et tirez ses poignées pour changer sa taille et son orientation (Maj : par pas de 15°). Suppr ou un clic droit l’enlève, Échap le libère. Il ne peut pas traverser les murs ni d’autres obstacles."
         },
         "messages": {
             "outside": "Impossible en dehors de la salle 4.",
@@ -1139,9 +1125,9 @@
             "imageFailed": "L’image n’a pas pu être chargée.",
             "randomDone": "{{placed}} placée(s).",
             "randomShort": "Seulement {{placed}} placée(s) sur {{asked}} (pas assez de murs pour les mettre).",
-            "templateBlocked": "Chaque disposition essayée laisse une partie de la salle inaccessible. Vérifiez les parties rouge clair.",
             "wallEnd": "Pas au bout d’un mur. Cliquez sur une face de mur au moins aussi large qu’une victime (2 cm).",
-            "unreachable": "Le robot ne peut pas s’approcher d’ici : pas de victimes là où le robot ne peut pas aller (règle {{rule_reach}})."
+            "unreachable": "Le robot ne peut pas s’approcher d’ici : pas de victimes là où le robot ne peut pas aller (règle {{rule_reach}}).",
+            "obstacleBlocked": "Il ne tient pas ici : il traverserait un mur ou un autre obstacle, recouvrirait une victime, ou dépasserait de la salle 4."
         },
         "tokens": "Marques murales : {{count}}",
         "farFromWall": "{{count}} loin de tout mur (cercle rouge pointillé)",

@@ -404,17 +404,12 @@ const ROOM4: TourStep[] = [
         env.creator!.r4api.erasePen(R4.line);
     }),
     {
-        // a template laid over a cleared picture: the drawings so far make way for it
-        id: 'r4template', chapter: 'room4', creator: true, target: '.r4-panel', mark: ['.r4-viewport', r4tool('template')], r4tool: 'template',
-        // put with "clear first" on, so the practice shapes (which may close off the entrance) go
-        goal: drewWith('template', function (r4) { return !!r4.templateClear; }),
-        auto: function (env) { env.creator!.r4.templateClear = true; env.creator!.r4api.applyTemplate('pillars', true); },
-        state: function (env) {
-            const cr = env.creator;
-            if (!cr) return null;
-            if (cr.r4.tool !== 'template') return { key: 'tool', params: { name: 'template' }, nameOf: 'room4.tools.' };
-            return cr.r4.templateClear ? null : { key: 'clearOff' };
-        }
+        // the practice shapes cleared away with "clear all" (the robot gets everywhere again, for the
+        // victims, the obstacle and the place out of reach to come)
+        id: 'r4clear', chapter: 'room4', creator: true, target: '.r4-topbar', mark: ['.r4-topbar .r4-icon.danger'],
+        enter: function (env, st) { st.c0 = env.creator ? env.creator!.r4.clearCount || 0 : 0; },
+        goal: function (env, st) { return !!env.creator && (env.creator!.r4.clearCount || 0) > st.c0; },
+        auto: function (env) { env.creator!.r4api.clear(); }
     },
     {
         id: 'r4stamp', chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-panel', r4tool('stamp')], r4tool: 'stamp',
@@ -445,6 +440,23 @@ const ROOM4: TourStep[] = [
             if (cr.r4.tool !== 'erase') return { key: 'tool', params: { name: 'erase' }, nameOf: 'room4.tools.' };
             return cr.r4.eraseTarget !== 'tokens' ? { key: 'target' } : null;
         }
+    },
+    {
+        // an obstacle put in room 4 with the creator's obstacle tool; "do it for me" puts a small
+        // cylinder where one fits, off the walls (where the victims are) in the room cleared
+        id: 'r4obstacle', chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-panel', r4tool('obstacle')], r4tool: 'obstacle',
+        enter: function (env, st) { st.n0 = env.creator ? env.creator!.r4.obstacleCount || 0 : 0; },
+        goal: function (env, st) { return !!env.creator && (env.creator!.r4.obstacleCount || 0) > st.n0; },
+        auto: function (env) {
+            const cr = env.creator!;
+            cr.r4api.obstacleSet({ shape: 'cylinder', w: 3, d: 3, h: 5 });
+            [[0.5, 0.35], [0.3, 0.35], [0.7, 0.35], [0.5, 0.5]].some(function (f) {
+                const n = cr.r4.obstacleCount || 0;
+                cr.r4api.putObstacle(f);
+                return (cr.r4.obstacleCount || 0) > n;
+            });
+        },
+        state: otherTool('obstacle')
     },
     {
         // a place the robot cannot get into made on purpose (a small closed square), and seen

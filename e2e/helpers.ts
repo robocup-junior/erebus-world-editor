@@ -126,11 +126,12 @@ export async function reseed(page: Page, seed = 7): Promise<void> {
     await page.evaluate((n) => (window as any).__reseed(n), seed);
 }
 
-// What a click on a button downloads, as text
-export async function download(page: Page, act: () => Promise<void>): Promise<{ name: string; text: string }> {
+// What a click on a button downloads, as text (and its bytes, with binary)
+export async function download(page: Page, act: () => Promise<void>, opts: { binary?: boolean } = {}): Promise<{ name: string; text: string; buffer?: Buffer }> {
     const [d] = await Promise.all([page.waitForEvent('download'), act()]);
     const p = await d.path();
-    return { name: d.suggestedFilename(), text: fs.readFileSync(p!, 'utf8') };
+    const buffer = fs.readFileSync(p!);
+    return { name: d.suggestedFilename(), text: opts.binary ? '' : buffer.toString('utf8'), buffer: opts.binary ? buffer : undefined };
 }
 
 // A point of the room 4 creator's picture (fractions of it) in window pixels

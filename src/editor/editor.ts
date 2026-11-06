@@ -42,6 +42,9 @@ interface Dialog {
     actions: DialogAction[];
     done: (v: unknown) => void;
 }
+// An obstacle picked or pointed at: a tile's (its cell x, y) or room 4's (r4: its number in
+// map.room4Obstacles; x, y unused)
+type ObRef = { x: number; y: number; r4?: number };
 interface Selected { where: Where; victim: VictimInfo; rot: number; letter: string; offset: number }
 interface Notice { text: string; kind: string }
 // The room 4 creator while it is open: what it is given, and what it leaves (its picture)
@@ -53,6 +56,13 @@ export interface Room4Host {
     room4Img: HTMLImageElement;
     room4CanvasSave: string | null;
     room4Tokens: Room4Token[];
+    // room 4's obstacles (lib/field: Room4Obstacle): shown and in the robot's way in the creator, and
+    // kept in (or taken from) the picture it saves as an image
+    room4Obstacles: W.Room4Obstacle[];
+    // the map with `list` as room 4's obstacles (the creator's, checked against the map's walls and
+    // obstacles), and the obstacle tool's shape to put next as the map editor has it
+    room4ObstacleMap(list: W.Room4Obstacle[]): MapData;
+    room4ObstacleNext: W.ObstacleShape;
     room4StampTypes: StampType[];
     // the ring targets of the map's year: the type of a code, a random code of a type
     room4Target: Tokens['target'];
@@ -176,7 +186,7 @@ export function createEditor() {
         wallSel: null as { segs: string[]; arc: L.Arc | null; cm: number } | null,
         // the floor tool's obstacle: the one picked on the map (at: its tile cell), or the one to put
         // next; its shape as the panel shows it
-        obstacle: { at: null as { x: number; y: number } | null, shape: Object.assign({}, M.OBSTACLE_DEFAULT) as W.ObstacleShape },
+        obstacle: { at: null as ObRef | null, shape: Object.assign({}, M.OBSTACLE_DEFAULT) as W.ObstacleShape },
         obstacleKinds: W.OBSTACLE_KINDS,
         // colours to pick at once (any other in the colour picker): the grey of before first
         obstacleColors: [W.OBSTACLE_GREY, '#ffffff', '#3f3f46', '#dc2626', '#f97316', '#facc15', '#16a34a', '#2563eb', '#7c3aed', '#92400e'],
@@ -910,7 +920,11 @@ export function createEditor() {
             canvasHeight: size.h,
             // the map as the creator works out the robot's reach on it: its walls, holes and start, and
             // its obstacles (solid, in the way to room 4's entrances as well)
-            room4MapGeometry: function () { return Object.assign(W.mapGeometry(map), { obstacles: W.obstacleOutlines(map) }); },
+            // (room 4's own obstacles are the creator's: room4Obstacles)
+            room4MapGeometry: function () { return Object.assign(W.mapGeometry(map), { obstacles: W.obstacleOutlines(map, true) }); },
+            room4Obstacles: JSON.parse(JSON.stringify(W.room4Obstacles(map))),
+            room4ObstacleMap: function (list) { return Object.assign({}, map, { room4Obstacles: list }); },
+            room4ObstacleNext: Object.assign({}, S.obstacle.shape, { dx: 0, dy: 0 }),
             room4Img: new Image(),
             room4CanvasSave: map.room4CanvasSave || null,
             room4Tokens: JSON.parse(JSON.stringify(map.room4Tokens || [])),
@@ -922,7 +936,8 @@ export function createEditor() {
         };
         room4Done = function () {
             const picture = (host.room4CanvasSave || null) !== (map.room4CanvasSave || null);
-            const kept = JSON.stringify(host.room4Tokens || []) !== JSON.stringify(map.room4Tokens || []);
+            const kept = JSON.stringify(host.room4Tokens || []) !== JSON.stringify(map.room4Tokens || [])
+                || JSON.stringify(host.room4Obstacles || []) !== JSON.stringify(W.room4Obstacles(map));
             const floored = map.roomTiles[2].some(function (k) {
                 const p = k.split(',').map(Number);
                 return M.floorKind(map, p[0], p[1]) !== (host.room4Floors[p[0] + ',' + p[1]] || '');
@@ -931,6 +946,8 @@ export function createEditor() {
                 begin();
                 map.room4CanvasSave = host.room4CanvasSave;
                 map.room4Tokens = host.room4Tokens || [];
+                map.room4Obstacles = (host.room4Obstacles || []).map(function (o) { return M.clampRoom4Obstacle(o); });
+                if (S.obstacle.at && S.obstacle.at.r4 !== undefined) S.obstacle.at = null;
                 map.roomTiles[2].forEach(function (k) {
                     const p = k.split(',').map(Number);
                     M.setFloorKind(map, p[0], p[1], host.room4Floors[p[0] + ',' + p[1]] || '');
@@ -1232,14 +1249,16 @@ export function createEditor() {
         } else if (tool === 'obstacle' && obstacleHandleAt(p)) {
             // a handle of the picked one: its size or its turn, dragged
             const at = S.obstacle.at!;
-            stroke = { obstacle: at, handle: obstacleHandleAt(p)!.kind, shape: Object.assign({}, W.obstacleShape(M.tileOf(map, at.x, at.y))) };
+            stroke = { obstacle: at, handle: obstacleHandleAt(p)!.kind, shape: Object.assign({}, obShape(at)) };
         } else if (tool === 'obstacle') {
-            // on an obstacle: picked, and dragged it moves on its tile
+            // on an obstacle (its outline, or a tile with one): picked, and dragged it moves (on its
+            // tile; room 4's in room 4)
             const tl = tileAt(p);
             const t = tl && M.tileOf(map, tl.x, tl.y);
-            if (tl && t && t.obstacle) {
-                pickObstacle(tl);
-                stroke = { obstacle: tl, down: p, from: { dx: S.obstacle.shape.dx, dy: S.obstacle.shape.dy } };
+            const at = obstacleUnder(p) || (tl && t && t.obstacle ? tl : null);
+            if (at) {
+                pickObstacle(at);
+                stroke = { obstacle: S.obstacle.at, down: p, from: Object.assign({}, obShape(S.obstacle.at)) };
             } else stroke = {};
         } else {
             stroke = {};
@@ -1261,7 +1280,7 @@ export function createEditor() {
             else if (tool === 'victim') dragVictim(p);
             else if (tool === 'obstacle' && stroke.handle) obstacleHandleDrag(p);
             else if (tool === 'obstacle' && stroke.obstacle) {
-                M.changeObstacle(map, stroke.obstacle.x, stroke.obstacle.y, { dx: stroke.from.dx + p.x - stroke.down.x, dy: stroke.from.dy + p.y - stroke.down.y });
+                obMove(stroke.obstacle, stroke.from, p.x - stroke.down.x, p.y - stroke.down.y);
                 syncObstacle();
             }
         }
@@ -1304,6 +1323,7 @@ export function createEditor() {
             else if (stroke.obstacle) { /* picked (and moved) */ }
             else if (refused) notify(refused.key, refused.params, 'warn');
             else if (tl && S.obstacleMode === 'icon' && S.obstacle.shape.shape !== 'icon') notify('obstacle_pickIcon', null, 'warn');
+            else if (room4Tile(tl)) putRoom4Obstacle(p, S.obstacle.shape);
             else if (tl && !M.isOutside(map, tl.x, tl.y)) {
                 // put with the panel's shape, in the middle of its tile, and picked; not where it would
                 // go into a wall or another obstacle
@@ -1514,6 +1534,13 @@ export function createEditor() {
     }
 
     function erase(p: P, floors: boolean, click: boolean) {
+        // room 4's obstacles are taken off where they are, as victims are
+        const ob = obstacleUnder(p);
+        if (ob && ob.r4 !== undefined) {
+            obRemove(ob);
+            if (S.obstacle.at && S.obstacle.at.r4 !== undefined) S.obstacle.at = null;
+            return;
+        }
         if (floors) {
             const f = floorNear(p, click);
             if (!f) return;
@@ -1560,7 +1587,12 @@ export function createEditor() {
         S.wallSel = null;
     }
     // the obstacle whose outline is at p (on its tile or the next: one may reach over its tile's edge)
-    function obstacleUnder(p: P): { x: number; y: number } | null {
+    function obstacleUnder(p: P): ObRef | null {
+        // room 4's, the one drawn last first
+        const r4 = W.room4Obstacles(map);
+        for (let i = r4.length - 1; i >= 0; i--) {
+            if (W.room4ObstacleRings(map, r4[i]).some(function (r) { return W.insideRing(p.x, p.y, r); })) return { x: 0, y: 0, r4: i };
+        }
         const tx = 2 * Math.floor(p.x / TILE) + 1, ty = 2 * Math.floor(p.y / TILE) + 1;
         for (let x = tx - 2; x <= tx + 2; x += 2) {
             for (let y = ty - 2; y <= ty + 2; y += 2) {
@@ -1585,7 +1617,7 @@ export function createEditor() {
         return run;
     }
     // what a click of the select tool at p would pick
-    function objectAt(p: P): { kind: string; where?: Where; tile?: { x: number; y: number }; arc?: L.Arc; segs?: string[] } | null {
+    function objectAt(p: P): { kind: string; where?: Where; tile?: ObRef; arc?: L.Arc; segs?: string[] } | null {
         const w = victimUnder(p);
         if (w) return { kind: 'victim', where: w };
         const ob = obstacleUnder(p);
@@ -1613,7 +1645,7 @@ export function createEditor() {
             openTool('obstacle');
             S.obstacleMode = '';
             pickObstacle(o.tile!);
-            stroke = { obstacle: o.tile, down: p, from: { dx: S.obstacle.shape.dx, dy: S.obstacle.shape.dy } };
+            stroke = { obstacle: S.obstacle.at, down: p, from: Object.assign({}, obShape(S.obstacle.at)) };
         } else {
             S.wallSel = o.arc ? { segs: [], arc: o.arc, cm: 0 } : { segs: o.segs!, arc: null, cm: 6 * o.segs!.length };
             stroke = { picked: true };
@@ -1900,9 +1932,49 @@ export function createEditor() {
         return passageWallsAt.segs;
     }
 
-    // ---- obstacles (the floor tool's obstacle): picked on the map, changed in the panel ----
-    function pickObstacle(tl: { x: number; y: number }) {
-        S.obstacle.at = { x: tl.x, y: tl.y };
+    // ---- obstacles (the obstacle tool): picked on the map, changed in the panel ----
+    // An obstacle by its reference: its shape, its centre and outlines on the map (cm), changed (as far
+    // as it goes), moved by (ddx, ddy) cm from the shape it had, taken off
+    function obShape(at: ObRef | null): W.ObstacleShape | null {
+        if (!at || !map) return null;
+        if (at.r4 !== undefined) return W.room4Obstacles(map)[at.r4] || null;
+        return W.obstacleShape(M.tileOf(map, at.x, at.y));
+    }
+    function obCentre(at: ObRef, sh: W.ObstacleShape): number[] {
+        if (at.r4 !== undefined) return W.room4ObstacleCentre(map, sh as W.Room4Obstacle) || [0, 0];
+        return [6 * at.x + sh.dx, 6 * at.y + sh.dy];
+    }
+    function obRings(at: ObRef, sh: W.ObstacleShape): number[][][] {
+        return at.r4 !== undefined ? W.room4ObstacleRings(map, sh as W.Room4Obstacle) : W.obstacleRings(sh, at.x, at.y);
+    }
+    function obChange(at: ObRef, change: Partial<W.Room4Obstacle>): boolean {
+        if (at.r4 !== undefined) return M.changeRoom4Obstacle(map, at.r4, change, room4Picture());
+        return M.changeObstacle(map, at.x, at.y, change);
+    }
+    function obMove(at: ObRef, from: W.ObstacleShape, ddx: number, ddy: number) {
+        if (at.r4 === undefined) { obChange(at, { dx: from.dx + ddx, dy: from.dy + ddy }); return; }
+        const b = W.room4Box(map), f = from as W.Room4Obstacle;
+        if (b) obChange(at, { fx: f.fx + ddx / b.w, fy: f.fy + ddy / b.h });
+    }
+    function obRemove(at: ObRef) {
+        if (at.r4 !== undefined) M.removeRoom4Obstacle(map, at.r4);
+        else M.setObstacle(map, at.x, at.y, null);
+    }
+    // room 4 at tile tl: a custom one (its obstacles anywhere in it), or one that takes none (a preset)
+    function room4Tile(tl: { x: number; y: number } | null) { return !!tl && M.roomOf(map, tl.x, tl.y) === 4 && !M.isOutside(map, tl.x, tl.y); }
+    function room4Custom() { return !!map.area4Room && map.area4Room.type === 1; }
+    // one put in room 4 with its centre at p (the panel's shape), and picked; not where it would go
+    // into a wall - the map's or the picture's - or another obstacle
+    function putRoom4Obstacle(p: P, sh: Partial<W.ObstacleShape>) {
+        const b = W.room4Box(map);
+        if (!b) return false;
+        const i = M.addRoom4Obstacle(map, Object.assign({}, sh, { fx: (p.x - b.x0) / b.w, fy: (p.y - b.y0) / b.h }), room4Picture());
+        if (i < 0) { notify('obstacle_blocked', null, 'warn'); return false; }
+        pickObstacle({ x: 0, y: 0, r4: i });
+        return true;
+    }
+    function pickObstacle(tl: ObRef) {
+        S.obstacle.at = tl.r4 !== undefined ? { x: 0, y: 0, r4: tl.r4 } : { x: tl.x, y: tl.y };
         // an outline being drawn or an icon being looked for is left: the panel is this one's
         S.obstacleMode = '';
         syncObstacle();
@@ -1910,7 +1982,7 @@ export function createEditor() {
     // the panel's shape: the picked obstacle's (none once it is gone), else the one to put next
     function syncObstacle() {
         const at = S.obstacle.at;
-        const sh = at && map && W.obstacleShape(M.tileOf(map, at.x, at.y));
+        const sh = obShape(at);
         if (at && !sh) S.obstacle.at = null;
         if (sh) S.obstacle.shape = Object.assign({}, sh);
     }
@@ -1924,7 +1996,7 @@ export function createEditor() {
         if (!at) return true;
         if (!obstacleSliding) { begin(); obstacleSliding = true; }
         // as far as it goes without going into a wall or another obstacle
-        const done = M.changeObstacle(map, at.x, at.y, change);
+        const done = obChange(at, change);
         syncObstacle();
         view.redraw();
         return done;
@@ -1961,10 +2033,10 @@ export function createEditor() {
     function obstacleHandles(): { kind: string; at: number[] }[] {
         const at = S.obstacle.at;
         // one of the classic editor (no shape: the place its box may be) as that box: dragged, it has one
-        const sh = at && W.obstacleShape(M.tileOf(map, at.x, at.y));
+        const sh = obShape(at);
         if (!at || !sh) return [];
         const c = Math.cos(sh.rot), sn = Math.sin(sh.rot);
-        const cx = 6 * at.x + sh.dx, cy = 6 * at.y + sh.dy;
+        const mid = obCentre(at, sh), cx = mid[0], cy = mid[1];
         const toMap = function (u: number, v: number) { return [cx + u * c + v * sn, cy - u * sn + v * c]; };
         const out: { kind: string; at: number[] }[] = [];
         const hw = sh.w / 2, hd = sh.d / 2;
@@ -1986,7 +2058,7 @@ export function createEditor() {
     // a handle dragged to p: the change it makes, from the shape it had when the drag began
     function obstacleHandleDrag(p: P) {
         const at = stroke.obstacle, from: W.ObstacleShape = stroke.shape;
-        const cx = 6 * at.x + from.dx, cy = 6 * at.y + from.dy, X = p.x - cx, Y = p.y - cy;
+        const mid = obCentre(at, from), X = p.x - mid[0], Y = p.y - mid[1];
         const u = X * Math.cos(from.rot) - Y * Math.sin(from.rot), v = X * Math.sin(from.rot) + Y * Math.cos(from.rot);
         let change: Partial<W.ObstacleShape>;
         if (stroke.handle === 'w') change = { w: 2 * Math.abs(u) };
@@ -2001,7 +2073,7 @@ export function createEditor() {
             if (shiftHeld) rot = Math.round(rot / (Math.PI / 12)) * (Math.PI / 12);
             change = { rot: rot };
         }
-        M.changeObstacle(map, at.x, at.y, change);
+        obChange(at, change);
         syncObstacle();
     }
 
@@ -2033,6 +2105,19 @@ export function createEditor() {
         const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
         const tile = { x: 2 * Math.floor(cx / 12) + 1, y: 2 * Math.floor(cy / 12) + 1 };
         const dx = cx - 6 * tile.x, dy = cy - 6 * tile.y;
+        const norm0 = Outline.normalize([pts])!;
+        // its middle in room 4: one of room 4's, anywhere in it
+        if (room4Tile(tile)) {
+            if (!room4Custom()) { notify('floor_obstacleRoom4', null, 'warn'); return; }
+            begin();
+            const put = putRoom4Obstacle({ x: cx, y: cy }, { shape: 'polygon', outline: norm0.rings, w: x1 - x0, d: y1 - y0, aspect: norm0.aspect, h: S.obstacle.shape.h, rot: 0, color: S.obstacle.shape.color });
+            commit();
+            if (!put) return;
+            lastDrawn = { outline: norm0.rings, w: x1 - x0, d: y1 - y0, aspect: norm0.aspect };
+            S.obstacleMode = '';
+            S.obstacleDraw = [];
+            return;
+        }
         if (Math.abs(dx) > lim.offset || Math.abs(dy) > lim.offset) { notify('obstacle_drawCentre', null, 'warn'); return; }
         const t0 = M.tileOf(map, tile.x, tile.y);
         if (!(t0 && t0.obstacle) && !M.floorFree(map, tile.x, tile.y, 'obstacle')) {
@@ -2041,7 +2126,7 @@ export function createEditor() {
             return;
         }
         const norm = Outline.normalize([pts])!;
-        const sh: Partial<W.ObstacleShape> = { shape: 'polygon', outline: norm.rings, w: x1 - x0, d: y1 - y0, aspect: norm.aspect, h: S.obstacle.shape.h, dx: dx, dy: dy, rot: 0 };
+        const sh: Partial<W.ObstacleShape> = { shape: 'polygon', outline: norm.rings, w: x1 - x0, d: y1 - y0, aspect: norm.aspect, h: S.obstacle.shape.h, dx: dx, dy: dy, rot: 0, color: S.obstacle.shape.color };
         // one to a tile: it takes the place of the tile's obstacle
         const keep = t0 && t0.obstacle ? { obstacle: t0.obstacle, obstacleShape: t0.obstacleShape } : null;
         if (keep) M.setObstacle(map, tile.x, tile.y, null);
@@ -2113,7 +2198,7 @@ export function createEditor() {
         const at = S.obstacle.at;
         if (!at) return;
         begin();
-        M.setObstacle(map, at.x, at.y, null);
+        obRemove(at);
         S.obstacle.at = null;
         commit();
     }
@@ -2126,6 +2211,8 @@ export function createEditor() {
         if (kind === 'start') return M.startFree(map, tl.x, tl.y) ? null : { key: 'floor_startTaken', params: {} };
         const tile = M.tileOf(map, tl.x, tl.y);
         if (kind === 'obstacle' && tile && tile.obstacle) return null;
+        // room 4: anywhere in a custom one, none in a preset
+        if (kind === 'obstacle' && room4Tile(tl)) return room4Custom() ? null : { key: 'floor_obstacleRoom4', params: {} };
         if (M.floorFree(map, tl.x, tl.y, kind)) return null;
         if (kind === 'obstacle') {
             const room = M.roomOf(map, tl.x, tl.y);
@@ -2200,9 +2287,12 @@ export function createEditor() {
             if (S.obstacleMode === 'draw') { say(S.obstacleDraw.length >= 3 ? 'obstacle_drawClose' : 'obstacle_drawCorner'); return null; }
             const h = obstacleHandleAt(p);
             if (h) { say(h.kind === 'rot' ? 'obstacle_rotate' : 'obstacle_resize'); return null; }
+            const under = obstacleUnder(p);
+            if (under && under.r4 !== undefined) { say('floor_obstacleSelect'); return { kind: 'pickObstacle', tile: under }; }
             const refused = !(tile && tile.obstacle) && floorRefused(tl, 'obstacle');
             if (M.isOutside(map, tl.x, tl.y)) say('floor_outside');
             else if (refused) say(refused.key, refused.params);
+            else if (room4Tile(tl)) { say('floor_obstacleOnRoom4', { shape: t('obstacles.shapes.' + S.obstacle.shape.shape) }); return null; }
             else say(tile && tile.obstacle ? 'floor_obstacleSelect' : 'floor_obstacleOn', { shape: t('obstacles.shapes.' + S.obstacle.shape.shape) });
             return { kind: 'tile', tile: tl, color: refused ? '#dc2626' : undefined };
         }
@@ -2226,6 +2316,8 @@ export function createEditor() {
             return { kind: 'curve', choice: c };
         }
         if (tool === 'eraser') {
+            const ob = obstacleUnder(p);
+            if (ob && ob.r4 !== undefined) { say('erase_obstacle'); return { kind: 'pickObstacle', tile: ob, color: '#dc2626' }; }
             const w = victimUnder(p);
             if (w) { say('erase_victim'); return { kind: 'spot', at: M.victimPlace(map, w).at, color: '#dc2626', small: w.kind === 'slot' }; }
             const a = M.arcNear(map, p.x, p.y, reach());
@@ -2377,19 +2469,19 @@ export function createEditor() {
             else drawSegs(ctx, S.wallSel.segs, '#f59e0b', 1.8);
         }
         const ob = ui.tool === 'obstacle' && S.obstacle.at;
-        const obShape = ob && W.obstacleShape(M.tileOf(map, ob.x, ob.y));
-        if (ob && obShape) {
+        const obSh = ob ? obShape(ob) : null;
+        if (ob && obSh) {
+            const mid = obCentre(ob, obSh);
             ctx.beginPath();
-            W.obstacleRings(obShape, ob.x, ob.y).forEach(function (c) {
+            obRings(ob, obSh).forEach(function (c) {
                 c.forEach(function (q, i) { if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
                 ctx.closePath();
             });
             ctx.strokeStyle = '#2563eb';
             ctx.lineWidth = 2 * px;
             ctx.stroke();
-            dot(ctx, 6 * ob.x + obShape.dx, 6 * ob.y + obShape.dy, 1.6 * px, '#2563eb');
+            dot(ctx, mid[0], mid[1], 1.6 * px, '#2563eb');
             // its handles: squares for its sizes, a round one on a stalk for its turn
-            const mid = [6 * ob.x + obShape.dx, 6 * ob.y + obShape.dy];
             obstacleHandles().forEach(function (h) {
                 ctx.fillStyle = '#fff';
                 ctx.strokeStyle = '#2563eb';
@@ -2461,14 +2553,14 @@ export function createEditor() {
         } else if (hover.kind === 'pickVictim') {
             ring(ctx, hover.at[0], hover.at[1], 2.6, '#2563eb', px);
         } else if (hover.kind === 'pickObstacle') {
-            const sh = W.obstacleShape(M.tileOf(map, hover.tile.x, hover.tile.y));
+            const sh = obShape(hover.tile);
             if (sh) {
                 ctx.beginPath();
-                W.obstacleRings(sh, hover.tile.x, hover.tile.y).forEach(function (c) {
+                obRings(hover.tile, sh).forEach(function (c) {
                     c.forEach(function (q, i) { if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
                     ctx.closePath();
                 });
-                ctx.strokeStyle = '#2563eb';
+                ctx.strokeStyle = hover.color || '#2563eb';
                 ctx.lineWidth = 1.4 * px;
                 ctx.setLineDash([2 * px, 2 * px]);
                 ctx.stroke();

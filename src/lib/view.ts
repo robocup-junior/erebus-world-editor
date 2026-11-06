@@ -316,6 +316,14 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
         }
     }
 
+    // room 4's obstacles, on its picture: each as a tile's would be drawn with its centre there
+    function drawRoom4Obstacles() {
+        F.room4Obstacles(map!).forEach(function (o) {
+            const c = F.room4ObstacleCentre(map!, o);
+            if (c) drawObstacle({ obstacle: true, obstacleShape: Object.assign({}, o, { dx: 0, dy: 0 }) }, c[0] / 6, c[1] / 6);
+        });
+    }
+
     function drawGrid() {
         ctx.lineWidth = 1 / view.scale;
         // 6 cm lines inside rooms 2 and 3, where walls can sit on them
@@ -528,6 +536,7 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
             if (options.overFloor) options.overFloor(ctx, { scale: view.scale });
             drawGrid();
             drawRoom4();
+            drawRoom4Obstacles();
             drawRoomEdges();
             drawStart();
             drawWalls();

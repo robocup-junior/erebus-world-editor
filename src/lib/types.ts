@@ -48,6 +48,14 @@ export interface Room4Token {
     code: string | null;
 }
 
+// An obstacle of a custom room 4: its shape as a tile's obstacle has it (lib/field: ObstacleShape; dx, dy
+// unused) and its centre as fractions of room 4's box (left to right, top to bottom), as the room 4
+// picture's stamps are kept: it stays where it is on the picture when room 4 is made larger or smaller
+export interface Room4ObstacleData {
+    shape: string; w: number; d: number; h: number; dx: number; dy: number; rot: number;
+    n?: number; outline?: number[][][]; aspect?: number; icon?: string; color?: string;
+    fx: number; fy: number;
+}
 export interface MapData {
     name: string;
     width: number;
@@ -59,6 +67,8 @@ export interface MapData {
     area4Room: any;
     room4CanvasSave?: string | null;
     room4Tokens?: Room4Token[];
+    // the obstacles of a custom room 4 (lib/field: Room4Obstacle), put anywhere in it
+    room4Obstacles?: Room4ObstacleData[];
     [key: string]: any;
 }
 
