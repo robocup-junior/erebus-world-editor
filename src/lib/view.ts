@@ -1,6 +1,6 @@
 // The map view: draws a map (the classic editor's format) on a canvas in cm, with zoom (wheel,
 // buttons) and pan (drag).
-import type { MapData } from './types';
+import type { MapData, Pt } from './types';
 import * as L from './lattice';
 import * as Icons from './icons';
 import { drawHole } from './hole';
@@ -47,7 +47,7 @@ export interface MapView {
 }
 
 const TILE = 12;                 // cm
-const WALL = 1;                  // wall thickness, cm
+const WALL = L.WALL_T;           // wall thickness, cm
 const ROOM_FILL: Record<number, string> = { 1: '#ffffff', 2: '#dcebfb', 3: '#f7e3f7', 4: '#e6d9ff' };
 const ROOM_EDGE: Record<number, string> = { 2: '#359ef4', 3: '#c86fca', 4: '#7500ff' };
 
@@ -429,7 +429,7 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
             let a = t.ax === null || t.ay === null ? null : { x: x + t.ax * w, y: y + t.ay * h, thick: t.thick * w };
             const edge = room4EdgeNear(c.cx, c.cy, 3);
             if (edge && (!a || Math.hypot(edge.x - c.cx, edge.y - c.cy) < Math.hypot(a.x - c.cx, a.y - c.cy))) a = { x: edge.x, y: edge.y, thick: 1 };
-            const at = R4.badgeOnWall(c, a, 1.6);
+            const at = R4.badgeOnWall(c, a, L.BADGE_R);
             if (type && (type.kind === 'ct' || type.kind === 'fakect')) ctBadge(at.x, at.y, null, type.color);
             else badge(at.x, at.y, type ? { symbol: type.symbol, face: type.face, color: type.color } : { symbol: '?', color: Icons.FAKE }, !!type && type.kind === 'fake');
         });
@@ -463,12 +463,12 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
     // Victims and cognitive targets with the icons shared with the room 4 creator (SimIcons)
     // a victim in the colour of its type (lib/icons), hollow when it is a fake
     function badge(x: number, y: number, glyph: Glyph, fake?: boolean | number) {
-        Icons.victim(ctx, x, y, 1.6, glyph.symbol, glyph.color || (fake ? Icons.FAKE : Icons.VICTIM), 0.25, glyph.face, !!fake);
+        Icons.victim(ctx, x, y, L.BADGE_R, glyph.symbol, glyph.color || (fake ? Icons.FAKE : Icons.VICTIM), 0.25, glyph.face, !!fake);
     }
 
     // on the map a cognitive target shows its type's mark: its own rings would be too small to see
     function ctBadge(x: number, y: number, code: string | null, color?: string) {
-        Icons.targetMark(ctx, x, y, 1.6, code, color as string, 0.25);
+        Icons.targetMark(ctx, x, y, L.BADGE_R, code, color as string, 0.25);
     }
 
     function drawVictims() {
@@ -477,15 +477,14 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
             const p = key.split(',').map(Number);
             const cell = cells[key];
             if (p[2] !== 0 || !cell.tile || p[0] % 2 !== 1 || p[1] % 2 !== 1) return;
-            const t = cell.tile, cx = 6 * p[0], cy = 6 * p[1];
-            const side: Record<string, number[]> = { top: [0, -4], right: [4, 0], bottom: [0, 4], left: [-4, 0] };
+            const t = cell.tile;
+            const side: Record<string, Pt> = { top: [0, -1], right: [1, 0], bottom: [0, 1], left: [-1, 0] };
             Object.keys(side).forEach(function (d) {
                 const code = t.cognitives && t.cognitives[d + '_code'];
                 const v = t.victims && t.victims[d];
                 if (!v && !code) return;
-                // where it is along its wall (lib/model's victimPlace)
-                const off = Number(t.victim_offset) || 0;
-                const x = cx + side[d][0] + (side[d][0] ? 0 : off), y = cy + side[d][1] + (side[d][0] ? off : 0);
+                // where it is along its wall: lib/model's victimPlace (lattice's edgePoint)
+                const at = L.edgePoint(p[0], p[1], side[d], Number(t.victim_offset) || 0).at, x = at[0], y = at[1];
                 if (code) { ctBadge(x, y, code); return; }
                 badge(x, y, edgeGlyph(map!, v as string), t.victim_is_fake);
             });
@@ -493,19 +492,9 @@ function create(canvas: HTMLCanvasElement, options: ViewOptions = {}): MapView {
                 const v = t.halfWallVic && t.halfWallVic[i];
                 const code = t.halfWallCognitives && t.halfWallCognitives[i];
                 if ((!v || v == 0) && !code) continue;
-                // on its wall, where it is along it: beside the face of the arc in a curved quarter, joined
-                // to it (as room 4 shows)
+                // on its wall, where it is along it: against the face of the arc in a curved quarter, as
+                // on a straight one
                 const pt = L.slotPoint(p[0], p[1], i, t.curve, t.halfWallVicOffsets ? Number(t.halfWallVicOffsets[i]) || 0 : 0);
-                if (pt.curved) {
-                    ctx.save();
-                    ctx.strokeStyle = '#475569';
-                    ctx.lineWidth = 0.35;
-                    ctx.beginPath();
-                    ctx.moveTo(pt.at[0], pt.at[1]);
-                    ctx.lineTo(pt.wall[0], pt.wall[1]);
-                    ctx.stroke();
-                    ctx.restore();
-                }
                 if (code) { ctBadge(pt.at[0], pt.at[1], code); continue; }
                 badge(pt.at[0], pt.at[1], slotGlyph(map!, String(v)), t.halfWallVicFakes && t.halfWallVicFakes[i]);
             }

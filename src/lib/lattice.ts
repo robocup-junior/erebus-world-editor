@@ -206,6 +206,24 @@ function curveSide(v: number, inside: boolean) {
     return inside ? (d + 2) % 4 : d;
 }
 
+// How a victim's badge sits on its wall, the same on every wall of every room (tile sides, 6 cm faces,
+// curves, room 4's picture): its centre off the face of the wall by its radius less how far it reaches
+// into it - a quarter of its radius, never more than most of the wall's thickness
+const BADGE_R = 1.6;              // the badge's radius on the map, cm
+const WALL_T = 1;                 // a wall's thickness on the map, cm
+const BADGE_SINK = 0.25;
+function badgeOffFace(r: number, thick: number) { return r - Math.min(BADGE_SINK * r, 0.8 * thick); }
+// off the middle of a map wall, cm
+const VICTIM_OFF = WALL_T / 2 + badgeOffFace(BADGE_R, WALL_T);
+
+// Where the victim on side dir (its unit step off the tile's centre) of tile (x, y) is drawn, cm, the
+// point of the wall it is on and the way its face runs. offset: cm along the face from its middle
+function edgePoint(x: number, y: number, d: Pt, offset?: number): { at: Pt; wall: Pt; along: Pt } {
+    const o = Number(offset) || 0, along: Pt = d[0] ? [0, 1] : [1, 0];
+    const wx = 6 * x + 6 * d[0] + along[0] * o, wy = 6 * y + 6 * d[1] + along[1] * o;
+    return { at: [wx - VICTIM_OFF * d[0], wy - VICTIM_OFF * d[1]], wall: [wx, wy], along: along };
+}
+
 // Where slot i of tile (x, y) is drawn, cm, the point of the wall it is on and the way its face runs
 // there. curve: the tile's curve array (or nothing). offset: cm along the face from its middle (+ to
 // the right on a top or bottom face, + down on a left or right one; on a curve, the length of arc,
@@ -217,17 +235,23 @@ function slotPoint(x: number, y: number, i: number, curve?: (number | string)[] 
     if (!v) {
         const off = [[0, -1], [1, 0], [0, 1], [-1, 0]][side];
         const along: Pt = side % 2 ? [0, 1] : [1, 0];
-        return { at: [qx + 2 * off[0] + along[0] * o, qy + 2 * off[1] + along[1] * o], wall: [qx + 3 * off[0] + along[0] * o, qy + 3 * off[1] + along[1] * o], along: along, curved: false };
+        const wx = qx + 3 * off[0] + along[0] * o, wy = qy + 3 * off[1] + along[1] * o;
+        return { at: [wx - VICTIM_OFF * off[0], wy - VICTIM_OFF * off[1]], wall: [wx, wy], along: along, curved: false };
     }
     const c = curveCentre(x, y, q, v);
     const a = Math.atan2(qy - c[1], qx - c[0]) + o / 6;
     const u = [Math.cos(a), Math.sin(a)];
     const inside = curveInside(v, side);
-    const r = 6 + (inside ? -2.4 : 2.4);
+    const r = 6 + (inside ? -VICTIM_OFF : VICTIM_OFF);
     return { at: [c[0] + u[0] * r, c[1] + u[1] * r], wall: [c[0] + u[0] * 6, c[1] + u[1] * 6], along: [-u[1], u[0]], curved: true, inside: inside, centre: c };
 }
 
 export {
+    BADGE_R,
+    WALL_T,
+    VICTIM_OFF,
+    badgeOffFace,
+    edgePoint,
     curveCentre,
     curveInside,
     curveSide,

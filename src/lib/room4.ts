@@ -3,6 +3,8 @@
 // the token type carried in the blue value (stampColor). A red drawn by hand, or a stamp left on
 // "random", gets a random type.
 
+import { badgeOffFace } from './lattice';
+
 // A token found in the picture: its box, centre and stamp type (-1 random)
 export interface FoundToken { minX: number; minY: number; maxX: number; maxY: number; n: number; sx: number; sy: number; cx: number; cy: number; type: number }
 // The face of a wall a token stands against, and how thick the wall is there
@@ -66,14 +68,12 @@ function wallAnchor(isWallAt: (x: number, y: number) => boolean, cx: number, cy:
 }
 
 // Where a token's badge of radius r is drawn: against its wall's face (anchor), on the token's
-// side, the badge reaching into the wall by at most most of its thickness (never through it, and
-// never apart from it). wallThick overrides the anchor's thickness (same units as r)
-function badgeOnWall(t: { cx: number; cy: number }, anchor: WallAnchor | null, r: number, wallThick?: number) {
+// side, as on every wall of the map (lattice's badgeOffFace)
+function badgeOnWall(t: { cx: number; cy: number }, anchor: WallAnchor | null, r: number) {
     if (!anchor) return { x: t.cx, y: t.cy };
     const dx = t.cx - anchor.x, dy = t.cy - anchor.y, l = Math.hypot(dx, dy);
     if (l < 1e-6) return { x: t.cx, y: t.cy };
-    const thick = wallThick !== undefined ? wallThick : anchor.thick || 1;
-    const off = r - Math.min(0.5 * r, 0.8 * thick);
+    const off = badgeOffFace(r, anchor.thick || 1);
     return { x: anchor.x + dx / l * off, y: anchor.y + dy / l * off };
 }
 

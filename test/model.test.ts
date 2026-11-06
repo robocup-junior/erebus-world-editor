@@ -803,7 +803,7 @@ test('each problem says everything it is about, to point out on the map', () => 
   M.setWalls(map, ['v,2,3'], false);                           // half of it gone: a half wall in room 1, a floating victim
   const by = (k: string) => M.problems(map).find((p) => p.key === k);
   assert.deepStrictEqual(by('conn.notConnected').show.tiles.sort(), [[2, 0], [3, 0]]);
-  assert.deepStrictEqual(by('victimNoWall').show.points, [[10, 18]]);
+  assert.deepStrictEqual(by('victimNoWall').show.points, [[12 - L.VICTIM_OFF, 18]]);  // against the wall's face, as every victim
   assert.deepStrictEqual(by('wallRule').show.segs, ['v,2,2']);
 });
 

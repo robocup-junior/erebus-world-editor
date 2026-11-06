@@ -1404,12 +1404,8 @@ function victimPlace(map: MapData, where: Where, offset?: number): VictimPlace {
         const sp = L.slotPoint(where.x, where.y, where.i, t && t.curve, o);
         return { at: sp.at, wall: sp.wall, along: sp.along, offset: o, half: sp.curved ? 1.5 * Math.PI : 3, centre: sp.centre };
     }
-    const d = SIDES[where.dir], along: Pt = d[0] ? [0, 1] : [1, 0];
-    return {
-        at: [6 * where.x + 4 * d[0] + along[0] * o, 6 * where.y + 4 * d[1] + along[1] * o],
-        wall: [6 * where.x + 6 * d[0] + along[0] * o, 6 * where.y + 6 * d[1] + along[1] * o],
-        along: along, offset: o, half: 6
-    };
+    const ep = L.edgePoint(where.x, where.y, SIDES[where.dir], o);
+    return { at: ep.at, wall: ep.wall, along: ep.along, offset: o, half: 6 };
 }
 
 // The point of the wall k cm along the face from the victim's middle (round the arc on a curve), and

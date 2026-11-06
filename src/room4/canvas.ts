@@ -612,20 +612,25 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         return types.find(function (t) { return t.idx === idx; });
     }
 
-    function drawBadge(t: Token) {
-        const type = typeOf(t.type);
+    // the icon of a victim of stamp type idx at (cx, cy): on the face of its wall (R4.badgeOnWall),
+    // with the icons of the map editor (lib/icons): letter victims as discs, cognitive targets as on
+    // its map - a disc in the type colour with the type letter (× a fake one)
+    function badgeIcon(idx: number, c: { cx: number; cy: number }, anchor: R4.WallAnchor | null) {
+        const type = typeOf(idx);
         const r = badgeRadius();
-        // on the face of its wall (R4.badgeOnWall), with the icons of the map editor
-        // (lib/icons): letter victims as discs, cognitive targets as on its map - a disc in the
-        // type colour with the type letter (× a fake one)
-        const at = R4.badgeOnWall(t, t.anchor, r);
+        const at = R4.badgeOnWall(c, anchor, r);
         if (type && (type.kind === 'ct' || type.kind === 'fakect')) Icons.targetMark(octx, at.x, at.y, r, null, type.color, 2 * k);
         else Icons.victim(octx, at.x, at.y, r, type ? type.symbol : '?', type ? type.color : '#94a3b8', 2 * k, type ? type.face : undefined, !!type && type.kind === 'fake');
+        return { x: at.x, y: at.y, r: r };
+    }
+
+    function drawBadge(t: Token) {
+        const at = badgeIcon(t.type, t, t.anchor);
         if (!t.nearWall || t.unreachable) {
             octx.save();
             octx.beginPath();
             octx.setLineDash([4 * k, 3 * k]);
-            octx.arc(at.x, at.y, r + 5 * k, 0, Math.PI * 2);
+            octx.arc(at.x, at.y, at.r + 5 * k, 0, Math.PI * 2);
             octx.lineWidth = 2 * k;
             octx.strokeStyle = '#dc2626';
             octx.stroke();
@@ -1261,30 +1266,34 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
                     });
                 }
             } else if (r4.tool === 'stamp') {
+                // as the map editor's victim tool: a blue ring round a victim put, the victim it would
+                // be (faded) where one can go, a red cross where none can
                 const hit = tokenAt(hover);
                 if (hit) {
+                    const r = badgeRadius(), at = R4.badgeOnWall(hit, hit.anchor, r);
                     octx.strokeStyle = '#2563eb';
-                    octx.lineWidth = 2 * k;
-                    octx.strokeRect(hit.minX - 4 * k, hit.minY - 4 * k, hit.maxX - hit.minX + 8 * k, hit.maxY - hit.minY + 8 * k);
+                    octx.lineWidth = 2.5 * k;
+                    octx.beginPath();
+                    octx.arc(at.x, at.y, r + 4 * k, 0, Math.PI * 2);
+                    octx.stroke();
                 } else {
                     const spot = stampSpot(hover);
                     if (spot.ok) {
+                        // the victim as it will show once put (not its red stamp, which reads as "not here")
+                        const c = { cx: spot.x + stampSize / 2, cy: spot.y + stampSize / 2 };
                         octx.globalAlpha = 0.6;
-                        octx.fillStyle = R4.stampColor(r4.stamp);
-                        octx.fillRect(spot.x, spot.y, stampSize, stampSize);
+                        badgeIcon(r4.stamp, c, R4.wallAnchor(wallPx, c.cx, c.cy, 1.2 * stampSize + 8));
                         octx.globalAlpha = 1;
-                        octx.strokeStyle = '#2563eb';
-                        octx.lineWidth = 1.5 * k;
-                        octx.setLineDash([3 * k, 2 * k]);
-                        octx.beginPath(); octx.moveTo(spot.wall.x, spot.wall.y); octx.lineTo(spot.x + stampSize / 2, spot.y + stampSize / 2); octx.stroke();
                     } else {
-                        octx.strokeStyle = '#94a3b8';
-                        octx.lineWidth = 2 * k;
+                        octx.strokeStyle = '#dc2626';
+                        octx.lineWidth = 2.5 * k;
+                        octx.lineCap = 'round';
                         const d = 5 * k;
                         octx.beginPath();
                         octx.moveTo(hover.x - d, hover.y - d); octx.lineTo(hover.x + d, hover.y + d);
                         octx.moveTo(hover.x + d, hover.y - d); octx.lineTo(hover.x - d, hover.y + d);
                         octx.stroke();
+                        octx.lineCap = 'butt';
                     }
                 }
             } else if (r4.tool === 'floor') {

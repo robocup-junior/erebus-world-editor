@@ -5,6 +5,7 @@ import assert from 'node:assert';
 import type { MapData } from '../src/lib/types';
 import * as M from '../src/lib/model';
 import * as L from '../src/lib/lattice';
+import * as R4 from '../src/lib/room4';
 import * as Score from '../src/rules/parts/scoring/v1';
 
 type Where = M.Where;
@@ -55,11 +56,11 @@ test('a victim is in the middle of its face until it is moved', () => {
   topWall(map, 1, 1, 1);
   assert.ok(M.setVictim(map, 3, 3, 'top', 'H', false));
   const p = M.victimPlace(map, edge(3, 3, 'top'));
-  assert.deepStrictEqual([p.at, p.wall, p.along, p.offset, p.half], [[18, 14], [18, 12], [1, 0], 0, 6]);
+  assert.deepStrictEqual([p.at, p.wall, p.along, p.offset, p.half], [[18, 12 + L.VICTIM_OFF], [18, 12], [1, 0], 0, 6]);
   assert.strictEqual(M.victimOffset(map, edge(3, 3, 'top')), 0);
   // left and right faces run down
   assert.deepStrictEqual(M.victimPlace(map, edge(3, 3, 'left'), 2).along, [0, 1]);
-  assert.deepStrictEqual(M.victimPlace(map, edge(3, 3, 'left'), 2).at, [14, 20]);
+  assert.deepStrictEqual(M.victimPlace(map, edge(3, 3, 'left'), 2).at, [12 + L.VICTIM_OFF, 20]);
 });
 
 test('room 1: along a free wall it goes to 1 cm from the tile\'s corner (it is 2 cm across)', () => {
@@ -217,8 +218,8 @@ test('a victim on a curve goes round its arc, clear of the walls at its ends', (
   assert.strictEqual(r.max, Number((1.5 * Math.PI - 1).toFixed(1)));
   assert.ok(M.moveVictim(map, w, 2));
   const p = M.victimPlace(map, w);
-  // still 6 cm + 2.4 cm off the centre, turned 2 cm of arc (1/3 rad) clockwise
-  assert.ok(Math.abs(Math.hypot(p.at[0] - 12, p.at[1] - 18) - 8.4) < 1e-9);
+  // still off the arc as off any wall (lattice's VICTIM_OFF), turned 2 cm of arc (1/3 rad) clockwise
+  assert.ok(Math.abs(Math.hypot(p.at[0] - 12, p.at[1] - 18) - (6 + L.VICTIM_OFF)) < 1e-9);
   assert.ok(Math.abs(Math.atan2(p.at[1] - 18, p.at[0] - 12) - (-Math.PI / 4 + 1 / 3)) < 1e-9);
   // dragged: to the angle of the pointer
   assert.strictEqual(M.offsetToward(map, w, 12 + 9 * Math.cos(-Math.PI / 4 - 0.25), 18 + 9 * Math.sin(-Math.PI / 4 - 0.25)), -1.5);
@@ -355,4 +356,21 @@ test('where the robot gets to and the score take the moved place', () => {
   assert.deepStrictEqual(moved[0], M.victimPlace(map, slot(3, 1, 6)).at, 'the place with its offset');
   const s = Score.maxScore(map, null)!;
   assert.strictEqual(s.unreachableTokens, 1);
+});
+
+test('a victim sits the same on every wall: a tile side, a 6 cm face, either face of a curve, room 4', () => {
+  // off the middle of the wall it is on, along the way off its face
+  const off = (at: number[], wall: number[]) => Math.hypot(at[0] - wall[0], at[1] - wall[1]);
+  const e = L.edgePoint(3, 3, [0, -1]);
+  assert.ok(Math.abs(off(e.at, e.wall) - L.VICTIM_OFF) < 1e-9, 'tile side');
+  for (let i = 0; i < 16; i++) {
+    const s = L.slotPoint(3, 3, i);
+    assert.ok(Math.abs(off(s.at, s.wall) - L.VICTIM_OFF) < 1e-9, '6 cm face ' + i);
+    const c = L.slotPoint(3, 3, i, [1, 1, 1, 1]);
+    assert.ok(Math.abs(off(c.at, c.wall) - L.VICTIM_OFF) < 1e-9, 'curve ' + i);
+  }
+  // room 4: from the face of a wall as thick as the map's, the same
+  const anchor = { x: 0, y: L.WALL_T / 2, thick: L.WALL_T };
+  const b = R4.badgeOnWall({ cx: 0, cy: 5 }, anchor, L.BADGE_R);
+  assert.ok(Math.abs(b.y - L.VICTIM_OFF) < 1e-9, 'room 4');
 });

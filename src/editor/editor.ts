@@ -2363,7 +2363,7 @@ export function createEditor() {
             const hit = victimUnder(p);
             if (hit) {
                 victimSay();
-                return { kind: 'spot', at: M.victimPlace(map, hit).at, color: '#16a34a', small: hit.kind === 'slot' };
+                return { kind: 'pickVictim', at: M.victimPlace(map, hit).at };
             }
             const where = placementAt(p);
             if (!where) return null;
@@ -2378,7 +2378,8 @@ export function createEditor() {
             const place = M.victimPlace(map, where, rule.ok ? M.offsetToward(map, where, p.x, p.y, 0, ui.victim) : 0);
             const lost = rule.ok && !!robot && !robot.gotTo(where.x, where.y, place.at, place.wall);
             if (lost) say('victim_unreachable');
-            return { kind: 'spot', at: place.at, color: rule.ok && !lost ? '#16a34a' : '#dc2626', small: where.kind === 'slot' };
+            // as the room 4 creator: the victim it would be, faded, or a red cross where it cannot go
+            return rule.ok && !lost ? { kind: 'ghostVictim', at: place.at } : { kind: 'noVictim', at: place.at };
         }
         return null;
     }
@@ -2552,6 +2553,15 @@ export function createEditor() {
             drawSegs(ctx, hover.segs, hover.color, 1.4);
         } else if (hover.kind === 'pickVictim') {
             ring(ctx, hover.at[0], hover.at[1], 2.6, '#2563eb', px);
+        } else if (hover.kind === 'ghostVictim') {
+            ctx.save();
+            ctx.globalAlpha = 0.6;
+            // drawn as the map draws a victim put (lib/view's badge, ctBadge)
+            if (isTarget(ui.victim)) Icons.targetMark(ctx, hover.at[0], hover.at[1], L.BADGE_R, ui.rings.join(''), '', 0.25);
+            else Icons.victim(ctx, hover.at[0], hover.at[1], L.BADGE_R, symbolOf(ui.victim), colorOf(ui.victim) || (ui.fake ? Icons.FAKE : Icons.VICTIM), 0.25, faceOf(ui.victim) || undefined, !!ui.fake);
+            ctx.restore();
+        } else if (hover.kind === 'noVictim') {
+            cross(ctx, hover.at[0], hover.at[1], 1.2, '#dc2626', px);
         } else if (hover.kind === 'pickObstacle') {
             const sh = obShape(hover.tile);
             if (sh) {
@@ -2671,6 +2681,16 @@ export function createEditor() {
         ctx.fill();
     }
 
+    function cross(ctx: CanvasRenderingContext2D, x: number, y: number, d: number, color: string, px: number) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.5 * px;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(x - d, y - d); ctx.lineTo(x + d, y + d);
+        ctx.moveTo(x + d, y - d); ctx.lineTo(x - d, y + d);
+        ctx.stroke();
+        ctx.lineCap = 'butt';
+    }
     function ring(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string, px: number) {
         ctx.strokeStyle = color;
         ctx.lineWidth = 2.5 * px;
