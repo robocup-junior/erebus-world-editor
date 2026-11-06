@@ -733,8 +733,7 @@
                 },
                 "r4clear": {
                     "title": "Borrar todo",
-                    "body": "La papelera de la barra superior (Borrar todo) borra toda la imagen y quita también los obstáculos de la sala 4. Deshacer (Ctrl+Z) la recupera.\nQuita las formas de práctica y después pon víctimas y obstáculos.",
-                    "task": "Pulsa la papelera de la barra superior para quitar las formas de práctica"
+                    "body": "Para empezar de nuevo: la papelera de la barra superior (Borrar todo) borra toda la imagen y quita también los obstáculos de la sala 4. Deshacer (Ctrl+Z) la recupera."
                 },
                 "r4stamp": {
                     "title": "Poner víctimas",
@@ -761,16 +760,6 @@
                     "title": "Poner un obstáculo",
                     "body": "La herramienta de obstáculos (K) pone un obstáculo donde haces clic en la sala 4. La sala 4 no sigue las baldosas, así que puedes poner todos los que quepan. Elige la forma, la altura y el color en el panel.\nHaz clic en uno para elegirlo, arrástralo para moverlo y arrastra sus asas para cambiar su tamaño y su giro. Se detiene donde toca una pared u otro obstáculo. El robot no puede entrar en un obstáculo, y las imágenes guardadas aquí los conservan.",
                     "task": "Con la herramienta de obstáculos, haz clic en la sala 4 para poner un obstáculo"
-                },
-                "r4reach": {
-                    "title": "Crea un sitio inalcanzable y míralo",
-                    "body": "Con Inalcanzable activado, donde el robot (radio 3,7 cm) no puede llegar se muestra con rayas rojas: un sitio cerrado por paredes, o un hueco más estrecho que el robot.\nUn sitio inalcanzable está bien en sí mismo (el interior de un obstáculo debe serlo). Pero el robot no puede encontrar una víctima puesta ahí, así que usa las rayas al poner víctimas. Las víctimas a las que el robot no puede acercarse, o que están fuera de su pared, llevan un anillo rojo discontinuo, y la línea de abajo las cuenta.\nEntradas / CP muestra las entradas y los puntos de control. Prueba a crear un sitio inalcanzable.",
-                    "task": "Con la herramienta de rectángulo, dibuja un cuadrado pequeño lejos de las paredes y mira cómo su interior se vuelve de rayas rojas (Hazlo por mí dibuja un cuadrado pequeño con el lápiz)",
-                    "tasks": {
-                        "off": "No hay salida, así que no se puede calcular a dónde no puede llegar el robot. Pon primero la salida en el mapa (este paso se puede saltar)",
-                        "allBlocked": "El robot no puede entrar en casi nada de la sala 4: algo cierra su entrada. Borra la pared que está delante",
-                        "victimsIn": "{{n}} de las víctimas puestas hasta ahora están donde el robot no llega: las comprobaciones detendrían la exportación por ellas. Deshaz (Ctrl+Z) y dibuja el cuadrado en otro sitio, o quítalas con el Borrador en «Solo víctimas» («Hazlo por mí» las quita)"
-                    }
                 },
                 "r4file": {
                     "title": "Guardar y abrir como imagen",

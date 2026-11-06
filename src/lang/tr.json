@@ -733,8 +733,7 @@
                 },
                 "r4clear": {
                     "title": "Tümünü temizle",
-                    "body": "Üst çubuktaki çöp kutusu (Tümünü temizle) resmin tamamını siler ve oda 4'ün engellerini de kaldırır. Geri al (Ctrl+Z) geri getirir.\nAlıştırma şekillerini temizleyin, sonra kazazedeleri ve engelleri koyun.",
-                    "task": "Alıştırma şekillerini temizlemek için üst çubuktaki çöp kutusuna basın"
+                    "body": "Baştan başlamak için: üst çubuktaki çöp kutusu (Tümünü temizle) resmin tamamını siler ve oda 4'ün engellerini de kaldırır. Geri al (Ctrl+Z) geri getirir."
                 },
                 "r4stamp": {
                     "title": "Kazazede koyun",
@@ -761,16 +760,6 @@
                     "title": "Engel koymak",
                     "body": "Engel aracı (K), oda 4'te tıkladığınız yere bir engel koyar. Oda 4 karolara bağlı değildir, bu yüzden sığdığı kadar engel koyabilirsiniz. Şekli, yüksekliği ve rengi panelden seçin.\nSeçmek için bir engele tıklayın, taşımak için sürükleyin, boyutunu ve yönünü değiştirmek için tutamaçlarını sürükleyin. Bir duvara veya başka bir engele değdiği yerde durur. Robot bir engelin içine giremez ve burada kaydedilen resimler engelleri de saklar.",
                     "task": "Engel aracıyla oda 4'e tıklayarak bir engel koyun"
-                },
-                "r4reach": {
-                    "title": "Ulaşılamayan bir yer yapın ve görün",
-                    "body": "Ulaşılamaz açıkken robotun (yarıçap 3,7 cm) ulaşamadığı yerler kırmızı çizgilerle gösterilir: duvarlarla kapatılmış bir yer veya robottan dar bir aralık.\nUlaşılamayan bir yer kendi başına sorun değildir (bir engelin içi öyle olmalıdır). Ama robot oraya konmuş bir kazazedeyi bulamaz, bu yüzden kazazede koyarken çizgileri kullanın. Robotun yaklaşamadığı veya duvarından ayrı kazazedeler kesikli kırmızı bir halka alır ve alt satır onları sayar.\nGirişler / CP, girişleri ve kontrol noktalarını gösterir. Ulaşılamayan bir yer yapmayı deneyin.",
-                    "task": "Dikdörtgen aracıyla duvarlardan uzakta küçük bir kare çizin ve içinin kırmızı çizgilere döndüğünü görün (Benim için yap kalemle küçük bir kare çizer)",
-                    "tasks": {
-                        "off": "Başlangıç yok, bu yüzden robotun ulaşamadığı yerler hesaplanamaz. Önce haritaya başlangıcı koyun (bu adım atlanabilir)",
-                        "allBlocked": "Robot oda 4'ün neredeyse hiçbir yerine giremiyor: bir şey girişini kapatıyor. Önündeki duvarı silin",
-                        "victimsIn": "Şimdiye kadar konan kazazedelerden {{n}} tanesi artık robotun gidemediği yerde: denetimler bu yüzden dışa aktarmayı durdurur. Geri alın (Ctrl+Z) ve kareyi başka yere çizin ya da onları Silgi'nin \"Yalnızca kazazedeler\" ayarıyla silin (\"Benim için yap\" da siler)"
-                    }
                 },
                 "r4file": {
                     "title": "Resim olarak kaydet ve aç",

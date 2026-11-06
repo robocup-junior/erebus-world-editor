@@ -733,8 +733,7 @@
                 },
                 "r4clear": {
                     "title": "Alles löschen",
-                    "body": "Der Papierkorb in der oberen Leiste (Alles löschen) löscht das ganze Bild und entfernt auch die Hindernisse von Raum 4. Rückgängig (Strg+Z) holt es zurück.\nRäume die Übungsformen weg und setze dann Opfer und Hindernisse.",
-                    "task": "Drücke den Papierkorb in der oberen Leiste, um die Übungsformen zu löschen"
+                    "body": "Wenn du neu anfangen willst: Der Papierkorb in der oberen Leiste (Alles löschen) löscht das ganze Bild und entfernt auch die Hindernisse von Raum 4. Rückgängig (Strg+Z) holt es zurück."
                 },
                 "r4stamp": {
                     "title": "Opfer setzen",
@@ -761,16 +760,6 @@
                     "title": "Ein Hindernis setzen",
                     "body": "Das Hinderniswerkzeug (K) setzt ein Hindernis dorthin, wo du in Raum 4 klickst. Raum 4 folgt nicht den Kacheln, also kannst du so viele setzen, wie Platz haben. Form, Höhe und Farbe wählst du im Panel.\nKlicke eines an, um es auszuwählen, ziehe es zum Verschieben und ziehe an seinen Griffen, um Größe und Drehung zu ändern. Es hält an, wo es auf eine Wand oder ein anderes Hindernis trifft. Der Roboter kommt nicht in ein Hindernis hinein, und die hier gespeicherten Bilder behalten sie.",
                     "task": "Klicke mit dem Hinderniswerkzeug in Raum 4, um ein Hindernis zu setzen"
-                },
-                "r4reach": {
-                    "title": "Eine unerreichbare Stelle schaffen und sehen",
-                    "body": "Ist Unerreichbar an, wird rot gestreift gezeigt, wo der Roboter (Radius 3,7 cm) nicht hinkommt: eine von Wänden eingeschlossene Stelle oder eine Lücke, die schmaler als der Roboter ist.\nEine unerreichbare Stelle ist an sich in Ordnung (das Innere eines Hindernisses soll es sein). Aber der Roboter kann ein Opfer dort nicht finden, also nutze die Streifen beim Setzen von Opfern. Opfer, an die der Roboter nicht nahe herankommt oder die nicht an ihrer Wand sind, bekommen einen gestrichelten roten Ring, und die untere Zeile zählt sie.\nEingänge / CP zeigt die Eingänge und Checkpoints. Versuche, eine unerreichbare Stelle zu schaffen.",
-                    "task": "Zeichne mit dem Rechteck-Werkzeug ein kleines Quadrat abseits der Wände und sieh, wie sein Inneres rot gestreift wird (Für mich erledigen zeichnet ein kleines Quadrat mit dem Stift)",
-                    "tasks": {
-                        "off": "Es gibt keinen Start, also lässt sich nicht berechnen, wo der Roboter nicht hinkommt. Setze zuerst den Start auf die Karte (dieser Schritt kann übersprungen werden)",
-                        "allBlocked": "Der Roboter kommt fast nirgends in Raum 4 hinein: Etwas versperrt seinen Eingang. Radiere die Wand davor weg",
-                        "victimsIn": "{{n}} der bisher gesetzten Opfer liegen jetzt, wo der Roboter nicht hinkommt: Die Prüfung würde den Export dafür stoppen. Mache es rückgängig (Strg+Z) und zeichne das Quadrat woanders, oder entferne sie mit dem Radierer auf „Nur Opfer“ („Für mich erledigen“ entfernt sie)"
-                    }
                 },
                 "r4file": {
                     "title": "Als Bild speichern und öffnen",

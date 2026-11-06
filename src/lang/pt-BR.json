@@ -733,8 +733,7 @@
                 },
                 "r4clear": {
                     "title": "Apagar tudo",
-                    "body": "A lixeira da barra de cima (Apagar tudo) apaga a imagem inteira e tira também os obstáculos da sala 4. Desfazer (Ctrl+Z) a traz de volta.\nTire as formas de treino e depois ponha vítimas e obstáculos.",
-                    "task": "Aperte a lixeira da barra de cima para apagar as formas de treino"
+                    "body": "Para recomeçar: a lixeira da barra de cima (Apagar tudo) apaga a imagem inteira e tira também os obstáculos da sala 4. Desfazer (Ctrl+Z) a traz de volta."
                 },
                 "r4stamp": {
                     "title": "Colocar vítimas",
@@ -761,16 +760,6 @@
                     "title": "Pôr um obstáculo",
                     "body": "A ferramenta de obstáculos (K) põe um obstáculo onde você clica na sala 4. A sala 4 não segue os ladrilhos, então você pode pôr quantos couberem. Escolha a forma, a altura e a cor no painel.\nClique em um para escolhê-lo, arraste-o para movê-lo e arraste suas alças para mudar o tamanho e o giro. Ele para onde encontra uma parede ou outro obstáculo. O robô não consegue entrar em um obstáculo, e as imagens salvas aqui os guardam.",
                     "task": "Com a ferramenta de obstáculos, clique na sala 4 para pôr um obstáculo"
-                },
-                "r4reach": {
-                    "title": "Criar um lugar fora de alcance e vê-lo",
-                    "body": "Com Fora de alcance ligado, onde o robô (raio de 3,7 cm) não consegue chegar aparece com listras vermelhas: um lugar fechado por paredes, ou uma passagem mais estreita que o robô.\nUm lugar fora de alcance não é um problema em si (o interior de um obstáculo deve ser assim). Mas o robô não consegue achar uma vítima posta ali, então use as listras ao colocar vítimas. Vítimas das quais o robô não consegue chegar perto, ou que estão fora da parede, ganham um anel vermelho tracejado, e a linha de baixo as conta.\nEntradas / CP mostra as entradas e os checkpoints. Experimente criar um lugar fora de alcance.",
-                    "task": "Com a ferramenta de retângulo, desenhe um quadrado pequeno longe das paredes e veja o interior virar listras vermelhas (Faça por mim desenha um quadrado pequeno com a caneta)",
-                    "tasks": {
-                        "off": "Não há partida, então não dá para calcular onde o robô não consegue chegar. Coloque primeiro a partida no mapa (este passo pode ser pulado)",
-                        "allBlocked": "O robô não consegue entrar em quase nada da sala 4: algo fecha a entrada. Apague a parede na frente dela",
-                        "victimsIn": "{{n}} das vítimas postas até agora estão onde o robô não chega: as verificações parariam a exportação por elas. Desfaça (Ctrl+Z) e desenhe o quadrado em outro lugar, ou tire-as com a Borracha em \"Só vítimas\" (\"Faça por mim\" as tira)"
-                    }
                 },
                 "r4file": {
                     "title": "Salvar e abrir como imagem",

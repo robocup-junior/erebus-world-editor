@@ -200,7 +200,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         if (!reachBase || OpenCV.failed()) state = 'unavailable';
         else if (!OpenCV.isReady()) state = 'loading';
         else if (!geo!.start) state = 'noStart';
-        scope.$applyAsync(function () { r4.reachState = state; if (state !== 'ok') r4.reachBlocked = 0; });
+        scope.$applyAsync(function () { r4.reachState = state; });
         if (state !== 'ok') return;
 
         const gw = reachBase!.gw, gh = reachBase!.gh;
@@ -334,8 +334,6 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         reachLayer = blocked ? layer : null;
         if (seed >= 0) reachInfo = { dist: Float32Array.from(rdist.data32F), gw: gw, gh: gh, need: need };
         reachStats = { blocked: blocked, room: roomCells };
-        // how much is out of reach (cells), for the editor's guide
-        scope.$applyAsync(function () { r4.reachBlocked = blocked; r4.reachRoom = roomCells; });
         src.delete(); dist.delete(); rsrc.delete(); rdist.delete();
     }
 
@@ -2273,14 +2271,6 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         eraseTokensAt({ x: t.cx, y: t.cy });
         commit();
     };
-    // the eraser on victims only, on each victim the robot cannot get to
-    scope.r4api.eraseUnreachable = function () {
-        const out = tokens.filter(function (t) { return t.unreachable; });
-        if (!out.length) return;
-        checkpoint();
-        out.forEach(function (t) { eraseTokensAt({ x: t.cx, y: t.cy }); });
-        commit();
-    };
     scope.r4api.selectToken = function (i) { selectToken(tokens[i || 0] || null); };
     scope.r4api.undo = function () {
         if (sel) { sel = null; syncSel(); }
@@ -2293,7 +2283,7 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         undo.push(step());
         restore(redo.pop()!);
     };
-    // the picture cleared, room 4's obstacles taken off with it (one step to undo); counted for the guide
+    // the picture cleared, room 4's obstacles taken off with it (one step to undo)
     scope.r4api.clear = function () {
         checkpoint();
         ctx.fillStyle = '#FFFFFF';
@@ -2301,7 +2291,6 @@ export function mountCanvas(scope: CreatorScope, stage: HTMLElement): void {
         editor.room4Obstacles = [];
         r4.obSel = null;
         obSync();
-        r4.clearCount = (r4.clearCount || 0) + 1;
         commit();
     };
     // the picture as a PNG file, room 4's obstacles kept in it (its text chunk OBSTACLES_KEY)

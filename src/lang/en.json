@@ -733,8 +733,7 @@
                 },
                 "r4clear": {
                     "title": "Clear all",
-                    "body": "The bin in the top bar (Clear all) clears the whole picture, and takes room 4's obstacles off too. Undo (Ctrl+Z) brings it back.\nClear away the practice shapes, then put victims and obstacles.",
-                    "task": "Press the bin in the top bar to clear away the practice shapes"
+                    "body": "To start over: the bin in the top bar (Clear all) clears the whole picture, and takes room 4's obstacles off too. Undo (Ctrl+Z) brings it back."
                 },
                 "r4stamp": {
                     "title": "Put victims",
@@ -761,16 +760,6 @@
                     "title": "Put an obstacle",
                     "body": "The obstacle tool (K) puts an obstacle where you click in room 4. Room 4 does not follow the tiles, so you can put as many as fit. Pick the shape, height and colour in the panel.\nClick one to pick it, drag it to move it, and drag its handles to size and turn it. It stops where it meets a wall or another obstacle. The robot cannot get into an obstacle, and the pictures saved here keep them.",
                     "task": "With the obstacle tool, click in room 4 to put an obstacle"
-                },
-                "r4reach": {
-                    "title": "Make a place out of reach, and see it",
-                    "body": "With Out of reach on, where the robot (radius 3.7 cm) cannot get to is shown with red stripes: a place closed in by walls, or a gap narrower than the robot.\nA place out of reach is fine in itself (the inside of an obstacle is meant to be). But the robot cannot find a victim put there, so use the stripes when putting victims. Victims the robot cannot get near, or that are off their wall, get a dashed red ring, and the bottom line counts them.\nEntrances / CP shows the entrances and checkpoints. Try making a place out of reach.",
-                    "task": "With the rectangle tool, draw a small square away from the walls and see its inside turn to red stripes (Do it for me draws a small square with the pen)",
-                    "tasks": {
-                        "off": "There is no start, so where the robot cannot get to cannot be worked out. Put the start on the map first (this step can be skipped)",
-                        "allBlocked": "The robot cannot get into almost any of room 4: something closes off its entrance. Rub out the wall in front of it",
-                        "victimsIn": "{{n}} of the victims put so far are now where the robot cannot get to: the checks would stop the export for them. Undo (Ctrl+Z) and draw the square somewhere else, or take them off with the Eraser on Victims only (\"Do it for me\" takes them off)"
-                    }
                 },
                 "r4file": {
                     "title": "Save and open as a picture",

@@ -3044,7 +3044,6 @@ export function createEditor() {
         if (s.checks) ui.checksFolded = false;
         const cr = creatorScope();
         if (cr && s.r4tool && cr.setTool) cr.setTool(s.r4tool);
-        if (cr && s.showReach) cr.r4.showReach = true;
         if (cr && s.r4tool === 'erase') cr.r4.eraseTarget = s.eraseTokens ? 'tokens' : 'all';
         if (s.openMore) later(function () { const d = document.querySelector('.r4-more') as HTMLDetailsElement | null; if (d) d.open = true; }, 60);
         if (s.enter && (map || s.noMap) && (!s.creator || cr)) { try { s.enter(tourEnv(), tr.st); } catch (e) { /* the step shows anyway */ } }

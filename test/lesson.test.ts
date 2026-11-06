@@ -26,23 +26,19 @@ function makeEnv(year = R.LATEST_YEAR) {
     resize(w, l) { M.resize(env.map, w, l); borders = M.syncBorderWalls(env.map, borders); },
     openRoom4() {
       if (env.map.area4Room.type !== 1) { env.map.area4Room = W.area4Presets()[1]; env.sync(); }
-      const r4: Record<string, any> = { tool: 'pen', drawCount: 0, tokenCount: 0, reachBlocked: 0, reachState: 'ok', hasSelection: false, sel: null, mirror: 'none', eraseTarget: 'all' };
+      const r4: Record<string, any> = { tool: 'pen', drawCount: 0, tokenCount: 0, hasSelection: false, sel: null, mirror: 'none', eraseTarget: 'all' };
       const drew = () => { r4.drawCount++; };
       env.creator = {
         r4,
         r4api: {
-          // a closed line (first point = last) makes a place out of reach
-          drawPen(pts: number[][]) { drew(); if (pts && String(pts[0]) === String(pts[pts.length - 1])) r4.reachBlocked += 400; },
-          drawShape: drew, drawIcon: drew, erasePen: drew,
+          drawPen: drew, drawShape: drew, drawIcon: drew, erasePen: drew,
           selectBox() { r4.hasSelection = true; },
           selection(a: string) { if (a === 'drop' && r4.hasSelection) { r4.hasSelection = false; drew(); } },
           randomStamps(n: number) { r4.tokenCount += n; drew(); },
           selectToken() { r4.sel = {}; },
           eraseToken() { if (r4.tokenCount) { r4.tokenCount--; drew(); } },
-          clear() { r4.clearCount = (r4.clearCount || 0) + 1; r4.reachBlocked = 0; r4.tokenCount = 0; drew(); },
           obstacleSet() { /* the shape to put next */ },
-          putObstacle() { r4.obstacleCount = (r4.obstacleCount || 0) + 1; drew(); },
-          eraseUnreachable() { r4.tokenCount -= r4.unreachCount || 0; r4.unreachCount = 0; drew(); }
+          putObstacle() { r4.obstacleCount = (r4.obstacleCount || 0) + 1; drew(); }
         },
         closeRoom4() { env.map.room4CanvasSave = 'data:image/png;base64,AAAA'; env.creator = null; }
       };
@@ -181,26 +177,4 @@ test('the step to pick a victim lights up the victims where they were put', () =
   // on the outer wall above the top left tile
   assert.ok(M.setVictim(env.map, 1, 1, 'top', 'H', false, { rot: 0 }));
   assert.deepStrictEqual(step.region(env, {}), [[0, 0, 0, 0]]);
-});
-
-test('the step that makes a place out of reach is not done while it shuts in victims put before', () => {
-  const env = makeEnv();
-  env.act.newMap();
-  env.act.openRoom4();
-  const r4 = env.creator!.r4;
-  r4.tokenCount = 3;
-  const step = T.LESSON.find((s) => s.id === 'r4reach')!;
-  const st: T.StepState = {};
-  step.enter!(env, st);
-  assert.ok(!step.goal!(env, st));
-  // a square drawn round a victim: out of reach, and the victim with it
-  env.creator!.r4api.drawPen([[0, 0], [1, 0], [1, 1], [0, 0]]);
-  r4.unreachCount = 1;
-  assert.ok(!step.goal!(env, st), 'not done with a victim shut in');
-  assert.deepStrictEqual(step.state!(env, st), { key: 'victimsIn', params: { n: 1 } });
-  // "do it for me" takes the victim off
-  step.auto!(env, st);
-  assert.ok(step.goal!(env, st));
-  assert.strictEqual(r4.tokenCount, 2);
-  assert.strictEqual(step.state!(env, st), null);
 });

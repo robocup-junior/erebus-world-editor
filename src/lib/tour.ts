@@ -10,7 +10,7 @@
 // the panel shows), r4tool (the same in the room 4 creator), checks (the checks card opened), place
 // ('below': the card under the part if there is room), cardIn (selector: the card at the bottom right
 // inside that part instead, when the parts lit are all round it), noMap (only while no map is open), creator (a
-// step in the room 4 creator), showReach (its places out of reach shown), eraseTokens (the eraser
+// step in the room 4 creator), eraseTokens (the eraser
 // set to victims only), r4guide (lines in fractions of the room 4 picture), leave(env) (when the step
 // is left), lessonOnly (left out of the look-only tour), keys (key names shown), plan (the sample map drawn on the card), and
 // for a lesson step: region(env) - tiles [x0, y0, x1, y1] (tile indices) lit on the map, guide(env) -
@@ -79,7 +79,6 @@ export interface TourStep {
     checks?: boolean;
     noMap?: boolean;
     creator?: boolean;
-    showReach?: boolean;
     eraseTokens?: boolean;
     openMore?: boolean;
     r4guide?: number[][][];
@@ -357,8 +356,7 @@ const R4 = {
     ellipse: [[0.32, 0.63], [0.68, 0.67]],
     polygon: { a: [0.5, 0.73], r: 0.08, n: 6 },
     icon: [[0.38, 0.8], [0.62, 0.88]],
-    select: [[0.29, 0.5], [0.51, 0.6]],
-    square: [[0.4, 0.6], [0.6, 0.6], [0.6, 0.72], [0.4, 0.72], [0.4, 0.6]]
+    select: [[0.29, 0.5], [0.51, 0.6]]
 };
 const ROOM4: TourStep[] = [
     { id: 'r4intro', chapter: 'room4', creator: true, target: '.r4-main' },
@@ -404,14 +402,6 @@ const ROOM4: TourStep[] = [
         env.creator!.r4api.erasePen(R4.line);
     }),
     {
-        // the practice shapes cleared away with "clear all" (the robot gets everywhere again, for the
-        // victims, the obstacle and the place out of reach to come)
-        id: 'r4clear', chapter: 'room4', creator: true, target: '.r4-topbar', mark: ['.r4-topbar .r4-icon.danger'],
-        enter: function (env, st) { st.c0 = env.creator ? env.creator!.r4.clearCount || 0 : 0; },
-        goal: function (env, st) { return !!env.creator && (env.creator!.r4.clearCount || 0) > st.c0; },
-        auto: function (env) { env.creator!.r4api.clear(); }
-    },
-    {
         id: 'r4stamp', chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-panel', r4tool('stamp')], r4tool: 'stamp',
         enter: function (env, st) { st.n0 = env.creator ? env.creator!.r4.tokenCount || 0 : 0; },
         goal: function (env, st) { return !!env.creator && (env.creator!.r4.tokenCount || 0) >= Math.max(2, st.n0 + 1); },
@@ -443,14 +433,14 @@ const ROOM4: TourStep[] = [
     },
     {
         // an obstacle put in room 4 with the creator's obstacle tool; "do it for me" puts a small
-        // cylinder where one fits, off the walls (where the victims are) in the room cleared
+        // cylinder where one fits: first where the eraser took the line off, in the middle of the room
         id: 'r4obstacle', chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-panel', r4tool('obstacle')], r4tool: 'obstacle',
         enter: function (env, st) { st.n0 = env.creator ? env.creator!.r4.obstacleCount || 0 : 0; },
         goal: function (env, st) { return !!env.creator && (env.creator!.r4.obstacleCount || 0) > st.n0; },
         auto: function (env) {
             const cr = env.creator!;
             cr.r4api.obstacleSet({ shape: 'cylinder', w: 3, d: 3, h: 5 });
-            [[0.5, 0.35], [0.3, 0.35], [0.7, 0.35], [0.5, 0.5]].some(function (f) {
+            [[0.5, 0.14], [0.4, 0.14], [0.6, 0.14], [0.5, 0.94], [0.5, 0.5]].some(function (f) {
                 const n = cr.r4.obstacleCount || 0;
                 cr.r4api.putObstacle(f);
                 return (cr.r4.obstacleCount || 0) > n;
@@ -458,36 +448,8 @@ const ROOM4: TourStep[] = [
         },
         state: otherTool('obstacle')
     },
-    {
-        // a place the robot cannot get into made on purpose (a small closed square), and seen
-        id: 'r4reach', chapter: 'room4', creator: true, target: '.r4-viewport', mark: ['.r4-topbar', '.r4-status', r4tool('rect')], r4tool: 'rect', showReach: true,
-        r4guide: [R4.square],
-        // done with a place out of reach that has none of the victims put so far in it (else the
-        // checks would stop the export for them, and only drawing again fixes that)
-        enter: function (env, st) {
-            st.b0 = env.creator ? env.creator!.r4.reachBlocked || 0 : 0;
-            st.u0 = env.creator ? env.creator!.r4.unreachCount || 0 : 0;
-        },
-        goal: function (env, st) {
-            const r4 = env.creator && env.creator!.r4;
-            return !!r4 && (r4.reachBlocked || 0) > st.b0 && (r4.unreachCount || 0) <= st.u0;
-        },
-        // the square drawn; once more, the victims it shut in taken off
-        auto: function (env, st) {
-            const cr = env.creator!;
-            if ((cr.r4.unreachCount || 0) > st.u0) cr.r4api.eraseUnreachable();
-            else cr.r4api.drawPen(R4.square);
-        },
-        state: function (env, st) {
-            const r4 = env.creator && env.creator!.r4;
-            if (!r4) return null;
-            if (r4.reachState && r4.reachState !== 'ok') return { key: 'off' };
-            if ((r4.unreachCount || 0) > st.u0) return { key: 'victimsIn', params: { n: (r4.unreachCount || 0) - st.u0 } };
-            // nearly all of room 4 out of reach already: its entrance is closed off
-            if (r4.reachRoom && (r4.reachBlocked || 0) >= 0.9 * r4.reachRoom) return { key: 'allBlocked' };
-            return null;
-        }
-    },
+    // "clear all" only shown: the shapes drawn stay, with the victims and the obstacle among them
+    { id: 'r4clear', chapter: 'room4', creator: true, target: '.r4-topbar', mark: ['.r4-topbar .r4-icon.danger'] },
     { id: 'r4file', chapter: 'room4', creator: true, target: '.r4-topbar' },
     {
         id: 'r4ok', chapter: 'room4', creator: true, target: '.r4-head-ok', place: 'below', closes: true,

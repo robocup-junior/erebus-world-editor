@@ -45,8 +45,6 @@ export interface R4State {
     passageCount: number;
     missingCheckpoints: number;
     reachState: string;
-    reachBlocked?: number;
-    reachRoom?: number;
     canUndo: boolean;
     canRedo: boolean;
     undoCount?: number;
@@ -66,7 +64,6 @@ export interface R4State {
     obSel: number | null;
     obPicked: ObstacleShape | null;
     obstacleCount?: number;
-    clearCount?: number;
 }
 
 export interface CreatorScope {
