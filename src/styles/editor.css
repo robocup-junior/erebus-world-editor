@@ -468,6 +468,7 @@
     position: absolute;
     inset: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     pointer-events: none;
@@ -1350,6 +1351,11 @@
     border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
     color: #334155; font-size: 0.78rem; white-space: normal;
 }
+.ed-build-logo { display: block; width: 160px; height: auto; margin: 0 0 0.5rem; user-select: none; }
+/* on the start screen, under its card */
+.ed-rcj-logo { display: block; width: 240px; max-width: calc(100% - 32px); height: auto; margin-top: 1.4rem; user-select: none; }
+.ed-erebus-link { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.6rem; font-size: 0.8rem; color: #2563eb; pointer-events: auto; }
+.ed-erebus-link .fas { font-size: 0.7rem; }
 .ed-build-head { margin-bottom: 0.4rem; font-weight: 700; color: #1e293b; }
 .ed-build dl { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 0.8rem; margin: 0; }
 .ed-build dt { font-weight: 400; color: #64748b; }

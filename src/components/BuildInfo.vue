@@ -41,6 +41,7 @@ onBeforeUnmount(stop);
   <span class="ed-copyright" ref="root">
     <button class="ed-copyright-btn" type="button" @click="toggle" :aria-expanded="open" :title="t('app.build.title')">©︎ 2021-2026 Erebus Development Team</button>
     <div class="ed-build" v-if="open" role="dialog" :aria-label="t('app.build.title')">
+      <img class="ed-build-logo" src="/images/robocup-junior-rescue.png" alt="RoboCup Junior Rescue" width="160" height="46" draggable="false">
       <div class="ed-build-head">Erebus World Editor</div>
       <dl>
         <dt>{{ t('app.build.commit') }}</dt>

@@ -16,7 +16,9 @@
             "title": "このエディタについて",
             "lead": "Erebus World Editor（β版）です。今までのエディタと同じJSONを読み書きするので、保存したマップはどちらでも開けます。",
             "classic": "今までのエディタで開く",
-            "classicNote": "作業中のマップは、先に「保存」でJSONに保存してから開いてください"
+            "classicNote": "作業中のマップは、先に「保存」でJSONに保存してから開いてください",
+            "erebus": "Erebus プラットフォーム",
+            "erebusNote": "RoboCupJunior Rescue のシミュレーション競技プラットフォーム（ワールドの試走、大会）"
         },
         "build": {
             "title": "このビルドの情報",

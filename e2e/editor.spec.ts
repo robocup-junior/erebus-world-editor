@@ -143,19 +143,23 @@ test('2027: contact tiles on any tile, smiley victims', async ({ page }) => {
     await shot(page, 'contact-smiley-2027');
 });
 
-test('the β menu: the link to the classic editor of 2026; 2027 has none', async ({ page }) => {
+test('the β menu: the Erebus platform; the link to the classic editor of 2026, 2027 has none', async ({ page }) => {
     await boot(page);
     await page.locator('.ed-beta-btn').click();
     await expect(page.locator('.ed-beta-menu')).toBeVisible();
-    await expect(page.locator('.ed-beta-menu-item')).toHaveCount(0);
+    const items = page.locator('.ed-beta-menu-item');
+    await expect(items).toHaveCount(1);
+    await expect(items.first()).toHaveAttribute('href', 'https://erebus.rcj.cloud');
     await shot(page, 'beta-menu-2027');
     await page.locator('.ed-beta-back').click();
     await page.locator('.ed-empty-rules-choices button', { hasText: '2026' }).click();
     await page.locator('.ed-beta-btn').click();
     await shot(page, 'beta-menu');
-    const link = page.locator('.ed-beta-menu-item');
+    await expect(items).toHaveCount(2);
+    const link = items.first();
     await expect(link).toHaveAttribute('href', 'https://osaka.rcj.cloud/service/editor/simulation/2026/classic');
     await expect(link).toHaveAttribute('target', '_blank');
+    await expect(items.nth(1)).toHaveAttribute('target', '_blank');
     await page.locator('.ed-beta-back').click();
     await expect(page.locator('.ed-beta-menu')).toHaveCount(0);
 });

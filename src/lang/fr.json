@@ -16,7 +16,9 @@
             "title": "À propos de cet éditeur",
             "lead": "Erebus World Editor (bêta). Il lit et écrit le même JSON que l’éditeur classique, donc une carte enregistrée s’ouvre dans l’un ou l’autre.",
             "classic": "Ouvrir l’éditeur classique",
-            "classicNote": "Enregistrez d’abord la carte en cours (Enregistrer, JSON)"
+            "classicNote": "Enregistrez d’abord la carte en cours (Enregistrer, JSON)",
+            "erebus": "Plateforme Erebus",
+            "erebusNote": "La plateforme de simulation de RoboCupJunior Rescue : essayer des mondes, compétitions"
         },
         "build": {
             "title": "À propos de cette version",

@@ -16,7 +16,9 @@
             "title": "Bu düzenleyici hakkında",
             "lead": "Erebus World Editor (beta). Klasik düzenleyiciyle aynı JSON'u okur ve yazar, bu yüzden kaydedilmiş bir harita ikisinde de açılır.",
             "classic": "Klasik düzenleyiciyi aç",
-            "classicNote": "Önce üzerinde çalıştığınız haritayı kaydedin (Kaydet, JSON)"
+            "classicNote": "Önce üzerinde çalıştığınız haritayı kaydedin (Kaydet, JSON)",
+            "erebus": "Erebus platformu",
+            "erebusNote": "RoboCupJunior Rescue'nun simülasyon platformu: dünyaları deneyin, yarışmalar"
         },
         "build": {
             "title": "Bu sürüm hakkında",

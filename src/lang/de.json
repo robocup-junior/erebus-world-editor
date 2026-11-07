@@ -16,7 +16,9 @@
             "title": "Über diesen Editor",
             "lead": "Erebus World Editor (Beta). Er liest und schreibt dasselbe JSON wie der klassische Editor, sodass eine gespeicherte Karte in beiden geöffnet werden kann.",
             "classic": "Klassischen Editor öffnen",
-            "classicNote": "Speichere zuerst die Karte, an der du arbeitest (Speichern, JSON)"
+            "classicNote": "Speichere zuerst die Karte, an der du arbeitest (Speichern, JSON)",
+            "erebus": "Erebus-Plattform",
+            "erebusNote": "Die Simulationsplattform von RoboCupJunior Rescue: Welten ausprobieren, Wettbewerbe"
         },
         "build": {
             "title": "Über diesen Build",

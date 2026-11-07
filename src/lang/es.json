@@ -16,7 +16,9 @@
             "title": "Acerca de este editor",
             "lead": "Erebus World Editor (beta). Lee y escribe el mismo JSON que el editor clásico, así que un mapa guardado se abre en cualquiera de los dos.",
             "classic": "Abrir el editor clásico",
-            "classicNote": "Guarda primero el mapa en el que trabajas (Guardar, JSON)"
+            "classicNote": "Guarda primero el mapa en el que trabajas (Guardar, JSON)",
+            "erebus": "Plataforma Erebus",
+            "erebusNote": "La plataforma de simulación de RoboCupJunior Rescue: probar mundos, competiciones"
         },
         "build": {
             "title": "Acerca de esta versión",

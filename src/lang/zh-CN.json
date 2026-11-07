@@ -16,7 +16,9 @@
             "title": "关于此编辑器",
             "lead": "Erebus World Editor（测试版）。它读写与经典编辑器相同的 JSON，因此保存的地图在两者中都能打开。",
             "classic": "打开经典编辑器",
-            "classicNote": "请先保存正在编辑的地图（保存，JSON）"
+            "classicNote": "请先保存正在编辑的地图（保存，JSON）",
+            "erebus": "Erebus 平台",
+            "erebusNote": "RoboCupJunior Rescue 的仿真平台：试跑世界、比赛"
         },
         "build": {
             "title": "关于此版本",

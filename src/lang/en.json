@@ -16,7 +16,9 @@
             "title": "About this editor",
             "lead": "Erebus World Editor (beta). It reads and writes the same JSON as the classic editor, so a saved map opens in either.",
             "classic": "Open the classic editor",
-            "classicNote": "Save the map you are working on (Save, JSON) first"
+            "classicNote": "Save the map you are working on (Save, JSON) first",
+            "erebus": "Erebus platform",
+            "erebusNote": "RoboCupJunior Rescue's simulation platform: try worlds, competitions"
         },
         "build": {
             "title": "About this build",

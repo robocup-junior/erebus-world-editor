@@ -16,7 +16,9 @@
             "title": "Tentang editor ini",
             "lead": "Erebus World Editor (beta). Editor ini membaca dan menulis JSON yang sama dengan editor klasik, jadi peta yang disimpan bisa dibuka di keduanya.",
             "classic": "Buka editor klasik",
-            "classicNote": "Simpan dulu peta yang sedang Anda kerjakan (Simpan, JSON)"
+            "classicNote": "Simpan dulu peta yang sedang Anda kerjakan (Simpan, JSON)",
+            "erebus": "Platform Erebus",
+            "erebusNote": "Platform simulasi RoboCupJunior Rescue: coba dunia, kompetisi"
         },
         "build": {
             "title": "Tentang build ini",

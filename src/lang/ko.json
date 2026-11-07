@@ -16,7 +16,9 @@
             "title": "이 에디터에 대해",
             "lead": "Erebus World Editor (베타). 클래식 에디터와 같은 JSON을 읽고 쓰므로 저장한 맵은 어느 쪽에서도 열 수 있습니다.",
             "classic": "클래식 에디터 열기",
-            "classicNote": "먼저 작업 중인 맵을 저장하세요 (저장, JSON)"
+            "classicNote": "먼저 작업 중인 맵을 저장하세요 (저장, JSON)",
+            "erebus": "Erebus 플랫폼",
+            "erebusNote": "RoboCupJunior Rescue의 시뮬레이션 플랫폼: 월드 시험 주행, 대회"
         },
         "build": {
             "title": "이 빌드에 대해",

@@ -30,6 +30,8 @@ const Room4Creator = defineAsyncComponent({
 const E = createEditor();
 const S = E.S;
 const keys = Keys.text;
+// the simulation platform the worlds made here run on
+const EREBUS_URL = 'https://erebus.rcj.cloud';
 // The mouse and the keys, in the guide's dialog (the tools' keys are on the tool rail)
 const KEY_SHEET = [
     { id: 'view', rows: [{ id: 'zoom', keys: ['@wheel'] }, { id: 'pan', keys: ['@spaceDrag', '@middleDrag'] }, { id: 'hand', keys: ['H'] }] },
@@ -82,6 +84,10 @@ onMounted(function () {
             <a class="ed-beta-menu-item" v-if="S.classic" :href="S.classic" target="_blank" rel="noopener" role="menuitem">
               <i class="fas fa-external-link-alt fa-fw"></i>
               <span><strong>{{ t('app.about.classic') }}</strong><small>{{ t('app.about.classicNote') }}</small></span>
+            </a>
+            <a class="ed-beta-menu-item" :href="EREBUS_URL" target="_blank" rel="noopener" role="menuitem">
+              <i class="fas fa-external-link-alt fa-fw"></i>
+              <span><strong>{{ t('app.about.erebus') }}</strong><small>{{ t('app.about.erebusNote') }}</small></span>
             </a>
           </div>
         </span></span>
@@ -456,6 +462,9 @@ onMounted(function () {
               </button>
               <div class="ed-error" v-if="S.error">{{ t(S.error, S.errorParams) }}</div>
             </div>
+            <!-- the competition's logo and its simulation platform: on the start screen only, never over the work -->
+            <img class="ed-rcj-logo" src="/images/robocup-junior-rescue.png" alt="RoboCup Junior Rescue" width="240" height="69" draggable="false">
+            <a class="ed-erebus-link" :href="EREBUS_URL" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i>{{ t('app.about.erebus') }}</a>
           </div>
         </main>
       </div>
