@@ -99,6 +99,13 @@ interface Tour {
 }
 interface TourKeep { tool: string; checksFolded: boolean; shapeMode: string; made: boolean }
 
+// The year of the rules chosen last time (KEPT.rulesYear), if the editor still takes it; else the latest
+function keptYear(): number {
+    let y = NaN;
+    try { y = Number(localStorage.getItem(KEPT.rulesYear)); } catch (e) { /* storage off */ }
+    return years().indexOf(y) >= 0 ? y : LATEST_YEAR;
+}
+
 export function createEditor() {
     const tools: Tool[] = [
         // icons and keys as the same tools of the custom room 4 creator
@@ -198,8 +205,9 @@ export function createEditor() {
         obstacleLimits: W.OBSTACLE_LIMITS,
         ui: {
             tool: 'line', room: 2, floor: 'checkpoint', victim: 'H', fake: false,
-            // the year of the rules a new map is made with (asked on the start screen)
-            newYear: LATEST_YEAR,
+            // the year of the rules a new map is made with (asked on the start screen): the one chosen
+            // last time, kept in this browser
+            newYear: keptYear(),
             rings: 'GYYKG'.split(''), ring: 0, rot: 0, randomRot: true, shapeMode: 'outline', showLinear: false,
             checksFolded: false, freshMap: false, betaMenu: false, scoreMenu: false, guidePick: false as false | string
         },
@@ -674,8 +682,12 @@ export function createEditor() {
     }
     // before a map is open: the latest year's
     setRuleTexts(LATEST_YEAR, rulesFor(LATEST_YEAR)!.refs);
-    // on the start screen the texts and panels follow the year chosen for new maps
-    watch(function () { return ui.newYear; }, function () { if (!map) followRules(); });
+    // on the start screen the texts and panels follow the year chosen for new maps; the year is kept
+    // for the next visit
+    watch(function () { return ui.newYear; }, function (y) {
+        try { localStorage.setItem(KEPT.rulesYear, String(y)); } catch (e) { /* storage off */ }
+        if (!map) followRules();
+    });
 
     // A custom room 4 picture read for the checks and the score (its walls and its stamps): read once
     // per picture; it loads first, and the map is looked at again then
@@ -2845,6 +2857,8 @@ export function createEditor() {
             map.rules = year;
             borders = M.syncBorderWalls(map, borders);
             commit();
+            // chosen: the year new maps are made with from now on, too
+            ui.newYear = year;
             notify('rulesSwitched', { year: year }, 'ok');
             digest();
         });

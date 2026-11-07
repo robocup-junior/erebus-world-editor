@@ -85,6 +85,24 @@ test('the start screen asks the year of the rules: 2027 (a draft) chosen, 2026 t
     await expect(page.locator('.ed-rules-btn')).toContainText('2026');
 });
 
+test('the year of the rules chosen is kept: chosen again on the next visit, also when switched by the rules menu', async ({ page }) => {
+    await boot(page);
+    const choices = page.locator('.ed-empty-rules-choices button');
+    await choices.filter({ hasText: '2026' }).click();
+    await page.reload();
+    await settle(page);
+    await expect(choices.filter({ hasText: '2026' })).toHaveAttribute('aria-checked', 'true');
+    // a map switched to 2027 by the rules menu: 2027 next time
+    await page.locator('.ed-empty-actions .btn-primary').click();
+    await settle(page);
+    await page.locator('.ed-rules-btn').click();
+    await page.locator('.ed-rules-item', { hasText: '2027' }).locator('button').click();
+    await page.locator('.ed-dialog-btn', { hasText: '切り替える' }).click();
+    await settle(page);
+    await expect(page.locator('.ed-rules-btn')).toContainText('2027');
+    expect(await page.evaluate(() => localStorage.getItem('erebusEditor.rulesYear'))).toBe('2027');
+});
+
 test('the rules menu: the map\'s year, its rule book, and 2027 (a draft) to switch to, asked first', async ({ page }) => {
     await boot(page);
     await openMap(page, 'mapA.json', { year: null });

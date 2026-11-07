@@ -1,12 +1,14 @@
 // What the editor keeps in this browser (localStorage), by key: the work in case the page is closed
-// unsaved, whether the guide was seen or offered, and the language chosen. Earlier versions kept the
+// unsaved, whether the guide was seen or offered, the language chosen, and the year of the rules last
+// chosen (on the start screen or by the rules menu). Earlier versions kept the
 // same under other keys (the CMS's beta editor's, and angular-translate's for the language);
 // carryOver() moves what is there to these keys, once.
 export const KEPT = {
     autosave: 'erebusEditor.autosave',
     tourSeen: 'erebusEditor.tourSeen',
     guideAsked: 'erebusEditor.guideAsked',
-    lang: 'erebusEditor.lang'
+    lang: 'erebusEditor.lang',
+    rulesYear: 'erebusEditor.rulesYear'
 };
 
 const EARLIER: Record<string, string> = {
